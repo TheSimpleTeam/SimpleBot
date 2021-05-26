@@ -45,6 +45,7 @@ public class Main {
         client = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setPrefix("!")
+                .useHelpBuilder(false)
                 .addCommands(new PerfectNumber())
                 .setActivity(Activity.playing("se créer de lui-même..."))
                 .setStatus(OnlineStatus.ONLINE)
@@ -54,7 +55,7 @@ public class Main {
 
     private static String readConfig() throws IOException {
         File config = new File(Paths.get("config.json").toUri());
-        if(!config.exists()) {
+        if (!config.exists()) {
             config.createNewFile();
             Map<String, String> map = new HashMap<>();
             map.put("token", "YOUR-TOKEN-HERE");
