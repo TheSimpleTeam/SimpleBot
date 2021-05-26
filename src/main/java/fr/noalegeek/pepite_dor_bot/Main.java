@@ -2,7 +2,6 @@ package fr.noalegeek.pepite_dor_bot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -16,8 +15,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.HashMap;
