@@ -2,11 +2,10 @@ package fr.noalegeek.pepite_dor_bot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import fr.noalegeek.pepite_dor_bot.commands.PingCommand;
+import fr.noalegeek.pepite_dor_bot.commands.PerfectNumber;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -16,8 +15,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -48,7 +45,7 @@ public class Main {
         client = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setPrefix("!")
-                .addCommands(new PingCommand())
+                .addCommands(new PerfectNumber())
                 .setActivity(Activity.playing("se créer de lui-même..."))
                 .setStatus(OnlineStatus.ONLINE)
                 .build();
