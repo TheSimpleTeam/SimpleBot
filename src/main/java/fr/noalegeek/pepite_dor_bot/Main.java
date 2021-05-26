@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import fr.noalegeek.pepite_dor_bot.commands.PingCommand;
+import fr.noalegeek.pepite_dor_bot.commands.PerfectNumber;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -45,7 +45,7 @@ public class Main {
         client = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setPrefix("!")
-                .addCommands(new PingCommand())
+                .addCommands(new PerfectNumber())
                 .setActivity(Activity.playing("se créer de lui-même..."))
                 .setStatus(OnlineStatus.ONLINE)
                 .build();
