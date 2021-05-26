@@ -22,7 +22,7 @@ public class Events extends ListenerAdapter {
                 case "!e":
                     event.getChannel().sendMessage("E").queue();
                     break;
-                case "!perfectnumber":
+                case "!pn":
                     if(args.length == 2) {
                         try {
                             int addNumbers = 0;
@@ -42,7 +42,7 @@ public class Events extends ListenerAdapter {
                             event.getMessage().reply("**[**"+event.getAuthor().getAsMention()+"**]** Le nombre spécifié n'est pas un nombre entier.").queue();
                         }
                     } else if(args.length < 2){
-                        event.getMessage().reply("**[**"+event.getAuthor().getAsMention()+"**]** Syntaxe de la commande !perfectnumber : ``!perfectnumber <nombre>``. Le nombre spécifié doit être un nombre entier.").queue();
+                        event.getMessage().reply("**[**"+event.getAuthor().getAsMention()+"**]** Syntaxe de la commande !perfectnumber : ``!pn <nombre>``. Le nombre spécifié doit être un nombre entier.").queue();
                     } else {
                         event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Vous devez mettre seulement un nombre entier.").queue();
                     }
