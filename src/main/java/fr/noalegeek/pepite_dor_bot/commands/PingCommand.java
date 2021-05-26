@@ -9,6 +9,7 @@ public class PingCommand extends Command {
         this.aliases = new String[]{"Pong","P"};
         this.name = "Ping";
     }
+
     @Override
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
