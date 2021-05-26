@@ -23,13 +23,17 @@ public class Events extends ListenerAdapter {
                     event.getChannel().sendMessage("E").queue();
                     break;
                 case "!perfectnumber":
-                    event.getChannel().sendMessage(String.valueOf(args.length)).queue();
                     if(args.length == 2) {
-                        int chooseNumber = Integer.parseInt(args[1]);
+                        try {
+                            int chooseNumber = Integer.parseInt(args[1]);
+                            event.getMessage().reply("okay").queue();
+                        } catch (NumberFormatException numberFormatException){
+                            event.getMessage().reply("**[**"+event.getAuthor().getAsMention()+"**]** Le nombre spécifié n'est pas un nombre entier.").queue();
+                        }
                     } else if(args.length < 2){
-                        event.getChannel().sendMessage("**[**"+event.getAuthor().getAsMention()+"**]** Syntaxe de la commande !perfectnumber : ``!perfectnumber <nombre>``. Le nombre spécifié doit être ").queue();
+                        event.getMessage().reply("**[**"+event.getAuthor().getAsMention()+"**]** Syntaxe de la commande !perfectnumber : ``!perfectnumber <nombre>``. Le nombre spécifié doit être un nombre entier.").queue();
                     } else {
-                        event.getChannel().sendMessage("").queue();
+                        event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]**").queue();
                     }
                     break;
                 case "!test":
@@ -37,9 +41,6 @@ public class Events extends ListenerAdapter {
                     break;
             }
         }
-    }
-    public void chooseNumber(){
-
     }
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {

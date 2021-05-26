@@ -19,7 +19,7 @@ public class Main {
     private static CommandClient client;
     public static void main(String[] args) throws LoginException {
         EventWaiter waiter = new EventWaiter();
-        jda = JDABuilder.createDefault("ODQ2MDM1MTU3OTQ0NjMxMzI3.YKpppA.e3yAFfLV308s0ZvBumwTNfIZZHM").enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
+        jda = JDABuilder.createDefault("ODQ2MDM1MTU3OTQ0NjMxMzI3.YKpppA.43WP1SWM2vPWfXr5NPRV0qsEf_I").enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
         Random randomActivity = new Random();
         client = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
