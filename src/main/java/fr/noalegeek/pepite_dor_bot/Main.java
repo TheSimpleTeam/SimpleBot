@@ -2,26 +2,23 @@ package fr.noalegeek.pepite_dor_bot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import fr.noalegeek.pepite_dor_bot.commands.HelpCommand;
-import fr.noalegeek.pepite_dor_bot.commands.PerfectNumber;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,30 +29,49 @@ public class Main {
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
         Infos infos = null;
+
         try {
             infos = readConfig();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
         }
+
         EventWaiter waiter = new EventWaiter();
+
         try {
             jda = JDABuilder.createDefault(infos.token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE,"Le token est invalide");
         }
+
         Random randomActivity = new Random();
 
         String[] activities = {"Se créer de lui-même...", infos.prefix + "help"};
-        client = new CommandClientBuilder()
+        CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setPrefix(infos.prefix)
                 .useHelpBuilder(false)
-                .addCommands(new PerfectNumber(),
-                        new HelpCommand())
                 .setActivity(Activity.playing(activities[randomActivity.nextInt(activities.length)]))
-                .setStatus(OnlineStatus.ONLINE)
-                .build();
+                .setStatus(OnlineStatus.ONLINE);
+        setupCommands(clientBuilder);
+        client = clientBuilder.build();
         jda.addEventListener(new Events(), waiter, client);
+        client.getCommands().forEach(System.out::println);
+    }
+
+    /**
+     * <p>Instantiates all classes from the package {@link fr.noalegeek.pepite_dor_bot.commands}</p>
+     */
+    private static void setupCommands(CommandClientBuilder clientBuilder) {
+        Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
+        Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
+        for (Class<? extends Command> command : commands) {
+            try {
+                clientBuilder.addCommands(command.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static Infos readConfig() throws IOException {
@@ -75,5 +91,13 @@ public class Main {
         Infos infos = gson.fromJson(reader, Infos.class);
         reader.close();
         return infos;
+    }
+
+    public static JDA getJda() {
+        return jda;
+    }
+
+    public static CommandClient getClient() {
+        return client;
     }
 }
