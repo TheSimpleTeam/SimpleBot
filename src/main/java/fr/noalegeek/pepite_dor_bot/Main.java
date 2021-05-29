@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import fr.noalegeek.pepite_dor_bot.commands.Calculate;
+import fr.noalegeek.pepite_dor_bot.commands.Events;
 import fr.noalegeek.pepite_dor_bot.commands.PerfectNumber;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -39,17 +41,16 @@ public class Main {
         try {
             jda = JDABuilder.createDefault(token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
         } catch (LoginException e) {
-            LOGGER.log(Level.SEVERE,"Le token est invalide");
+            LOGGER.log(Level.SEVERE,"Le token est invalide.");
         }
         Random randomActivity = new Random();
         client = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setPrefix("!")
-                .addCommands(new PerfectNumber())
                 .setActivity(Activity.playing("se créer de lui-même..."))
                 .setStatus(OnlineStatus.ONLINE)
                 .build();
-        jda.addEventListener(new Events(), waiter, client);
+        jda.addEventListener(new Calculate(), new PerfectNumber(), new Events(), waiter, client);
     }
 
     private static String readConfig() throws IOException {
