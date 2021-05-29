@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 public class PerfectNumber extends Command {
+
     public PerfectNumber(){
         this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"pn","perfectn","pnumber"};
@@ -11,6 +12,7 @@ public class PerfectNumber extends Command {
         this.arguments = "<nombre entier>";
         this.help = "Vérifie si un nombre est premier.";
     }
+
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getMessage().getContentRaw().split(" ");

@@ -1,8 +1,9 @@
 {
+  "token": "YOUR-TOKEN-HERE",
   "prefix": "!",
+  "defaultRoleID": "YOUR-ROLE-ID",
   "activities": [
     "!help",
     "Se créer de lui-meme..."
-  ],
-  "token": "YOUR-TOKEN-HERE"
+  ]
 }

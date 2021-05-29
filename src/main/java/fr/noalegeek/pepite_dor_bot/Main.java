@@ -31,11 +31,10 @@ import java.util.logging.Logger;
 public class Main {
     private static JDA jda;
     private static CommandClient client;
+    private static Infos infos;
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
-        Infos infos = null;
-
         try {
             infos = readConfig();
         } catch (IOException ex) {
@@ -83,9 +82,10 @@ public class Main {
         File configTemplate = new File(Paths.get("config-template.json").toUri());
         if (!config.exists()) {
             config.createNewFile();
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("token", "YOUR-TOKEN-HERE");
             map.put("prefix", "!");
+            map.put("defaultRoleID", "YOUR-ROLE-ID");
             map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
@@ -105,5 +105,9 @@ public class Main {
 
     public static CommandClient getClient() {
         return client;
+    }
+
+    public static Infos getInfos() {
+        return infos;
     }
 }
