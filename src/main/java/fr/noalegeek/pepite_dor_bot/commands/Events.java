@@ -1,8 +1,9 @@
-package fr.noalegeek.pepite_dor_bot;
+package fr.noalegeek.pepite_dor_bot.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,6 @@ public class Events extends ListenerAdapter {
         Objects.requireNonNull(event.getGuild().getTextChannelById("846712559696609290")).sendMessage(embedMemberJoin.build()).queue();
         event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById("846715377760731156"))).queue();
     }
-
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
         EmbedBuilder embedMemberRemove = new EmbedBuilder();
