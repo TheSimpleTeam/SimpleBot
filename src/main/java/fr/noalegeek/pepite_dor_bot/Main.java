@@ -14,10 +14,15 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,17 +51,15 @@ public class Main {
 
         Random randomActivity = new Random();
 
-        String[] activities = {"Se créer de lui-même...", infos.prefix + "help"};
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setPrefix(infos.prefix)
                 .useHelpBuilder(false)
-                .setActivity(Activity.playing(activities[randomActivity.nextInt(activities.length)]))
+                .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder);
         client = clientBuilder.build();
         jda.addEventListener(new Events(), waiter, client);
-        client.getCommands().forEach(System.out::println);
     }
 
     /**
@@ -79,15 +82,17 @@ public class Main {
         File configTemplate = new File(Paths.get("config-template.json").toUri());
         if (!config.exists()) {
             config.createNewFile();
-            Map<String, String> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             map.put("token", "YOUR-TOKEN-HERE");
             map.put("prefix", "!");
-            Writer writer = new FileWriter(config);
+            map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
+            Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
             writer.close();
             Files.copy(config.toPath(), configTemplate.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            configTemplate.setWritable(false);
         }
-        Reader reader = Files.newBufferedReader(Paths.get("config.json"));
+        Reader reader = Files.newBufferedReader(Paths.get("config.json"), StandardCharsets.UTF_8);
         Infos infos = gson.fromJson(reader, Infos.class);
         reader.close();
         return infos;

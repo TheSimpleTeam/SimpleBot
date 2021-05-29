@@ -1,4 +1,8 @@
 {
   "prefix": "!",
+  "activities": [
+    "!help",
+    "Se créer de lui-meme..."
+  ],
   "token": "YOUR-TOKEN-HERE"
 }
