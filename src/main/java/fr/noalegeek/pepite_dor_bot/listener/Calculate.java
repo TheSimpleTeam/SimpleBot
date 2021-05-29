@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.commands;
+package fr.noalegeek.pepite_dor_bot.listener;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -51,7 +51,7 @@ public class Calculate extends ListenerAdapter {
                             case "/":
                                 try{
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Division en cours...").queue();
-                                    double division = 0;
+                                    double division;
                                     try {
                                          division = number1 / number2;
                                         event.getChannel().sendMessage("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat de la division est "+division+".").queue();
