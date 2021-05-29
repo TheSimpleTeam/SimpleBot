@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 public class PerfectNumber extends Command {
     public PerfectNumber(){
+        this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"pn","perfectn","pnumber"};
         this.name = "perfectnumber";
         this.arguments = "<nombre entier>";

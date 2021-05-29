@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import fr.noalegeek.pepite_dor_bot.commands.HelpCommand;
 import fr.noalegeek.pepite_dor_bot.commands.PerfectNumber;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -16,6 +17,7 @@ import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,46 +28,52 @@ import java.util.logging.Logger;
 public class Main {
     private static JDA jda;
     private static CommandClient client;
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
-        String token = null;
+        Infos infos = null;
         try {
-            token = readConfig();
+            infos = readConfig();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
         }
         EventWaiter waiter = new EventWaiter();
         try {
-            jda = JDABuilder.createDefault(token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
+            jda = JDABuilder.createDefault(infos.token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE,"Le token est invalide");
         }
         Random randomActivity = new Random();
+
+        String[] activities = {"Se créer de lui-même...", infos.prefix + "help"};
         client = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
-                .setPrefix("!")
+                .setPrefix(infos.prefix)
                 .useHelpBuilder(false)
-                .addCommands(new PerfectNumber())
-                .setActivity(Activity.playing("se créer de lui-même..."))
+                .addCommands(new PerfectNumber(),
+                        new HelpCommand())
+                .setActivity(Activity.playing(activities[randomActivity.nextInt(activities.length)]))
                 .setStatus(OnlineStatus.ONLINE)
                 .build();
         jda.addEventListener(new Events(), waiter, client);
     }
 
-    private static String readConfig() throws IOException {
+    private static Infos readConfig() throws IOException {
         File config = new File(Paths.get("config.json").toUri());
+        File configTemplate = new File(Paths.get("config-template.json").toUri());
         if (!config.exists()) {
             config.createNewFile();
             Map<String, String> map = new HashMap<>();
             map.put("token", "YOUR-TOKEN-HERE");
+            map.put("prefix", "!");
             Writer writer = new FileWriter(config);
             gson.toJson(map, writer);
             writer.close();
+            Files.copy(config.toPath(), configTemplate.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         Reader reader = Files.newBufferedReader(Paths.get("config.json"));
-        Map<String, String> map = gson.fromJson(reader, Map.class);
+        Infos infos = gson.fromJson(reader, Infos.class);
         reader.close();
-        return map.get("token");
+        return infos;
     }
 }
