@@ -22,15 +22,11 @@ public class HelpCommand extends Command {
                 .setTitle("**" + event.getSelfUser().getName() + "** " + "commands :")
                 .setAuthor(event.getAuthor().getName())
                 .setColor(Color.GREEN);
-        Category lastCategory = null;
         for (Command command : event.getClient().getCommands()) {
-            if(lastCategory == null || lastCategory != command.getCategory()) {
-                lastCategory = command.getCategory();
-                builder.addBlankField(false);
-                builder.addBlankField(false);
-                builder.addField(category.getName() + " commands:", "", false);
-                builder.addBlankField(false);
-            }
+            builder.addBlankField(false);
+            builder.addBlankField(false);
+            builder.addField(category.getName() + " commands:", "", false);
+            builder.addBlankField(false);
             builder.addField( event.getClient().getPrefix() + command.getName() + command.getArguments(), command.getHelp(), false);
             builder.addBlankField(false);
             event.replyInDm(builder.build());
