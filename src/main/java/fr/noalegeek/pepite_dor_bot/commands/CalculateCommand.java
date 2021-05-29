@@ -41,7 +41,6 @@ public class CalculateCommand extends Command {
             }
         }
         fullArg = argsBuilder.toString();
-        System.out.println(fullArg);
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("js");
         try {

@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.stream.Collectors;
 
 public class HelpCommand extends Command {
@@ -31,10 +31,10 @@ public class HelpCommand extends Command {
                 !command.getHelp().isEmpty()).collect(Collectors.toList())) {
             if(command.getCategory() != null && lastCategory != command.getCategory()) {
                 lastCategory = command.getCategory();
+                builder.addBlankField(false);
                 builder.addField(lastCategory.getName() + " commands:", "", false);
             }
             builder.addField(event.getClient().getPrefix() + command.getName() + " " + command.getArguments(), command.getHelp(), false);
-            builder.addBlankField(false);
         }
         event.replyInDm(builder.build());
     }
