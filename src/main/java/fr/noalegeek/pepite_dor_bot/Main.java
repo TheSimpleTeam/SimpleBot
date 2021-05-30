@@ -24,9 +24,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Main {
 
@@ -60,6 +64,11 @@ public class Main {
         setupCommands(clientBuilder);
         client = clientBuilder.build();
         jda.addEventListener(new Events(), waiter, client);
+        try {
+            setupLogs();
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage());
+        }
     }
 
     /**
@@ -75,6 +84,19 @@ public class Main {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void setupLogs() throws IOException {
+        File logFolder = new File("logs/");
+        if (!Files.exists(logFolder.toPath())) {
+            logFolder.mkdir();
+        }
+        FileHandler fh = new FileHandler("logs/log-" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                .replaceAll(":", "-") + ".log");
+        SimpleFormatter sf = new SimpleFormatter();
+        fh.setEncoding("UTF-8");
+        fh.setFormatter(sf);
+        LOGGER.addHandler(fh);
     }
 
     private static Infos readConfig() throws IOException {

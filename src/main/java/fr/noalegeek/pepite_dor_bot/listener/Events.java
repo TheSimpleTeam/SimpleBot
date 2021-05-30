@@ -6,11 +6,14 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.*;
+
+import static fr.noalegeek.pepite_dor_bot.Main.LOGGER;
 
 public class Events extends ListenerAdapter {
 
@@ -40,6 +43,7 @@ public class Events extends ListenerAdapter {
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin.build()).queue();
         event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getInfos().defaultRoleID)))
                 .queue();
+        LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " joined " + event.getGuild().getName());
     }
 
     @Override
@@ -53,5 +57,12 @@ public class Events extends ListenerAdapter {
         embedMemberRemove.setFooter(String.valueOf(Calendar.getInstance().getTime()));
         embedMemberRemove.setColor(Color.RED);
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberRemove.build()).queue();
+        LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " left " + event.getGuild().getName());
+    }
+
+    @Override
+    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+        LOGGER.info(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " said : \n" +
+                event.getMessage().getContentRaw());
     }
 }
