@@ -15,7 +15,7 @@ public class InviteCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split(" ");
-        if(args.length != 1 && !args[0].equalsIgnoreCase("create")) {
+        if(event.getArgs().length() != 1 && !args[0].equalsIgnoreCase("create")) {
             event.replyError("**[**" + event.getAuthor().getAsMention() + "**]** Syntaxe de la commande !invite : ``!invite create``.");
             return;
         }

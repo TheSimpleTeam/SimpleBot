@@ -45,7 +45,7 @@ public class CalculateCommand extends Command {
         ScriptEngine engine = manager.getEngineByName("js");
         try {
             Object result = engine.eval(fullArg);
-            event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat est : " + result);
+            event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** Le resultat est : " + result);
         } catch (ScriptException e) {
             e.printStackTrace();
         }

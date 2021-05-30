@@ -6,7 +6,6 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import fr.noalegeek.pepite_dor_bot.listener.Events;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -50,9 +49,7 @@ public class Main {
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE,"Le token est invalide");
         }
-
         Random randomActivity = new Random();
-
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setPrefix(infos.prefix)
@@ -61,7 +58,7 @@ public class Main {
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder);
         client = clientBuilder.build();
-        jda.addEventListener(new Events(), waiter, client);
+        jda.addEventListener(waiter, client);
     }
 
     /**
