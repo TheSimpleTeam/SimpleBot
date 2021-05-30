@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot;
+package fr.noalegeek.pepite_dor_bot.config;
 
 public class Infos {
 

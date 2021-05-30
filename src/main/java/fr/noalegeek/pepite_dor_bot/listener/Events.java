@@ -4,6 +4,7 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -11,9 +12,17 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.logging.Level;
 
-import static fr.noalegeek.pepite_dor_bot.Main.LOGGER;
+import static fr.noalegeek.pepite_dor_bot.Main.*;
 
 public class Events extends ListenerAdapter {
 
@@ -30,6 +39,19 @@ public class Events extends ListenerAdapter {
     }
 
     @Override
+    public void onShutdown(@NotNull ShutdownEvent event) {
+        try {
+            Path configPath = new File("server-config.json").toPath();
+            Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+            gson.toJson(serverConfig, writer);
+            writer.close();
+            LOGGER.info("Server config updated");
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage());
+        }
+    }
+
+    @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         EmbedBuilder embedMemberJoin = new EmbedBuilder();
         embedMemberJoin.setThumbnail(event.getMember().getUser().getAvatarUrl());
@@ -41,8 +63,10 @@ public class Events extends ListenerAdapter {
         embedMemberJoin.setFooter(String.valueOf(Calendar.getInstance().getTime()));
         embedMemberJoin.setColor(Color.GREEN);
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin.build()).queue();
-        event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getInfos().defaultRoleID)))
-                .queue();
+        if(serverConfig.guildJoinRole.containsKey(event.getGuild().getId())) {
+            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(serverConfig.guildJoinRole.get(event.getGuild().getId()))))
+                    .queue();
+        }
         LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " joined " + event.getGuild().getName());
     }
 

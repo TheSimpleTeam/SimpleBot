@@ -6,6 +6,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
+import fr.noalegeek.pepite_dor_bot.config.Infos;
+import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.listener.Events;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -37,12 +40,16 @@ public class Main {
     private static JDA jda;
     private static CommandClient client;
     private static Infos infos;
+    public static ServerConfig serverConfig;
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
         try {
             infos = readConfig();
+            LOGGER.info("Bot config loaded");
+            serverConfig = setupServerConfig();
+            LOGGER.info("Servers config loaded");
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
         }
@@ -57,6 +64,8 @@ public class Main {
         Random randomActivity = new Random();
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
+                .setCoOwnerIds("363811352688721930")
+                .addCommands(new ShutdownCommand())
                 .setPrefix(infos.prefix)
                 .useHelpBuilder(false)
                 .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
@@ -116,10 +125,28 @@ public class Main {
             Files.copy(config.toPath(), configTemplate.toPath(), StandardCopyOption.REPLACE_EXISTING);
             configTemplate.setWritable(false);
         }
-        Reader reader = Files.newBufferedReader(Paths.get("config.json"), StandardCharsets.UTF_8);
+        Reader reader = Files.newBufferedReader(config.toPath(), StandardCharsets.UTF_8);
         Infos infos = gson.fromJson(reader, Infos.class);
         reader.close();
         return infos;
+    }
+
+    private static ServerConfig setupServerConfig() throws IOException {
+        File serverConfigFile = new File("server-config.json");
+        if(!serverConfigFile.exists()) {
+            serverConfigFile.createNewFile();
+            Map<String, Object> map = new LinkedHashMap<>();
+            Map<String, String> defaultGuild = new HashMap<>();
+            defaultGuild.put("846048803554852904", "846715377760731156");
+            map.put("guildJoinRole", defaultGuild);
+            Writer writer = Files.newBufferedWriter(serverConfigFile.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+            gson.toJson(map, writer);
+            writer.close();
+        }
+        Reader reader = Files.newBufferedReader(serverConfigFile.toPath(), StandardCharsets.UTF_8);
+        ServerConfig config = gson.fromJson(reader, ServerConfig.class);
+        reader.close();
+        return config;
     }
 
     public static JDA getJda() {

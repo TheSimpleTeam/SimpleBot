@@ -20,10 +20,9 @@ public class CalculateCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String regex = "\"^[-+](?:[0-9]*[.])?[0-9]+|(?<=\\(|\\/|\\*)[+-](?:[0-9]*[.])?[0-9]+|(?:[0-9]*[.])?[0-9]+|[-+*\\/()]\"g";
-        String arg = event.getArgs().replaceAll(" ", "");
-        arg = replaceAll(regex, arg);
-        System.out.println("Calcul : " + arg);
-        Expression e = new Expression(arg);
+        String args = event.getArgs().replaceAll(" ", "");
+        args = replaceAll(regex, args);
+        Expression e = new Expression(args);
         event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat est : " + e.calculate());
     }
 

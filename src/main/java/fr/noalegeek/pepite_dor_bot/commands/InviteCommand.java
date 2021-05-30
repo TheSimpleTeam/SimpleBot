@@ -19,7 +19,7 @@ public class InviteCommand extends Command {
             event.replyError("**[**" + event.getAuthor().getAsMention() + "**]** Syntaxe de la commande !invite : ``!invite create``.");
             return;
         }
-        event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** Voici ton lien d'invitation du serveur " + event.getGuild().getName() + ", n'hésite pas à faire venir plein de personnes ! \n" +
-                event.getTextChannel().createInvite().complete().getUrl());
+        event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** Voici ton lien d'invitation du serveur " + event.getGuild().getName() +
+                ", n'hésite pas à faire venir plein de personnes ! \n" + event.getTextChannel().createInvite().complete().getUrl());
     }
 }
