@@ -37,14 +37,4 @@ public class CalculateCommand extends Command {
         }
         return builder.toString();
     }
-
-    public boolean isCharDigit(char character) {
-        if(Arrays.asList(operators).contains(String.valueOf(character)) || character == '.') return true;
-        try{
-            Double.valueOf(character);
-        } catch(NumberFormatException ex) {
-            return false;
-        }
-        return true;
-    }
 }
