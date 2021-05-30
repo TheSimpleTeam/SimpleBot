@@ -62,6 +62,7 @@ public class Events extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+        if(event.getAuthor() == event.getJDA().getSelfUser()) return;
         LOGGER.info(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " said : \n" +
                 event.getMessage().getContentRaw());
     }
