@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class Calculate extends ListenerAdapter {
+
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         String[] args = event.getMessage().getContentRaw().split(" ");
@@ -26,7 +27,7 @@ public class Calculate extends ListenerAdapter {
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Addition en cours...").queue();
                                     double addition = number1 + number2;
                                     event.getChannel().sendMessage("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat de l'addition est "+addition+".").queue();
-                                }catch (NumberFormatException numberFormatException){
+                                }catch (NumberFormatException ex){
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat est trop grand.").queue();
                                 }
                                 break;
@@ -35,7 +36,7 @@ public class Calculate extends ListenerAdapter {
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Soustraction en cours...").queue();
                                     double soustraction = number1 - number2;
                                     event.getChannel().sendMessage("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat de la soustraction est "+soustraction+".").queue();
-                                }catch (NumberFormatException numberFormatException){
+                                }catch (NumberFormatException ex){
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat est trop grand.").queue();
                                 }
                                 break;
@@ -44,7 +45,7 @@ public class Calculate extends ListenerAdapter {
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Multiplication en cours...").queue();
                                     double multiplication = number1 * number2;
                                     event.getChannel().sendMessage("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat de la multiplication est "+multiplication+".").queue();
-                                }catch (NumberFormatException numberFormatException){
+                                }catch (NumberFormatException ex){
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat est trop grand.").queue();
                                 }
                                 break;
@@ -55,15 +56,15 @@ public class Calculate extends ListenerAdapter {
                                     try {
                                          division = number1 / number2;
                                         event.getChannel().sendMessage("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat de la division est "+division+".").queue();
-                                    } catch (ArithmeticException arithmeticException){
+                                    } catch (ArithmeticException ex){
                                         event.getChannel().sendMessage("**[**" + event.getAuthor().getAsMention() + "**]** Il est impossible de diviser par 0.").queue();
                                     }
-                                }catch (NumberFormatException numberFormatException){
+                                }catch (NumberFormatException ex){
                                     event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat est trop grand.").queue();
                                 }
                                 break;
                         }
-                    }catch (NumberFormatException numberFormatException) {
+                    }catch (NumberFormatException ex) {
                         event.getMessage().reply("**[**" + event.getAuthor().getAsMention() + "**]** Un argument invalide a été détecté ou un des nombres est trop grand.").queue();
                     }
                 } else {

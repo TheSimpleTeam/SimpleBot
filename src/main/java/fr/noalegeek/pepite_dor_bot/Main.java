@@ -29,11 +29,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
+
     private static JDA jda;
     private static CommandClient client;
     private static Infos infos;
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
         try {
             infos = readConfig();
@@ -86,6 +88,7 @@ public class Main {
             map.put("token", "YOUR-TOKEN-HERE");
             map.put("prefix", "!");
             map.put("defaultRoleID", "YOUR-ROLE-ID");
+            map.put("timeBetweenStatusChange", 15);
             map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);

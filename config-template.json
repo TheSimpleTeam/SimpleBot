@@ -2,6 +2,7 @@
   "token": "YOUR-TOKEN-HERE",
   "prefix": "!",
   "defaultRoleID": "YOUR-ROLE-ID",
+  "timeBetweenStatusChange": 15,
   "activities": [
     "!help",
     "Se créer de lui-meme..."
