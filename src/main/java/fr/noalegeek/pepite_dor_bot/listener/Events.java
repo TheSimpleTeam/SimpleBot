@@ -20,7 +20,6 @@ public class Events extends ListenerAdapter {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("Changed");
                 event.getJDA().getPresence().setActivity(Activity.playing(Main.getInfos().activities[
                         new Random().nextInt(Main.getInfos().activities.length)]));
             }

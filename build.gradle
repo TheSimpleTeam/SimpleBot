@@ -1,9 +1,13 @@
 plugins {
     id 'java'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
+
+mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
 
 sourceCompatibility = targetCompatibility = 1.8
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
@@ -21,6 +25,7 @@ repositories {
 }
 
 dependencies {
+    implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.9.12'
     implementation("net.dv8tion:JDA:4.2.1_253")
     implementation 'com.google.code.gson:gson:2.8.7'
