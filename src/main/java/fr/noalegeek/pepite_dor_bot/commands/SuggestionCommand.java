@@ -31,5 +31,4 @@ public class SuggestionCommand extends Command {
         suggestionChannel.sendMessage(builder).queue();
         event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** La suggestion à bien été envoyée.");
     }
-
 }
