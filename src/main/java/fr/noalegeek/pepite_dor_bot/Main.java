@@ -46,7 +46,7 @@ public class Main {
             String arg = "";
             try {
                 arg = args[0];
-            }catch (NullPointerException ignore) {}
+            }catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
