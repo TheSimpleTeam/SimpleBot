@@ -20,20 +20,19 @@ public class UserInfoCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        final String[] args = event.getArgs().split(" ");
-
         Member member = event.getMember();
-        if (MessageHelper.getMember(args[0], event.getGuild()) != null) {
-            member = MessageHelper.getMember(args[0], event.getGuild());
+
+        if(!event.getMessage().getMentionedMembers().isEmpty() && event.getMessage().getMentionedMembers().get(0) != null) {
+            member = event.getMessage().getMentionedMembers().get(0);
         }
 
         MessageEmbed embed = new EmbedBuilder()
                 .setTimestamp(OffsetDateTime.now())
                 .setColor(Color.GREEN)
-                .addField("Nom d'utilistateur", MessageHelper.getTag(member.getUser()), false)
-                .addField("Identifiant", member.getId(), false)
-                .addField("Date de création du compte", MessageHelper.formatDate(member.getTimeCreated()), false)
-                .addField("Cet utilisateur à rejoint le", MessageHelper.formatDate(member.getTimeJoined()), false)
+                .addField("Nom d'utilistateur", MessageHelper.getTag(member.getUser()), true)
+                .addField("Identifiant", member.getId(), true)
+                .addField("Date de création du compte", MessageHelper.formatDate(member.getTimeCreated()), true)
+                .addField("Cet utilisateur à rejoint le", MessageHelper.formatDate(member.getTimeJoined()), true)
                 .setAuthor(MessageHelper.getTag(member.getUser()), null, member.getUser().getEffectiveAvatarUrl())
                 .build();
         event.reply(embed);
