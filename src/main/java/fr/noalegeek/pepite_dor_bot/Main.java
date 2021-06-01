@@ -43,7 +43,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            infos = readConfig(args);
+            infos = readConfig(args[0] == null ? "" : args[0]);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
             LOGGER.info("Servers config loaded");
@@ -105,13 +105,13 @@ public class Main {
         LOGGER.addHandler(fh);
     }
 
-    private static Infos readConfig(String[] args) throws IOException {
+    private static Infos readConfig(String arg) throws IOException {
         File config = new File(Paths.get("config.json").toUri());
         File configTemplate = new File(Paths.get("config-template.json").toUri());
         if (!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            if(args != null && args[0] != null && args[0].equalsIgnoreCase("--nosetup")) {
+            if(arg != null && !arg.isEmpty() && arg.equalsIgnoreCase("--nosetup")) {
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "!");
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
