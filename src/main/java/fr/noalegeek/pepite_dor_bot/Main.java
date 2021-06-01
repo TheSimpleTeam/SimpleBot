@@ -44,9 +44,9 @@ public class Main {
     public static void main(String[] args) {
         try {
             String arg = "";
-            if(args != null && args[0] != null) {
+            try {
                 arg = args[0];
-            }
+            }catch (NullPointerException ignore) {}
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
