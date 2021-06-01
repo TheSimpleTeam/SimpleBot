@@ -25,5 +25,5 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag pepite-dor-bot:$(date +%s)
+    - name: Build Dockerfile with Gradle
+      run: ./gradlew docker
