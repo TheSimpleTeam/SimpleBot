@@ -1,11 +1,10 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.johnrengelman.shadow" version "6.1.0"
-
+    id 'com.palantir.docker' version '0.26.0'
 }
 
-group 'org.example'
+group 'fr.noalegeek'
 version '1.0-SNAPSHOT'
 
 mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
@@ -37,4 +36,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+docker {
+    name "${project.name}"
+    dockerfile file('Dockerfile')
+    copySpec.from(jar).rename(".*", "bot.jar")
+    buildArgs(['JAR_FILE': "bot.jar"])
 }

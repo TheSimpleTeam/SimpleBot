@@ -1,6 +1,7 @@
 /.idea/
 /.gradle/
 /build/
-config.json
 /logs/
+config.json
 server-config.json
+gradle.properties
