@@ -18,10 +18,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -121,19 +118,23 @@ public class Main {
                 map.put("timeBetweenStatusChange", 15);
                 map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
             } else {
+                Console console = System.console();
+                if (console == null) {
+                    System.out.println("No console: non-interactive mode!");
+                    System.exit(0);
+                }
                 System.out.println("I see that it's the first time that you install the bot.");
                 System.out.println("The configuration will begin");
                 System.out.println("What is your bot token ?");
-                Scanner sc = new Scanner(System.in);
-                map.put("token", sc.nextLine());
+                map.put("token", console.readLine());
                 System.out.println("What will be the bot's prefix ?");
-                map.put("prefix", sc.nextLine().isEmpty() ? "!" : sc.nextLine());
+                map.put("prefix", console.readLine().isEmpty() ? "!" : console.readLine());
                 //flemme
                 map.put("defaultRoleID", "846715377760731156");
                 map.put("timeBetweenStatusChange", 15);
                 System.out.println("What are gonna be the bot's activities? \n [Separate them with ;]. For example: \n" +
                         "!help;ban everyone;check my mentions");
-                map.put("activities", sc.nextLine().isEmpty() ? new String[]{map.get("prefix") + "help"} : sc.nextLine().split(";"));
+                map.put("activities", console.readLine().isEmpty() ? new String[]{map.get("prefix") + "help"} : console.readLine().split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");
             }
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
