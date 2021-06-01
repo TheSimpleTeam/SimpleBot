@@ -114,7 +114,7 @@ public class Main {
         if (!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            if(args[0].equalsIgnoreCase("--nosetup")) {
+            if(args[0] != null && args[0].equalsIgnoreCase("--nosetup")) {
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "!");
                 map.put("defaultRoleID", "YOUR-ROLE-ID");

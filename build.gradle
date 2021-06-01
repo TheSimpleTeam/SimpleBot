@@ -1,12 +1,14 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.palantir.docker' version '0.26.0'
     id "com.github.johnrengelman.shadow" version "6.1.0"
+    id 'com.palantir.docker' version '0.25.0'
+    id 'com.palantir.docker-run' version '0.25.0'
 }
 
+String appname = "pepite_dor_bot"
 group 'fr.noalegeek'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
 
@@ -35,21 +37,32 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
-jar {
-    manifest {
-        attributes(
-                'Main-Class': mainClassName
-        )
-    }
-}
-
 test {
     useJUnitPlatform()
 }
 
+String imageName = "minemobs/$appname:$version"
 docker {
-    name "${project.name}"
-    dockerfile file('Dockerfile')
-    copySpec.from(jar).rename(".*", "bot.jar")
-    buildArgs(['JAR_FILE': "bot.jar"])
+    name imageName
+    files "build/libs/${appname}-${version}-all.jar"
+    buildArgs([JAR_FILE: "${appname}-${version}-all.jar"])
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': project.version,
+                'Main-Class': mainClassName
+    }
+    setArchiveName(appname + "-" + project.version + '-all')
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+build{}.finalizedBy(fatJar)
+
+dockerRun {
+    name project.name
+    image imageName
+    clean true
 }
