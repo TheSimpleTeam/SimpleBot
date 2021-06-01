@@ -15,6 +15,7 @@ public class CalculateCommand extends Command {
         this.name = "Calculate";
         this.aliases = new String[]{"c", "calc"};
         this.arguments = "`+` ou `-` ou `*` ou `/`";
+        this.cooldown = 5;
     }
 
     @Override
