@@ -23,11 +23,11 @@ public class GuildInfoCommand extends Command {
         Guild guild = event.getGuild();
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(MessageHelper.getTag(event.getMember().getUser()), null, event.getMember().getUser().getEffectiveAvatarUrl())
-                .setImage(guild.getIconUrl())
+                .setThumbnail(guild.getIconUrl())
                 .addField("Nom du serveur", guild.getName(), false)
                 .addField("Niveau de nitro", String.valueOf(guild.getBoostTier().getKey()), false)
                 .addField("Créateur du serveur", guild.getOwner().getNickname() == null ? guild.getOwner().getUser().getName() : guild.getOwner().getNickname(), false)
-                .addField("", String.valueOf(guild.getMemberCount()), false)
+                .addField("Membres sur le discord", String.valueOf(guild.getMemberCount()), false)
                 .setColor(Color.GREEN)
                 .setTimestamp(OffsetDateTime.now())
                 .build();
