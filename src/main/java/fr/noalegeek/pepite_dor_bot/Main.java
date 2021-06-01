@@ -43,7 +43,11 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            infos = readConfig(args[0] == null ? "" : args[0]);
+            String arg = "";
+            if(args != null && args[0] != null) {
+                arg = args[0];
+            }
+            infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
             LOGGER.info("Servers config loaded");
