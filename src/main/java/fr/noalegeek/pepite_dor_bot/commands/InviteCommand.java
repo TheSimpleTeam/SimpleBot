@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 
 public class InviteCommand extends Command {
 
@@ -16,7 +17,7 @@ public class InviteCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split(" ");
         if(event.getArgs().length() != 1 && !args[0].equalsIgnoreCase("create")) {
-            event.replyError("**[**" + event.getAuthor().getAsMention() + "**]** Syntaxe de la commande !invite : ``!invite create``.");
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Syntaxe de la commande !invite : ``!invite create``.");
             return;
         }
         event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** Voici ton lien d'invitation du serveur " + event.getGuild().getName() +

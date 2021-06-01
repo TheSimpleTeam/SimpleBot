@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.helpers;
+package fr.noalegeek.pepite_dor_bot.utils.helpers;
 
 import net.dv8tion.jda.api.entities.User;
 
@@ -15,5 +15,9 @@ public class MessageHelper {
         int month = date.getMonthValue();
         int year = date.getYear();
         return day + "-" + month + "-" + year;
+    }
+
+    public static String formattedMention(User user) {
+        return String.format("**[**%s**]** ", user.getAsMention());
     }
 }

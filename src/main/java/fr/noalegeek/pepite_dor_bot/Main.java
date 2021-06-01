@@ -46,7 +46,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            infos = readConfig();
+            infos = readConfig(args);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
             LOGGER.info("Servers config loaded");
@@ -108,17 +108,34 @@ public class Main {
         LOGGER.addHandler(fh);
     }
 
-    private static Infos readConfig() throws IOException {
+    private static Infos readConfig(String[] args) throws IOException {
         File config = new File(Paths.get("config.json").toUri());
         File configTemplate = new File(Paths.get("config-template.json").toUri());
         if (!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("token", "YOUR-TOKEN-HERE");
-            map.put("prefix", "!");
-            map.put("defaultRoleID", "YOUR-ROLE-ID");
-            map.put("timeBetweenStatusChange", 15);
-            map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
+            if(args[0].equalsIgnoreCase("--nosetup")) {
+                map.put("token", "YOUR-TOKEN-HERE");
+                map.put("prefix", "!");
+                map.put("defaultRoleID", "YOUR-ROLE-ID");
+                map.put("timeBetweenStatusChange", 15);
+                map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
+            } else {
+                System.out.println("I see that it's the first time that you install the bot.");
+                System.out.println("The configuration will begin");
+                System.out.println("What is your bot token ?");
+                Scanner sc = new Scanner(System.in);
+                map.put("token", sc.nextLine());
+                System.out.println("What will be the bot's prefix ?");
+                map.put("prefix", sc.nextLine().isEmpty() ? "!" : sc.nextLine());
+                //flemme
+                map.put("defaultRoleID", "846715377760731156");
+                map.put("timeBetweenStatusChange", 15);
+                System.out.println("What are gonna be the bot's activities? \n [Separate them with ;]. For example: \n" +
+                        "!help;ban everyone;check my mentions");
+                map.put("activities", sc.nextLine().isEmpty() ? new String[]{map.get("prefix") + "help"} : sc.nextLine().split(";"));
+                System.out.println("The configuration is finished. Your bot will be ready to start !");
+            }
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
             writer.close();

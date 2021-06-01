@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import org.mariuszgromada.math.mxparser.Expression;
 
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class CalculateCommand extends Command {
         String args = event.getArgs().replaceAll(" ", "");
         args = replaceAll(regex, args);
         Expression e = new Expression(args);
-        event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** Le résultat est : " + e.calculate());
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le résultat est : " + e.calculate());
     }
 
     public String replaceAll(String regex, String text) {
