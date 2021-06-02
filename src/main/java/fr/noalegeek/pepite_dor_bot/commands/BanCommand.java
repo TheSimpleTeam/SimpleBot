@@ -22,8 +22,8 @@ public class BanCommand extends Command {
             event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous n'avez pas la permission de faire cette commande.");
             return;
         }
-        if (event.getArgs().length() == 1) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Syntaxe de la commande !ban : ``!ban <user ou userID> <temps en jours> [raison]``.\nMettre une ");
+        if (args.length == 1) {
+            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Syntaxe de la commande !ban : ``!ban <user ou userID> <temps en jours> [raison]``.\nSi le temps dépasse les 7 jours, \nMettre une raison n'est pas obligatoire.");
             return;
         }
         try{
