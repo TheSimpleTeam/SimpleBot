@@ -45,6 +45,8 @@ public class BanCommand extends Command {
         }
         try{
             int banTime = Integer.parseInt(args[2]);
+            event.replySuccess("**[**" + event.getAuthor().getAsMention() + "**]** "+event.getMessage().getMentionedMembers().get(0)+" a été bien banni pendant "+banTime+" pour la raison "+args[2]+".");
+            event.getMessage().getMentionedMembers().get(0).ban(banTime,args[3]).queue();
         } catch (NumberFormatException numberFormatException){
             event.replyError("**[**" + event.getAuthor().getAsMention() + "**]** Le temps spécifié n'est pas un nombre.");
         }
