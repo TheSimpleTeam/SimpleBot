@@ -42,9 +42,16 @@ public class MessageHelper {
         return builder.toString();
     }
 
+
+    /**
+     * {@link MessageHelper#formatEnum(Enum)}
+     * @param _enum
+     * @return
+     */
+    
     public static String formatEnum(Enum<?> _enum) {
         StringBuilder builder = new StringBuilder();
-        char[] nameArray = _enum.name().toCharArray();
+        char[] nameArray = _enum.name().toLowerCase(Locale.ROOT).toCharArray();
         for (char c : nameArray) {
             if(c == nameArray[0]) {
                 builder.append(String.valueOf(c).toUpperCase(Locale.ROOT));
