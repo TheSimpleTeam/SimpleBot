@@ -110,8 +110,8 @@ public class Main {
     }
 
     private static Infos readConfig(String arg) throws IOException {
-        File config = new File(Paths.get("config.json").toUri());
-        File configTemplate = new File(Paths.get("config-template.json").toUri());
+        File config = new File(Paths.get("config/config.json").toUri());
+        File configTemplate = new File(Paths.get("config/config-template.json").toUri());
         if (!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
@@ -154,7 +154,7 @@ public class Main {
     }
 
     private static ServerConfig setupServerConfig() throws IOException {
-        File serverConfigFile = new File("server-config.json");
+        File serverConfigFile = new File("config/server-config.json");
         if(!serverConfigFile.exists()) {
             serverConfigFile.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
