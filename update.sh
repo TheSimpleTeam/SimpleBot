@@ -1,2 +1,2 @@
 git pull origin master
-./gradlew shadowJar
+./gradlew clean shadowJar
