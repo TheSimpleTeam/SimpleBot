@@ -18,8 +18,8 @@ public class UnbanCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if (event.getAuthor().isBot()) return;
-        if (event.getArgs().length() == 1) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Syntaxe de la commande !ban : ``!ban <user ou userID> <temps en jours> [raison]``.");
+        if (event.getArgs().split(" ").length == 1) {
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
             return;
         }
         User target = event.getMessage().getMentionedUsers().get(0);
@@ -27,8 +27,7 @@ public class UnbanCommand extends Command {
             event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifié un membre existant.");
             return;
         }
-        event.getGuild().unban(target).queue(unused ->
-                event.replySuccess("L'utilisateur " + target.getName() + " à bien été unban."));
+        event.getGuild().unban(target).queue(unused -> event.replySuccess("L'utilisateur " + target.getName() + " à bien été débanni."));
 
     }
 }
