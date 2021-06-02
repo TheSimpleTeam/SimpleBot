@@ -3,5 +3,5 @@
 /build/
 /logs/
 config.json
-server-config.json
+config/server-config.json
 gradle.properties
