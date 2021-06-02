@@ -17,7 +17,6 @@ public class UnbanCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split(" ");
         if (event.getAuthor().isBot()) return;
         if (event.getArgs().length() == 1) {
             event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Syntaxe de la commande !ban : ``!ban <user ou userID> <temps en jours> [raison]``.");
