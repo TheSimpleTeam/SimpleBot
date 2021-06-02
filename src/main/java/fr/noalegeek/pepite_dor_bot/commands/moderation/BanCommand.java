@@ -28,8 +28,8 @@ public class BanCommand extends Command {
             return;
         }
 
-        if (event.getArgs().length() == 1) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Syntaxe de la commande !ban : ``!ban <user ou userID> <temps en jours> [raison]``.");
+        if (args.length == 1) {
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nLa limite du temps à spécifier est à 7 jours.\nSi le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours\nMettre une raison n'est pas obligatoire.");
             return;
         }
 
@@ -51,6 +51,12 @@ public class BanCommand extends Command {
                 }
             }
             try{
+                if(args[1] == null || args[1].isEmpty()){
+                    args[1] = "7";
+                }
+                if(args[2] == null || args[2].isEmpty()){
+                    args[2] = "aucune raison";
+                }
                 int banTime = Integer.parseInt(args[1]);
                 if(banTime > 7){
                     banTime = 7;
