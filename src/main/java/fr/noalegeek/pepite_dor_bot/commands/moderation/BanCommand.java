@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.commands;
+package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -7,25 +7,32 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
+/**
+ * @author NoaLeGeek
+ */
+
 public class BanCommand extends Command {
     public BanCommand() {
         this.name = "ban";
         this.aliases = new String[]{"b"};
         this.guildOnly = true;
-        this.arguments = "<user ou userID> <temps> <raison>";
+        this.arguments = "<mention> <temps> <raison>";
     }
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split(" ");
         if (event.getAuthor().isBot()) return;
+
         if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
             event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous n'avez pas la permission de faire cette commande.");
             return;
         }
-        if (args.length == 1) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Syntaxe de la commande !ban : ``!ban <user ou userID> <temps en jours> [raison]``.\nSi le temps dépasse les 7 jours, \nMettre une raison n'est pas obligatoire.");
+
+        if (event.getArgs().length() == 1) {
+            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Syntaxe de la commande !ban : ``!ban <user ou userID> <temps en jours> [raison]``.");
             return;
         }
+
         try{
             User target = event.getMessage().getMentionedUsers().get(0);
             if (target == null) {
@@ -51,10 +58,10 @@ public class BanCommand extends Command {
                 }
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+target.getName()+" a été bien banni pendant "+banTime+" pour la raison "+args[2]+".");
                 event.getGuild().ban(target, banTime).queue();
-            } catch (NumberFormatException numberFormatException){
+            } catch (NumberFormatException ex){
                 event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Le temps spécifié n'est pas un nombre.");
             }
-        }catch (IndexOutOfBoundsException indexOutOfBoundsException){
+        }catch (IndexOutOfBoundsException ex){
             event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifier une personne existante.");
         }
     }
