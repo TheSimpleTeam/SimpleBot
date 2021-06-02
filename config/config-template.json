@@ -2,9 +2,12 @@
   "token": "YOUR-TOKEN-HERE",
   "prefix": "!",
   "defaultRoleID": "YOUR-ROLE-ID",
-  "timeBetweenStatusChange": 15,
+  "timeBetweenStatusChange": 60,
   "activities": [
-    "!help",
-    "Se créer de lui-meme..."
+    "Redémarrer pour des nouvelles fonctionnalités",
+    "Débattre sur le fait que Minecraft c'est le meilleur jeu",
+    "Prier minemobs",
+    "Préparer son exposé d'allemand",
+    "Être un imposteur"
   ]
 }
