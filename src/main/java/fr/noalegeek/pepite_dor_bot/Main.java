@@ -7,6 +7,8 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
+import fr.noalegeek.pepite_dor_bot.commands.slashcommand.SlashCommand;
+import fr.noalegeek.pepite_dor_bot.commands.slashcommand.SlashCommandListener;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.listener.Events;
@@ -15,6 +17,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
@@ -62,6 +65,7 @@ public class Main {
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE,"Le token est invalide");
         }
+        CommandListUpdateAction commands = jda.updateCommands();
         Random randomActivity = new Random();
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
@@ -72,8 +76,10 @@ public class Main {
                 .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder);
+        setupSlashCommands(commands);
+
         client = clientBuilder.build();
-        jda.addEventListener(new Events(), waiter, client);
+        jda.addEventListener(new Events(), new SlashCommandListener(), waiter, client);
         try {
             setupLogs();
         } catch (IOException ex) {
@@ -94,6 +100,23 @@ public class Main {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void setupSlashCommands(CommandListUpdateAction commands) {
+        Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands.slashcommand");
+        Set<Class<? extends SlashCommand>> slashCommands = reflections.getSubTypesOf(SlashCommand.class);
+        for (Class<? extends SlashCommand> command : slashCommands) {
+            try {
+                SlashCommand slashCommand = command.newInstance();
+                System.out.println("Added " + slashCommand.getData().getName());
+                commands.addCommands(slashCommand.getData());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                LOGGER.info(e.getMessage());
+            }
+        }
+        commands.queue();
     }
 
     private static void setupLogs() throws IOException {
