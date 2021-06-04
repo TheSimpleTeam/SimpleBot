@@ -1,6 +1,5 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
@@ -9,7 +8,7 @@ import org.mariuszgromada.math.mxparser.Expression;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class CalculateCommand extends Command {
+public class CalculateCommand extends BotCommand {
 
     private final String[] operators = {"+", "-", "/", "*"};
 
