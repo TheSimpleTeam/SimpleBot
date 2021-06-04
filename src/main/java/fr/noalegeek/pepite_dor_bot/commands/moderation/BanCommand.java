@@ -1,7 +1,7 @@
 package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.commands.BotCommand;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.User;
  * @author NoaLeGeek
  */
 
-public class BanCommand extends Command {
+public class BanCommand extends BotCommand {
     public BanCommand() {
         this.name = "ban";
         this.aliases = new String[]{"b"};

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import java.awt.*;
 import java.util.stream.Collectors;
 
-public class HelpCommand extends Command {
+public class HelpCommand extends BotCommand {
 
     /**
      * Experimental command

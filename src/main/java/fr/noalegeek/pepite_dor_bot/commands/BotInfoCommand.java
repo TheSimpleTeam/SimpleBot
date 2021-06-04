@@ -1,18 +1,14 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.time.OffsetDateTime;
 
-public class BotInfoCommand extends Command {
+public class BotInfoCommand extends BotCommand {
     public BotInfoCommand() {
         this.name = "botinfo";
         this.aliases = new String[]{"bi"};

@@ -1,10 +1,9 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 
-public class InviteCommand extends Command {
+public class InviteCommand extends BotCommand {
 
     public InviteCommand() {
         this.name = "invite";
