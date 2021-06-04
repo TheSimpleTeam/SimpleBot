@@ -18,6 +18,7 @@ public class UserInfoCommand extends BotCommand {
         this.aliases = new String[]{"useri", "ui","uinfo"};
         this.arguments = "`<mention de l'utilisateur>`";
         this.guildOnly = true;
+        this.help = "Donne des informations sur l'auteur";
     }
 
     @Override
@@ -33,7 +34,7 @@ public class UserInfoCommand extends BotCommand {
             user = event.getMessage().getMentionedUsers().get(0);
         }
 
-        MessageEmbed embed = new EmbedBuilder()
+        MessageEmbed embedUserInfo = new EmbedBuilder()
                 .setFooter(":information_source: "+OffsetDateTime.now())
                 .setColor(Color.BLUE)
                 .addField("Nom d'utilistateur", member.getNickname() == null ? member.getUser().getName() : member.getNickname(), false)
@@ -43,7 +44,7 @@ public class UserInfoCommand extends BotCommand {
                 .addField("Joue à", getUserActivityName(member), false)
                 .setAuthor(MessageHelper.getTag(user), null, user.getEffectiveAvatarUrl())
                 .build();
-        event.reply(embed);
+        event.reply(embedUserInfo);
     }
 
     private String getUserActivityName(Member member) {
