@@ -120,6 +120,7 @@ public class Main {
                 map.put("prefix", "!");
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
                 map.put("timeBetweenStatusChange", 15);
+                map.put("autoSaveDelay", 15);
                 map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
             } else {
                 Console console = System.console();
@@ -136,6 +137,7 @@ public class Main {
                 //flemme
                 map.put("defaultRoleID", "846715377760731156");
                 map.put("timeBetweenStatusChange", 15);
+                map.put("autoSaveDelay", 15);
                 System.out.println("What are gonna be the bot's activities? \n [Separate them with ;]. For example: \n" +
                         "!help;ban everyone;check my mentions");
                 map.put("activities", console.readLine().isEmpty() ? new String[]{map.get("prefix") + "help"} : console.readLine().split(";"));

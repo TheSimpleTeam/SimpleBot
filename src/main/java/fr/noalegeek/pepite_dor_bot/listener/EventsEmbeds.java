@@ -1,6 +1,5 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
-import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -20,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import static fr.noalegeek.pepite_dor_bot.Main.*;
@@ -28,27 +28,41 @@ public class EventsEmbeds extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                event.getJDA().getPresence().setActivity(Activity.playing(Main.getInfos().activities[
-                        new Random().nextInt(Main.getInfos().activities.length)]));
+                event.getJDA().getPresence().setActivity(Activity.playing(getInfos().activities[new Random().nextInt(getInfos().activities.length)]));
             }
-        }, 0, Main.getInfos().timeBetweenStatusChange * 1000);
+        }, 0, getInfos().timeBetweenStatusChange * 1000);
+
+        Timer autoSave = new Timer();
+        autoSave.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    saveConfigs();
+                } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, ex.getMessage());
+                }
+            }
+        }, TimeUnit.SECONDS.toMinutes(getInfos().autoSaveDelay), TimeUnit.SECONDS.toMinutes(getInfos().autoSaveDelay));
     }
 
     @Override
     public void onShutdown(@NotNull ShutdownEvent event) {
         try {
-            Path configPath = new File("server-config.json").toPath();
-            Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
-            gson.toJson(serverConfig, writer);
-            writer.close();
-            LOGGER.info("Server config updated");
+            saveConfigs();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage());
         }
+    }
+
+    public void saveConfigs() throws IOException {
+        Path configPath = new File("server-config.json").toPath();
+        Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+        gson.toJson(serverConfig, writer);
+        writer.close();
+        LOGGER.info("Server config updated");
     }
 
     @Override
