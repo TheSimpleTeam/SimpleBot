@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import static fr.noalegeek.pepite_dor_bot.Main.*;
@@ -45,7 +44,7 @@ public class EventsEmbeds extends ListenerAdapter {
                     LOGGER.log(Level.SEVERE, ex.getMessage());
                 }
             }
-        }, TimeUnit.SECONDS.toMinutes(getInfos().autoSaveDelay), TimeUnit.SECONDS.toMinutes(getInfos().autoSaveDelay));
+        }, 120_000, getInfos().autoSaveDelay * 1000 * 60);
     }
 
     @Override

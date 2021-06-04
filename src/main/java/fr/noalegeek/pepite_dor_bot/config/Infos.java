@@ -6,7 +6,7 @@ public class Infos {
     public final String[] activities;
     public final long timeBetweenStatusChange, autoSaveDelay;
 
-    public Infos(String token, String prefix, String defaultRoleID, String[] activities, int timeBetweenStatusChange, int autoSaveDelay) {
+    public Infos(String token, String prefix, String defaultRoleID, String[] activities, int timeBetweenStatusChange, long autoSaveDelay) {
         this.token = token;
         this.prefix = prefix;
         this.defaultRoleID = defaultRoleID;
