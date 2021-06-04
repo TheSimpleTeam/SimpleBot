@@ -3,7 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-public abstract class OverrideFunctions extends Command {
+public abstract class BotCommand extends Command {
     @Override
     public String getCooldownError(CommandEvent event, int remaining)
     {
