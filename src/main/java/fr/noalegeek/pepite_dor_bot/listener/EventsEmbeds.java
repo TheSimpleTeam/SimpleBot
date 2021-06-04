@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
+import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -61,7 +63,9 @@ public class EventsEmbeds extends ListenerAdapter {
     }
 
     public void saveConfigs() throws IOException {
-        Path configPath = new File("server-config.json").toPath();
+        Path configPath = new File("config/server-config.json").toPath();
+        Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
+        if(gson.fromJson(reader, ServerConfig.class) == serverConfig) return;
         Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
         gson.toJson(serverConfig, writer);
         writer.close();
