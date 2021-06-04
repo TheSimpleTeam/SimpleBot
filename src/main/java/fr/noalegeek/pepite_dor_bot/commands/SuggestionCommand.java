@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 
 public class SuggestionCommand extends BotCommand {
