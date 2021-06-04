@@ -15,7 +15,7 @@ public class SayCommand extends Command {
     public SayCommand() {
         this.name = "say";
         this.cooldown = 5;
-        this.arguments = "<text>";
+        this.arguments = "`<texte>`";
         this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
     }
 

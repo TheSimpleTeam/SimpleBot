@@ -16,7 +16,7 @@ public class BanCommand extends Command {
         this.name = "ban";
         this.aliases = new String[]{"b"};
         this.guildOnly = true;
-        this.arguments = "<mention> <temps> <raison>";
+        this.arguments = "`<mention> <temps> <raison>`";
     }
     @Override
     protected void execute(CommandEvent event) {
@@ -29,7 +29,7 @@ public class BanCommand extends Command {
         }
 
         if (args.length == 1) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nLa limite du temps à spécifier est à 7 jours.\nSi le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours\nMettre une raison n'est pas obligatoire.");
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nLa limite du temps à spécifier est à 7 jours.\nSi le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours.\nMettre une raison n'est pas obligatoire.");
             return;
         }
 

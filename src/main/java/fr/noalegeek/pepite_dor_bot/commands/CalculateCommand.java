@@ -16,7 +16,7 @@ public class CalculateCommand extends Command {
     public CalculateCommand() {
         this.name = "Calculate";
         this.aliases = new String[]{"c", "calc"};
-        this.arguments = "`+` ou `-` ou `*` ou `/`";
+        this.arguments = "`<+ ou - ou * ou />`";
         this.cooldown = 5;
     }
 

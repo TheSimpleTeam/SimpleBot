@@ -14,7 +14,7 @@ public class GuildInfoCommand extends Command {
 
     public GuildInfoCommand() {
         this.name = "guildinfo";
-        this.aliases = new String[]{"guild", "gi"};
+        this.aliases = new String[]{"guildi", "gi","ginfo"};
         this.guildOnly = true;
     }
 

@@ -15,9 +15,9 @@ import java.time.OffsetDateTime;
 public class UserInfoCommand extends Command {
 
     public UserInfoCommand() {
-        this.name = "user";
-        this.aliases = new String[]{"userinfo", "ui"};
-        this.arguments = "[@User]";
+        this.name = "userinfo";
+        this.aliases = new String[]{"useri", "ui","uinfo"};
+        this.arguments = "`<mention de l'utilisateur>`";
         this.guildOnly = true;
     }
 

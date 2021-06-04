@@ -10,7 +10,7 @@ public class InviteCommand extends Command {
         this.name = "invite";
         this.aliases = new String[]{"inv", "i"};
         this.guildOnly = true;
-        this.arguments = "<create>";
+        this.arguments = "`<create>`";
     }
 
     @Override

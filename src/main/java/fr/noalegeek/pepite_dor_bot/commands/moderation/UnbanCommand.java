@@ -10,7 +10,8 @@ public class UnbanCommand extends Command {
 
     public UnbanCommand() {
         this.name = "unban";
-        this.arguments = "<mention>";
+        this.arguments = "`<mention>`";
+        this.aliases = new String[]{"ub"};
         this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
         this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
     }
@@ -28,6 +29,5 @@ public class UnbanCommand extends Command {
             return;
         }
         event.getGuild().unban(target).queue(unused -> event.replySuccess("L'utilisateur " + target.getName() + " à bien été débanni."));
-
     }
 }
