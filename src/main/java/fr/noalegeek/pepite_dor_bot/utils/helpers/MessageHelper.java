@@ -17,7 +17,11 @@ public class MessageHelper {
         int day = date.getDayOfMonth();
         int month = date.getMonthValue();
         int year = date.getYear();
-        return day + "-" + month + "-" + year;
+        if(month < 10){
+            String strMonth = "0"+month;
+            return day + "/" + strMonth + "/" + year;
+        }
+        return day + "/" + month + "/" + year;
     }
 
     public static String formattedMention(User user) {
