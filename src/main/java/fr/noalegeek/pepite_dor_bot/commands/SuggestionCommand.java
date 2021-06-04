@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 
 public class SuggestionCommand extends BotCommand {
 
@@ -25,8 +26,8 @@ public class SuggestionCommand extends BotCommand {
         TextChannel suggestionChannel = event.getJDA().getGuildById(846048803554852904L).getTextChannelById(848599555540123648L);
         MessageEmbed builder = new EmbedBuilder()
                 .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion")
-                .setColor(Color.magenta)
-                .setTimestamp(Instant.now())
+                .setColor(Color.YELLOW)
+                .setFooter(":bulb: "+ OffsetDateTime.now())
                 .addField("Suggestion: ", "```" + event.getArgs() + "```", false)
                 .build();
         suggestionChannel.sendMessage(builder).queue();
