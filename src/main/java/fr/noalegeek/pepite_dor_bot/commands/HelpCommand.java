@@ -18,6 +18,7 @@ public class HelpCommand extends BotCommand {
         this.hidden = true;
         this.guildOnly = true;
         this.aliases = new String[]{"aide", "?"};
+        this.help = "Envoie un message de toutes les commandes ainsi que leur utilité.";
     }
 
     @Override

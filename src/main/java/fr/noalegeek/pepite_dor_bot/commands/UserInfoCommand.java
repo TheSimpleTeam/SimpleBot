@@ -18,7 +18,7 @@ public class UserInfoCommand extends BotCommand {
         this.aliases = new String[]{"useri", "ui","uinfo"};
         this.arguments = "`<mention de l'utilisateur>`";
         this.guildOnly = true;
-        this.help = "Donne des informations sur l'auteur";
+        this.help = "Donne des informations sur l'auteur ou sur la personne mentionnée.";
     }
 
     @Override
