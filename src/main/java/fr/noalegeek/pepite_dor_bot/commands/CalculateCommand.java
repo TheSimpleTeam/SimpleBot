@@ -22,6 +22,7 @@ public class CalculateCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        event.reply(String.valueOf(CooldownScope.USER));
         String regex = "\"^[-+](?:[0-9]*[.])?[0-9]+|(?<=\\(|\\/|\\*)[+-](?:[0-9]*[.])?[0-9]+|(?:[0-9]*[.])?[0-9]+|[-+*\\/()]\"g";
         String args = event.getArgs().replaceAll(" ", "");
         args = replaceAll(regex, args);

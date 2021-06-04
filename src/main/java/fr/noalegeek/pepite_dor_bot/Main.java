@@ -9,7 +9,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
-import fr.noalegeek.pepite_dor_bot.listener.Events;
+import fr.noalegeek.pepite_dor_bot.listener.EventsEmbeds;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -73,7 +73,7 @@ public class Main {
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder);
         client = clientBuilder.build();
-        jda.addEventListener(new Events(), waiter, client);
+        jda.addEventListener(new EventsEmbeds(), waiter, client);
         try {
             setupLogs();
         } catch (IOException ex) {
