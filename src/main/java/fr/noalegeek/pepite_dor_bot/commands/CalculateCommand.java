@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
@@ -8,19 +9,23 @@ import org.mariuszgromada.math.mxparser.Expression;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class CalculateCommand extends BotCommand {
+public class CalculateCommand extends Command {
 
     private final String[] operators = {"+", "-", "/", "*"};
 
     public CalculateCommand() {
         this.name = "Calculate";
         this.aliases = new String[]{"c", "calc"};
-        this.arguments = "`<+ ou - ou * ou />`";
+        this.arguments = "`<premier nombre> <+ ou - ou * ou /> <second nombre>`";
         this.cooldown = 5;
     }
 
     @Override
     protected void execute(CommandEvent event) {
+        String[] argsArray = event.getMessage().getContentRaw().split(" ");
+        if(argsArray.length == 1){
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nVous pouvez mettre plusieurs nombres après le second en mettant les opérateurs disponibles.");
+        }
         String regex = "\"^[-+](?:[0-9]*[.])?[0-9]+|(?<=\\(|\\/|\\*)[+-](?:[0-9]*[.])?[0-9]+|(?:[0-9]*[.])?[0-9]+|[-+*\\/()]\"g";
         String args = event.getArgs().replaceAll(" ", "");
         args = replaceAll(regex, args);

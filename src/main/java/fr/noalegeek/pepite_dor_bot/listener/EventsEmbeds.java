@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -66,21 +67,18 @@ public class EventsEmbeds extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        EmbedBuilder embedMemberJoin = new EmbedBuilder();
-        embedMemberJoin.setThumbnail(event.getMember().getUser().getAvatarUrl());
-        embedMemberJoin.setTitle("**" + event.getMember().getEffectiveName() + " a rejoint le serveur __" + event.getGuild().getName()
-                + "__ !**");
-        embedMemberJoin.addField("Membre", event.getMember().getAsMention(), false);
-        embedMemberJoin.addField("[+] Nouveau membre","Nous sommes maintenant " + event.getGuild().getMemberCount()
-                + " membres sur le serveur !", false);
-        embedMemberJoin.setFooter(String.valueOf(Calendar.getInstance().getTime()));
-        embedMemberJoin.setColor(Color.GREEN);
+        EmbedBuilder embedMemberJoin = new EmbedBuilder()
+             .setThumbnail(event.getMember().getUser().getAvatarUrl())
+             .setTitle("**" + event.getMember().getEffectiveName()+" a rejoint le serveur __"+event.getGuild().getName()+ "__ !**")
+             .addField("Membre", event.getMember().getAsMention(), false)
+             .addField("[+] Nouveau membre","Nous sommes maintenant "+event.getGuild().getMemberCount()+" membres sur le serveur !", false)
+             .setFooter(":information_source: "+OffsetDateTime.now())
+             .setColor(Color.GREEN);
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin.build()).queue();
         if(serverConfig.guildJoinRole.containsKey(event.getGuild().getId())) {
-            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(serverConfig.guildJoinRole.get(event.getGuild().getId()))))
-                    .queue();
+            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(serverConfig.guildJoinRole.get(event.getGuild().getId())))).queue();
         }
-        LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " joined " + event.getGuild().getName());
+        LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a rejoint le serveur "+event.getGuild().getName()+".");
     }
 
     @Override
@@ -89,12 +87,11 @@ public class EventsEmbeds extends ListenerAdapter {
         embedMemberRemove.setThumbnail(event.getUser().getAvatarUrl());
         embedMemberRemove.setTitle("**"+(event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**");
         embedMemberRemove.addField("Membre",event.getUser().getAsMention(), false);
-        embedMemberRemove.addField("[-] Membre perdu","Nous sommes de nouveau à " + event.getGuild().getMemberCount()
-                + " membres sur le serveur...", false);
-        embedMemberRemove.setFooter(String.valueOf(Calendar.getInstance().getTime()));
+        embedMemberRemove.addField("[-] Membre perdu","Nous sommes de nouveau à "+event.getGuild().getMemberCount()+" membres sur le serveur...", false);
+        embedMemberRemove.setFooter(":information_source: "+OffsetDateTime.now());
         embedMemberRemove.setColor(Color.RED);
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberRemove.build()).queue();
-        LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " left " + event.getGuild().getName());
+        LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a quitté le serveur"+event.getGuild().getName()+".");
     }
 
     @Override
