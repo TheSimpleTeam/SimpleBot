@@ -16,7 +16,7 @@ public class PurgeCommand extends Command {
         this.guildOnly = true;
         this.botPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
-        this.arguments = "<number of messages>";
+        this.arguments = "<nombre de messages>";
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PurgeCommand extends Command {
         String[] args = event.getArgs().split(" ");
         final AuditableRestAction<Void> deleteMessage = event.getMessage().delete();
         if(event.getArgs().isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Le nombre de messages à spécifier doit se situer entre 1 et 100.");
             return;
         }
         int clearMessages = 1;
@@ -38,13 +38,13 @@ public class PurgeCommand extends Command {
                 clearMessages = Integer.parseInt(args[0]);
             }
         } catch (NumberFormatException ignore) {
-            event.replyError("Le premier argument doit être un nombre de **1** à **100**.");
+            event.replyError("Le nombre à spécifier doit être un nombre de **1** à **100**.");
             return;
         }
-        int clearMessages1 = clearMessages;
+        int finalClearMessages = clearMessages;
         event.getTextChannel().getHistory().retrievePast(clearMessages + 1).queue(messages -> deleteMessage.queue(unused -> {
             event.getTextChannel().purgeMessages(messages);
-            event.replySuccess(clearMessages1 + " ont bien été supprimés", message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
+            event.replySuccess(finalClearMessages + " ont bien été supprimés", message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
         }));
     }
 }

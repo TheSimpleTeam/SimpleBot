@@ -17,7 +17,8 @@ public class SuggestionCommand extends Command {
         this.help = "Envoie une suggestion aux développeurs.";
         this.name = "suggestion";
         this.aliases = new String[]{"sugg", "s"};
-        this.cooldown = 5;
+        this.cooldown = 30;
+        this.arguments = "<suggestion>";
     }
 
     @Override

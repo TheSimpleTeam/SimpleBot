@@ -16,9 +16,9 @@ public class UserInfoCommand extends Command {
     public UserInfoCommand() {
         this.name = "userinfo";
         this.aliases = new String[]{"useri", "ui","uinfo"};
-        this.arguments = "`<mention de l'utilisateur>`";
+        this.arguments = "<mention de l'utilisateur>";
         this.guildOnly = true;
-        this.help = "Donne des informations sur l'auteur";
+        this.help = "Donne des informations sur l'auteur ou sur la personne mentionnée.";
     }
 
     @Override

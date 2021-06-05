@@ -17,7 +17,7 @@ public class ConvertCommand extends Command {
     public ConvertCommand() {
         this.name = "convert";
         this.aliases = new String[]{"co"};
-        this.arguments = "<type> <unité> <valeur> <convertir en>";
+        this.arguments = "<type> <unité de mesure> <valeur> <convertion en unité de mesure>";
         this.example = "length meter 10 centimeter";
     }
 
@@ -42,9 +42,15 @@ public class ConvertCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        String syntaxError = "\nLe type de mesure doit être un de ces 4 types de mesure : \"**volume**\"," +
+                "\"**length**\",\"**weight**\",\"**temperature**\".\nLes unités de mesure disponibles sont :\nPour le type \"volume\" : \"**gallon**\",\"**liter**\"," +
+                "\"**quart**\",\"**pint**\",\"**cup**\",\"**milliliter**\",\"**fluidOnce**\".\nPour le type \"length\" : \"**miles**\",\"**kilometers**\",\"**yards**\"," +
+                "\"**meters**\",\"**feet**\",\"**inches**\",\"**centimeters**\",\"**millimeters**\".\nPour le type \"weight\" : \"**stone**\",\"**pounds**\"," +
+                "\"**kilograms**\",\"**milligrams**\",\"**grams**\",\"**ounces**\".\nPour le type \"temperature\" : \"**fahrenheit**\",\"**celsius**\",\"**kelvin**\"." +
+                "\n:warning: Vous devez écrire ces arguments en anglais !";
         String[] args = event.getArgs().split(" ");
         if(args.length < 3) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
             return;
         }
 
@@ -55,51 +61,47 @@ public class ConvertCommand extends Command {
 
         try {
             type = UnitType.valueOf(args[0].toUpperCase());
-        }catch (IllegalArgumentException ex) {
-            event.replyError("Le premier argument est invalide. Les valeurs acceptées sont **Volume**, **Length**, **Weight** et **Temperature**");
+        }catch (IllegalArgumentException e) {
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
             return;
         }
 
         try{
             value = Double.parseDouble(args[2]);
         }catch (NumberFormatException ignored) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
             return;
         }
 
-        if(unit.isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
-            return;
-        }
-
-        if(convertTo.isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+        if(unit.isEmpty() || convertTo.isEmpty()) {
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
             return;
         }
 
         try {
             Response response = RequestHelper.sendRequest(String.format("%s%s/%s/%f", BASE_URL, type.name().toLowerCase(), unit, value));
             if(!response.isSuccessful()) {
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
                 return;
             }
             JsonObject object = Main.gson.fromJson(RequestHelper.getResponseAsString(response), JsonObject.class);
             JsonElement valueConverted = object.get(convertTo.toLowerCase());
             if(valueConverted == null) {
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
                 return;
             }
-            event.replySuccess(value + " " + capitalize(type.name()) + " = " + valueConverted.getAsDouble() + " " + capitalize(convertTo));
+            event.replySuccess("Convertion en cours...");
+            event.getChannel().sendMessage(value + " " + capitalize(type.name()) + " = " + valueConverted.getAsDouble() + " " + capitalize(convertTo)).queue();
         } catch (IOException exception) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
         }
 
     }
 
     private enum UnitType {
         VOLUME,
-        LENGTH,
-        WEIGHT,
+        LONGUEUR,
+        POIDS,
         TEMPERATURE
     }
 }

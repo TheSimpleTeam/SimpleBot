@@ -10,7 +10,8 @@ public class InviteCommand extends Command {
         this.name = "invite";
         this.aliases = new String[]{"inv", "i"};
         this.guildOnly = true;
-        this.arguments = "`<create>`";
+        this.arguments = "<create>";
+        this.help = "Crée une invitation du serveur.";
     }
 
     @Override
@@ -20,7 +21,6 @@ public class InviteCommand extends Command {
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Syntaxe de la commande !invite : ``!invite create``.");
             return;
         }
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Voici ton lien d'invitation du serveur " + event.getGuild().getName() +
-                ", n'hésite pas à faire venir plein de personnes ! \n" + event.getTextChannel().createInvite().complete().getUrl());
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+"Voici ton lien d'invitation du serveur "+event.getGuild().getName()+", n'hésite pas à faire venir plein de personnes !\n"+event.getTextChannel().createInvite().complete().getUrl());
     }
 }
