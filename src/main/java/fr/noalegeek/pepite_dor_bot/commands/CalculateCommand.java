@@ -13,7 +13,7 @@ public class CalculateCommand extends BotCommand {
     private final String[] operators = {"+", "-", "/", "*"};
 
     public CalculateCommand() {
-        this.name = "Calculate";
+        this.name = "calculate";
         this.aliases = new String[]{"c", "calc"};
         this.arguments = "`<premier nombre> <+ ou - ou * ou /> <second nombre>`";
         this.cooldown = 5;
