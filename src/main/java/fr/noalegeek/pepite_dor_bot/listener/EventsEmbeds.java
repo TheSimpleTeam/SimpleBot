@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
+import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -10,17 +11,20 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 
 import static fr.noalegeek.pepite_dor_bot.Main.*;
@@ -46,7 +50,7 @@ public class EventsEmbeds extends ListenerAdapter {
                     LOGGER.log(Level.SEVERE, ex.getMessage());
                 }
             }
-        }, TimeUnit.SECONDS.toMinutes(getInfos().autoSaveDelay), TimeUnit.SECONDS.toMinutes(getInfos().autoSaveDelay));
+        }, 120_000, getInfos().autoSaveDelay * 1000 * 60);
     }
 
     @Override
@@ -59,7 +63,9 @@ public class EventsEmbeds extends ListenerAdapter {
     }
 
     public void saveConfigs() throws IOException {
-        Path configPath = new File("server-config.json").toPath();
+        Path configPath = new File("config/server-config.json").toPath();
+        Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
+        if(gson.fromJson(reader, ServerConfig.class) == serverConfig) return;
         Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
         gson.toJson(serverConfig, writer);
         writer.close();

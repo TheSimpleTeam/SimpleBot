@@ -5,7 +5,7 @@ import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-import java.awt.*;
+import java.awt.Color;
 import java.time.OffsetDateTime;
 
 public class GuildInfoCommand extends BotCommand {
