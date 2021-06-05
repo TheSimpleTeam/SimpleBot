@@ -41,7 +41,10 @@ public class PurgeCommand extends BotCommand {
             event.replyError("Le premier argument doit être un nombre de **1** à **100**.");
             return;
         }
-        event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> deleteMessage.queue(unused -> event.getTextChannel().purgeMessages(messages)));
-        event.replySuccess(clearMessages + " ont bien été supprimés", message -> message.delete().queueAfter(2, TimeUnit.SECONDS));
+        int clearMessages1 = clearMessages;
+        event.getTextChannel().getHistory().retrievePast(clearMessages + 1).queue(messages -> deleteMessage.queue(unused -> {
+            event.getTextChannel().purgeMessages(messages);
+            event.replySuccess(clearMessages1 + " ont bien été supprimés", message -> message.delete().queueAfter(5, TimeUnit.SECONDS));
+        }));
     }
 }
