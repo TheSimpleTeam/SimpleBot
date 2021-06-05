@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.Permission;
@@ -7,7 +8,7 @@ import net.dv8tion.jda.api.entities.Role;
 
 import static fr.noalegeek.pepite_dor_bot.Main.serverConfig;
 
-public class JoinRoleCommand extends BotCommand {
+public class JoinRoleCommand extends Command {
 
     public JoinRoleCommand() {
         this.name = "joinrole";

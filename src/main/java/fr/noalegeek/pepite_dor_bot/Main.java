@@ -2,11 +2,11 @@ package fr.noalegeek.pepite_dor_bot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
-import fr.noalegeek.pepite_dor_bot.commands.BotCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
@@ -88,8 +88,8 @@ public class Main {
      */
     private static void setupCommands(CommandClientBuilder clientBuilder) {
         Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
-        Set<Class<? extends BotCommand>> commands = reflections.getSubTypesOf(BotCommand.class);
-        for (Class<? extends BotCommand> command : commands) {
+        Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
+        for (Class<? extends Command> command : commands) {
             try {
                 clientBuilder.addCommands(command.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {

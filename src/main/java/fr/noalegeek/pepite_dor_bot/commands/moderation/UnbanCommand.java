@@ -1,12 +1,12 @@
 package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.commands.BotCommand;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 
-public class UnbanCommand extends BotCommand {
+public class UnbanCommand extends Command {
 
     public UnbanCommand() {
         this.name = "unban";

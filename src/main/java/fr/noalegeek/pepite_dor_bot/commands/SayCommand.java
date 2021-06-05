@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -9,7 +10,7 @@ import java.awt.Color;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 
-public class SayCommand extends BotCommand {
+public class SayCommand extends Command {
 
     public SayCommand() {
         this.name = "say";

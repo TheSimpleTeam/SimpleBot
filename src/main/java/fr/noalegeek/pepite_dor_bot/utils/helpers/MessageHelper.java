@@ -1,7 +1,7 @@
 package fr.noalegeek.pepite_dor_bot.utils.helpers;
 
+import com.jagrosh.jdautilities.command.Command;
 import fr.noalegeek.pepite_dor_bot.Main;
-import fr.noalegeek.pepite_dor_bot.commands.BotCommand;
 import net.dv8tion.jda.api.entities.User;
 
 import java.time.OffsetDateTime;
@@ -28,7 +28,7 @@ public class MessageHelper {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
 
-    public static String syntaxError(User user, BotCommand command) {
+    public static String syntaxError(User user, Command command) {
         String syntaxMessage = MessageHelper.formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : ``" + Main.getInfos().prefix + command.getName()
                 + " " + command.getArguments() + "``.";
         if(!command.getExample().isEmpty()) {

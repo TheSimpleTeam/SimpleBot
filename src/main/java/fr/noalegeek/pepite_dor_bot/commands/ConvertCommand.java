@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
@@ -11,7 +12,7 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.Locale;
 
-public class ConvertCommand extends BotCommand {
+public class ConvertCommand extends Command {
 
     public ConvertCommand() {
         this.name = "convert";
@@ -20,6 +21,7 @@ public class ConvertCommand extends BotCommand {
         this.example = "length meter 10 centimeter";
     }
 
+    //https://github.com/jrshutske/unit-conversion-api
     private final String BASE_URL = "https://java-unit-conversion.herokuapp.com/api/";
 
     private String capitalize(String string) {

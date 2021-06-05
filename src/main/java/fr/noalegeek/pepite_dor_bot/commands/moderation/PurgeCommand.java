@@ -1,14 +1,14 @@
 package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.commands.BotCommand;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import java.util.concurrent.TimeUnit;
 
-public class PurgeCommand extends BotCommand {
+public class PurgeCommand extends Command {
 
     public PurgeCommand() {
         this.name = "purge";

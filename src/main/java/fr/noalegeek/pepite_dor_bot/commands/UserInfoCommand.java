@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,8 +11,7 @@ import net.dv8tion.jda.api.entities.User;
 import java.awt.Color;
 import java.time.OffsetDateTime;
 
-
-public class UserInfoCommand extends BotCommand {
+public class UserInfoCommand extends Command {
 
     public UserInfoCommand() {
         this.name = "userinfo";
