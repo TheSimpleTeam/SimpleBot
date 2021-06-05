@@ -24,6 +24,7 @@ public class CalculateCommand extends BotCommand {
         String[] argsArray = event.getMessage().getContentRaw().split(" ");
         if(argsArray.length == 1){
             event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nVous pouvez mettre plusieurs nombres après le second en mettant les opérateurs disponibles.");
+            return;
         }
         String regex = "\"^[-+](?:[0-9]*[.])?[0-9]+|(?<=\\(|\\/|\\*)[+-](?:[0-9]*[.])?[0-9]+|(?:[0-9]*[.])?[0-9]+|[-+*\\/()]\"g";
         String args = event.getArgs().replaceAll(" ", "");
