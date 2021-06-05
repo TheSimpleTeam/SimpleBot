@@ -9,12 +9,13 @@ import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
 import fr.noalegeek.pepite_dor_bot.commands.BotCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
-import fr.noalegeek.pepite_dor_bot.listener.EventsEmbeds;
+import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import okhttp3.OkHttpClient;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
@@ -40,6 +41,7 @@ public class Main {
     public static ServerConfig serverConfig;
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+    public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
 
     public static void main(String[] args) {
         try {
@@ -73,7 +75,7 @@ public class Main {
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder);
         client = clientBuilder.build();
-        jda.addEventListener(new EventsEmbeds(), waiter, client);
+        jda.addEventListener(new Listener(), waiter, client);
         try {
             setupLogs();
         } catch (IOException ex) {

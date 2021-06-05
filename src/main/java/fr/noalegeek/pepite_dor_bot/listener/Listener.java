@@ -29,7 +29,7 @@ import java.util.logging.Level;
 
 import static fr.noalegeek.pepite_dor_bot.Main.*;
 
-public class EventsEmbeds extends ListenerAdapter {
+public class Listener extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
