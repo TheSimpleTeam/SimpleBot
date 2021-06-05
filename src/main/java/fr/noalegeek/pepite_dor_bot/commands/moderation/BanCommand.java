@@ -16,7 +16,7 @@ public class BanCommand extends BotCommand {
         this.name = "ban";
         this.aliases = new String[]{"b"};
         this.guildOnly = true;
-        this.arguments = "`<mention> <temps> <raison>`";
+        this.arguments = "<mention> <temps> <raison>";
     }
     @Override
     protected void execute(CommandEvent event) {

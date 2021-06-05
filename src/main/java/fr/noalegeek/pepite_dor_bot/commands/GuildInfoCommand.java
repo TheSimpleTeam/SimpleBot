@@ -11,8 +11,8 @@ import java.time.OffsetDateTime;
 public class GuildInfoCommand extends BotCommand {
 
     public GuildInfoCommand() {
-        this.name = "event.getGuild()info";
-        this.aliases = new String[]{"event.getGuild()i", "gi","ginfo"};
+        this.name = "guildinfo";
+        this.aliases = new String[]{"guildi", "gi","ginfo"};
         this.guildOnly = true;
         this.help = "Donne des informations sur le serveur.";
         this.cooldown = 5;

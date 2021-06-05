@@ -9,7 +9,7 @@ public class InviteCommand extends BotCommand {
         this.name = "invite";
         this.aliases = new String[]{"inv", "i"};
         this.guildOnly = true;
-        this.arguments = "`<create>`";
+        this.arguments = "<create>";
         this.help = "Crée une invitation du serveur.";
     }
 

@@ -10,8 +10,8 @@ public class UnbanCommand extends BotCommand {
 
     public UnbanCommand() {
         this.name = "unban";
-        this.arguments = "`<mention>`";
-        this.aliases = new String[]{"ub"};
+        this.arguments = "<mention>";
+        this.aliases = new String[]{"ub","unb","uban","pa","pardon"};
         this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
         this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
     }

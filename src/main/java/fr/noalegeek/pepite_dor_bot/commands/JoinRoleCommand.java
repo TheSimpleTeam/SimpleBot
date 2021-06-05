@@ -14,7 +14,7 @@ public class JoinRoleCommand extends BotCommand {
         this.aliases = new String[]{"jr"};
         this.userPermissions = new Permission[]{Permission.MANAGE_ROLES};
         this.help = "Défini le rôle (avec son identifiant) que va avoir un utilisateur lors de son arrivée sur un serveur.";
-        this.arguments = "`<identifiant du role>`";
+        this.arguments = "<identifiant du role>";
     }
 
     @Override

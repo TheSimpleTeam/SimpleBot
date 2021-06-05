@@ -17,6 +17,7 @@ public class SuggestionCommand extends BotCommand {
         this.name = "suggestion";
         this.aliases = new String[]{"sugg", "s"};
         this.cooldown = 30;
+        this.arguments = "<suggestion>";
     }
 
     @Override

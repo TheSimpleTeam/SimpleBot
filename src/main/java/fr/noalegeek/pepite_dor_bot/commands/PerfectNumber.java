@@ -9,7 +9,7 @@ public class PerfectNumber extends BotCommand {
         this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"pn","perfectn","pnumber"};
         this.name = "perfectnumber";
-        this.arguments = "`<nombre entier>`";
+        this.arguments = "<nombre entier>";
         this.help = "Vérifie si un nombre est premier.";
         this.cooldown = 5;
     }

@@ -9,11 +9,13 @@ import java.awt.Color;
 import java.time.OffsetDateTime;
 
 public class BotInfoCommand extends BotCommand {
+
     public BotInfoCommand() {
         this.name = "botinfo";
-        this.aliases = new String[]{"bi"};
+        this.aliases = new String[]{"bi","boti","binfo"};
         this.guildOnly = true;
         this.cooldown = 5;
+        this.help = "Donne des informations sur le bot Pépite d'or Bot.";
     }
     @Override
     protected void execute(CommandEvent event) {

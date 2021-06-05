@@ -16,6 +16,7 @@ public class CalculateCommand extends BotCommand {
         this.name = "calculate";
         this.aliases = new String[]{"c", "calc"};
         this.arguments = "`<premier nombre> <+ ou - ou * ou /> <second nombre>`";
+        this.guildOnly = true;
         this.cooldown = 5;
     }
 
