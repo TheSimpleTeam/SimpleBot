@@ -20,7 +20,7 @@ public class JoinRoleCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split(" ");
+        String[] args = event.getArgs().split(" \\s+");
         if (args.length != 1) {
             event.replyError("Vous devez avoir obligatoirement 1 argument. Exemple ```" + Main.getInfos().prefix + "joinrole 846715377760731156```");
             return;

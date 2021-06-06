@@ -5,10 +5,7 @@
   "timeBetweenStatusChange": 60,
   "autoSaveDelay": 15,
   "activities": [
-    "Redémarrer pour des nouvelles fonctionnalités",
-    "Débattre sur le fait que Minecraft c'est le meilleur jeu",
-    "Prier minemobs",
-    "Préparer son exposé d'allemand",
-    "Être un imposteur"
+    "example",
+    "another example"
   ]
 }

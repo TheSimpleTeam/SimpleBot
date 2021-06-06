@@ -131,7 +131,7 @@ public class Main {
                     System.exit(0);
                 }
                 System.out.println("I see that it's the first time that you install the bot.");
-                System.out.println("The configuration will begin");
+                System.out.println("The configuration will begin.");
                 System.out.println("What is your bot token ?");
                 map.put("token", console.readLine());
                 System.out.println("What will be the bot's prefix ?");

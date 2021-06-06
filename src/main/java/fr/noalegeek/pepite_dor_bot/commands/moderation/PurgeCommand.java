@@ -21,7 +21,7 @@ public class PurgeCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split(" ");
+        String[] args = event.getArgs().split(" \\s+");
         final AuditableRestAction<Void> deleteMessage = event.getMessage().delete();
         if(event.getArgs().isEmpty()) {
             event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Le nombre de messages à spécifier doit se situer entre 1 et 100.");

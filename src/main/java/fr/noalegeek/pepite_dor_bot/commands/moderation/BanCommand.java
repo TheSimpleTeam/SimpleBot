@@ -20,7 +20,7 @@ public class BanCommand extends Command {
     }
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split(" ");
+        String[] args = event.getArgs().split(" \\s+");
         if (event.getAuthor().isBot()) return;
 
         if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
