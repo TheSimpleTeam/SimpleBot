@@ -13,6 +13,7 @@ public class PerfectNumber extends Command {
         this.arguments = "<nombre entier>";
         this.help = "Vérifie si un nombre est premier.";
         this.cooldown = 5;
+        this.example = "14";
     }
 
     @Override

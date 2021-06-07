@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
@@ -17,6 +18,9 @@ public class PurgeCommand extends Command {
         this.botPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.arguments = "<nombre de messages>";
+        this.help = "Supprime le nombre de messages spécifié.";
+        this.category = CommandCategories.STAFF.category;
+        this.example = "69";
     }
 
     @Override
@@ -44,8 +48,8 @@ public class PurgeCommand extends Command {
         }
         int finalClearMessages = clearMessages;
         try {
-            for(int i = 1;i < finalClearMessages;i+=0){
-                event.getTextChannel().getHistory().retrievePast(i).queue(messages -> deleteMessage.queue(unused -> {
+            for(int i = 1;i < finalClearMessages;i+=1){
+                event.getTextChannel().getHistory().retrievePast(1).queue(messages -> deleteMessage.queue(unused -> {
                     event.getTextChannel().purgeMessages(messages);
 
                 }));

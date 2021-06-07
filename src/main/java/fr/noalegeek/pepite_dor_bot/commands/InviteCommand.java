@@ -12,6 +12,7 @@ public class InviteCommand extends Command {
         this.guildOnly = true;
         this.arguments = "<create>";
         this.help = "Crée une invitation du serveur.";
+        this.category = CommandCategories.MISC.category;
     }
 
     @Override

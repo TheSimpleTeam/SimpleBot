@@ -18,6 +18,8 @@ public class SayCommand extends Command {
         this.arguments = "<texte>";
         this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.help = "Envoie le un message avec le texte défini après la commande sans supprimer le message d'origine.";
+        this.example = "Hey, je suis un robot !";
+        this.category = CommandCategories.STAFF.category;
     }
 
     @Override

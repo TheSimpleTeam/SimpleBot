@@ -17,8 +17,10 @@ public class CalculateCommand extends Command {
         this.name = "calculate";
         this.aliases = new String[]{"c", "calc"};
         this.arguments = "`<premier nombre> <+ ou - ou * ou /> <second nombre>`";
-        this.guildOnly = true;
         this.cooldown = 5;
+        this.help = "Calcule les opérations spécifiés après la commande.";
+        this.example = "24*.2 ou 36.7+89-12.102/4";
+        this.category = CommandCategories.FUN.category;
     }
 
     @Override
@@ -29,10 +31,11 @@ public class CalculateCommand extends Command {
             return;
         }
         String regex = "\"^[-+](?:[0-9]*[.])?[0-9]+|(?<=\\(|\\/|\\*)[+-](?:[0-9]*[.])?[0-9]+|(?:[0-9]*[.])?[0-9]+|[-+*\\/()]\"g";
-        String args = event.getArgs().replaceAll(" ", "");
+        String args = event.getArgs().replaceAll("\\s+", "");
         args = replaceAll(regex, args);
         Expression e = new Expression(args);
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le résultat est : " + e.calculate());
+        event.replySuccess("Calcul en cours...");
+        event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + "Le résultat est : " + e.calculate()).queue();
         Main.LOGGER.info(args);
     }
 

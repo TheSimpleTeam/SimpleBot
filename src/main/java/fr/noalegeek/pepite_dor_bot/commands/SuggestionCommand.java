@@ -19,19 +19,23 @@ public class SuggestionCommand extends Command {
         this.aliases = new String[]{"sugg", "s"};
         this.cooldown = 30;
         this.arguments = "<suggestion>";
+        this.category = CommandCategories.MISC.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
         TextChannel suggestionChannel = event.getJDA().getGuildById(846048803554852904L).getTextChannelById(848599555540123648L);
-        MessageEmbed builder = new EmbedBuilder()
+        MessageEmbed embedSuggestion = new EmbedBuilder()
                 .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion")
                 .setColor(Color.YELLOW)
                 .setFooter(":bulb: "+ OffsetDateTime.now())
                 .addField("Suggestion: ", "```" + event.getArgs() + "```", false)
                 .build();
-        suggestionChannel.sendMessage(builder).queue();
+        if(event.getArgs().isEmpty()){
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this));
+        }
+        suggestionChannel.sendMessage(embedSuggestion).queue();
         event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "La suggestion à bien été envoyée.");
     }
 }

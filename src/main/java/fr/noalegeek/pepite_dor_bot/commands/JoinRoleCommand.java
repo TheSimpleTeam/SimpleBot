@@ -16,6 +16,8 @@ public class JoinRoleCommand extends Command {
         this.userPermissions = new Permission[]{Permission.MANAGE_ROLES};
         this.help = "Défini le rôle (avec son identifiant) que va avoir un utilisateur lors de son arrivée sur un serveur.";
         this.arguments = "<identifiant du role>";
+        this.category = CommandCategories.PARAMETERS.category;
+        this.example = "660061218878390272";
     }
 
     @Override

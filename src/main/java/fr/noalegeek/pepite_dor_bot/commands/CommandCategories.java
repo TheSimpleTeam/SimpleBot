@@ -6,8 +6,9 @@ public enum CommandCategories {
 
     FUN(new Command.Category("Fun")),
     STAFF(new Command.Category("Staff")),
-    WTF(new Command.Category("??????????")),
-    IDK(new Command.Category("Idk srry")),
+    INFO(new Command.Category("Informations")),
+    MISC(new Command.Category("Divers")),
+    PARAMETERS(new Command.Category("Paramètres"))
     //Add other categories
     ;
 

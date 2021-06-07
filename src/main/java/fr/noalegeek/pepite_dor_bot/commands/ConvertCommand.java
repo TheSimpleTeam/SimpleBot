@@ -18,7 +18,9 @@ public class ConvertCommand extends Command {
         this.name = "convert";
         this.aliases = new String[]{"co"};
         this.arguments = "<type> <unité de mesure> <valeur> <convertion en unité de mesure>";
-        this.example = "length meter 10 centimeter";
+        this.help = "Convertis une unité de mesure en une autre.";
+        this.example = "lenght meter 10 centimeter";
+        this.category = CommandCategories.FUN.category;
     }
 
     //https://github.com/jrshutske/unit-conversion-api

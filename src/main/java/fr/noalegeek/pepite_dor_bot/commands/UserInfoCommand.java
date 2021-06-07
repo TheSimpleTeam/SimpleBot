@@ -19,6 +19,8 @@ public class UserInfoCommand extends Command {
         this.arguments = "<mention de l'utilisateur>";
         this.guildOnly = true;
         this.help = "Donne des informations sur l'auteur ou sur la personne mentionnée.";
+        this.example = "";
+        this.category = CommandCategories.INFO.category;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class UserInfoCommand extends Command {
         }
 
         MessageEmbed embedUserInfo = new EmbedBuilder()
-                .setFooter(":information_source: "+OffsetDateTime.now())
+                .setFooter("ℹ️ "+OffsetDateTime.now())
                 .setColor(Color.BLUE)
                 .addField("Nom d'utilistateur", member.getNickname() == null ? member.getUser().getName() : member.getNickname(), false)
                 .addField("Identifiant", member.getUser().getId(), false)

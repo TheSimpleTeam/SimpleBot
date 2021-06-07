@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -17,10 +18,14 @@ public class BanCommand extends Command {
         this.aliases = new String[]{"b"};
         this.guildOnly = true;
         this.arguments = "<mention> <temps> <raison>";
+        this.example = "363811352688721930";
+        this.category = CommandCategories.STAFF.category;
+        this.help = "Banni les gens définitivement du serveur.\nLe nombre à spécifier correspond aux messages qui vont être supprimés en fonction du temps.";
     }
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split(" \\s+");
+        //TODO minebos faut que tu fasses le systeme pour que ça suppr les messages en fonction du temps spécifié
+        String[] args = event.getArgs().split("\\s+");
         if (event.getAuthor().isBot()) return;
 
         if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
@@ -29,7 +34,7 @@ public class BanCommand extends Command {
         }
 
         if (args.length == 1) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nLa limite du temps à spécifier est à 7 jours.\nSi le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours.\nMettre une raison n'est pas obligatoire.");
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nLa limite du temps à spécifier est à 7 jours.\nSi le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours.\nLe rôle de ce temps à spécifier correspond aux messages qui vont être supprimés en fonction du temps.\nMettre une raison n'est pas obligatoire.");
             return;
         }
 

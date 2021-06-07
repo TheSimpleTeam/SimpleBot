@@ -91,6 +91,7 @@ public class Main {
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
             try {
+
                 clientBuilder.addCommands(command.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();

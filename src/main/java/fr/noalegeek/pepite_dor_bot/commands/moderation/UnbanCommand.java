@@ -14,6 +14,9 @@ public class UnbanCommand extends Command {
         this.aliases = new String[]{"ub","unb","uban","pa","pardon"};
         this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
         this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
+        this.help = "Débanni seulement les personnes déjà banni.";
+        this.guildOnly = true;
+        this.example = "285829396009451522";
     }
 
     @Override

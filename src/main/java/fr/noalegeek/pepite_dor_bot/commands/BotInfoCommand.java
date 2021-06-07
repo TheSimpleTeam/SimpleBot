@@ -16,11 +16,12 @@ public class BotInfoCommand extends Command {
         this.guildOnly = true;
         this.cooldown = 5;
         this.help = "Donne des informations sur le bot Pépite d'or Bot.";
+        this.category = CommandCategories.INFO.category;
     }
     @Override
     protected void execute(CommandEvent event) {
         MessageEmbed embedBotInfo = new EmbedBuilder()
-                .setTimestamp(OffsetDateTime.now())
+                .setFooter("ℹ️ "+OffsetDateTime.now())
                 .setColor(Color.BLUE)
                 .addField("Nom de l'utilistateur", event.getSelfMember().getNickname() == null ? event.getSelfUser().getName() : event.getSelfMember().getNickname(), false)
                 .addField("Identifiant de l'utilisateur", event.getSelfUser().getId(), false)

@@ -75,12 +75,12 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         EmbedBuilder embedMemberJoin = new EmbedBuilder()
-             .setThumbnail(event.getMember().getUser().getAvatarUrl())
-             .setTitle("**" + event.getMember().getEffectiveName()+" a rejoint le serveur __"+event.getGuild().getName()+ "__ !**")
-             .addField("Membre", event.getMember().getAsMention(), false)
-             .addField("[+] Nouveau membre","Nous sommes maintenant "+event.getGuild().getMemberCount()+" membres sur le serveur !", false)
-             .setFooter(":information_source: "+OffsetDateTime.now())
-             .setColor(Color.GREEN);
+                .setThumbnail(event.getMember().getUser().getAvatarUrl())
+                .setTitle("**" + event.getMember().getEffectiveName()+" a rejoint le serveur __"+event.getGuild().getName()+ "__ !**")
+                .addField("Membre", event.getMember().getAsMention(), false)
+                .addField("[+] Nouveau membre","Nous sommes maintenant "+event.getGuild().getMemberCount()+" membres sur le serveur !", false)
+                .setTimestamp(OffsetDateTime.now())
+                .setColor(Color.GREEN);
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin.build()).queue();
         if(serverConfig.guildJoinRole.containsKey(event.getGuild().getId())) {
             event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(serverConfig.guildJoinRole.get(event.getGuild().getId())))).queue();
@@ -90,13 +90,13 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        EmbedBuilder embedMemberRemove = new EmbedBuilder();
-        embedMemberRemove.setThumbnail(event.getUser().getAvatarUrl());
-        embedMemberRemove.setTitle("**"+(event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**");
-        embedMemberRemove.addField("Membre",event.getUser().getAsMention(), false);
-        embedMemberRemove.addField("[-] Membre perdu","Nous sommes de nouveau à "+event.getGuild().getMemberCount()+" membres sur le serveur...", false);
-        embedMemberRemove.setFooter(":information_source: "+OffsetDateTime.now());
-        embedMemberRemove.setColor(Color.RED);
+        EmbedBuilder embedMemberRemove = new EmbedBuilder()
+                .setThumbnail(event.getUser().getAvatarUrl())
+                .setTitle("**"+(event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**")
+                .addField("Membre",event.getUser().getAsMention(), false)
+                .addField("[-] Membre perdu","Nous sommes de nouveau à "+event.getGuild().getMemberCount()+" membres sur le serveur...", false)
+                .setTimestamp(OffsetDateTime.now())
+                .setColor(Color.RED);
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberRemove.build()).queue();
         LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a quitté le serveur"+event.getGuild().getName()+".");
     }

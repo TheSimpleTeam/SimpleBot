@@ -17,6 +17,7 @@ public class GuildInfoCommand extends Command {
         this.guildOnly = true;
         this.help = "Donne des informations sur le serveur.";
         this.cooldown = 5;
+        this.category = CommandCategories.INFO.category;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class GuildInfoCommand extends Command {
                 .addField("Créateur du serveur", event.getGuild().getOwner().getNickname() == null ? event.getGuild().getOwner().getUser().getName() : event.getGuild().getOwner().getNickname(), false)
                 .addField("Membres sur le discord", String.valueOf(event.getGuild().getMemberCount()), false)
                 .setColor(Color.GREEN)
-                .setTimestamp(OffsetDateTime.now())
+                .setFooter("ℹ️ "+OffsetDateTime.now())
                 .build();
         event.reply(embedGuildInfo);
     }
