@@ -48,7 +48,7 @@ public class ConvertCommand extends Command {
                 "\"**meters**\",\"**feet**\",\"**inches**\",\"**centimeters**\",\"**millimeters**\".\nPour le type \"weight\" : \"**stone**\",\"**pounds**\"," +
                 "\"**kilograms**\",\"**milligrams**\",\"**grams**\",\"**ounces**\".\nPour le type \"temperature\" : \"**fahrenheit**\",\"**celsius**\",\"**kelvin**\"." +
                 "\n:warning: Vous devez écrire ces arguments en anglais !";
-        String[] args = event.getArgs().split(" ");
+        String[] args = event.getArgs().split(" \\s+");
         if(args.length < 3) {
             event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
             return;

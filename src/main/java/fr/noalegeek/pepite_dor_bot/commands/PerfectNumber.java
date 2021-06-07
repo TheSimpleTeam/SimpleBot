@@ -17,7 +17,7 @@ public class PerfectNumber extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split(" ");
+        String[] args = event.getArgs().split(" \\s+");
         if(event.getArgs().length() == 2) {
             try {
                 int addNumbers = 0;
