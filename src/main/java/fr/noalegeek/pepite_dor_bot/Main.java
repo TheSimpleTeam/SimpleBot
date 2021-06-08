@@ -7,6 +7,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
+import fr.noalegeek.pepite_dor_bot.commands.slashcommand.SlashCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
@@ -15,6 +16,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import okhttp3.OkHttpClient;
 import org.reflections.Reflections;
 
@@ -64,6 +66,7 @@ public class Main {
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE,"Le token est invalide");
         }
+        CommandListUpdateAction commands = jda.updateCommands();
         Random randomActivity = new Random();
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
@@ -74,6 +77,7 @@ public class Main {
                 .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder);
+        setupSlashCommand(commands);
         client = clientBuilder.build();
         jda.addEventListener(new Listener(), waiter, client);
         try {
@@ -91,8 +95,19 @@ public class Main {
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
             try {
-
                 clientBuilder.addCommands(command.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void setupSlashCommand(CommandListUpdateAction commands) {
+        Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands.slashcommand");
+        Set<Class<? extends SlashCommand>> commandSet = reflections.getSubTypesOf(SlashCommand.class);
+        for (Class<? extends SlashCommand> command : commandSet) {
+            try {
+                commands.addCommands(command.newInstance().getData());
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
