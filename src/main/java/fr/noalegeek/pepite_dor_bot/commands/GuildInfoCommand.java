@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.Color;
+import java.time.Clock;
 import java.time.OffsetDateTime;
 
 public class GuildInfoCommand extends Command {
@@ -30,7 +31,7 @@ public class GuildInfoCommand extends Command {
                 .addField("Créateur du serveur", event.getGuild().getOwner().getNickname() == null ? event.getGuild().getOwner().getUser().getName() : event.getGuild().getOwner().getNickname(), false)
                 .addField("Membres sur le discord", String.valueOf(event.getGuild().getMemberCount()), false)
                 .setColor(Color.GREEN)
-                .setFooter("ℹ️ "+OffsetDateTime.now())
+                .setFooter("ℹ️ "+OffsetDateTime.now(Clock.systemUTC()))
                 .build();
         event.reply(embedGuildInfo);
     }

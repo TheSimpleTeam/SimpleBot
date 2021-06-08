@@ -16,7 +16,7 @@ public class CalculateCommand extends Command {
     public CalculateCommand() {
         this.name = "calculate";
         this.aliases = new String[]{"c", "calc"};
-        this.arguments = "`<premier nombre> <+ ou - ou * ou /> <second nombre>`";
+        this.arguments = "<premier nombre> <+ ou - ou * ou /> <second nombre>";
         this.cooldown = 5;
         this.help = "Calcule les opérations spécifiés après la commande.";
         this.example = "24*.2 ou 36.7+89-12.102/4";

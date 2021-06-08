@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
+import java.time.Clock;
 import java.time.OffsetDateTime;
 
 public class UserInfoCommand extends Command {
@@ -37,7 +38,7 @@ public class UserInfoCommand extends Command {
         }
 
         MessageEmbed embedUserInfo = new EmbedBuilder()
-                .setFooter("ℹ️ "+OffsetDateTime.now())
+                .setFooter("ℹ️ "+OffsetDateTime.now(Clock.systemUTC()))
                 .setColor(Color.BLUE)
                 .addField("Nom d'utilistateur", member.getNickname() == null ? member.getUser().getName() : member.getNickname(), false)
                 .addField("Identifiant", member.getUser().getId(), false)

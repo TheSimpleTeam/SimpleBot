@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.Color;
+import java.time.Clock;
 import java.time.OffsetDateTime;
 
 public class BotInfoCommand extends Command {
@@ -21,7 +22,7 @@ public class BotInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         MessageEmbed embedBotInfo = new EmbedBuilder()
-                .setFooter("ℹ️ "+OffsetDateTime.now())
+                .setFooter("ℹ️ "+OffsetDateTime.now(Clock.systemUTC()))
                 .setColor(Color.BLUE)
                 .addField("Nom de l'utilistateur", event.getSelfMember().getNickname() == null ? event.getSelfUser().getName() : event.getSelfMember().getNickname(), false)
                 .addField("Identifiant de l'utilisateur", event.getSelfUser().getId(), false)

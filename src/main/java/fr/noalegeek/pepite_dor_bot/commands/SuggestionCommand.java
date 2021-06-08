@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.Color;
+import java.time.Clock;
 import java.time.OffsetDateTime;
 
 public class SuggestionCommand extends Command {
@@ -29,7 +30,7 @@ public class SuggestionCommand extends Command {
         MessageEmbed embedSuggestion = new EmbedBuilder()
                 .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion")
                 .setColor(Color.YELLOW)
-                .setFooter(":bulb: "+ OffsetDateTime.now())
+                .setFooter("\uD83D\uDCA1 "+ OffsetDateTime.now(Clock.systemUTC()))
                 .addField("Suggestion: ", "```" + event.getArgs() + "```", false)
                 .build();
         if(event.getArgs().isEmpty()){
