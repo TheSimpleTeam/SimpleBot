@@ -30,7 +30,6 @@ public class SayCommand extends Command {
         }
         if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
             event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+event.getArgs());
-            return;
         }
         event.replySuccess(event.getArgs());
         event.getMessage().delete().queue();
