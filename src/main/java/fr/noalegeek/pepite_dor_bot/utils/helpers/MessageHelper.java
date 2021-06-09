@@ -32,7 +32,7 @@ public class MessageHelper {
         String syntaxMessage = MessageHelper.formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" + Main.getInfos().prefix + command.getName()
                 + " " + command.getArguments() + "`.";
         if(!command.getExample().isEmpty()) {
-            syntaxMessage += "\nPar exemple : `"+Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.";
+            syntaxMessage += "\nPar exemple : `"+Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.\n";
         }
         return syntaxMessage;
     }
