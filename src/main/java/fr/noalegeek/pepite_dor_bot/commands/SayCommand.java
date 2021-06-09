@@ -20,6 +20,7 @@ public class SayCommand extends Command {
         this.help = "Envoie le un message avec le texte défini après la commande sans supprimer le message d'origine.";
         this.example = "Hey, je suis un robot !";
         this.category = CommandCategories.STAFF.category;
+        this.guildOnly = true;
     }
 
     @Override
