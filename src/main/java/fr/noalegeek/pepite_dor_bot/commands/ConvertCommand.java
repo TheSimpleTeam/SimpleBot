@@ -7,9 +7,12 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.RequestHelper;
+import net.dv8tion.jda.api.EmbedBuilder;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.Locale;
 
 public class ConvertCommand extends Command {
@@ -44,12 +47,25 @@ public class ConvertCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String syntaxError = "\nLe type de mesure doit être un de ces 4 types de mesure : \"**volume**\"," +
-                "\"**length**\",\"**weight**\",\"**temperature**\".\nLes unités de mesure disponibles sont :\nPour le type \"volume\" : \"**gallon**\",\"**liter**\"," +
-                "\"**quart**\",\"**pint**\",\"**cup**\",\"**milliliter**\",\"**fluidOnce**\".\nPour le type \"length\" : \"**miles**\",\"**kilometers**\",\"**yards**\"," +
-                "\"**meters**\",\"**feet**\",\"**inches**\",\"**centimeters**\",\"**millimeters**\".\nPour le type \"weight\" : \"**stone**\",\"**pounds**\"," +
-                "\"**kilograms**\",\"**milligrams**\",\"**grams**\",\"**ounces**\".\nPour le type \"temperature\" : \"**fahrenheit**\",\"**celsius**\",\"**kelvin**\"." +
+        String syntaxError = "\nLe type de mesure doit être un de ces 4 types de mesure : \"volume\"," +
+                "\"length\",\"weight\",\"temperature\".\nLes unités de mesure disponibles sont :\n**Pour le type \"volume\"** : \"gallon\",\"liter\"," +
+                "\"quart\",\"pint\",\"cup\",\"milliliter\",\"fluidOnce\".\n**Pour le type \"length\"** : \"miles\",\"kilometers\",\"yards\"," +
+                "\"meters\",\"feet\",\"inches\",\"centimeters\",\"millimeters\".\n**Pour le type \"weight\"** : \"stone\",\"pounds\"," +
+                "\"kilograms\",\"milligrams\",\"grams\",\"ounces\".\n**Pour le type \"temperature\"** : \"fahrenheit\",\"celsius\",\"kelvin\"." +
                 "\n:warning: Vous devez écrire ces arguments en anglais !";
+        EmbedBuilder embedSyntaxError = new EmbedBuilder()
+                .setFooter(event.getAuthor().getName()+"#"+event.getAuthor().getDiscriminator(),event.getAuthor().getAvatarUrl())
+                .setTitle("Syntaxe de la commande "+Main.getInfos().prefix+name)
+                .setColor(0x2f3136)
+                .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
+                .addField("Arguments",Main.getInfos().prefix+name+" "+arguments,false)
+                .addField("Informations","Le type de mesure à spécifier doit être un de ces 4 types de mesure :\n- volume\n- length\n- weight\n- temperature\n\n" +
+                        "chacun de ces types, il existe plusieurs unités de mesure qui sont listées en-dessous.",false)
+                .addField("Volume","- gallon\n- liter\n- quart\n- pint\n- cup\n- milliliter\n- fluidOnce",false)
+                .addField("Lenght","",false)
+                .addField("Weight","",false)
+                .addField("Temperature","",false);
+        event.reply(embedSyntaxError.build());
         String[] args = event.getArgs().split(" \\s+");
         if(args.length < 3) {
             event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);

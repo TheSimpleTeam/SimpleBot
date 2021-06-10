@@ -27,13 +27,13 @@ public class SayCommand extends Command {
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()){
             event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Si vous n'avez pas les permissions de gérer les messages, le bot va vour mentionner et ne va pas supprimer le message où vous avez executer la commande.");
-        } else {
-            if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            return;
+        }
+        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + event.getArgs());
-            } else {
-                event.replySuccess(event.getArgs());
-                event.getMessage().delete().queue();
-            }
+        } else {
+            event.replySuccess(event.getArgs());
+            event.getMessage().delete().queue();
         }
     }
 }
