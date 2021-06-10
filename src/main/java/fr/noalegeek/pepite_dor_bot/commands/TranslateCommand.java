@@ -28,7 +28,6 @@ public class TranslateCommand extends Command {
         }
         String[] args = event.getArgs().split(" --lang ");
         String text = args[0];
-        Main.LOGGER.info(text);
         String[] langs = args[1].split("\\s");
         String firstLang = langs[0];
         String secondLang = langs[1];
