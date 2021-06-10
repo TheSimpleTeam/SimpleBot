@@ -123,6 +123,8 @@ public class Main {
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
                 map.put("timeBetweenStatusChange", 15);
                 map.put("autoSaveDelay", 15);
+                map.put("frenglyEmail", "xxx@xxx.com");
+                map.put("frenglyPassword", "xxx");
                 map.put("activities", new String[]{map.get("prefix") + "help", "Se créer de lui-meme..."});
             } else {
                 Console console = System.console();
