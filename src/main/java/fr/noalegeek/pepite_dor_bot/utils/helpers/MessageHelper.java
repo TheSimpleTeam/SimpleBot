@@ -1,6 +1,7 @@
 package fr.noalegeek.pepite_dor_bot.utils.helpers;
 
 import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.entities.User;
 
@@ -8,9 +9,11 @@ import java.time.OffsetDateTime;
 import java.util.Locale;
 
 public class MessageHelper {
+
     public static String getTag(final User user) {
         return user.getName() + "#" + user.getDiscriminator();
     }
+
     public static String formatDate(OffsetDateTime date) {
         int day = date.getDayOfMonth();
         int month = date.getMonthValue();
@@ -21,9 +24,11 @@ public class MessageHelper {
         }
         return day + "/" + month + "/" + year;
     }
+
     public static String formattedMention(User user) {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
+
     public static String syntaxError(User user, Command command) {
         String syntaxMessage = MessageHelper.formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" + Main.getInfos().prefix + command.getName()
                 + " " + command.getArguments() + "`.\n";
@@ -32,6 +37,7 @@ public class MessageHelper {
         }
         return syntaxMessage;
     }
+
     public static String formatEnum(String name) {
         StringBuilder builder = new StringBuilder();
         char[] nameChar = name.toCharArray();
@@ -44,6 +50,7 @@ public class MessageHelper {
         }
         return builder.toString();
     }
+
     public static String formatEnum(Enum<?> _enum) {
         StringBuilder builder = new StringBuilder();
         char[] nameArray = _enum.name().toLowerCase(Locale.ROOT).toCharArray();
@@ -55,5 +62,10 @@ public class MessageHelper {
             }
         }
         return builder.toString();
+    }
+
+    public static void sendError(Exception ex, CommandEvent event) {
+        event.replyError("Une erreur est survenue. Veuillez contacter les développeurs\n" + ex.getMessage());
+        Main.LOGGER.severe(ex.getMessage());
     }
 }
