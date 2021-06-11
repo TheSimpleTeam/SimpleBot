@@ -28,10 +28,10 @@ public class SuggestionCommand extends Command {
         if(event.getAuthor().isBot()) return;
         TextChannel suggestionChannel = event.getJDA().getGuildById(846048803554852904L).getTextChannelById(848599555540123648L);
         MessageEmbed embedSuggestion = new EmbedBuilder()
-                .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion")
+                .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
                 .setColor(Color.YELLOW)
-                .setFooter("\uD83D\uDCA1 "+ OffsetDateTime.now(Clock.systemUTC()))
-                .addField("Suggestion: ", "```" + event.getArgs() + "```", false)
+                .setFooter("\uD83D\uDCA1 "+OffsetDateTime.now(Clock.systemUTC()))
+                .addField("Suggestion  ", "```" + event.getArgs() + "```", false)
                 .build();
         if(event.getArgs().isEmpty()){
             event.replyError(MessageHelper.syntaxError(event.getAuthor(),this));

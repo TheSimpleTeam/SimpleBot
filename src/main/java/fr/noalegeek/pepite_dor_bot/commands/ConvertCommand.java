@@ -47,12 +47,6 @@ public class ConvertCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String syntaxError = "\nLe type de mesure doit être un de ces 4 types de mesure : \"volume\"," +
-                "\"length\",\"weight\",\"temperature\".\nLes unités de mesure disponibles sont :\n**Pour le type \"volume\"** : \"gallon\",\"liter\"," +
-                "\"quart\",\"pint\",\"cup\",\"milliliter\",\"fluidOnce\".\n**Pour le type \"length\"** : \"miles\",\"kilometers\",\"yards\"," +
-                "\"meters\",\"feet\",\"inches\",\"centimeters\",\"millimeters\".\n**Pour le type \"weight\"** : \"stone\",\"pounds\"," +
-                "\"kilograms\",\"milligrams\",\"grams\",\"ounces\".\n**Pour le type \"temperature\"** : \"fahrenheit\",\"celsius\",\"kelvin\"." +
-                "\n:warning: Vous devez écrire ces arguments en anglais !";
         EmbedBuilder embedSyntaxError = new EmbedBuilder()
                 .setFooter(event.getAuthor().getName()+"#"+event.getAuthor().getDiscriminator(),event.getAuthor().getAvatarUrl())
                 .setTitle("Syntaxe de la commande "+Main.getInfos().prefix+name)
@@ -60,18 +54,17 @@ public class ConvertCommand extends Command {
                 .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
                 .addField("Arguments",Main.getInfos().prefix+name+" "+arguments,false)
                 .addField("Informations","Le type de mesure à spécifier doit être un de ces 4 types de mesure :\n- volume\n- length\n- weight\n- temperature\n\n" +
-                        "chacun de ces types, il existe plusieurs unités de mesure qui sont listées en-dessous.",false)
-                .addField("Volume","- gallon\n- liter\n- quart\n- pint\n- cup\n- milliliter\n- fluidOnce",false)
-                .addField("Lenght","",false)
-                .addField("Weight","",false)
-                .addField("Temperature","",false);
-        event.reply(embedSyntaxError.build());
+                        "Pour chacun de ces types, il existe plusieurs unités de mesure qui sont listées en-dessous.",false)
+                .addField("Volume","- gallon\n- liter\n- quart\n- pint\n- cup\n- milliliter\n- fluidOnce",true)
+                .addField("Lenght","- miles\n- kilometers\n- yards\n- meters\n- feet\n- inches\n- centimeters\n- millimeters",true)
+                .addField("Weight","- stone\n- pounds\n- kilograms\n- milligrams\n- grams\n- ounces",true)
+                .addField("Temperature","- fahrenheit\n- celsius\n- kelvin",true)
+                .addField("⚠️ Attention !","Vous devez écrire ces arguments en anglais !",false);
         String[] args = event.getArgs().split(" \\s+");
         if(args.length < 3) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
+            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
             return;
         }
-
         UnitType type;
         String unit = args[1];
         double value;
@@ -80,38 +73,38 @@ public class ConvertCommand extends Command {
         try {
             type = UnitType.valueOf(args[0].toUpperCase());
         }catch (IllegalArgumentException e) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
+            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
             return;
         }
 
         try{
             value = Double.parseDouble(args[2]);
         }catch (NumberFormatException ignored) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
+            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
             return;
         }
 
         if(unit.isEmpty() || convertTo.isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
+            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
             return;
         }
 
         try {
             Response response = RequestHelper.sendRequest(String.format("%s%s/%s/%f", BASE_URL, type.name().toLowerCase(), unit, value));
             if(!response.isSuccessful()) {
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
+                event.getChannel().sendMessage(embedSyntaxError.build()).queue();
                 return;
             }
             JsonObject object = Main.gson.fromJson(RequestHelper.getResponseAsString(response), JsonObject.class);
             JsonElement valueConverted = object.get(convertTo.toLowerCase());
             if(valueConverted == null) {
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
+                event.getChannel().sendMessage(embedSyntaxError.build()).queue();
                 return;
             }
             event.replySuccess("Convertion en cours...");
             event.getChannel().sendMessage(value + " " + capitalize(type.name()) + " = " + valueConverted.getAsDouble() + " " + capitalize(convertTo)).queue();
         } catch (IOException exception) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+syntaxError);
+            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
         }
 
     }
