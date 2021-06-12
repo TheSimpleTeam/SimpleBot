@@ -17,6 +17,9 @@ public class UnshortURLCommand extends Command {
         this.name = "unshorturl";
         this.aliases = new String[]{"usu"};
         this.arguments = "<URL>";
+        this.help = "Donne la redirection d'un lien.";
+        this.category = CommandCategories.MISC.category;
+        this.example = "Liens AdFly";
     }
 
     @Override
@@ -29,9 +32,7 @@ public class UnshortURLCommand extends Command {
             return;
         }
     }
-
     public String getURL(String _url) throws IOException {
-        //Idk how i should name it
         String url = UrlCleaner.unshortenUrl(_url);
         String[] urls = url.replace("https://", "").replace("http://", "").split("/");
         if(urls[0].equalsIgnoreCase("preview.tinyurl.com")) {

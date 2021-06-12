@@ -12,7 +12,8 @@ public class InviteCommand extends Command {
         this.name = "invite";
         this.aliases = new String[]{"inv", "i"};
         this.guildOnly = true;
-        this.arguments = "[create] - [bot]";
+        this.cooldown = 30;
+        this.arguments = "<create/bot>";
         this.help = "Crée une invitation du serveur.";
         this.category = CommandCategories.MISC.category;
     }
@@ -20,12 +21,11 @@ public class InviteCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s");
-        if(event.getArgs().length() == 0 /* && !args[0].equalsIgnoreCase("create")*/) {
-            //event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Syntaxe de la commande !invite : ``!invite create``.");
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+        if(event.getArgs().length() == 0) {
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Les arguments disponibles sont \"create\" et \"bot\".\nL'argument \"create\" crée un lien" +
+                    " d'invitation du serveur où a été fait la commande.\nL'argument \"bot\" envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur.");
             return;
         }
-
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "create":
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Voici ton lien d'invitation du serveur " + event.getGuild().getName() +
@@ -33,10 +33,11 @@ public class InviteCommand extends Command {
                 break;
             case "bot":
                 String discordInviteURL = "https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591";
-                event.replySuccess(String.format(discordInviteURL, event.getJDA().getSelfUser().getId()));
+                event.replySuccess("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n"+String.format(discordInviteURL, event.getJDA().getSelfUser().getId()));
                 break;
             default:
-                event.replyError("Cet argument n'existe pas.");
+                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Les arguments disponibles sont \"create\" et \"bot\".\nL'argument \"create\" crée un lien" +
+                        "d'invitation du serveur où a été fait la commande.\nL'argument \"bot\" envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur.");
                 break;
         }
     }

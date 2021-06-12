@@ -20,7 +20,7 @@ public class UserInfoCommand extends Command {
         this.arguments = "<mention de l'utilisateur>";
         this.guildOnly = true;
         this.help = "Donne des informations sur l'auteur ou sur la personne mentionnée.";
-        this.example = "";
+        this.example = "@minemobs";
         this.category = CommandCategories.INFO.category;
     }
 

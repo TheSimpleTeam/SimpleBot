@@ -17,7 +17,7 @@ public class HelpCommand extends Command {
         this.name = "help";
         this.hidden = true;
         this.guildOnly = true;
-        this.aliases = new String[]{"aide", "?"};
+        this.aliases = new String[]{"aide", "?","h"};
         this.help = "Envoie un message de toutes les commandes ainsi que leur utilité.";
         this.category = CommandCategories.INFO.category;
     }
