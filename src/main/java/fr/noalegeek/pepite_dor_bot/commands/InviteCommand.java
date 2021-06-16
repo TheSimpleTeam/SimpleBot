@@ -12,7 +12,7 @@ public class InviteCommand extends Command {
         this.name = "invite";
         this.aliases = new String[]{"inv", "i"};
         this.guildOnly = true;
-        this.cooldown = 30;
+        this.cooldown = 10;
         this.arguments = "<create/bot>";
         this.help = "Crée une invitation du serveur.";
         this.category = CommandCategories.MISC.category;
