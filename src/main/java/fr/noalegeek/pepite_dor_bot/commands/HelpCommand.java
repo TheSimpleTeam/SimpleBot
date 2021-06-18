@@ -34,9 +34,9 @@ public class HelpCommand extends Command {
             if(command.getCategory() != null && lastCategory != command.getCategory()) {
                 lastCategory = command.getCategory();
                 builder.addBlankField(false);
-                builder.addField(lastCategory.getName() + " commands:", "", false);
+                builder.addField("Catégorie "+lastCategory.getName()+" :", "", false);
             }
-            builder.addField(event.getClient().getPrefix() + command.getName() + " " + command.getArguments(), command.getHelp(), false);
+            builder.addField(event.getClient().getPrefix()+command.getName() + " " + command.getArguments(),command.getHelp(), false);
         }
         event.replyInDm(builder.build());
     }
