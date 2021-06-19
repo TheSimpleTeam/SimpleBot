@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.shekhargulati.urlcleaner.UrlCleaner;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import org.jsoup.Jsoup;
@@ -19,6 +20,9 @@ public class UnshortURLCommand extends Command {
         this.name = "unshorturl";
         this.aliases = new String[]{"usu"};
         this.arguments = "<URL>";
+        this.help = "Donne la redirection d'un lien.";
+        this.category = CommandCategories.MISC.category;
+        this.example = "Liens AdFly";
     }
 
     @Override
@@ -50,7 +54,6 @@ public class UnshortURLCommand extends Command {
     }
 
     public static String unshortenUrl(final String shortUrl) throws IOException {
-        //http://www.freeproxylists.net/fr/?s=ts
         HttpURLConnection connection = (HttpURLConnection) new URL(shortUrl).openConnection();
         connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("HEAD");

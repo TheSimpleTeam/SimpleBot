@@ -17,7 +17,7 @@ public class HelpCommand extends Command {
         this.name = "help";
         this.hidden = true;
         this.guildOnly = true;
-        this.aliases = new String[]{"aide", "?"};
+        this.aliases = new String[]{"aide", "?","h"};
         this.help = "Envoie un message de toutes les commandes ainsi que leur utilité.";
         this.category = CommandCategories.INFO.category;
     }
@@ -34,9 +34,9 @@ public class HelpCommand extends Command {
             if(command.getCategory() != null && lastCategory != command.getCategory()) {
                 lastCategory = command.getCategory();
                 builder.addBlankField(false);
-                builder.addField(lastCategory.getName() + " commands:", "", false);
+                builder.addField("Catégorie "+lastCategory.getName()+" :", "", false);
             }
-            builder.addField(event.getClient().getPrefix() + command.getName() + " " + command.getArguments(), command.getHelp(), false);
+            builder.addField(event.getClient().getPrefix()+command.getName() + " " + command.getArguments(),command.getHelp(), false);
         }
         event.replyInDm(builder.build());
     }

@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.User;
 public class BanCommand extends Command {
     public BanCommand() {
         this.name = "ban";
-        this.aliases = new String[]{"b"};
+        this.aliases = new String[]{"b","ba"};
         this.guildOnly = true;
         this.arguments = "<mention> <temps> <raison>";
         this.example = "363811352688721930";
@@ -24,7 +24,6 @@ public class BanCommand extends Command {
     }
     @Override
     protected void execute(CommandEvent event) {
-        //TODO minebos faut que tu fasses le systeme pour que ça suppr les messages en fonction du temps spécifié
         String[] args = event.getArgs().split("\\s+");
         if (event.getAuthor().isBot()) return;
 

@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
-import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 public class UserInfoCommand extends Command {
 
@@ -19,8 +19,9 @@ public class UserInfoCommand extends Command {
         this.aliases = new String[]{"useri", "ui","uinfo"};
         this.arguments = "<mention de l'utilisateur>";
         this.guildOnly = true;
+        this.cooldown = 5;
         this.help = "Donne des informations sur l'auteur ou sur la personne mentionnée.";
-        this.example = "";
+        this.example = "@minemobs";
         this.category = CommandCategories.INFO.category;
     }
 
@@ -36,14 +37,13 @@ public class UserInfoCommand extends Command {
                 event.getMessage().getMentionedUsers().get(0) != null) {
             user = event.getMessage().getMentionedUsers().get(0);
         }
-
         MessageEmbed embedUserInfo = new EmbedBuilder()
-                .setFooter("ℹ️ "+OffsetDateTime.now(Clock.systemUTC()))
+                .setTimestamp(Instant.now())
                 .setColor(Color.BLUE)
                 .addField("Nom d'utilistateur", member.getNickname() == null ? member.getUser().getName() : member.getNickname(), false)
                 .addField("Identifiant", member.getUser().getId(), false)
-                .addField("Date de création du compte", MessageHelper.formatDate(member.getTimeCreated()), true)
-                .addField("Cet utilisateur à rejoint le", MessageHelper.formatDate(member.getTimeJoined()), false)
+                .addField("Date de création du compte", MessageHelper.formatShortDate(member.getTimeCreated()), true)
+                .addField("Cet utilisateur à rejoint le", MessageHelper.formatShortDate(member.getTimeJoined()), false)
                 .addField("Joue à", getUserActivityName(member), false)
                 .setAuthor(MessageHelper.getTag(user), null, user.getEffectiveAvatarUrl())
                 .build();

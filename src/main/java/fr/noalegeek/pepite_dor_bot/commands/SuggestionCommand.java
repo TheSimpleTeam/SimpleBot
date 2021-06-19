@@ -17,7 +17,7 @@ public class SuggestionCommand extends Command {
         this.guildOnly = true;
         this.help = "Envoie une suggestion aux développeurs.";
         this.name = "suggestion";
-        this.aliases = new String[]{"sugg", "s"};
+        this.aliases = new String[]{"sugg", "su","sug","sugge","suggest"};
         this.cooldown = 30;
         this.arguments = "<suggestion>";
         this.category = CommandCategories.MISC.category;

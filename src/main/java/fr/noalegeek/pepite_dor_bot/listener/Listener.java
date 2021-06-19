@@ -4,6 +4,7 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Clock;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Random;
@@ -76,14 +78,15 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        EmbedBuilder embedMemberJoin = new EmbedBuilder()
+        MessageEmbed embedMemberJoin = new EmbedBuilder()
                 .setThumbnail(event.getMember().getUser().getAvatarUrl())
                 .setTitle("**" + event.getMember().getEffectiveName()+" a rejoint le serveur __"+event.getGuild().getName()+ "__ !**")
                 .addField("Membre", event.getMember().getAsMention(), false)
-                .addField("[+] Nouveau membre","Nous sommes maintenant "+event.getGuild().getMemberCount()+" membres sur le serveur !", false)
-                .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
-                .setColor(Color.GREEN);
-        Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin.build()).queue();
+                .addField("Nouveau membre","Nous sommes maintenant "+event.getGuild().getMemberCount()+" membres sur le serveur !", false)
+                .setTimestamp(Instant.now())
+                .setColor(Color.GREEN)
+                .build();
+        Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin).queue();
         if(Main.getServerConfig().guildJoinRole.containsKey(event.getGuild().getId())) {
             event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole.get(event.getGuild().getId())))).queue();
         }
@@ -92,21 +95,22 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        EmbedBuilder embedMemberRemove = new EmbedBuilder()
+        MessageEmbed embedMemberRemove = new EmbedBuilder()
                 .setThumbnail(event.getUser().getAvatarUrl())
                 .setTitle("**"+(event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**")
                 .addField("Membre",event.getUser().getAsMention(), false)
-                .addField("[-] Membre perdu","Nous sommes de nouveau à "+event.getGuild().getMemberCount()+" membres sur le serveur...", false)
+                .addField("Membre perdu","Nous sommes de nouveau à "+event.getGuild().getMemberCount()+" membres sur le serveur...", false)
                 .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
-                .setColor(Color.RED);
-        Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberRemove.build()).queue();
-        LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a quitté le serveur"+event.getGuild().getName()+".");
+                .setColor(Color.RED)
+                .build();
+        Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberRemove).queue();
+        LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a quitté le serveur "+event.getGuild().getName()+".");
     }
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if(event.getAuthor() == event.getJDA().getSelfUser()) return;
-        LOGGER.info(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " said : \n" +
+        LOGGER.info(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a dit :\n" +
                 event.getMessage().getContentRaw());
     }
 }

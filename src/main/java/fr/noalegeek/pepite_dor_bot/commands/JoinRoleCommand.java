@@ -3,7 +3,9 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 
 public class JoinRoleCommand extends Command {
@@ -22,7 +24,7 @@ public class JoinRoleCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split(" \\s+");
         if (args.length != 1) {
-            event.replyError("Vous devez avoir obligatoirement 1 argument. Exemple ```" + Main.getInfos().prefix + "joinrole 846715377760731156```");
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this));
             return;
         }
 

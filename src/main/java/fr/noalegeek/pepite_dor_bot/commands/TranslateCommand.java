@@ -15,15 +15,16 @@ public class TranslateCommand extends Command {
 
     public TranslateCommand() {
         this.name = "translate";
-        this.aliases = new String[]{"t"};
+        this.aliases = new String[]{"t","tr","tra","tran","trans","transl","transla","translat"};
         this.example = "Hello everyone. --lang en fr";
-        this.arguments = "<text> <--lang <from> <to>>";
+        this.arguments = "<text> <--lang> <from> <to>";
+        this.help = "Traduit la phrase spécifiée.\nIl faut spécifié la langue de la phrase et la langue dans laquelle vous voulez qu'elle soit traduit.";
+        this.category = CommandCategories.FUN.category;
     }
-
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getMessage().getContentRaw().contains("--lang")) {
-            MessageHelper.syntaxError(event.getAuthor(), this);
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
             return;
         }
         String[] args = event.getArgs().split(" --lang ");
@@ -36,7 +37,7 @@ public class TranslateCommand extends Command {
             event.replySuccess(Main.gson.fromJson(response.body().string(), JsonObject.class).get("translation").getAsString());
         } catch (IOException ex) {
             Main.LOGGER.severe(ex.getMessage());
-            event.replyError("Une erreur est survenue. Veuillez contacter le développeur \n" +
+            event.replyError("Une erreur est survenue. Veuillez contacter le développeur et envoyez lui ce message :\n" +
                     ex.getMessage());
         }
     }

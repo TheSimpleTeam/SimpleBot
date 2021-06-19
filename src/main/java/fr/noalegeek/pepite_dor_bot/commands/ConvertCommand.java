@@ -47,22 +47,14 @@ public class ConvertCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder embedSyntaxError = new EmbedBuilder()
-                .setFooter(event.getAuthor().getName()+"#"+event.getAuthor().getDiscriminator(),event.getAuthor().getAvatarUrl())
-                .setTitle("Syntaxe de la commande "+Main.getInfos().prefix+name)
-                .setColor(0x2f3136)
-                .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
-                .addField("Arguments",Main.getInfos().prefix+name+" "+arguments,false)
-                .addField("Informations","Le type de mesure à spécifier doit être un de ces 4 types de mesure :\n- volume\n- length\n- weight\n- temperature\n\n" +
-                        "Pour chacun de ces types, il existe plusieurs unités de mesure qui sont listées en-dessous.",false)
-                .addField("Volume","- gallon\n- liter\n- quart\n- pint\n- cup\n- milliliter\n- fluidOnce",true)
-                .addField("Lenght","- miles\n- kilometers\n- yards\n- meters\n- feet\n- inches\n- centimeters\n- millimeters",true)
-                .addField("Weight","- stone\n- pounds\n- kilograms\n- milligrams\n- grams\n- ounces",true)
-                .addField("Temperature","- fahrenheit\n- celsius\n- kelvin",true)
-                .addField("⚠️ Attention !","Vous devez écrire ces arguments en anglais !",false);
+        String syntaxError = MessageHelper.syntaxError(event.getAuthor(),this)+"Le type de mesure à spécifier doit être un de ces 4 types de mesure :\n- volume\n" +
+                "- length\n- weight\n- temperature\n\nPour chacun de ces types, il existe plusieurs unités de mesure qui sont listées en-dessous.\n\n**Volume** :\n- gallon\n" +
+                "- liter\n- quart\n- pint\n- cup\n- milliliter\n- fluidOnce\n\n**Lenght** :\n- miles\n- kilometers\n- yards\n- meters\n- feet\n- inches\n- centimeters\n" +
+                "- millimeters\n\n**Weight** :\n- stone\n- pounds\n- kilograms\n- milligrams\n- grams\n- ounces\n\n**Temperature** :\n- fahrenheit\n- celsius\n- kelvin\n\n" +
+                "⚠️ Attention ! Vous devez écrire ces arguments en anglais.";
         String[] args = event.getArgs().split(" \\s+");
         if(args.length < 3) {
-            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
+            event.replyError(syntaxError);
             return;
         }
         UnitType type;
@@ -73,38 +65,38 @@ public class ConvertCommand extends Command {
         try {
             type = UnitType.valueOf(args[0].toUpperCase());
         }catch (IllegalArgumentException e) {
-            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
+            event.replyError(syntaxError);
             return;
         }
 
         try{
             value = Double.parseDouble(args[2]);
         }catch (NumberFormatException ignored) {
-            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
+            event.replyError(syntaxError);
             return;
         }
 
         if(unit.isEmpty() || convertTo.isEmpty()) {
-            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
+            event.replyError(syntaxError);
             return;
         }
 
         try {
             Response response = RequestHelper.sendRequest(String.format("%s%s/%s/%f", BASE_URL, type.name().toLowerCase(), unit, value));
             if(!response.isSuccessful()) {
-                event.getChannel().sendMessage(embedSyntaxError.build()).queue();
+                event.replyError(syntaxError);
                 return;
             }
             JsonObject object = Main.gson.fromJson(RequestHelper.getResponseAsString(response), JsonObject.class);
             JsonElement valueConverted = object.get(convertTo.toLowerCase());
             if(valueConverted == null) {
-                event.getChannel().sendMessage(embedSyntaxError.build()).queue();
+                event.replyError(syntaxError);
                 return;
             }
             event.replySuccess("Convertion en cours...");
             event.getChannel().sendMessage(value + " " + capitalize(type.name()) + " = " + valueConverted.getAsDouble() + " " + capitalize(convertTo)).queue();
         } catch (IOException exception) {
-            event.getChannel().sendMessage(embedSyntaxError.build()).queue();
+            event.replyError(syntaxError);
         }
 
     }

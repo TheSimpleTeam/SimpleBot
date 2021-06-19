@@ -5,24 +5,18 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.entities.User;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 public class MessageHelper {
 
+
+
     public static String getTag(final User user) {
         return user.getName() + "#" + user.getDiscriminator();
-    }
-
-    public static String formatDate(OffsetDateTime date) {
-        int day = date.getDayOfMonth();
-        int month = date.getMonthValue();
-        int year = date.getYear();
-        if(month < 10){
-            String strMonth = "0"+month;
-            return day + "/" + strMonth + "/" + year;
-        }
-        return day + "/" + month + "/" + year;
     }
 
     public static String formattedMention(User user) {
@@ -69,7 +63,18 @@ public class MessageHelper {
     }
 
     public static void sendError(Exception ex, CommandEvent event) {
-        event.replyError("Une erreur est survenue. Veuillez contacter les développeurs\n" + ex.getMessage());
+        event.replyError("Une erreur est survenue. Veuillez contacter les développeurs et envoyez ce message :\n" + ex.getMessage());
         Main.LOGGER.severe(ex.getMessage());
+    }
+
+    public static String formatShortDate(OffsetDateTime date) {
+        int day = date.getDayOfMonth();
+        int month = date.getMonthValue();
+        int year = date.getYear();
+        if(month < 10){
+            String strMonth = "0"+month;
+            return day + "/" + strMonth + "/" + year;
+        }
+        return day + "/" + month + "/" + year;
     }
 }
