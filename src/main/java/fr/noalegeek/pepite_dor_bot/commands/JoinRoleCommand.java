@@ -6,8 +6,6 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 
-import static fr.noalegeek.pepite_dor_bot.Main.serverConfig;
-
 public class JoinRoleCommand extends Command {
 
     public JoinRoleCommand() {
@@ -38,7 +36,7 @@ public class JoinRoleCommand extends Command {
             return;
         }
 
-        serverConfig.guildJoinRole.put(event.getGuild().getId(), role.getId());
+        Main.getServerConfig().guildJoinRole.put(event.getGuild().getId(), role.getId());
         event.replySuccess("Le rôle à bien été ajouté");
     }
 }

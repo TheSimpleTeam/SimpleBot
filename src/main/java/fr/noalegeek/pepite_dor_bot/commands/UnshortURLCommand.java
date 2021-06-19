@@ -2,7 +2,6 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.shekhargulati.urlcleaner.UrlCleaner;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import org.jsoup.Jsoup;
@@ -10,6 +9,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Objects;
 
 public class UnshortURLCommand extends Command {
 
@@ -21,6 +23,10 @@ public class UnshortURLCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        if(event.getArgs().isEmpty()) {
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            return;
+        }
         String[] args = event.getArgs().split("\\s");
         try {
             event.replySuccess(String.format("`%s`", getURL(args[0])));
@@ -31,8 +37,7 @@ public class UnshortURLCommand extends Command {
     }
 
     public String getURL(String _url) throws IOException {
-        //Idk how i should name it
-        String url = UrlCleaner.unshortenUrl(_url);
+        String url = unshortenUrl(_url);
         String[] urls = url.replace("https://", "").replace("http://", "").split("/");
         if(urls[0].equalsIgnoreCase("preview.tinyurl.com")) {
             Document doc = Jsoup.connect(_url).get();
@@ -42,5 +47,24 @@ public class UnshortURLCommand extends Command {
             return docText.substring(docText.indexOf("to: "), docText.indexOf(" Proceed")).replace("to: ", "").replace(" Proceed", "");
         }
         return url;
+    }
+
+    public static String unshortenUrl(final String shortUrl) throws IOException {
+        //http://www.freeproxylists.net/fr/?s=ts
+        HttpURLConnection connection = (HttpURLConnection) new URL(shortUrl).openConnection();
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("HEAD");
+        connection.setConnectTimeout(10000);
+        int responseCode = connection.getResponseCode();
+        String url = connection.getHeaderField("Location");
+        if (responseCode / 100 == 3 && url != null) {
+            String expandedUrl = unshortenUrl(url);
+            if (Objects.equals(expandedUrl, url))
+                return url;
+            else {
+                return expandedUrl;
+            }
+        }
+        return shortUrl;
     }
 }
