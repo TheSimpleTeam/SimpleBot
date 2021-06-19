@@ -27,18 +27,15 @@ public class JoinRoleCommand extends Command {
             event.replyError(MessageHelper.syntaxError(event.getAuthor(),this));
             return;
         }
-
-        Role role = event.getGuild().getRoleById(args[0]);
-
-        if (role == null) {
+        Role joinRole = event.getGuild().getRoleById(args[0]);
+        if (joinRole == null) {
             event.replyError("Ce rôle n'existe pas.");
             return;
-        }else if (role.isManaged()) {
-            event.replyError("Ce rôle ne peut être attribué à un utilisateur.");
+        } else if (joinRole.isManaged()) {
+            event.replyError("Ce rôle ne peut pas être attribué à un utilisateur.");
             return;
         }
-
-        Main.getServerConfig().guildJoinRole.put(event.getGuild().getId(), role.getId());
-        event.replySuccess("Le rôle à bien été ajouté");
+        Main.getServerConfig().guildJoinRole.put(event.getGuild().getId(), joinRole.getId());
+        event.replySuccess("Le rôle "+joinRole.getName()+" à bien été défini.");
     }
 }

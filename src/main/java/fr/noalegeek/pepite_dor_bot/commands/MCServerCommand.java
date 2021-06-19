@@ -26,7 +26,7 @@ public class MCServerCommand extends Command {
                 "mcserver","mcserveu","mcserve","mcser","mcse","mcs","minecserveur","minecserveu","minecserver","minecserve","minecserv","minecser","minecse","minecs",
                 "mcraftserveur","mcraftserveu","mcraftserver","mcraftserve","mcraftserv","mcraftser","mcraftse","mcrafts"};
         this.arguments = "<IP d'un serveur Minecraft>";
-        this.category = CommandCategories.INFO.category;
+        this.category = CommandCategories.FUN.category;
         this.guildOnly = true;
     }
 
