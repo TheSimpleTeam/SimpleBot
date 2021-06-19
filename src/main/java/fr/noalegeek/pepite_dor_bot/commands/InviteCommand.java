@@ -20,7 +20,7 @@ public class InviteCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split("\\s");
+        String[] args = event.getArgs().split("\\s+");
         if(event.getArgs().length() == 0) {
             event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Les arguments disponibles sont \"create\" et \"bot\".\nL'argument \"create\" crée un lien" +
                     " d'invitation du serveur où a été fait la commande.\nL'argument \"bot\" envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur.");

@@ -24,7 +24,7 @@ public class UnshortURLCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split("\\s");
+        String[] args = event.getArgs().split("\\s+");
         try {
             event.replySuccess(String.format("`%s`", getURL(args[0])));
         } catch (IOException e) {
