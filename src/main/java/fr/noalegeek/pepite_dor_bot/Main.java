@@ -38,7 +38,7 @@ public class Main {
     private static JDA jda;
     private static CommandClient client;
     private static Infos infos;
-    public static ServerConfig serverConfig;
+    private static ServerConfig serverConfig;
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
@@ -188,5 +188,9 @@ public class Main {
 
     public static Infos getInfos() {
         return infos;
+    }
+
+    public static ServerConfig getServerConfig() {
+        return serverConfig;
     }
 }

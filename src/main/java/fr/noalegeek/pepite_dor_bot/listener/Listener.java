@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
+import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -68,9 +69,9 @@ public class Listener extends ListenerAdapter {
     public void saveConfigs() throws IOException {
         Path configPath = new File("config/server-config.json").toPath();
         Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
-        if(gson.fromJson(reader, ServerConfig.class) == serverConfig) return;
+        if(gson.fromJson(reader, ServerConfig.class) == Main.getServerConfig()) return;
         Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
-        gson.toJson(serverConfig, writer);
+        gson.toJson(Main.getServerConfig(), writer);
         writer.close();
         LOGGER.info("Server config updated");
     }
@@ -86,8 +87,8 @@ public class Listener extends ListenerAdapter {
                 .setColor(Color.GREEN)
                 .build();
         Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin).queue();
-        if(serverConfig.guildJoinRole.containsKey(event.getGuild().getId())) {
-            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(serverConfig.guildJoinRole.get(event.getGuild().getId())))).queue();
+        if(Main.getServerConfig().guildJoinRole.containsKey(event.getGuild().getId())) {
+            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole.get(event.getGuild().getId())))).queue();
         }
         LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a rejoint le serveur "+event.getGuild().getName()+".");
     }

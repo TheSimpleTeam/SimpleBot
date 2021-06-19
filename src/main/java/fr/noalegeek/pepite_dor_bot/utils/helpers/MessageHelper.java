@@ -32,6 +32,10 @@ public class MessageHelper {
         return syntaxMessage;
     }
 
+    public static String syntaxError(CommandEvent event, Command command) {
+        return syntaxError(event.getAuthor(), command);
+    }
+
     public static String formatEnum(String name) {
         StringBuilder builder = new StringBuilder();
         char[] nameChar = name.toCharArray();
