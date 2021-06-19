@@ -61,11 +61,8 @@ public class UnshortURLCommand extends Command {
         String url = connection.getHeaderField("Location");
         if (responseCode / 100 == 3 && url != null) {
             String expandedUrl = unshortenUrl(url);
-            if (Objects.equals(expandedUrl, url))
-                return url;
-            else {
-                return expandedUrl;
-            }
+            if (Objects.equals(expandedUrl, url)) return url;
+            return expandedUrl;
         }
         return shortUrl;
     }
