@@ -50,9 +50,7 @@ public class MCServerCommand extends Command {
     private void getServerInfos(JsonObject jo, CommandEvent event) {
         String ip = jo.get("ip").getAsString();
         String port = jo.get("port").getAsString();
-
         String age = jo.get("version").getAsString();
-
         JsonObject player = jo.get("players").getAsJsonObject();
         int playerList = player.get("online").getAsInt();
 
