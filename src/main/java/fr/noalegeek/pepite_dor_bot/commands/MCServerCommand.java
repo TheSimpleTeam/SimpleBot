@@ -25,7 +25,7 @@ public class MCServerCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split("\\s");
+        String[] args = event.getArgs().split("\\s+");
         Main.LOGGER.info(args[0]);
         try {
             JsonObject object = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(baseURL + args[0])), JsonObject.class);
