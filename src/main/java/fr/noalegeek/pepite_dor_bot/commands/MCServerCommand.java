@@ -20,7 +20,14 @@ public class MCServerCommand extends Command {
     public MCServerCommand() {
         this.name = "mcserv";
         this.cooldown = 5;
-        this.arguments = "<ip du serveur>";
+        this.help = "Donne la version, le nombre de joueurs connectés et le port d'un serveur.";
+        this.example = "hypixel.net";
+        this.aliases = new String[]{"minecraftserveur","minecraftserver","minecraftserveu","minecraftserve","minecraftserv","minecraftser","minecraftse","minecrafts","mcserveur",
+                "mcserver","mcserveu","mcserve","mcser","mcse","mcs","minecserveur","minecserveu","minecserver","minecserve","minecserv","minecser","minecse","minecs",
+                "mcraftserveur","mcraftserveu","mcraftserver","mcraftserve","mcraftserv","mcraftser","mcraftse","mcrafts"};
+        this.arguments = "<IP d'un serveur Minecraft>";
+        this.category = CommandCategories.INFO.category;
+        this.guildOnly = true;
     }
 
     @Override
@@ -51,10 +58,10 @@ public class MCServerCommand extends Command {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setTimestamp(Instant.now())
-                .addField("IP:", ip, false)
-                .addField("Port:", port, false)
-                .addField("Version:", age, false)
-                .addField("Nombre de joueurs:", String.valueOf(playerList), false)
+                .addField("IP :", ip, false)
+                .addField("Port :", port, false)
+                .addField("Version :", age, false)
+                .addField("Nombre de joueurs :", String.valueOf(playerList), false)
                 .setColor(Color.GREEN)
                 .build();
         event.reply(embed);
