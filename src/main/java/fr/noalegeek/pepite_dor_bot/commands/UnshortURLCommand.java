@@ -2,7 +2,6 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.shekhargulati.urlcleaner.UrlCleaner;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import org.jsoup.Jsoup;
