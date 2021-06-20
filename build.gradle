@@ -27,7 +27,7 @@ dependencies {
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.9.12'
     implementation 'com.google.code.gson:gson:2.8.7'
-    implementation("net.dv8tion:JDA:4.2.1_253")
+    implementation("net.dv8tion:JDA:4.3.0_277")
     implementation('pw.chew:jda-chewtils:1.20.2') {
         exclude group: 'pw.chew:jda-chewtils-command:1.20.2'
     }
