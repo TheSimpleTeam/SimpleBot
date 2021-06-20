@@ -38,5 +38,6 @@ public class SuggestionCommand extends Command {
         }
         suggestionChannel.sendMessage(embedSuggestion).queue();
         event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "La suggestion à bien été envoyée.");
+        event.getMessage().delete().queue();
     }
 }

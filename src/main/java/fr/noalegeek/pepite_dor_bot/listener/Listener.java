@@ -86,8 +86,9 @@ public class Listener extends ListenerAdapter {
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .build();
-        Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin).queue();
-        if(Main.getServerConfig().guildJoinRole.containsKey(event.getGuild().getId())) {
+        if(!getServerConfig().channelMemberJoin.containsKey(event.getGuild().getId())) Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin).queue();
+        Objects.requireNonNull(event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin.get(event.getGuild().getId()))).sendMessage(embedMemberJoin).queue();
+        if(getServerConfig().guildJoinRole.containsKey(event.getGuild().getId())) {
             event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole.get(event.getGuild().getId())))).queue();
         }
         LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a rejoint le serveur "+event.getGuild().getName()+".");
@@ -103,7 +104,8 @@ public class Listener extends ListenerAdapter {
                 .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
                 .setColor(Color.RED)
                 .build();
-        Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberRemove).queue();
+        if(!getServerConfig().channelMemberRemove.containsKey(event.getGuild().getId())) Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberRemove).queue();
+        Objects.requireNonNull(event.getGuild().getTextChannelById(getServerConfig().channelMemberRemove.get(event.getGuild().getId()))).sendMessage(embedMemberRemove).queue();
         LOGGER.info(event.getUser().getName()+"#"+event.getUser().getDiscriminator()+" a quitté le serveur "+event.getGuild().getName()+".");
     }
 

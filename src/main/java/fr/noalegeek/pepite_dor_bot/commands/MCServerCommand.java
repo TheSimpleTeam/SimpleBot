@@ -18,11 +18,11 @@ public class MCServerCommand extends Command {
     String baseURL = "https://api.mcsrvstat.us/2/";
 
     public MCServerCommand() {
-        this.name = "mcserv";
+        this.name = "minecraftserveur";
         this.cooldown = 5;
         this.help = "Donne la version, le nombre de joueurs connectés et le port d'un serveur.";
         this.example = "hypixel.net";
-        this.aliases = new String[]{"minecraftserveur","minecraftserver","minecraftserveu","minecraftserve","minecraftserv","minecraftser","minecraftse","minecrafts","mcserveur",
+        this.aliases = new String[]{"minecraftserver","minecraftserveu","minecraftserve","minecraftserv","minecraftser","minecraftse","minecrafts","mcserveur",
                 "mcserver","mcserveu","mcserve","mcser","mcse","mcs","minecserveur","minecserveu","minecserver","minecserve","minecserv","minecser","minecse","minecs",
                 "mcraftserveur","mcraftserveu","mcraftserver","mcraftserve","mcraftserv","mcraftser","mcraftse","mcrafts"};
         this.arguments = "<IP d'un serveur Minecraft>";
