@@ -5,10 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.entities.User;
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 public class MessageHelper {
@@ -24,8 +21,8 @@ public class MessageHelper {
     }
 
     public static String syntaxError(User user, Command command) {
-        String syntaxMessage = MessageHelper.formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" + Main.getInfos().prefix + command.getName()
-                + " " + command.getArguments() + "`.\n";
+        String syntaxMessage = MessageHelper.formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" +
+                Main.getInfos().prefix + command.getName() + " " + command.getArguments() + "`.\n";
         if(!command.getExample().isEmpty()) {
             syntaxMessage += "\nPar exemple : `"+Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.\n ";
         }

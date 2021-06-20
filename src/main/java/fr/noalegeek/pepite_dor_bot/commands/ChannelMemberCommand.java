@@ -26,8 +26,10 @@ public class ChannelMemberCommand extends Command {
         if(event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2){
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Les arguments disponibles sont \"join\" et \"remove\".\nL'argument \"join\" " +
-                    "définira le salon où les annonces de bienvenues apparaîtront.\nL'argument \"remove\" définira le salon où les annonces de départss apparaîtront.");
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+
+                    "Les arguments disponibles sont **join** et **remove**.\n" +
+                    "L'argument **join** définira le salon où les annonces de bienvenues apparaîtront.\n" +
+                    "L'argument **remove** définira le salon où les annonces de départs apparaîtront.");
             return;
         }
         GuildChannel channelMember = event.getGuild().getGuildChannelById(args[1]);
@@ -44,8 +46,10 @@ public class ChannelMemberCommand extends Command {
                 Main.getServerConfig().channelMemberRemove.put(event.getGuild().getId(),channelMember.getId());
                 break;
             default:
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Les arguments disponibles sont \"join\" et \"remove\".\nL'argument \"join\" " +
-                        "définira le salon où les annonces de bienvenues apparaîtront.\nL'argument \"remove\" définira le salon où les annonces de départss apparaîtront.");
+                event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"" +
+                        "Les arguments disponibles sont **join** et **remove**.\n" +
+                        "L'argument **join** définira le salon où les annonces de bienvenues apparaîtront.\n" +
+                        "L'argument **remove** définira le salon où les annonces de départs apparaîtront.");
         }
         event.replySuccess("Le salon "+channelMember.getName()+" a bien été défini.");
     }
