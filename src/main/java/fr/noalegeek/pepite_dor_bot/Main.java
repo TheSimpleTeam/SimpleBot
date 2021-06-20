@@ -6,7 +6,6 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.jagrosh.jdautilities.examples.command.ShutdownCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
@@ -68,9 +67,9 @@ public class Main {
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId("285829396009451522")
                 .setCoOwnerIds("363811352688721930")
-                .addCommands(new ShutdownCommand())
                 .setPrefix(infos.prefix)
-                .useHelpBuilder(false)
+                .useHelpBuilder(true)
+                .setServerInvite("https://discord.gg/jw3kn4gNZW")
                 .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder);
@@ -83,7 +82,7 @@ public class Main {
         }
     }
 
-    /**
+        /**
      * <p>Instantiates all classes from the package {@link fr.noalegeek.pepite_dor_bot.commands}</p>
      */
     private static void setupCommands(CommandClientBuilder clientBuilder) {

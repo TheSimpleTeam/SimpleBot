@@ -30,12 +30,10 @@ public class UnshortURLCommand extends Command {
             event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
             return;
         }
-        String[] args = event.getArgs().split("\\s");
         try {
-            event.replySuccess(String.format("`%s`", getURL(args[0])));
+            event.replySuccess(String.format("`%s`", getURL(event.getArgs().split("\\s")[0])));
         } catch (IOException e) {
             MessageHelper.sendError(e, event);
-            return;
         }
     }
 

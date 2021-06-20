@@ -3,12 +3,12 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 public class CreateChannel extends Command {
+
     public CreateChannel() {
-        this.name = "createcommand";
+        this.name = "createchannel";
         this.cooldown = 30;
         this.arguments = "<type : text|voice> <nom> <identifiant de la catégorie>";
         this.help = "Crée un channel selon le type, le nom et la catégorie spécifiés.";

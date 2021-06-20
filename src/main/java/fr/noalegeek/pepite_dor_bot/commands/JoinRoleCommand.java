@@ -5,7 +5,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 
 public class JoinRoleCommand extends Command {
@@ -16,7 +15,7 @@ public class JoinRoleCommand extends Command {
         this.userPermissions = new Permission[]{Permission.MANAGE_ROLES};
         this.help = "Défini le rôle (avec son identifiant) que va avoir un utilisateur lors de son arrivée sur un serveur.";
         this.arguments = "<identifiant du role>";
-        this.category = CommandCategories.PARAMETERS.category;
+        this.category = CommandCategories.CONFIG.category;
         this.example = "660061218878390272";
     }
 
