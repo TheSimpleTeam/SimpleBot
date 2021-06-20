@@ -21,7 +21,7 @@ public class CreateChannel extends Command {
     }
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getMessage().getContentRaw().split("\\s");
+        String[] args = event.getMessage().getContentRaw().split("\\s+");
         try{
             if(!(args[2].toCharArray().length > 100)) {
                 if(args[1].equalsIgnoreCase("text")) {

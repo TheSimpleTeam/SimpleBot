@@ -20,12 +20,19 @@ public class MCServerCommand extends Command {
     public MCServerCommand() {
         this.name = "mcserv";
         this.cooldown = 5;
-        this.arguments = "<ip du serveur>";
+        this.help = "Donne la version, le nombre de joueurs connectés et le port d'un serveur.";
+        this.example = "hypixel.net";
+        this.aliases = new String[]{"minecraftserveur","minecraftserver","minecraftserveu","minecraftserve","minecraftserv","minecraftser","minecraftse","minecrafts","mcserveur",
+                "mcserver","mcserveu","mcserve","mcser","mcse","mcs","minecserveur","minecserveu","minecserver","minecserve","minecserv","minecser","minecse","minecs",
+                "mcraftserveur","mcraftserveu","mcraftserver","mcraftserve","mcraftserv","mcraftser","mcraftse","mcrafts"};
+        this.arguments = "<IP d'un serveur Minecraft>";
+        this.category = CommandCategories.FUN.category;
+        this.guildOnly = true;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split("\\s");
+        String[] args = event.getArgs().split("\\s+");
         Main.LOGGER.info(args[0]);
         try {
             JsonObject object = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(baseURL + args[0])), JsonObject.class);
@@ -43,18 +50,16 @@ public class MCServerCommand extends Command {
     private void getServerInfos(JsonObject jo, CommandEvent event) {
         String ip = jo.get("ip").getAsString();
         String port = jo.get("port").getAsString();
-
         String age = jo.get("version").getAsString();
-
         JsonObject player = jo.get("players").getAsJsonObject();
         int playerList = player.get("online").getAsInt();
 
         MessageEmbed embed = new EmbedBuilder()
                 .setTimestamp(Instant.now())
-                .addField("IP:", ip, false)
-                .addField("Port:", port, false)
-                .addField("Version:", age, false)
-                .addField("Nombre de joueurs:", String.valueOf(playerList), false)
+                .addField("IP :", ip, false)
+                .addField("Port :", port, false)
+                .addField("Version :", age, false)
+                .addField("Nombre de joueurs :", String.valueOf(playerList), false)
                 .setColor(Color.GREEN)
                 .build();
         event.reply(embed);
