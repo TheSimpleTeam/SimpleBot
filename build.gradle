@@ -19,6 +19,7 @@ repositories {
         url 'https://m2.dv8tion.net/releases'
     }
     maven { url 'https://jitpack.io' }
+    maven { url "https://m2.chew.pro/releases" }
 }
 
 dependencies {
@@ -27,7 +28,10 @@ dependencies {
     implementation 'org.reflections:reflections:0.9.12'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation("net.dv8tion:JDA:4.2.1_253")
-    implementation 'com.github.Minemobs:JDA-Utilities:master-SNAPSHOT'
+    implementation('pw.chew:jda-chewtils:1.20.2') {
+        exclude group: 'pw.chew:jda-chewtils-command:1.20.2'
+    }
+    implementation 'com.github.Minemobs.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
