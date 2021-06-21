@@ -36,11 +36,12 @@ public class MuteCommand extends Command {
         try{
             User target = event.getMessage().getMentionedUsers().get(0);
             if (target == null) {
-                event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifié une personne.");
+                event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifié une personne existante.");
                 return;
             }
             if(event.getGuild().getMember(target) != null){
-                event.replyError(MessageHelper.formattedMention(event.getAuthor())+"La personne doit etre sur server ");
+                event.replyError(MessageHelper.formattedMention(event.getAuthor())+"La personne doit être présente sur ce serveur.");
+                return;
             }
             Member targetMember = event.getMessage().getMentionedMembers().get(0);
             if(!event.getSelfMember().canInteract(targetMember)){
@@ -82,7 +83,7 @@ public class MuteCommand extends Command {
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+targetMember.getEffectiveName()+" a bien été muté.");
             }
         } catch (IndexOutOfBoundsException e){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifier une personne existante.");
+            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifier une personne.");
         }
     }
 }
