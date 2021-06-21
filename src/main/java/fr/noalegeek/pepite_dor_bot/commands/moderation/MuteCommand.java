@@ -65,11 +65,21 @@ public class MuteCommand extends Command {
                 for(GuildChannel gc : event.getGuild().getTextChannels()){
                     gc.putPermissionOverride(targetMember).setAllow(Permission.MESSAGE_WRITE).queue();
                 }
+                if(args[1] != null){
+                    event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+targetMember.getEffectiveName()+" a bien été unmuté pour la raison "+args[1]+".");
+                    return;
+                }
+                event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+targetMember.getEffectiveName()+" a bien été unmuté.");
             } else {
                 //Mute the target
                 for(GuildChannel gc : event.getGuild().getTextChannels()){
                     gc.putPermissionOverride(targetMember).setDeny(Permission.MESSAGE_WRITE).queue();
                 }
+                if(args[1] != null){
+                    event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+targetMember.getEffectiveName()+" a bien été muté pour la raison "+args[1]+".");
+                    return;
+                }
+                event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+targetMember.getEffectiveName()+" a bien été muté.");
             }
         } catch (IndexOutOfBoundsException e){
             event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifier une personne existante.");
