@@ -24,23 +24,25 @@ public class BanCommand extends Command {
     }
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split("\\s+");
         if (event.getAuthor().isBot()) return;
-
+        String[] args = event.getArgs().split("\\s+");
         if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
             event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous n'avez pas la permission de faire cette commande.");
             return;
         }
 
         if (args.length == 1) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nLa limite du temps à spécifier est à 7 jours.\nSi le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours.\nLe rôle de ce temps à spécifier correspond aux messages qui vont être supprimés en fonction du temps.\nMettre une raison n'est pas obligatoire.");
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"La limite du temps à spécifier est à 7 jours.\n" +
+                    "Si le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours.\n" +
+                    "Le rôle de ce temps à spécifier correspond aux messages qui vont être supprimés en fonction du temps.\n" +
+                    "Mettre une raison n'est pas obligatoire.");
             return;
         }
 
         try{
             User target = event.getMessage().getMentionedUsers().get(0);
             if (target == null) {
-                event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifié un membre existant.");
+                event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifié une personne.");
                 return;
             }
             if(event.getGuild().getMember(target) != null){
