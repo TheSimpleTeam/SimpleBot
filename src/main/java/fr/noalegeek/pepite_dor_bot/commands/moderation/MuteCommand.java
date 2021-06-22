@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 
@@ -16,7 +17,7 @@ public class MuteCommand extends Command {
         this.aliases = new String[]{"m","mu","mut"};
         this.name = "mute";
         this.arguments = "<mention de l'utilisateur> [raison]";
-        this.help = "Mute définitivement un utilisateur ";
+        this.help = "Mute définitivement un utilisateur avec une raison ou non. Unmute si la personne est déjà mute.";
         this.cooldown = 5;
         this.example = "@NoaLeGeek spam";
     }
@@ -29,7 +30,7 @@ public class MuteCommand extends Command {
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Vous n'avez pas la permission de faire cette commande.");
             return;
         }
-        if(args.length == 0 || args.length > 2){
+        if(args.length > 2){
             event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Mettre une raison n'est pas obligatoire.");
             return;
         }
@@ -83,7 +84,7 @@ public class MuteCommand extends Command {
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+targetMember.getEffectiveName()+" a bien été muté.");
             }
         } catch (IndexOutOfBoundsException e){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Vous devez spécifier une personne.");
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Mettre une raison n'est pas obligatoire.");
         }
     }
 }

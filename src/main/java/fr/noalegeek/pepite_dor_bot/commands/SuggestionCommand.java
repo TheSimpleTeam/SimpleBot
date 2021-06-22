@@ -30,7 +30,7 @@ public class SuggestionCommand extends Command {
         MessageEmbed embedSuggestion = new EmbedBuilder()
                 .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
                 .setColor(Color.YELLOW)
-                .setFooter("\uD83D\uDCA1 "+OffsetDateTime.now(Clock.systemUTC()))
+                .setFooter("💡 "+OffsetDateTime.now(Clock.systemUTC()))
                 .addField("Suggestion  ", "```" + event.getArgs() + "```", false)
                 .build();
         if(event.getArgs().isEmpty()){
