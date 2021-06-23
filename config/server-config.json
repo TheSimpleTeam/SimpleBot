@@ -9,7 +9,9 @@
   "channelMemberRemove": {
     "657966618353074206": "660110008507432970"
   },
-  "withoutMutedRole": {},
+  "withoutMutedRole": {
+    "846048803554852904": true
+  },
   "mutedRole": {
     "657966618353074206": "660114547646005280"
   }

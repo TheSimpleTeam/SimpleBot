@@ -14,7 +14,8 @@ public class MutedRoleCommand extends Command {
         this.arguments = "<identifiant du rôle>";
         this.help = "Défini le rôle que nécessite la commande !mute pour fonctionner lorsque le serveur a choisi d'utiliser une rôle.";
         this.cooldown = 5;
-        this.example = "@NoaLeGeek spam";
+        this.example = "660114547646005280";
+        this.guildOnly = true;
     }
     @Override
     protected void execute(CommandEvent event) {
