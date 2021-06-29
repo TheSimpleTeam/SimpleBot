@@ -18,7 +18,7 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le bot a été bien éteint.");
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le bot a bien été éteint.");
         event.getJDA().shutdown();
     }
 }
