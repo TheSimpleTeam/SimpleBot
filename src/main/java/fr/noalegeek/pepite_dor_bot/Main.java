@@ -134,9 +134,8 @@ public class Main {
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
                 map.put("timeBetweenStatusChange", 15);
                 map.put("autoSaveDelay", 15);
-                map.put("frenglyEmail", "xxx@xxx.com");
-                map.put("frenglyPassword", "xxx");
                 map.put("activities", new String[]{"ban everyone","example","check my mentions"});
+                map.put("githubToken", "YOUR-GITHUB-TOKEN");
             } else {
                 Console console = System.console();
                 if (console == null) {
@@ -158,6 +157,7 @@ public class Main {
                 System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
                 map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions","example","ban everyone"} : console.readLine().split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");
+                map.put("githubToken", "YOUR-GITHUB-TOKEN");
             }
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);

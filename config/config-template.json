@@ -2,10 +2,12 @@
   "token": "YOUR-TOKEN-HERE",
   "prefix": "!",
   "defaultRoleID": "YOUR-ROLE-ID",
-  "timeBetweenStatusChange": 60,
+  "timeBetweenStatusChange": 15,
   "autoSaveDelay": 15,
   "activities": [
+    "ban everyone",
     "example",
-    "another example"
-  ]
+    "check my mentions"
+  ],
+  "githubToken": "YOUR-GITHUB-TOKEN"
 }
