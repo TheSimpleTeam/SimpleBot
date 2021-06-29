@@ -21,7 +21,7 @@ public class BotInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         MessageEmbed embedBotInfo = new EmbedBuilder()
-                .setTimestamp(Instant.now())
+                .setFooter("ℹ "+Instant.now())
                 .setColor(Color.BLUE)
                 .addField("Nom de l'utilistateur", event.getSelfMember().getNickname() == null ? event.getSelfUser().getName() : event.getSelfMember().getNickname(), false)
                 .addField("Identifiant de l'utilisateur", event.getSelfUser().getId(), false)

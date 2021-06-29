@@ -38,7 +38,7 @@ public class UserInfoCommand extends Command {
             user = event.getMessage().getMentionedUsers().get(0);
         }
         MessageEmbed embedUserInfo = new EmbedBuilder()
-                .setTimestamp(Instant.now())
+                .setFooter("ℹ "+Instant.now())
                 .setColor(Color.BLUE)
                 .addField("Nom d'utilistateur", member.getNickname() == null ? member.getUser().getName() : member.getNickname(), false)
                 .addField("Identifiant", member.getUser().getId(), false)

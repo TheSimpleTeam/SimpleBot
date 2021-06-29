@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Role;
 
 public class JoinRoleCommand extends Command {
@@ -35,6 +36,6 @@ public class JoinRoleCommand extends Command {
             return;
         }
         Main.getServerConfig().guildJoinRole.put(event.getGuild().getId(), joinRole.getId());
-        event.replySuccess("Le rôle "+joinRole.getName()+" à bien été défini.");
+        event.replySuccess("Le rôle "+joinRole.getAsMention()+" à bien été défini.");
     }
 }

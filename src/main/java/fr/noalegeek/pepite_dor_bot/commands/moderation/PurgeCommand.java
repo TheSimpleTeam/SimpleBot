@@ -47,19 +47,20 @@ public class PurgeCommand extends Command {
             return;
         }
         int finalClearMessages = clearMessages;
-        try {
-            for(int i = 1;i < finalClearMessages;i+=1){
+
+        for(int i = 1;i < finalClearMessages;i+=1){
+            try {
                 event.getTextChannel().getHistory().retrievePast(1).queue(messages -> deleteMessage.queue(unused -> {
                     event.getTextChannel().purgeMessages(messages);
 
                 }));
+            } catch (IllegalArgumentException ex){
+                isMessageOld = true;
             }
-            event.replySuccess(finalClearMessages + " messages ont bien été supprimés.", messageSucces -> messageSucces.delete().queueAfter(5000, TimeUnit.SECONDS));
-            if(isMessageOld){
-                event.getChannel().sendMessage(":warning: Les messages datant de plus 2 semaines n'ont pas pu être supprimé !").queue();
-            }
-        } catch (IllegalArgumentException ex){
-            isMessageOld = true;
+        }
+        event.replySuccess(finalClearMessages + " messages ont bien été supprimés.", messageSucces -> messageSucces.delete().queueAfter(5000, TimeUnit.SECONDS));
+        if(isMessageOld){
+            event.getChannel().sendMessage(":warning: Les messages datant de plus 2 semaines n'ont pas pu être supprimé !").queue();
         }
     }
 }

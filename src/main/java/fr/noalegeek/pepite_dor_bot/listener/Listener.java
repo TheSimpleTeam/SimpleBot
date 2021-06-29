@@ -83,7 +83,7 @@ public class Listener extends ListenerAdapter {
                 .setThumbnail(event.getMember().getUser().getAvatarUrl())
                 .setTitle("**" + event.getMember().getEffectiveName()+" a rejoint le serveur __"+event.getGuild().getName()+ "__ !**")
                 .addField("Membre", event.getMember().getAsMention(), false)
-                .addField("Nouveau membre","Nous sommes maintenant "+event.getGuild().getMemberCount()+" membres sur le serveur !", false)
+                .addField("➕ Nouveau membre","Nous sommes maintenant "+event.getGuild().getMemberCount()+" membres sur le serveur !", false)
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .build();
@@ -101,7 +101,7 @@ public class Listener extends ListenerAdapter {
                 .setThumbnail(event.getUser().getAvatarUrl())
                 .setTitle("**"+(event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**")
                 .addField("Membre",event.getUser().getAsMention(), false)
-                .addField("Membre perdu","Nous sommes de nouveau à "+event.getGuild().getMemberCount()+" membres sur le serveur...", false)
+                .addField("➖ Membre perdu","Nous sommes de nouveau à "+event.getGuild().getMemberCount()+" membres sur le serveur...", false)
                 .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
                 .setColor(Color.RED)
                 .build();

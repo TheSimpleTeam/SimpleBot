@@ -10,8 +10,11 @@ import java.io.IOException;
 public class GetBotIpCommand extends Command {
 
     public GetBotIpCommand() {
-        this.name = "getbotipcommand";
-        this.aliases = new String[]{"gbic", "gbi"};
+        this.category = CommandCategories.MISC.category;
+        this.help = "Envoie en message privé l'ip du bot.";
+        this.cooldown = 5;
+        this.name = "getbotip";
+        this.aliases = new String[]{"gbi","getbi","getboti","getbip","gbotip","gboti","gbip"};
         this.ownerCommand = true;
     }
 
