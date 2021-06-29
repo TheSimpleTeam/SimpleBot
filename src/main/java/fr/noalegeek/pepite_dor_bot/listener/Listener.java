@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.listener;
 
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
+import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -114,5 +115,13 @@ public class Listener extends ListenerAdapter {
         if(event.getAuthor() == event.getJDA().getSelfUser()) return;
         LOGGER.info(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a dit :\n" +
                 event.getMessage().getContentRaw());
+        if(!getServerConfig().prohibitWords.containsKey(event.getGuild().getId())) return;
+        for (String s : getServerConfig().prohibitWords.get(event.getGuild().getId())) {
+            if(event.getMessage().getContentRaw().toLowerCase().contains(s.toLowerCase())) {
+                event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) +
+                                "Le mot `" + s + "` fait parti de la liste des mots interdits.").queue(),
+                        unused -> event.getMessage().addReaction("\uD83E\uDD14\n").queue());
+            }
+        }
     }
 }
