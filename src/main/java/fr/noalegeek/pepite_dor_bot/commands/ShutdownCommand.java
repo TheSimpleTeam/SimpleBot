@@ -6,8 +6,7 @@ import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 
 public class ShutdownCommand extends Command {
 
-    public ShutdownCommand()
-    {
+    public ShutdownCommand() {
         this.name = "shutdown";
         this.help = "Eteint le bot \"proprement\".";
         this.aliases = new String[]{"sd","shutd","sdown"};

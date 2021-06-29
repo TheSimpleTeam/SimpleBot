@@ -70,8 +70,8 @@ public class GithubCommand extends Command {
                             .setColor(getColor(repo.getLanguage()))
                             .addField("Auteur :", repo.getOwnerName(), false)
                             .addField("Description:", repo.getDescription(), false)
-                            .addField("Readme:", IOUtils.toString(repo.getReadme().read(), StandardCharsets.UTF_8), false)
-                            .addField("License:", repo.getLicense().getName(), false)
+                            .addField("Readme:", readmeString(IOUtils.toString(repo.getReadme().read(), StandardCharsets.UTF_8)), false)
+                            .addField("License:", getLicense(repo), false)
                             .addField("Language principal:", repo.getLanguage(), false)
                             .build();
                     event.reply(builder);
@@ -102,6 +102,22 @@ public class GithubCommand extends Command {
                 MessageHelper.syntaxError(this, event);
                 break;
         }
+    }
+
+    private String getLicense(GHRepository repo) throws IOException {
+        return repo.getLicense() == null ? "Aucune license" : repo.getLicense().getName();
+    }
+
+    private String readmeString(String readme) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < readme.toCharArray().length; i++) {
+            if(i == 1020) {
+                builder.append("...");
+                break;
+            }
+            builder.append(readme.toCharArray()[i]);
+        }
+        return builder.toString();
     }
 
     private boolean isCommandDisabled() {

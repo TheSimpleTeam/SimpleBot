@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
@@ -46,19 +47,13 @@ public class PurgeCommand extends Command {
             event.replyError("Le nombre à spécifier doit être un nombre de **1** à **100**.");
             return;
         }
-        int finalClearMessages = clearMessages;
-
-        for(int i = 1;i < finalClearMessages;i+=1){
-            try {
-                event.getTextChannel().getHistory().retrievePast(1).queue(messages -> deleteMessage.queue(unused -> {
-                    event.getTextChannel().purgeMessages(messages);
-
-                }));
-            } catch (IllegalArgumentException ex){
-                isMessageOld = true;
-            }
+        try {
+            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> deleteMessage.queue(unused -> event.getTextChannel().purgeMessages(messages)),
+                    unused -> Main.LOGGER.info("Le message n'a pas pu être supprimé"));
+        } catch (IllegalArgumentException ex){
+            isMessageOld = true;
         }
-        event.replySuccess(finalClearMessages + " messages ont bien été supprimés.", messageSucces -> messageSucces.delete().queueAfter(5000, TimeUnit.SECONDS));
+        event.replySuccess(clearMessages + " messages ont bien été supprimés.", messageSuccess -> messageSuccess.delete().queueAfter(5000, TimeUnit.SECONDS));
         if(isMessageOld){
             event.getChannel().sendMessage(":warning: Les messages datant de plus 2 semaines n'ont pas pu être supprimé !").queue();
         }
