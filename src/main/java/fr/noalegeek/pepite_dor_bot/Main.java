@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
-import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
@@ -161,7 +160,7 @@ public class Main {
         return infos;
     }
 
-    private static ServerConfig setupServerConfig() throws IOException {
+    public static ServerConfig setupServerConfig() throws IOException {
         File serverConfigFile = new File("config/server-config.json");
         if(!serverConfigFile.exists()) {
             serverConfigFile.createNewFile();

@@ -124,10 +124,11 @@ public class Listener extends ListenerAdapter {
         if(getServerConfig().prohibitWords == null) {
             new File("config/server-config.json").delete();
             try {
-                saveConfigs();
+                Main.setupServerConfig();
             } catch (IOException ex) {
-                LOGGER.info(ex.getMessage());
+                LOGGER.severe(ex.getMessage());
             }
+            return;
         }
         if(!getServerConfig().prohibitWords.containsKey(event.getGuild().getId())) return;
         for (String s : getServerConfig().prohibitWords.get(event.getGuild().getId())) {
