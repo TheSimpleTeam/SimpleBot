@@ -69,6 +69,9 @@ public class Listener extends ListenerAdapter {
 
     public void saveConfigs() throws IOException {
         Path configPath = new File("config/server-config.json").toPath();
+        if(!new File(configPath.toUri()).exists()) {
+            new File(configPath.toUri()).createNewFile();
+        }
         Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
         if(gson.fromJson(reader, ServerConfig.class) == Main.getServerConfig()) return;
         Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
@@ -118,6 +121,14 @@ public class Listener extends ListenerAdapter {
         if(event.getAuthor() == event.getJDA().getSelfUser()) return;
         LOGGER.info(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a dit :\n" +
                 event.getMessage().getContentRaw());
+        if(getServerConfig().prohibitWords == null) {
+            new File("config/server-config.json").delete();
+            try {
+                saveConfigs();
+            } catch (IOException ex) {
+                LOGGER.info(ex.getMessage());
+            }
+        }
         if(!getServerConfig().prohibitWords.containsKey(event.getGuild().getId())) return;
         for (String s : getServerConfig().prohibitWords.get(event.getGuild().getId())) {
             if(event.getMessage().getContentRaw().toLowerCase().contains(s.toLowerCase())) {
