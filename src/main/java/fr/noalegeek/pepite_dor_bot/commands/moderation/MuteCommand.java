@@ -62,7 +62,7 @@ public class MuteCommand extends Command {
                 muteWithoutMutedRole(event, targetMember, args[1]);
             } else if(!Main.getServerConfig().withoutMutedRole.get(event.getGuild().getId())){ // If withoutMutedRole is false
                 if(Main.getServerConfig().mutedRole.get(event.getGuild().getId()) == null){
-                    event.reply(MessageHelper.formattedMention(event.getAuthor())+"Vous n'avez pas configurer le rôle qu'aura la personne mentionnée. Voulez-vous configurer ce rôle ?", messageMutedRoleConfig -> RestAction.allOf(
+                    event.reply(MessageHelper.formattedMention(event.getAuthor())+"Vous n'avez pas configurer le rôle qu'aura la personne mentionnée. Voulez-vous configurer ce rôle ?\n\n**Choix :**\n"+WHITE_CHECK_MARK+" Oui\n"+X+" Non", messageMutedRoleConfig -> RestAction.allOf(
                             messageMutedRoleConfig.addReaction(WHITE_CHECK_MARK),
                             messageMutedRoleConfig.addReaction(X)
                     ).queue(unused -> Main.getEventWaiter().waitForEvent(
@@ -98,10 +98,11 @@ public class MuteCommand extends Command {
                                 messageMutedRoleConfig.delete().queue();
                             }
                     )));
-                    muteWithMutedRole(event,targetMember,args[1]);
+                } else {
+                    muteWithMutedRole(event, targetMember, args[1]);
                 }
             } else { // If withoutMutedRole is empty
-                event.reply(MessageHelper.formattedMention(event.getAuthor()) + ":warning: Vous n'avez pas configurer la commande !mute. Voulez-vous configurer la commande !mute ?",messageEmptyConfig -> RestAction.allOf( // Allow multiple RestActions
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + ":warning: Vous n'avez pas configurer la commande !mute. Voulez-vous configurer la commande !mute ?\n\n**Choix :**\n"+WHITE_CHECK_MARK+" Oui\n"+X+" Non",messageEmptyConfig -> RestAction.allOf( // Allow multiple RestActions
                         messageEmptyConfig.addReaction(WHITE_CHECK_MARK),
                         messageEmptyConfig.addReaction(X)
                         ).queue(unused -> Main.getEventWaiter().waitForEvent(
@@ -130,7 +131,7 @@ public class MuteCommand extends Command {
                                 event.reply(MessageHelper.formattedMention(event.getAuthor())+":information_source: Vous devrez refaire la commande !mute après l'avoir paramétrée.");
                                 WithoutMutedRoleCommand.withoutMutedRoleParameter(event);
                             } else { // If it's X emoji
-                                event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+"Question annulée. Voulez-vous mute l'utilisateur sans avoir configurer de rôle ? (Le paramètre par défaut lorsque vous n'avez pas configurer le paramètre **WithoutMutedRole**)",messageDefaultConfig -> RestAction.allOf(
+                                event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+"Question annulée. Voulez-vous mute l'utilisateur sans avoir configurer de rôle ? (Le paramètre par défaut lorsque vous n'avez pas configurer le paramètre **WithoutMutedRole**)\n\n**Choix :**\n"+WHITE_CHECK_MARK+" Oui\n"+X+" Non",messageDefaultConfig -> RestAction.allOf(
                                         messageDefaultConfig.addReaction(WHITE_CHECK_MARK),
                                         messageDefaultConfig.addReaction(X)
                                 ).queue(unused1 -> Main.getEventWaiter().waitForEvent(
