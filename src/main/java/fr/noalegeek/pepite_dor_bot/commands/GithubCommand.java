@@ -29,70 +29,73 @@ public class GithubCommand extends Command {
     public GithubCommand() throws IOException {
         this.name = "github";
         this.cooldown = 5;
-        this.arguments = "<search/list> <user> [repo name]";
+        this.arguments = "<recherche/liste> <utilisateur GitHub> [nom du répertoire GitHub]";
         this.githubToken = Main.getInfos().githubToken;
+        this.category = CommandCategories.MISC.category;
+        this.example = "Liste tous les répertoires GitHub d'un utilisateur GitHub ou donne des informations sur un répertoire GitHub d'un utilisateur GitHub.\nL'utilisateur GitHub peut être remplacé par une organisation GitHub.";
+        this.help = "recherche PufferTeam SuperPack";
+        this.aliases = new String[]{"ghub","gith","gh"};
         this.github = new GitHubBuilder().withOAuthToken(githubToken).build();
     }
 
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(args.length <= 1 || args.length >= 4) {
+        if(args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(this, event);
             return;
         }
-
         if(isCommandDisabled()) {
             event.replyError("Cette commande est désactivée.");
             return;
         }
         String user = args[1];
         switch (args[0]) {
-            case "search":
+            case "recherche":
                 if(args.length != 3) {
                     MessageHelper.syntaxError(this, event);
                     return;
                 }
-                String repoS = args[2];
+                String strRepo = args[2];
                 GHRepository repo;
                 try {
-                    repo = github.getRepository(user + "/" + repoS);
+                    repo = github.getRepository(user + "/" + strRepo);
                 } catch (IOException ignored) {
-                    event.replyError("Ce répertoire Github n'existe pas. \n" + MessageHelper.syntaxError(event.getAuthor(), this));
+                    event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Ce répertoire Github n'existe pas.");
                     return;
                 }
                 try {
-                    MessageEmbed builder = new EmbedBuilder()
-                            .setAuthor(event.getAuthor().getName(), null, event.getAuthor().getEffectiveAvatarUrl())
+                    MessageEmbed embedSearch = new EmbedBuilder()
                             .setTimestamp(Instant.now())
+                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                             .setTitle(repo.getName(), repo.getUrl().toString())
                             .setThumbnail(repo.getOwner().getAvatarUrl())
                             .setColor(getColor(repo.getLanguage()))
                             .addField("Auteur :", repo.getOwnerName(), false)
-                            .addField("Description:", repo.getDescription(), false)
-                            .addField("Readme:", readmeString(IOUtils.toString(repo.getReadme().read(), StandardCharsets.UTF_8)), false)
-                            .addField("License:", getLicense(repo), false)
-                            .addField("Language principal:", repo.getLanguage(), false)
+                            .addField("Description :", repo.getDescription(), false)
+                            .addField("README :", readmeString(IOUtils.toString(repo.getReadme().read(), StandardCharsets.UTF_8)), false)
+                            .addField("License :", getLicense(repo), false)
+                            .addField("Language principal :", repo.getLanguage(), false)
                             .build();
-                    event.reply(builder);
+                    event.reply(embedSearch);
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event);
                 }
                 break;
-            case "list":
+            case "liste":
                 try {
                     GHUser ghuser = github.getUser(user);
-                    EmbedBuilder builder = new EmbedBuilder()
-                            .setAuthor(event.getAuthor().getName(), null, event.getAuthor().getEffectiveAvatarUrl())
+                    EmbedBuilder embedList = new EmbedBuilder()
                             .setTimestamp(Instant.now())
-                            .setTitle("Liste des projets de " + name)
+                            .setTitle("Liste des projets de " + name + " :")
+                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                             .setThumbnail(ghuser.getAvatarUrl());
                     Map<String, GHRepository> repositories = ghuser.getRepositories();
                     for (String ghname : repositories.keySet()) {
-                        builder.addField(ghname, repositories.get(ghname).getHtmlUrl().toString(), false);
+                        embedList.addField(ghname, repositories.get(ghname).getHtmlUrl().toString(), false);
                         Main.LOGGER.info("Added " + ghname);
                     }
-                    event.reply(builder.build());
+                    event.reply(embedList.build());
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event);
                     return;

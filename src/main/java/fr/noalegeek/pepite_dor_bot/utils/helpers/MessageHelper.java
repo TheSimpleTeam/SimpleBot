@@ -22,10 +22,11 @@ public class MessageHelper {
 
     public static String syntaxError(User user, Command command) {
         String syntaxMessage = MessageHelper.formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" +
-                Main.getInfos().prefix + command.getName() + " " + command.getArguments() + "`.\n";
-        if(!command.getExample().isEmpty()) {
-            syntaxMessage += "Par exemple : `" + Main.getInfos().prefix + command.getName() + " " + command.getExample() + "`.\n ";
-        }
+                Main.getInfos().prefix + command.getName();
+        if(!command.getArguments().isEmpty()) syntaxMessage += " " + command.getArguments() + "`.\n";
+        else syntaxMessage += "`.\n";
+        if(!command.getHelp().isEmpty()) syntaxMessage += command.getHelp() + "\n";
+        if(!command.getExample().isEmpty()) syntaxMessage += "Par exemple : `"+Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.\n";
         return syntaxMessage;
     }
 

@@ -1,8 +1,9 @@
-package fr.noalegeek.pepite_dor_bot.commands;
+package fr.noalegeek.pepite_dor_bot.commands.config;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildChannel;
@@ -13,7 +14,7 @@ public class JoinRoleCommand extends Command {
     public JoinRoleCommand() {
         this.name = "joinrole";
         this.aliases = new String[]{"jr","joinr","jrole"};
-        this.userPermissions = new Permission[]{Permission.MANAGE_ROLES};
+        this.userPermissions = new Permission[]{Permission.ADMINISTRATOR};
         this.help = "Défini le rôle (avec son identifiant) que va avoir un utilisateur lors de son arrivée sur un serveur.";
         this.arguments = "<identifiant du role>";
         this.category = CommandCategories.CONFIG.category;

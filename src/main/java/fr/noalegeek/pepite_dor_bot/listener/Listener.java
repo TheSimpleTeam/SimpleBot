@@ -87,7 +87,10 @@ public class Listener extends ListenerAdapter {
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .build();
-        if(!getServerConfig().channelMemberJoin.containsKey(event.getGuild().getId())) Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin).queue();
+        if(!getServerConfig().channelMemberJoin.containsKey(event.getGuild().getId())) {
+            Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessage(embedMemberJoin).queue();
+            return;
+        }
         Objects.requireNonNull(event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin.get(event.getGuild().getId()))).sendMessage(embedMemberJoin).queue();
         if(getServerConfig().guildJoinRole.containsKey(event.getGuild().getId())) {
             event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole.get(event.getGuild().getId())))).queue();

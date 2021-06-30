@@ -39,8 +39,8 @@ public class Main {
     private static CommandClient client;
     private static Infos infos;
     private static ServerConfig serverConfig;
-    //Todo: Fix JSON issue
-    public static final Gson gson = new GsonBuilder().setPrettyPrinting().setLenient().create();
+    private static final EventWaiter waiter = new EventWaiter();
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
 
@@ -93,16 +93,6 @@ public class Main {
         for (Class<? extends Command> command : commands) {
             try {
                 clientBuilder.addCommands(command.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        //Slash command
-        Reflections slashcommandReflections = new Reflections("fr.noalegeek.pepite_dor_bot.slashcommand");
-        Set<Class<? extends SlashCommand>> slashcommand = reflections.getSubTypesOf(SlashCommand.class);
-        for (Class<? extends SlashCommand> command : slashcommand) {
-            try {
-                clientBuilder.addSlashCommand(command.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -179,7 +169,6 @@ public class Main {
             Map<String, String> defaultGuildJoinRole = new HashMap<>();
             Map<String, String> defaultChannelMemberJoin = new HashMap<>();
             Map<String, String> defaultChannelMemberRemove = new HashMap<>();
-            Map<String, List<String>> prohibitWords = new HashMap<>();
             Map<String, Boolean> defaultWithoutMutedRole = new HashMap<>();
             Map<String, String> defaultMutedRole = new HashMap<>();
             defaultGuildJoinRole.put("657966618353074206", "660083059089080321");
@@ -187,13 +176,11 @@ public class Main {
             defaultChannelMemberRemove.put("657966618353074206", "660110008507432970");
             defaultWithoutMutedRole.put("657966618353074206",false);
             defaultMutedRole.put("657966618353074206","660114547646005280");
-            prohibitWords.put("739794013787258911", Collections.singletonList("porn"));
             map.put("guildJoinRole", defaultGuildJoinRole);
             map.put("channelMemberJoin", defaultChannelMemberJoin);
             map.put("channelMemberRemove", defaultChannelMemberRemove);
             map.put("withoutMutedRole",defaultWithoutMutedRole);
             map.put("mutedRole",defaultMutedRole);
-            map.put("prohibitWords", prohibitWords);
             Writer writer = Files.newBufferedWriter(serverConfigFile.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
             writer.close();
@@ -218,5 +205,9 @@ public class Main {
 
     public static ServerConfig getServerConfig() {
         return serverConfig;
+    }
+
+    public static EventWaiter getEventWaiter(){
+        return waiter;
     }
 }

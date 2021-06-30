@@ -1,9 +1,11 @@
-package fr.noalegeek.pepite_dor_bot.commands;
+package fr.noalegeek.pepite_dor_bot.commands.config;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
 import java.util.Locale;
@@ -18,6 +20,7 @@ public class ChannelMemberCommand extends Command {
         this.aliases = new String[]{"channelm","cmember","cm"};
         this.arguments = "<join|remove> <identifiant du salon>";
         this.category = CommandCategories.CONFIG.category;
+        this.userPermissions = new Permission[]{Permission.ADMINISTRATOR};
         this.guildOnly = true;
     }
 
