@@ -38,7 +38,7 @@ public class PurgeCommand extends Command {
             if(Integer.parseInt(args[0]) < 0) {
                 event.replyWarning("La valeur minimum est de 1.");
             }else if(Integer.parseInt(args[0]) > 100) {
-                event.replyWarning("La valeur maximale est de 100.\n");
+                event.replyWarning("La valeur maximale est de 100.\n:warning: La valeur a donc été défini à 100 !");
                 clearMessages = 100;
             } else {
                 clearMessages = Integer.parseInt(args[0]);

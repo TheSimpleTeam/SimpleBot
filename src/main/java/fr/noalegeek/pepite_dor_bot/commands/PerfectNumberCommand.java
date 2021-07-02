@@ -4,9 +4,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 
-public class PerfectNumber extends Command {
+public class PerfectNumberCommand extends Command {
 
-    public PerfectNumber(){
+    public PerfectNumberCommand(){
         this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"pn","perfectn","pnumber"};
         this.name = "perfectnumber";

@@ -87,7 +87,11 @@ public class MuteCommand extends Command {
                             e -> {
                                 MessageReaction.ReactionEmote emoteDefaultConfig = e.getReactionEmote();
                                 if(emoteDefaultConfig.getName().equals(WHITE_CHECK_MARK)){
-                                    MutedRoleCommand.mutedRoleParameter(event);
+                                    try{
+                                        String test = args[3];
+                                    }catch (ArrayIndexOutOfBoundsException ex){
+                                        event.reply("no");
+                                    }
                                 } else {
                                     event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+"Vous ne pourrez pas mute la personne mentionnée avec un rôle car vous n'avez pas configurer le rôle qu'aura la personne mentionnée.");
                                 }

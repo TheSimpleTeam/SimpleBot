@@ -15,7 +15,7 @@ public class ProhibitCommand extends Command {
 
     public ProhibitCommand() {
         this.name = "prohibitword";
-        this.aliases = new String[]{"prw", "prohibitw"};
+        this.aliases = new String[]{"prw", "prohibitw","prohitbitwrd","pw","pwrd","prohibitwr","pwr","pword"};
         this.example = "add prout";
         this.arguments = "<add/remove> <word>";
         this.category = CommandCategories.STAFF.category;
@@ -41,6 +41,8 @@ public class ProhibitCommand extends Command {
                 Main.getServerConfig().prohibitWords.clear();
                 Main.getServerConfig().prohibitWords.put(event.getGuild().getId(), words);
                 event.replySuccess("Le mot à bien été ajouté à la liste des mots interdits");
+                break;
+            case "sub":
                 break;
             //Todo: add more options
             default:
