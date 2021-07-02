@@ -3,8 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.MessageBuilder;
 
 public class PrimeNumberCommand extends Command {
     public PrimeNumberCommand(){
@@ -20,47 +19,49 @@ public class PrimeNumberCommand extends Command {
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
-        if(args.length != 2){
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Le nombre à spécifier a pour limite "+Long.MAX_VALUE+".");
+        if(args.length != 2) {
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this) + "Le nombre à spécifier a pour limite " + Long.MAX_VALUE  + ".");
+            return;
         }
+        String subCommand = args[0];
         try {
-            long number = Long.parseLong(args[1])/2;
-            int verifyPrimeNumber = 0;
-            switch (args[0]){
+            long number = Long.parseLong(args[1]);
+            switch (subCommand) {
                 case "nombre":
-                    for(long i = 2; i < number; i++){
-                        if (number % i == 0) {
-                            verifyPrimeNumber = 1;
-                            break;
-                        }
-                    }
-                    if(verifyPrimeNumber == 0){ // It's a prime number
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+Long.parseLong(args[1])+" est un nombre premier.");
-                    } else { // It's not a prime number
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+Long.parseLong(args[1])+" n'est pas un nombre premier.");
+                    if(isPrime(number)) {
+                        event.replySuccess("Le nombre " + number + " est un nombre premier.");
+                    } else {
+                        event.replySuccess("Le nombre " + number + " n'est pas un nombre premier.");
                     }
                     break;
                 case "liste":
-                    StringBuilder list = new StringBuilder();
-                    for(long i = 1; i < number; i++) {
-                        for (long j = 2; j < i; j++) {
-                            if (number % j != 0) {
-                                if (list.toString().length() > 1024) {
-                                    event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + "La liste étant trop longue est stoppée aux 1024 caractères.");
-                                    break;
-                                }
-                                list.append(i).append("\n");
-                            }
+                    MessageBuilder builder = new MessageBuilder();
+                    for (long i = 1; i < number; i++) {
+                        if(builder.toString().length() == 1024 || (builder.toString() + i + "\n").length() >= 1024) {
+                            event.replyWarning("La limite des 1024 caractères à été atteinte.");
+                            break;
+                        }
+                        if(isPrime(i)) {
+                            builder.append(i).append("\n");
                         }
                     }
-                    event.replySuccess(MessageHelper.formattedMention(event.getAuthor())+"Liste de tous les nombres premiers jusqu'à "+Long.parseLong(args[1])+" :\n\n"+list);
+                    event.reply(builder.build());
                     break;
                 default:
-                    event.replyError(MessageHelper.syntaxError(event.getAuthor(),this));
+                    MessageHelper.syntaxError(this, event);
                     break;
             }
-        } catch (NumberFormatException e){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Le nombre spécifié est trop grand.");
+        } catch(NumberFormatException ex) {
+            event.replyError("Le second argument ne peut contenir des lettres.\n " + MessageHelper.syntaxError(event.getAuthor(), this));
         }
+    }
+
+    private boolean isPrime(long num) {
+        for (long i = 2; i * i <= num; i++) {
+            if (num % i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
