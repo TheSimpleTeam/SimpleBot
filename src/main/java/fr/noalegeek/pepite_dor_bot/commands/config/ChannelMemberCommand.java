@@ -54,6 +54,6 @@ public class ChannelMemberCommand extends Command {
                         "L'argument **join** définira le salon où les annonces de bienvenues apparaîtront.\n" +
                         "L'argument **remove** définira le salon où les annonces de départs apparaîtront.");
         }
-        event.replySuccess("Le salon "+channelMember.getAsMention()+" a bien été défini.");
+        event.replySuccess("Le salon " + channelMember.getAsMention() + " a bien été défini.");
     }
 }
