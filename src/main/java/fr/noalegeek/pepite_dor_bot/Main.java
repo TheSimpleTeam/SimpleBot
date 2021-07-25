@@ -137,12 +137,10 @@ public class Main {
                 map.put("token", console.readLine());
                 System.out.println("What will be the bot's prefix ?");
                 map.put("prefix", console.readLine().isEmpty() ? "!" : console.readLine());
-                System.out.println("What is the role ID that a user will take when he joins the server.");
-                map.put("defaultRoleID", "846715377760731156");
                 System.out.println("How long will it take between each status change ?");
-                map.put("timeBetweenStatusChange", 15);
+                map.put("timeBetweenStatusChange", console.readLine().isEmpty() ? 15 : console.readLine());
                 System.out.println("What will be the delay between each automatic save ?");
-                map.put("autoSaveDelay", 15);
+                map.put("autoSaveDelay", console.readLine().isEmpty() ? 15 : console.readLine());
                 System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
                 map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions","example","ban everyone"} : console.readLine().split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");

@@ -121,7 +121,7 @@ public class Listener extends ListenerAdapter {
                 .setTitle("**" + (event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**")
                 .addField("Membre", event.getUser().getAsMention(), false)
                 .addField("➖ Membre perdu", "Nous sommes de nouveau à " + event.getGuild().getMemberCount() + " membres sur le serveur...", false)
-                .setTimestamp(OffsetDateTime.now(Clock.systemUTC()))
+                .setTimestamp(Instant.now())
                 .setColor(Color.RED)
                 .build();
         if (!getServerConfig().channelMemberRemove.containsKey(event.getGuild().getId())) {

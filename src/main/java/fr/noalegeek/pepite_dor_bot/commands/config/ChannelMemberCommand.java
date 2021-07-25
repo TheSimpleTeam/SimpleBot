@@ -42,17 +42,24 @@ public class ChannelMemberCommand extends Command {
         }
         switch (args[0].toLowerCase(Locale.ROOT)){
             case "join":
-                Main.getServerConfig().
-                        channelMemberJoin.put(event.getGuild().getId(),channelMember.getId());
+                if(event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin.get(event.getGuild().getId())).equals(channelMember)){
+                    event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon que vous voulez changer pour les messages de bienvenue est le même que celui configuré actuellement.");
+                    return;
+                }
+                Main.getServerConfig().channelMemberJoin.put(event.getGuild().getId(),channelMember.getId());
                 break;
             case "remove":
+                if(event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberRemove.get(event.getGuild().getId())).equals(channelMember)){
+                    event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon que vous voulez changer pour les messages de départs est le même que celui configuré actuellement.");
+                    return;
+                }
                 Main.getServerConfig().channelMemberRemove.put(event.getGuild().getId(),channelMember.getId());
                 break;
             default:
                 event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"" +
                         "Les arguments disponibles sont **join** et **remove**.\n" +
-                        "L'argument **join** définira le salon où les annonces de bienvenues apparaîtront.\n" +
-                        "L'argument **remove** définira le salon où les annonces de départs apparaîtront.");
+                        "L'argument **join** définira le salon où les messages de bienvenues apparaîtront.\n" +
+                        "L'argument **remove** définira le salon où les messages de départs apparaîtront.");
         }
         event.replySuccess("Le salon " + channelMember.getAsMention() + " a bien été défini.");
     }
