@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.commands;
+package fr.noalegeek.pepite_dor_bot.enums;
 
 import com.jagrosh.jdautilities.command.Command;
 

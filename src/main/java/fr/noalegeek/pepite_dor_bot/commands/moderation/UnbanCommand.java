@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
@@ -14,7 +15,8 @@ public class UnbanCommand extends Command {
         this.aliases = new String[]{"ub","unb","uban","pa","pardon"};
         this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
         this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
-        this.help = "Débanni seulement les personnes déjà banni.";
+        this.category = CommandCategories.STAFF.category;
+        this.help = "Débanni seulement les personnes déjà banni d'un serveur.";
         this.guildOnly = true;
         this.example = "285829396009451522";
     }

@@ -56,9 +56,6 @@ public class Main {
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
         }
-
-        EventWaiter waiter = new EventWaiter();
-
         try {
             jda = JDABuilder.createDefault(infos.token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
         } catch (LoginException e) {
@@ -166,17 +163,14 @@ public class Main {
             Map<String, String> defaultGuildJoinRole = new HashMap<>();
             Map<String, String> defaultChannelMemberJoin = new HashMap<>();
             Map<String, String> defaultChannelMemberRemove = new HashMap<>();
-            Map<String, Boolean> defaultWithoutMutedRole = new HashMap<>();
             Map<String, String> defaultMutedRole = new HashMap<>();
             defaultGuildJoinRole.put("657966618353074206", "660083059089080321");
             defaultChannelMemberJoin.put("657966618353074206", "848965362971574282");
             defaultChannelMemberRemove.put("657966618353074206", "660110008507432970");
-            defaultWithoutMutedRole.put("657966618353074206",false);
             defaultMutedRole.put("657966618353074206","660114547646005280");
             map.put("guildJoinRole", defaultGuildJoinRole);
             map.put("channelMemberJoin", defaultChannelMemberJoin);
             map.put("channelMemberRemove", defaultChannelMemberRemove);
-            map.put("withoutMutedRole",defaultWithoutMutedRole);
             map.put("mutedRole",defaultMutedRole);
             Writer writer = Files.newBufferedWriter(serverConfigFile.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);

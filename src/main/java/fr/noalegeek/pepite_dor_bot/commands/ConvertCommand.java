@@ -5,14 +5,12 @@ import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.RequestHelper;
-import net.dv8tion.jda.api.EmbedBuilder;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.time.Clock;
-import java.time.OffsetDateTime;
 import java.util.Locale;
 
 public class ConvertCommand extends Command {

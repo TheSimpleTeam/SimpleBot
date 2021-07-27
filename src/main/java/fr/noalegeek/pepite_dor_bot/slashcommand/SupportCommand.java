@@ -1,7 +1,7 @@
 package fr.noalegeek.pepite_dor_bot.slashcommand;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
-import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class SupportCommand extends SlashCommand {

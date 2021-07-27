@@ -2,11 +2,9 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
-import fr.noalegeek.pepite_dor_bot.commands.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +19,7 @@ public class PurgeCommand extends Command {
         this.arguments = "<nombre de messages>";
         this.help = "Supprime le nombre de messages spécifié.";
         this.category = CommandCategories.STAFF.category;
-        this.example = "69";
+        this.example = "6";
     }
 
     @Override
@@ -31,8 +29,6 @@ public class PurgeCommand extends Command {
             event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Le nombre de messages à spécifier doit se situer entre 1 et 100.");
             return;
         }
-        final AuditableRestAction<Void> deleteMessage = event.getMessage().delete();
-        boolean isMessageOld = false;
         int clearMessages = 1;
         try {
             if(Integer.parseInt(args[0]) < 0) {
@@ -48,14 +44,10 @@ public class PurgeCommand extends Command {
             return;
         }
         try {
-            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> deleteMessage.queue(unused -> event.getTextChannel().purgeMessages(messages)),
-                    unused -> Main.LOGGER.info("Le message n'a pas pu être supprimé."));
+            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete().queue(unused -> event.getTextChannel().purgeMessages(messages)));
         } catch (IllegalArgumentException ex){
-            isMessageOld = true;
+            event.getChannel().sendMessage("Il y a des messages datant de plus de 2 semaines donc je ne peux pas les supprimer !").queueAfter(10, TimeUnit.SECONDS);
         }
         event.replySuccess(clearMessages + " messages ont bien été supprimés.", messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
-        if(isMessageOld){
-            event.getChannel().sendMessage(":warning: Les messages datant de plus 2 semaines n'ont pas pu être supprimé !").queueAfter(10, TimeUnit.SECONDS);
-        }
     }
 }
