@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.commands.config;
+package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -19,10 +19,12 @@ public class ProhibitCommand extends Command {
         this.aliases = new String[]{"prohibitw","prohitbitwrd","pw","pwrd","pword"};
         this.example = "add prout";
         this.arguments = "<add|rem|reset> <mot>";
+        this.help = "Ajoute ou enlève un mot dans la liste de mots interdits. Peut même réinitialiser la liste complète des mots interdits.";
         this.category = CommandCategories.STAFF.category;
         this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.botPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.cooldown = 5;
+        this.guildOnly = true;
     }
 
     @Override
@@ -39,6 +41,10 @@ public class ProhibitCommand extends Command {
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "add":
                 List<String> prohibitWords = Main.getServerConfig().prohibitWords.get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords.get(event.getGuild().getId());
+                if(prohibitWords.contains(args[1])){
+                    event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + args[1] + "` est déjà présente dans la liste des mots interdits donc vous ne pouvez pas l'ajouter dans la liste.");
+                    return;
+                }
                 prohibitWords.add(args[1]);
                 Main.getServerConfig().prohibitWords.clear();
                 Main.getServerConfig().prohibitWords.put(event.getGuild().getId(), prohibitWords);
@@ -46,6 +52,10 @@ public class ProhibitCommand extends Command {
                 break;
             case "rem":
                 prohibitWords = Main.getServerConfig().prohibitWords.get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords.get(event.getGuild().getId());
+                if(!prohibitWords.contains(args[1])){
+                    event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + args[1] + "` n'est pas présente dans la liste des mots interdits donc vous ne pouvez pas l'enlever de la liste.");
+                    return;
+                }
                 prohibitWords.remove(args[1]);
                 Main.getServerConfig().prohibitWords.clear();
                 Main.getServerConfig().prohibitWords.put(event.getGuild().getId(), prohibitWords);

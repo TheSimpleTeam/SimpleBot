@@ -17,7 +17,9 @@ public class JoinRoleCommand extends Command {
         this.help = "Défini le rôle que va avoir un utilisateur lors de son arrivée sur un serveur.";
         this.arguments = "<identifiant/mention du role|reset>";
         this.category = CommandCategories.CONFIG.category;
+        this.cooldown = 5;
         this.example = "660061218878390272";
+        this.guildOnly = true;
     }
 
     @Override

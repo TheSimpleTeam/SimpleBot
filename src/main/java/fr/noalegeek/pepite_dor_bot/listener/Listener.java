@@ -1,6 +1,7 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.commands.moderation.ProhibitCommand;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -145,8 +146,13 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event.getAuthor() == event.getJDA().getSelfUser()) return;
-        LOGGER.info(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a dit :\n" +
+        LOGGER.info(MessageHelper.getTag(event.getAuthor()) + " a dit :\n" +
                 event.getMessage().getContentRaw());
+        /*try {
+            saveConfigs();
+        } catch (IOException ex) {
+            LOGGER.severe(ex.getMessage());
+        }*/
         if (getServerConfig().prohibitWords == null) {
             new File("config/server-config.json").delete();
             try {
@@ -158,9 +164,13 @@ public class Listener extends ListenerAdapter {
         }
         if (!getServerConfig().prohibitWords.containsKey(event.getGuild().getId())) return;
         for (String s : getServerConfig().prohibitWords.get(event.getGuild().getId())) {
+            for(String alias : new String[]{"prohibitw","prohitbitwrd","pw","pwrd","pword"}){
+                if(event.getMessage().getContentRaw().toLowerCase().startsWith(alias)){
+                    return;
+                }
+            }
             if (event.getMessage().getContentRaw().toLowerCase().contains(s.toLowerCase())) {
-                event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + s + "` fait parti de la liste des mots interdits.").queue(),
-                        unused -> event.getMessage().addReaction("\uD83E\uDD14\n").queue());
+                event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + s + "` fait parti de la liste des mots interdits.").queue());
             }
         }
     }

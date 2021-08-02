@@ -62,7 +62,7 @@ public class ChannelMemberCommand extends Command {
                         Main.getServerConfig().channelMemberJoin.put(event.getGuild().getId(),channelMember.getId());
                         break;
                     default:
-                        if(event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin.get(event.getGuild().getId())).equals(channelMember)){
+                        if(event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin.get(event.getGuild().getId())) == null && event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin.get(event.getGuild().getId())).equals(channelMember)){
                             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon que vous voulez changer pour les messages de bienvenue est le même que celui configuré actuellement.");
                             return;
                         }
