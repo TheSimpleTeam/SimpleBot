@@ -71,7 +71,7 @@ public class Listener extends ListenerAdapter {
         }
     }
 
-    public void saveConfigs() throws IOException {
+    public static void saveConfigs() throws IOException {
         Path configPath = new File("config/server-config.json").toPath();
         if (!new File(configPath.toUri()).exists()) {
             new File(configPath.toUri()).createNewFile();
