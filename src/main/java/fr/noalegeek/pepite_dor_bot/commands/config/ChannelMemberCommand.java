@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.User;
 
-import java.io.IOException;
 import java.util.Locale;
 
 public class ChannelMemberCommand extends Command {
