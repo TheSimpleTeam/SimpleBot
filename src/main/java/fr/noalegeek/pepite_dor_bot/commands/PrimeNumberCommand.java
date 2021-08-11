@@ -48,7 +48,7 @@ public class PrimeNumberCommand extends Command {
                     event.reply(MessageHelper.formattedMention(event.getAuthor())+"Voici la liste des nombres premiers jusqu'à "+number+" :\n"+list.build());
                     break;
                 default:
-                    MessageHelper.syntaxError(this, event);
+                    MessageHelper.syntaxError(event.getAuthor(), this);
                     break;
             }
         } catch(NumberFormatException ex) {
