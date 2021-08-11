@@ -1,4 +1,24 @@
 {
+  "arguments.channelmember": "<join|remove> <channel ID/mention|reset|this>",
+
+  "error.channelmember.join.channelnull": "The channel you want to change for the welcome messages does not exist.",
+  "error.channelmember.join.notconfigured": "The channel for welcome messages has not been configured so you can't reset it.",
+  "error.channelmember.join.sameasconfigured": "The channel you want to change for the welcome messages is the same as the one currently configured.",
+  "error.channelmember.leave.channelnull": "The channel you want to change for the departure messages does not exist.",
+  "error.channelmember.leave.notconfigured": "The channel for the departure messages has not been configured so you cannot reset it.",
+  "error.channelmember.leave.sameasconfigured": "The channel you want to change for the departure messages is the same as the one currently configured.",
+
+  "error.commands.notowner": "Only the server owner can configure the server.",
+
+  "help.channelmember": "Defines the room where the announcements of the people who join or leave the server with his ID.",
+
   "msg.example": "Here is an example!",
-  "msg.languageconfig": "The language has been set to %s"
+  "msg.languageconfig": "The language has been set to %s",
+
+  "success.channelmember.join.configured": "The channel %s has been defined as a channel for welcome messages.",
+  "success.channelmember.join.reset": "Le salon %s n'est plus le salon pour les messages de bienvenue.",
+  "success.channelmember.leave.configured": "The channel %s has been defined as a channel for departure messages.",
+  "success.channelmember.leave.reset": "Le salon %s n'est plus le salon pour les messages de départs.",
+
+  "syntax.channelmember": "The available arguments are:\n- **join** will define the channel where the welcome announcements will appear.\n- **leave** will define the channel where the departure announcements will appear.\n\nAfter these arguments, the available arguments are **channel ID/mention**, **reset** and **this** :\n- **channel ID/mention** will define the channel by its ID or mention.\n- **reset** will reset the channel that has been configured.\n- **this** will define the channel where the order was made."
 }

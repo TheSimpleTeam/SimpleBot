@@ -53,7 +53,7 @@ public class JoinRoleCommand extends Command {
             }
             Main.getServerConfig().guildJoinRole.remove(event.getGuild().getId());
         } else {
-            if(event.getGuild().getRoleById(joinRoleId).equals(joinRole)){
+            if(event.getGuild().getRoleById(joinRoleId) == joinRole){
                 event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le rôle que vous voulez changer est le même que celui configuré actuellement.");
                 return;
             }

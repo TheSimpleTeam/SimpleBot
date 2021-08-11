@@ -5,10 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.User;
 
 import java.util.Locale;
 
@@ -17,10 +14,10 @@ public class ChannelMemberCommand extends Command {
     public ChannelMemberCommand() {
         this.name = "channelmember";
         this.cooldown = 5;
-        this.help = "Défini le salon où les annonces des personnes qui rejoignent ou qui quittent le serveur avec son identifiant.";
+        this.help = "help.channelmember";
         this.example = "join 848965362971574282";
         this.aliases = new String[]{"channelm", "cmember", "cm"};
-        this.arguments = "<join|remove> <identifiant/mention du salon|reset|this>";
+        this.arguments = "arguments.channelmember";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;
     }
@@ -29,19 +26,12 @@ public class ChannelMemberCommand extends Command {
     protected void execute(CommandEvent event) {
         if (event.getAuthor().isBot()) return;
         if(!event.getMember().isOwner()){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Seul le propriétaire du serveur peut exécuter cette commande.");
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.commands.notowner", event.getGuild().getId()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
-        String syntaxError = "Les arguments disponibles sont **join** et **remove** :\n" +
-                "- **join** définira le salon où les annonces de bienvenues apparaîtront.\n" +
-                "- **leave** définira le salon où les annonces de départs apparaîtront.\n\n" +
-                "Après ces arguments, les arguments disponibles sont **identifiant/mention du salon**, **reset** et **this** :\n" +
-                "- **identifiant/mention du salon** définira le salon grâce à son indentifiant ou sa mention.\n" +
-                "- **reset** réinitialisera le salon qui a été configuré\n" +
-                "- **this** définira le salon où a été fait la commande.";
         if (args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + syntaxError);
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + MessageHelper.sendTranslatedMessage("syntax.channelmember", event.getGuild().getId()));
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -50,38 +40,38 @@ public class ChannelMemberCommand extends Command {
                 switch (args[1].toLowerCase(Locale.ROOT)) {
                     case "reset":
                         if (channelMemberId == null) {
-                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon pour les messages de bienvenue n'a pas été configuré donc vous ne pouvez pas le réinitialiser.");
+                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.join.notconfigured", event.getGuild().getId()));
                             return;
                         }
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le salon " + event.getGuild().getGuildChannelById(channelMemberId).getAsMention() + " n'est plus le salon pour les messages de bienvenue.");
+                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.sendTranslatedMessage("success.channelmember.join.reset", event.getGuild().getId()), event.getGuild().getGuildChannelById(channelMemberId).getAsMention()));
                         Main.getServerConfig().channelMemberJoin.remove(event.getGuild().getId());
                         break;
                     case "this":
                         GuildChannel channelMember = (GuildChannel) event.getChannel();
                         if (channelMemberId == null || !channelMember.getId().equals(event.getChannel().getId())) {
                             Main.getServerConfig().channelMemberJoin.put(event.getGuild().getId(), channelMember.getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le salon " + channelMember.getAsMention() + " a bien été défini comme salon pour les messages de bienvenue.");
+                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.sendTranslatedMessage("success.channelmember.leave.configured", event.getGuild().getId()), channelMember.getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon que vous voulez changer pour les messages de bienvenue est le même que celui configuré actuellement.");
+                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.join.sameasconfigured", event.getGuild().getId()));
                         break;
                     default:
                         String channelId = args[1].replaceAll("\\D+", "");
                         if (channelId.isEmpty()) {
-                            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + syntaxError);
+                            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + MessageHelper.sendTranslatedMessage("syntax.channelmember", event.getGuild().getId()));
                             return;
                         }
                         channelMember = event.getGuild().getGuildChannelById(channelId);
                         if (channelMember == null) {
-                            event.replyError("Ce salon n'existe pas.");
+                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.join.channelnull", event.getGuild().getId()));
                             return;
                         }
                         if (channelMemberId == null || !channelMemberId.equals(channelId)) {
                             Main.getServerConfig().channelMemberJoin.put(event.getGuild().getId(), channelMember.getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le salon " + channelMember.getAsMention() + " a bien été défini comme salon pour les messages de bienvenue.");
+                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.sendTranslatedMessage("success.channelmember.leave.configured", event.getGuild().getId()), channelMember.getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon que vous voulez changer pour les messages de bienvenue est le même que celui configuré actuellement.");
+                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.join.sameasconfigured", event.getGuild().getId()));
                         break;
                 }
                 break;
@@ -90,43 +80,43 @@ public class ChannelMemberCommand extends Command {
                 switch (args[1].toLowerCase(Locale.ROOT)) {
                     case "reset":
                         if (channelMemberId == null) {
-                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon pour les messages de départs n'a pas été configuré donc vous ne pouvez pas le réinitialiser.");
+                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.leave.notconfigured", event.getGuild().getId()));
                             return;
                         }
                         Main.getServerConfig().channelMemberRemove.remove(event.getGuild().getId());
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le salon " + event.getGuild().getGuildChannelById(channelMemberId).getAsMention() + " n'est plus le salon pour les messages de départs.");
+                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.sendTranslatedMessage("success.channelmember.leave.reset", event.getGuild().getId()), event.getGuild().getGuildChannelById(channelMemberId).getAsMention()));
                         break;
                     case "this":
                         GuildChannel channelMember = (GuildChannel) event.getChannel();
                         if (channelMemberId == null || !channelMemberId.equals(event.getChannel().getId())) {
                             Main.getServerConfig().channelMemberRemove.put(event.getGuild().getId(), channelMember.getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le salon " + channelMember.getAsMention() + " a bien été défini comme salon pour les messages de départs.");
+                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.sendTranslatedMessage("success.channelmember.leave.configured", event.getGuild().getId()), channelMember.getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon que vous voulez changer pour les messages de départs est le même que celui configuré actuellement.");
+                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.leave.sameasconfigured", event.getGuild().getId()));
                         break;
                     default:
                         String channelId = args[1].replaceAll("\\D+", "");
                         if (channelId.isEmpty()) {
-                            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + syntaxError);
+                            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + MessageHelper.sendTranslatedMessage("syntax.channelmember", event.getGuild().getId()));
                             return;
                         }
                         channelMember = event.getGuild().getGuildChannelById(channelId);
                         if (channelMember == null) {
-                            event.replyError("Ce salon n'existe pas.");
+                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.leave.channelnull", event.getGuild().getId()));
                             return;
                         }
                         if (channelMemberId == null || !channelMemberId.equals(channelId)) {
                             Main.getServerConfig().channelMemberRemove.put(event.getGuild().getId(), channelMember.getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le salon " + channelMember.getAsMention() + " a bien été défini comme salon pour les messages de départs.");
+                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.sendTranslatedMessage("success.channelmember.leave.configured", event.getGuild().getId()), channelMember.getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le salon que vous voulez changer pour les messages de départs est le même que celui configuré actuellement.");
+                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.channelmember.leave.sameasconfigured", event.getGuild().getId()));
                         break;
                 }
                 break;
             default:
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + syntaxError);
+                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + MessageHelper.sendTranslatedMessage("syntax.channelmember", event.getGuild().getId()));
         }
     }
 }

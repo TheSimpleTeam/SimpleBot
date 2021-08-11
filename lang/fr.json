@@ -1,4 +1,24 @@
 {
+  "arguments.channelmember": "<join|remove> <identifiant/mention du salon|reset|this>",
+
+  "error.channelmember.join.channelnull": "Le salon que vous voulez changer pour les messages de bienvenue n'existe pas.",
+  "error.channelmember.join.notconfigured": "Le salon pour les messages de bienvenue n'a pas été configuré donc vous ne pouvez pas le réinitialiser.",
+  "error.channelmember.join.sameasconfigured": "Le salon que vous voulez changer pour les messages de bienvenue est le même que celui configuré actuellement.",
+  "error.channelmember.leave.channelnull": "Le salon que vous voulez changer pour les messages de départs n'existe pas.",
+  "error.channelmember.leave.notconfigured": "Le salon pour les messages de départs n'a pas été configuré donc vous ne pouvez pas le réinitialiser.",
+  "error.channelmember.leave.sameasconfigured": "Le salon que vous voulez changer pour les messages de départs est le même que celui configuré actuellement.",
+
+  "error.commands.notowner": "Seul le propriétaire du serveur peut configurer le serveur.",
+
+  "help.channelmember": "Défini le salon où les annonces des personnes qui rejoignent ou qui quittent le serveur avec son identifiant.",
+
   "msg.example": "Voici un exemple!",
-  "msg.languageconfig": "La nouvelle langue pour le serveur a bien été mise sur %s"
+  "msg.languageconfig": "La nouvelle langue pour le serveur a bien été mise sur %s",
+
+  "success.channelmember.join.configured": "Le salon %s a bien été défini comme salon pour les messages de bienvenue.",
+  "success.channelmember.join.reset": "Le salon %s n'est plus le salon pour les messages de bienvenue.",
+  "success.channelmember.leave.configured": "Le salon %s a bien été défini comme salon pour les messages de départs.",
+  "success.channelmember.leave.reset": "Le salon %s n'est plus le salon pour les messages de départs.",
+
+  "syntax.channelmember": "Les arguments disponibles sont **join** et **remove** :\n- **join** définira le salon où les annonces de bienvenues apparaîtront.\n- **leave** définira le salon où les annonces de départs apparaîtront.\n\nAprès ces arguments, les arguments disponibles sont **identifiant/mention du salon**, **reset** et **this** :\n- **identifiant/mention du salon** définira le salon grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le salon qui a été configuré.\n- **this** définira le salon où a été fait la commande."
 }
