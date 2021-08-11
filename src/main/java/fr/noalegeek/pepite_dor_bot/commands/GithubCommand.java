@@ -41,7 +41,7 @@ public class GithubCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3) {
-            MessageHelper.syntaxError(this, event);
+            MessageHelper.syntaxError(event.getAuthor(), this);
             return;
         }
         if(isCommandDisabled()) {
@@ -52,7 +52,7 @@ public class GithubCommand extends Command {
         switch (args[0]) {
             case "recherche":
                 if(args.length != 3) {
-                    MessageHelper.syntaxError(this, event);
+                    MessageHelper.syntaxError(event.getAuthor(), this);
                     return;
                 }
                 String strRepo = args[2];
@@ -101,7 +101,7 @@ public class GithubCommand extends Command {
                 }
                 break;
             default:
-                MessageHelper.syntaxError(this, event);
+                MessageHelper.syntaxError(event.getAuthor(), this);
                 break;
         }
     }
