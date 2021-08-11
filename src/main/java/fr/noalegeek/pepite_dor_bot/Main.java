@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
@@ -42,8 +43,10 @@ public class Main {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
+    private static Map<String, JsonObject> localizations;
+    private static String[] langs;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         try {
             String arg = "";
             try {
@@ -75,12 +78,26 @@ public class Main {
         jda.addEventListener(new Listener(), waiter, client);
         try {
             setupLogs();
+            setupLocalizations();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage());
         }
     }
 
-        /**
+    private static void setupLocalizations() throws IOException {
+        Map<String, JsonObject> objects = new HashMap<>();
+        List<String> langS = new ArrayList<>();
+        File f = new File("lang");
+        File[] _langs = f.listFiles();
+        for (File lang : _langs) {
+            langS.add(lang.getName().replaceAll(".json", ""));
+            objects.put(lang.getName().replaceAll(".json", ""), gson.fromJson(Files.newBufferedReader(lang.toPath(), StandardCharsets.UTF_8), JsonObject.class));
+        }
+        localizations = objects;
+        langs = langS.toArray(new String[0]);
+    }
+
+    /**
      * <p>Instantiates all classes from the package {@link fr.noalegeek.pepite_dor_bot.commands}</p>
      */
     private static void setupCommands(CommandClientBuilder clientBuilder) {
@@ -165,16 +182,19 @@ public class Main {
             Map<String, String> defaultChannelMemberRemove = new HashMap<>();
             Map<String, String> defaultMutedRole = new HashMap<>();
             Map<String, String[]> defaultProhibitWords = new HashMap<>();
+            Map<String, String> languages = new HashMap<>();
             defaultGuildJoinRole.put("657966618353074206", "660083059089080321");
             defaultChannelMemberJoin.put("657966618353074206", "848965362971574282");
             defaultChannelMemberRemove.put("657966618353074206", "660110008507432970");
-            defaultMutedRole.put("657966618353074206","660114547646005280");
-            defaultProhibitWords.put("657966618353074206", new String[]{"prout","pute"});
+            defaultMutedRole.put("657966618353074206", "660114547646005280");
+            defaultProhibitWords.put("657966618353074206", new String[]{"prout", "pute"});
+            languages.put("846048803554852904", "en_us");
             map.put("guildJoinRole", defaultGuildJoinRole);
             map.put("channelMemberJoin", defaultChannelMemberJoin);
             map.put("channelMemberRemove", defaultChannelMemberRemove);
-            map.put("mutedRole",defaultMutedRole);
-            map.put("prohibitWords",defaultProhibitWords);
+            map.put("mutedRole", defaultMutedRole);
+            map.put("prohibitWords", defaultProhibitWords);
+            map.put("language", languages);
             Writer writer = Files.newBufferedWriter(serverConfigFile.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
             writer.close();
@@ -203,5 +223,13 @@ public class Main {
 
     public static EventWaiter getEventWaiter(){
         return waiter;
+    }
+
+    public static Map<String, JsonObject> getLocalizations() {
+        return localizations;
+    }
+
+    public static String[] getLangs() {
+        return langs;
     }
 }

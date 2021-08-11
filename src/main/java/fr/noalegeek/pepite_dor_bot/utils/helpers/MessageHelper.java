@@ -41,4 +41,13 @@ public class MessageHelper {
         }
         return day + "/" + month + "/" + year;
     }
+
+    public static String sendTranslatedMessage(String key, String guildID) {
+        String lang = Main.getServerConfig().language.containsKey(guildID)
+                ? Main.getServerConfig().language.get(guildID)
+                : "en_us";
+        return Main.getLocalizations()
+                .get(lang)
+                .get(key).getAsString();
+    }
 }
