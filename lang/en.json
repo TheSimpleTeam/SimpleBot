@@ -4,5 +4,7 @@
   "help.channelmember": "Defines the room where the announcements of the people who join or leave the server with his ID.",
 
   "msg.example": "Here is an example!",
-  "msg.languageconfig": "The language has been set to %s"
+  "msg.languageconfig": "The language has been set to %s",
+
+  "help.commands": "**%s** commands:"
 }

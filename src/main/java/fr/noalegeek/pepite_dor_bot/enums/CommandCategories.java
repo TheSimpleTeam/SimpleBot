@@ -4,12 +4,12 @@ import com.jagrosh.jdautilities.command.Command;
 
 public enum CommandCategories {
 
-    FUN(new Command.Category("Fun")),
-    STAFF(new Command.Category("Staff")),
-    INFO(new Command.Category("Informations")),
-    MISC(new Command.Category("Divers")),
-    CONFIG(new Command.Category("Configuration")),
-    NONE(new Command.Category("No category")),
+    FUN(new Command.Category("category.fun")),
+    STAFF(new Command.Category("category.mod")),
+    INFO(new Command.Category("category.infos")),
+    MISC(new Command.Category("category.misc")),
+    CONFIG(new Command.Category("category.config")),
+    NONE(new Command.Category("category.noCategory")),
     //Add other categories
     ;
 

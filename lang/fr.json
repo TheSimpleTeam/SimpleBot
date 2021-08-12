@@ -4,5 +4,7 @@
   "help.channelmember": "Défini le salon où les annonces des personnes qui rejoignent ou qui quittent le serveur avec son identifiant.",
 
   "msg.example": "Voici un exemple!",
-  "msg.languageconfig": "La nouvelle langue pour le serveur a bien été mise sur %s"
+  "msg.languageconfig": "La nouvelle langue pour le serveur a bien été mise sur %s",
+
+  "help.commands": "Commandes de **%s**:"
 }

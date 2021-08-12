@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
 import java.util.Locale;
@@ -80,9 +81,23 @@ public class MessageHelper {
         return day + "/" + month + "/" + year;
     }
 
+    /**
+     *
+     * @param key the localization key
+     * @param guildID ID of the guild
+     * @return the translated value
+     * @throws NullPointerException if the key does not exist in any localization files.
+     */
+    @Nullable
     public static String sendTranslatedMessage(String key, String guildID) {
-        String lang = Main.getServerConfig().language.getOrDefault(guildID, "en_us");
-        Optional<JsonElement> s = Optional.of(Main.getLocalizations().get(lang).get(key));
-        return s.orElseThrow(() -> new NullPointerException("This key does not exist in the default localization file !")).getAsString();
+        String lang = Main.getServerConfig().language.getOrDefault(guildID, "en");
+        Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
+        if(s.isPresent()) return s.get().getAsString();
+
+        if (Main.getLocalizations().get("en").get(key) == null) {
+            throw new NullPointerException("This key does not exist in any localization file !");
+        }
+        return Main.getLocalizations().get("en").get(key).getAsString();
+
     }
 }

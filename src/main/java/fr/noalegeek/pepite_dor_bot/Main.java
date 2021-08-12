@@ -12,6 +12,7 @@ import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
+import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -102,10 +103,9 @@ public class Main {
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
-        StringBuilder builder = new StringBuilder("Commandes de **"+event.getSelfUser().getName()+"** :\n");
+        StringBuilder builder = new StringBuilder(String.format(MessageHelper.sendTranslatedMessage("help.commands", event.getGuild().getId()), event.getSelfUser().getName()) + "\n");
         Command.Category category = null;
-        List<Command> botCommands = b.commands.
-                stream().sorted(Comparator.comparing(o -> o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName()))
+        List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName()))
                 .collect(Collectors.toList());
         for(Command command : botCommands)
         {
@@ -241,7 +241,7 @@ public class Main {
             defaultChannelMemberRemove.put("657966618353074206", "660110008507432970");
             defaultMutedRole.put("657966618353074206", "660114547646005280");
             defaultProhibitWords.put("657966618353074206", new String[]{"prout", "pute"});
-            languages.put("846048803554852904", "en_us");
+            languages.put("846048803554852904", "en");
             map.put("guildJoinRole", defaultGuildJoinRole);
             map.put("channelMemberJoin", defaultChannelMemberJoin);
             map.put("channelMemberRemove", defaultChannelMemberRemove);
