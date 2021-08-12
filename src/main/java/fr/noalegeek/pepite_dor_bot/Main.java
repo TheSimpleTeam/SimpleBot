@@ -6,14 +6,18 @@ import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import okhttp3.OkHttpClient;
 import org.reflections.Reflections;
@@ -32,6 +36,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -45,6 +50,17 @@ public class Main {
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
+
+    private static class Bot {
+        public final List<Command> commands;
+        public final String ownerID, serverInvite;
+
+        public Bot(List<Command> commands, String ownerID, String serverInvite) {
+            this.commands = commands;
+            this.ownerID = ownerID;
+            this.serverInvite = serverInvite;
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         try {
@@ -65,16 +81,17 @@ public class Main {
             LOGGER.log(Level.SEVERE,"Le token est invalide");
         }
         Random randomActivity = new Random();
+        Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
-                .setOwnerId("285829396009451522")
+                .setOwnerId(b.ownerID)
                 .setCoOwnerIds("363811352688721930")
                 .setPrefix(infos.prefix)
                 .useHelpBuilder(true)
-                .setServerInvite("https://discord.gg/jw3kn4gNZW")
+                .setServerInvite(b.serverInvite)
                 .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
                 .setStatus(OnlineStatus.ONLINE);
-        setupCommands(clientBuilder);
-        client = clientBuilder.build();
+        setupCommands(clientBuilder, b);
+        client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
         try {
             setupLogs();
@@ -82,6 +99,40 @@ public class Main {
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage());
         }
+    }
+
+    private static void getHelpConsumer(CommandEvent event, Bot b) {
+        StringBuilder builder = new StringBuilder("Commandes de **"+event.getSelfUser().getName()+"** :\n");
+        Command.Category category = null;
+        List<Command> botCommands = b.commands.
+                stream().sorted(Comparator.comparing(o -> o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName()))
+                .collect(Collectors.toList());
+        for(Command command : botCommands)
+        {
+            if(!command.isHidden() && (!command.isOwnerCommand() || event.isOwner()))
+            {
+                if(!Objects.equals(category, command.getCategory()))
+                {
+                    category = command.getCategory();
+                    builder.append("\n\n  __").append(category==null ? "Aucune catégorie" : category.getName()).append("__:\n");
+                }
+                builder.append("\n`").append(infos.prefix).append(infos.prefix==null?" ":"").append(command.getName())
+                        .append(command.getArguments()==null ? "`" : " "+command.getArguments()+"`")
+                        .append(" - ").append(command.getHelp());
+            }
+        }
+        User owner = event.getJDA().getUserById(b.ownerID);
+        if(owner!=null)
+        {
+            builder.append("\n\nPour plus d'aide, contactez **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
+            if(event.getClient().getServerInvite()!=null)
+                builder.append(" ou rejoignez le discord ").append(b.serverInvite);
+        }
+        event.replyInDm(builder.toString(), unused ->
+        {
+            if(event.isFromType(ChannelType.TEXT))
+                event.reactSuccess();
+        }, t -> event.replyWarning("Aucune aide ne peut vous être envoyé car vous avez bloqué vos messages privés."));
     }
 
     private static void setupLocalizations() throws IOException {
@@ -100,12 +151,14 @@ public class Main {
     /**
      * <p>Instantiates all classes from the package {@link fr.noalegeek.pepite_dor_bot.commands}</p>
      */
-    private static void setupCommands(CommandClientBuilder clientBuilder) {
+    private static void setupCommands(CommandClientBuilder clientBuilder, Bot b) {
         Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
             try {
-                clientBuilder.addCommands(command.newInstance());
+                Command instance = command.newInstance();
+                clientBuilder.addCommands(instance);
+                b.commands.add(instance);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }

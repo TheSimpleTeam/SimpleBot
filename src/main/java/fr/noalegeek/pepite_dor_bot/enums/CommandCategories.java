@@ -9,6 +9,7 @@ public enum CommandCategories {
     INFO(new Command.Category("Informations")),
     MISC(new Command.Category("Divers")),
     CONFIG(new Command.Category("Configuration")),
+    NONE(new Command.Category("No category")),
     //Add other categories
     ;
 

@@ -12,8 +12,6 @@ import java.util.Optional;
 
 public class MessageHelper {
 
-
-
     public static String getTag(final User user) {
         return user.getName() + "#" + user.getDiscriminator();
     }
