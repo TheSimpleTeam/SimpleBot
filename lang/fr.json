@@ -7,6 +7,10 @@
   "error.channelmember.leave.channelnull": "Le salon que vous voulez changer pour les messages de départs n'existe pas.",
   "error.channelmember.leave.notconfigured": "Le salon pour les messages de départs n'a pas été configuré donc vous ne pouvez pas le réinitialiser.",
   "error.channelmember.leave.sameasconfigured": "Le salon que vous voulez changer pour les messages de départs est le même que celui configuré actuellement.",
+  "error.joinrole.notconfigured": "Le rôle n'a pas été configuré donc vous ne pouvez pas le réinitialiser.",
+  "error.joinrole.rolenull": "Ce rôle n'existe pas.",
+  "error.joinrole.rolemanaged": "Ce rôle ne peut pas être attribué à un utilisateur.",
+  "error.joinrole.sameasconfigured": "Le rôle que vous voulez changer est le même que celui configuré actuellement.",
 
   "error.commands.notowner": "Seul le propriétaire du serveur peut configurer le serveur.",
 
@@ -19,6 +23,8 @@
   "success.channelmember.join.reset": "Le salon %s n'est plus le salon pour les messages de bienvenue.",
   "success.channelmember.leave.configured": "Le salon %s a bien été défini comme salon pour les messages de départs.",
   "success.channelmember.leave.reset": "Le salon %s n'est plus le salon pour les messages de départs.",
+  "success.joinrole.configured": "Le rôle %s a bien été défini.",
 
-  "syntax.channelmember": "Les arguments disponibles sont **join** et **remove** :\n- **join** définira le salon où les annonces de bienvenues apparaîtront.\n- **leave** définira le salon où les annonces de départs apparaîtront.\n\nAprès ces arguments, les arguments disponibles sont **identifiant/mention du salon**, **reset** et **this** :\n- **identifiant/mention du salon** définira le salon grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le salon qui a été configuré.\n- **this** définira le salon où a été fait la commande."
+  "syntax.channelmember": "Les arguments disponibles sont **join** et **remove** :\n- **join** définira le salon où les annonces de bienvenues apparaîtront.\n- **leave** définira le salon où les annonces de départs apparaîtront.\n\nAprès ces arguments, les arguments disponibles sont **identifiant/mention du salon**, **reset** et **this** :\n- **identifiant/mention du salon** définira le salon grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le salon qui a été configuré.\n- **this** définira le salon où a été fait la commande.",
+  "syntax.joinrole": "Les arguments disponibles sont :\n- **identifiant/mention du salon** définira le rôle grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le rôle qui a été configuré."
 }

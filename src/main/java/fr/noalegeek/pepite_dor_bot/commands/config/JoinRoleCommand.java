@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
+import java.util.Locale;
+
 public class JoinRoleCommand extends Command {
 
     public JoinRoleCommand() {
@@ -27,38 +29,36 @@ public class JoinRoleCommand extends Command {
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
         if(!event.getMember().isOwner()){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Seul le propriétaire du serveur peut exécuter cette commande.");
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.commands.notowner", event.getGuild().getId()));
             return;
         }
         String[] args = event.getArgs().split(" \\s+");
         if (args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this) + "Les arguments disponibles sont :\n" +
-                    "- **identifiant/mention du salon** définira le rôle grâce à son indentifiant ou sa mention.\n" +
-                    "- **reset** réinitialisera le rôle qui a été configuré.");
+            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this) + MessageHelper.sendTranslatedMessage("syntax.joinrole", event.getGuild().getId()));
             return;
         }
         Role joinRole = event.getGuild().getRoleById(args[0].replaceAll("\\D+",""));
         if (joinRole == null) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Ce rôle n'existe pas.");
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.joinrole.rolenull", event.getGuild().getId()));
             return;
         } else if (joinRole.isManaged()) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Ce rôle ne peut pas être attribué à un utilisateur.");
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.joinrole.rolemanaged", event.getGuild().getId()));
             return;
         }
         String joinRoleId = Main.getServerConfig().guildJoinRole.get(event.getGuild().getId());
         if(args[0].equalsIgnoreCase("reset")){
-            if(event.getGuild().getRoleById(joinRoleId) == null){
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le rôle n'a pas été configuré donc vous ne pouvez pas le réinitialiser.");
+            if(joinRoleId == null){
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.joinrole.notconfigured", event.getGuild().getId()));
                 return;
             }
             Main.getServerConfig().guildJoinRole.remove(event.getGuild().getId());
         } else {
-            if(event.getGuild().getRoleById(joinRoleId) == joinRole){
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le rôle que vous voulez changer est le même que celui configuré actuellement.");
+            if(joinRoleId.equals(joinRole.getId())){
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("error.joinrole.sameasconfigured", event.getGuild().getId()));
                 return;
             }
             Main.getServerConfig().guildJoinRole.put(event.getGuild().getId(), joinRole.getId());
-            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le rôle " + joinRole.getAsMention() + " à bien été défini.");
+            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.sendTranslatedMessage("success.joinrole.configured", event.getGuild().getId()));
         }
     }
 }
