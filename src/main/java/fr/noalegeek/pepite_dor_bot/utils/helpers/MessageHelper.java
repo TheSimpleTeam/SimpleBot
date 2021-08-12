@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.utils.helpers;
 
+import com.google.gson.JsonElement;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
@@ -7,6 +8,7 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.time.OffsetDateTime;
 import java.util.Locale;
+import java.util.Optional;
 
 public class MessageHelper {
 
@@ -81,11 +83,8 @@ public class MessageHelper {
     }
 
     public static String sendTranslatedMessage(String key, String guildID) {
-        String lang = Main.getServerConfig().language.containsKey(guildID)
-                ? Main.getServerConfig().language.get(guildID)
-                : "en_us";
-        return Main.getLocalizations()
-                .get(lang)
-                .get(key).getAsString();
+        String lang = Main.getServerConfig().language.getOrDefault(guildID, "en_us");
+        Optional<JsonElement> s = Optional.of(Main.getLocalizations().get(lang).get(key));
+        return s.orElseThrow(() -> new NullPointerException("This key does not exist in the default localization file !")).getAsString();
     }
 }
