@@ -1,6 +1,8 @@
 {
   "arguments.channelmember": "<join|remove> <channel ID/mention|reset|this>",
 
+  "help.channelmember": "Defines the room where the announcements of the people who join or leave the server with his ID.",
+
   "error.channelmember.join.channelnull": "The channel you want to change for the welcome messages does not exist.",
   "error.channelmember.join.notconfigured": "The channel for welcome messages has not been configured so you can't reset it.",
   "error.channelmember.join.sameasconfigured": "The channel you want to change for the welcome messages is the same as the one currently configured.",
@@ -14,10 +16,21 @@
 
   "error.commands.notowner": "Only the server owner can configure the server.",
 
-  "help.channelmember": "Defines the room where the announcements of the people who join or leave the server with his ID.",
-
   "msg.example": "Here is an example!",
   "msg.languageconfig": "The language has been set to %s",
+
+  "help.commands": "**%s** commands:",
+  "help.command.localization": "Idk man",
+  "help.contact": "For additional help, contact",
+  "help.discord": "or join",
+  "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
+
+  "category.fun": "Fun",
+  "category.mod": "Staff",
+  "category.infos": "Infos",
+  "category.misc": "Miscellaneous",
+  "category.config": "Config",
+  "category.noCategory": "No category",
 
   "success.channelmember.join.configured": "The channel %s has been defined as a channel for welcome messages.",
   "success.channelmember.join.reset": "The channel %s is no longer the channel for welcome messages.",

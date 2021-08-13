@@ -11,13 +11,17 @@
   "error.joinrole.rolenull": "Ce rôle n'existe pas.",
   "error.joinrole.rolemanaged": "Ce rôle ne peut pas être attribué à un utilisateur.",
   "error.joinrole.sameasconfigured": "Le rôle que vous voulez changer est le même que celui configuré actuellement.",
-
   "error.commands.notowner": "Seul le propriétaire du serveur peut configurer le serveur.",
-
-  "help.channelmember": "Défini le salon où les annonces des personnes qui rejoignent ou qui quittent le serveur avec son identifiant.",
 
   "msg.example": "Voici un exemple!",
   "msg.languageconfig": "La nouvelle langue pour le serveur a bien été mise sur %s",
+
+  "help.channelmember": "Défini le salon où les annonces des personnes qui rejoignent ou qui quittent le serveur avec son identifiant.",
+  "help.commands": "Commandes de **%s**:",
+  "help.command.localization": "Ceci est juste un test",
+  "help.contact": "Pour plus d'aide, contactez",
+  "help.discord": "ou rejoignez le discord",
+  "help.DMBlocked": "Aucune aide ne peut vous être envoyé car vous avez bloqué vos messages privés.",
 
   "success.channelmember.join.configured": "Le salon %s a bien été défini comme salon pour les messages de bienvenue.",
   "success.channelmember.join.reset": "Le salon %s n'est plus le salon pour les messages de bienvenue.",

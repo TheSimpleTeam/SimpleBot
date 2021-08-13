@@ -1,11 +1,15 @@
 package fr.noalegeek.pepite_dor_bot.utils.helpers;
 
+import com.google.gson.JsonElement;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
+import java.util.Locale;
+import java.util.Optional;
 
 public class MessageHelper {
 
@@ -42,12 +46,23 @@ public class MessageHelper {
         return day + "/" + month + "/" + year;
     }
 
+    /**
+     *
+     * @param key the localization key
+     * @param guildID ID of the guild
+     * @return the translated value
+     * @throws NullPointerException if the key does not exist in any localization files.
+     */
+    @Nullable
     public static String sendTranslatedMessage(String key, String guildID) {
-        String lang = Main.getServerConfig().language.containsKey(guildID)
-                ? Main.getServerConfig().language.get(guildID)
-                : "en_us";
-        return Main.getLocalizations()
-                .get(lang)
-                .get(key).getAsString();
+        String lang = Main.getServerConfig().language.getOrDefault(guildID, "en");
+        Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
+        if(s.isPresent()) return s.get().getAsString();
+
+        if (Main.getLocalizations().get("en").get(key) == null) {
+            throw new NullPointerException("This key does not exist in any localization file !");
+        }
+        return Main.getLocalizations().get("en").get(key).getAsString();
+
     }
 }
