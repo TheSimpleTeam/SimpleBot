@@ -1,16 +1,19 @@
 package fr.noalegeek.pepite_dor_bot.utils.helpers;
 
+import com.google.gson.JsonElement;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.entities.User;
 
 import java.time.OffsetDateTime;
+<<<<<<<<< Temporary merge branch 1
+=========
 import java.util.Locale;
+import java.util.Optional;
+>>>>>>>>> Temporary merge branch 2
 
 public class MessageHelper {
-
-
 
     public static String getTag(final User user) {
         return user.getName() + "#" + user.getDiscriminator();
@@ -21,47 +24,12 @@ public class MessageHelper {
     }
 
     public static String syntaxError(User user, Command command) {
-        String syntaxMessage = MessageHelper.formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" +
-                Main.getInfos().prefix + command.getName();
+        String syntaxMessage = formattedMention(user) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" + Main.getInfos().prefix + command.getName();
         if(!command.getArguments().isEmpty()) syntaxMessage += " " + command.getArguments() + "`.\n";
         else syntaxMessage += "`.\n";
         if(!command.getHelp().isEmpty()) syntaxMessage += command.getHelp() + "\n";
-        if(!command.getExample().isEmpty()) syntaxMessage += "Par exemple : `"+Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.\n";
-        return syntaxMessage;
-    }
-
-    public static void syntaxError(Command command, CommandEvent event) {
-        event.replyError(syntaxError(event.getAuthor(), command));
-    }
-
-    public static String syntaxError(CommandEvent event, Command command) {
-        return syntaxError(event.getAuthor(), command);
-    }
-
-    public static String formatEnum(String name) {
-        StringBuilder builder = new StringBuilder();
-        char[] nameChar = name.toCharArray();
-        for (int i = 0; i < nameChar.length; i++) {
-            if(i == 0) {
-                builder.append(String.valueOf(nameChar[i]).toUpperCase(Locale.ROOT));
-            } else {
-                builder.append(nameChar[i]);
-            }
-        }
-        return builder.toString();
-    }
-
-    public static String formatEnum(Enum<?> _enum) {
-        StringBuilder builder = new StringBuilder();
-        char[] nameArray = _enum.name().toLowerCase(Locale.ROOT).toCharArray();
-        for (char c : nameArray) {
-            if (c == nameArray[0]) {
-                builder.append(String.valueOf(c).toUpperCase(Locale.ROOT));
-            } else {
-                builder.append(c);
-            }
-        }
-        return builder.toString();
+        if(!command.getExample().isEmpty()) syntaxMessage += "Par exemple : `" + Main.getInfos().prefix+command.getName() + " " + command.getExample() + "`.\n";
+        return syntaxMessage + "\n";
     }
 
     public static void sendError(Exception ex, CommandEvent event) {
@@ -74,15 +42,29 @@ public class MessageHelper {
         int month = date.getMonthValue();
         int year = date.getYear();
         if(month < 10){
-            String strMonth = "0"+month;
+            String strMonth = "0" + month;
             return day + "/" + strMonth + "/" + year;
         }
         return day + "/" + month + "/" + year;
     }
 
+    /**
+     *
+     * @param key the localization key
+     * @param guildID ID of the guild
+     * @return the translated value
+     * @throws NullPointerException if the key does not exist in any localization files.
+     */
+    @Nullable
     public static String sendTranslatedMessage(String key, String guildID) {
-        String lang = Main.getServerConfig().language.getOrDefault(guildID, "en_us");
-        Optional<JsonElement> s = Optional.of(Main.getLocalizations().get(lang).get(key));
-        return s.orElseThrow(() -> new NullPointerException("This key does not exist in the default localization file !")).getAsString();
+        String lang = Main.getServerConfig().language.getOrDefault(guildID, "en");
+        Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
+        if(s.isPresent()) return s.get().getAsString();
+
+        if (Main.getLocalizations().get("en").get(key) == null) {
+            throw new NullPointerException("This key does not exist in any localization file !");
+        }
+        return Main.getLocalizations().get("en").get(key).getAsString();
+
     }
 }
