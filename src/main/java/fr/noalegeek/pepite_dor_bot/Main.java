@@ -103,10 +103,13 @@ public class Main {
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
-        StringBuilder builder = new StringBuilder(String.format(MessageHelper.sendTranslatedMessage("help.commands", event.getGuild().getId()), event.getSelfUser().getName()) + "\n");
+        String id = event.getGuild().getId();
+        StringBuilder builder = new StringBuilder(String.format(MessageHelper.sendTranslatedMessage("help.commands", id), event.getSelfUser().getName()) + "\n");
         Command.Category category = null;
-        List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName()))
-                .collect(Collectors.toList());
+        List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> {
+            String key = o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName();
+            return MessageHelper.sendTranslatedMessage(key, id);
+        })).collect(Collectors.toList());
         for(Command command : botCommands)
         {
             if(!command.isHidden() && (!command.isOwnerCommand() || event.isOwner()))
@@ -114,25 +117,34 @@ public class Main {
                 if(!Objects.equals(category, command.getCategory()))
                 {
                     category = command.getCategory();
-                    builder.append("\n\n  __").append(category==null ? "Aucune catégorie" : category.getName()).append("__:\n");
+                    category = category == null ? CommandCategories.NONE.category : category;
+                    builder.append("\n\n  __").append(MessageHelper.sendTranslatedMessage(category.getName(), id)).append("__:\n");
                 }
-                builder.append("\n`").append(infos.prefix).append(infos.prefix==null?" ":"").append(command.getName())
+
+                String help;
+                try {
+                    help = MessageHelper.sendTranslatedMessage(command.getHelp(), id);
+                } catch (NullPointerException ignored) {
+                    help = command.getHelp();
+                }
+
+                builder.append("\n`").append(infos.prefix).append(infos.prefix==null ? " " : "").append(command.getName())
                         .append(command.getArguments()==null ? "`" : " "+command.getArguments()+"`")
-                        .append(" - ").append(command.getHelp());
+                        .append(" - ").append(help);
             }
         }
         User owner = event.getJDA().getUserById(b.ownerID);
         if(owner!=null)
         {
-            builder.append("\n\nPour plus d'aide, contactez **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
+            builder.append("\n\n" + MessageHelper.sendTranslatedMessage("help.contact", id) + " **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
             if(event.getClient().getServerInvite()!=null)
-                builder.append(" ou rejoignez le discord ").append(b.serverInvite);
+                builder.append(' ').append(MessageHelper.sendTranslatedMessage("help.discord", id)).append(' ').append(b.serverInvite);
         }
         event.replyInDm(builder.toString(), unused ->
         {
             if(event.isFromType(ChannelType.TEXT))
                 event.reactSuccess();
-        }, t -> event.replyWarning("Aucune aide ne peut vous être envoyé car vous avez bloqué vos messages privés."));
+        }, t -> event.replyWarning(MessageHelper.sendTranslatedMessage("help.DMBlocked", id)));
     }
 
     private static void setupLocalizations() throws IOException {

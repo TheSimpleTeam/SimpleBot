@@ -6,5 +6,16 @@
   "msg.example": "Here is an example!",
   "msg.languageconfig": "The language has been set to %s",
 
-  "help.commands": "**%s** commands:"
+  "help.commands": "**%s** commands:",
+  "help.command.localization": "Idk man",
+  "help.contact": "For additional help, contact",
+  "help.discord": "or join",
+  "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
+
+  "category.fun": "Fun",
+  "category.mod": "Staff",
+  "category.infos": "Infos",
+  "category.misc": "Miscellaneous",
+  "category.config": "Config",
+  "category.noCategory": "No category"
 }

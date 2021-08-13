@@ -6,5 +6,9 @@
   "msg.example": "Voici un exemple!",
   "msg.languageconfig": "La nouvelle langue pour le serveur a bien été mise sur %s",
 
-  "help.commands": "Commandes de **%s**:"
+  "help.commands": "Commandes de **%s**:",
+  "help.command.localization": "Ceci est juste un test",
+  "help.contact": "Pour plus d'aide, contactez",
+  "help.discord": "ou rejoignez le discord",
+  "help.DMBlocked": "Aucune aide ne peut vous être envoyé car vous avez bloqué vos messages privés."
 }
