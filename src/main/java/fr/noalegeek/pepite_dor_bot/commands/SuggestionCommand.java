@@ -35,7 +35,7 @@ public class SuggestionCommand extends Command {
                 .addField("Suggestion  ", "```" + event.getArgs() + "```", false)
                 .build();
         if(event.getArgs().isEmpty()){
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this));
+            event.replyError(MessageHelper.syntaxError(event,this));
         }
         suggestionChannel.sendMessage(embedSuggestion).queue();
         event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "La suggestion à bien été envoyée.");

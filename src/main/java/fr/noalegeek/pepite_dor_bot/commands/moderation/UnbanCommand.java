@@ -26,7 +26,7 @@ public class UnbanCommand extends Command {
         if (event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if (event.getArgs().split(" ").length == 1) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            event.replyError(MessageHelper.syntaxError(event, this));
             return;
         }
         User target = event.getGuild().getMemberById(args[0].replace("<@!", "").replace(">", "")).getUser();

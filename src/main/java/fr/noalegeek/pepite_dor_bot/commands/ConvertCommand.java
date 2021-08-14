@@ -45,7 +45,7 @@ public class ConvertCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String syntaxError = MessageHelper.syntaxError(event.getAuthor(),this)+"Le type de mesure à spécifier doit être un de ces 4 types de mesure :\n- volume\n" +
+        String syntaxError = MessageHelper.syntaxError(event,this)+"Le type de mesure à spécifier doit être un de ces 4 types de mesure :\n- volume\n" +
                 "- length\n- weight\n- temperature\n\nPour chacun de ces types, il existe plusieurs unités de mesure qui sont listées en-dessous.\n\n**Volume** :\n- gallon\n" +
                 "- liter\n- quart\n- pint\n- cup\n- milliliter\n- fluidOnce\n\n**Lenght** :\n- miles\n- kilometers\n- yards\n- meters\n- feet\n- inches\n- centimeters\n" +
                 "- millimeters\n\n**Weight** :\n- stone\n- pounds\n- kilograms\n- milligrams\n- grams\n- ounces\n\n**Temperature** :\n- fahrenheit\n- celsius\n- kelvin\n\n" +

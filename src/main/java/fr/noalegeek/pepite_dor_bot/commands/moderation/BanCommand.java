@@ -26,7 +26,7 @@ public class BanCommand extends Command {
         if (event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length == 1) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this) + "La limite du temps à spécifier est à 7 jours.\n" +
+            event.replyError(MessageHelper.syntaxError(event,this) + "La limite du temps à spécifier est à 7 jours.\n" +
                     "Si le temps spécifié dépasse les 7 jours, celui-ci sera redéféni à 7 jours.\n" +
                     "Le rôle de ce temps à spécifier correspond aux messages qui vont être supprimés en fonction du temps.\n" +
                     "Mettre une raison n'est pas obligatoire.");

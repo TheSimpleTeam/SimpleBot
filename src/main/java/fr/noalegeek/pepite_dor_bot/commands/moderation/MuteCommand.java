@@ -31,34 +31,31 @@ public class MuteCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        User author = event.getAuthor();
-        if (author.isBot()) return;
+        if (event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length > 2) {
-            event.replyError(MessageHelper.syntaxError(author, this) + "Mettre une raison n'est pas obligatoire.");
+            event.replyError(MessageHelper.syntaxError(event, this) + "Mettre une raison n'est pas obligatoire.");
             return;
         }
-        Guild guild = event.getGuild();
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user ->
-                guild.retrieveMember(user).queue(member -> {
+                event.getGuild().retrieveMember(user).queue(member -> {
             if (!event.getSelfMember().canInteract(member)) {
-                event.replyError(MessageHelper.formattedMention(author) + "Le bot n'a pas les permissions de faire cela.");
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le bot n'a pas les permissions de faire cela.");
                 return;
             }
             if (!event.getMember().canInteract(member)) {
-                event.replyError(MessageHelper.formattedMention(author) + "Vous n'avez pas la permission de mute ce membre.");
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Vous n'avez pas la permission de mute ce membre.");
                 return;
             }
             String mutedRoleId = Main.getServerConfig().mutedRole.get(event.getGuild().getId());
                     if (mutedRoleId == null || event.getGuild().getRoleById(mutedRoleId) == null) {
-                        guild.createRole()
+                        event.getGuild().createRole()
                                 .setName("Muted Role")
                                 .setColor(0x010101)
                                 .queue(mutedRole -> {
-                                    Main.getServerConfig().mutedRole.put(guild.getId(), mutedRole.getId());
-                                    for (GuildChannel guildChannel : guild.getChannels()) {
-                                        guildChannel.putPermissionOverride(mutedRole)
-                                                .setDeny(Permission.MESSAGE_WRITE).queue();
+                                    Main.getServerConfig().mutedRole.put(event.getGuild().getId(), mutedRole.getId());
+                                    for (GuildChannel guildChannel : event.getGuild().getChannels()) {
+                                        guildChannel.putPermissionOverride(mutedRole).setDeny(Permission.MESSAGE_WRITE).queue();
                                     }
                                     if (args.length == 1) {
                                         mute(event, member, null, mutedRole);
@@ -66,34 +63,32 @@ public class MuteCommand extends Command {
                                         mute(event, member, args[1], mutedRole);
                                     }
                                 });
-                        event.replyWarning(MessageHelper.formattedMention(author) + ":warning: Le rôle configuré par défaut n'est pas présent donc j'ai créé un nouveau rôle nommé \"Muted Role\".");
+                        event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + ":warning: Le rôle configuré par défaut n'est pas présent donc j'ai créé un nouveau rôle nommé \"Muted Role\".");
                     } else {
                         if (args.length == 1) {
-                            mute(event, member, null, guild.getRoleById(mutedRoleId));
+                            mute(event, member, null, event.getGuild().getRoleById(mutedRoleId));
                         } else {
-                            mute(event, member, args[1], guild.getRoleById(mutedRoleId));
+                            mute(event, member, args[1], event.getGuild().getRoleById(mutedRoleId));
                         }
                     }
-        }, memberNull -> event.replyError(MessageHelper.formattedMention(author) + "Vous devez spécifié une personne présente sur le serveur.")), userNull -> event.replyError(MessageHelper.formattedMention(author) + "Vous devez spécifié une personne existante."));
+        }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Vous devez spécifié une personne présente sur le serveur.")), userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Vous devez spécifié une personne existante."));
     }
 
     public static void mute(CommandEvent event, Member targetMember, String reason, Role mutedRole) {
-        Guild guild = event.getGuild();
-        User author = event.getAuthor();
         if (targetMember.getRoles().contains(mutedRole)) { // Unmute the target
-            guild.removeRoleFromMember(targetMember, mutedRole).queue();
+            event.getGuild().removeRoleFromMember(targetMember, mutedRole).queue();
             if (reason != null) {
-                event.replySuccess(MessageHelper.formattedMention(author) + targetMember.getEffectiveName() + " a bien été démuter pour la raison " + reason + ".");
+                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + targetMember.getEffectiveName() + " a bien été démuter pour la raison " + reason + ".");
                 return;
             }
-            event.replySuccess(MessageHelper.formattedMention(author) + targetMember.getEffectiveName() + " a bien été démuter.");
+            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + targetMember.getEffectiveName() + " a bien été démuter.");
         } else { // Mute the target
-            guild.addRoleToMember(targetMember, mutedRole).queue();
+            event.getGuild().addRoleToMember(targetMember, mutedRole).queue();
             if (reason != null) {
-                event.replySuccess(MessageHelper.formattedMention(author) + targetMember.getEffectiveName() + " a bien été muter pour la raison " + reason + ".");
+                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + targetMember.getEffectiveName() + " a bien été muter pour la raison " + reason + ".");
                 return;
             }
-            event.replySuccess(MessageHelper.formattedMention(author) + targetMember.getEffectiveName() + " a bien été muter.");
+            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + targetMember.getEffectiveName() + " a bien été muter.");
         }
     }
 }

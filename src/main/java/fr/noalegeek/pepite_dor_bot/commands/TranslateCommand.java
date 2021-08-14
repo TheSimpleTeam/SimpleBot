@@ -19,13 +19,13 @@ public class TranslateCommand extends Command {
         this.aliases = new String[]{"t","tr","tra","tran","trans","transl","transla","translat"};
         this.example = "Hello everyone. --lang en fr";
         this.arguments = "<text> <--lang> <from> <to>";
-        this.help = "Traduit la phrase spécifiée.\nIl faut spécifié la langue de la phrase et la langue dans laquelle vous voulez qu'elle soit traduit.";
+        this.help = "Traduit la phrase spécifiée. Il faut spécifié la langue de la phrase et la langue dans laquelle vous voulez qu'elle soit traduit.";
         this.category = CommandCategories.FUN.category;
     }
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getMessage().getContentRaw().contains("--lang")) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            event.replyError(MessageHelper.syntaxError(event, this));
             return;
         }
         String[] args = event.getArgs().split(" --lang ");

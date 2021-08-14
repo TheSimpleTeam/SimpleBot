@@ -23,7 +23,7 @@ public class InviteCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(event.getArgs().length() == 0) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Les arguments disponibles sont **create** et **bot**.\n" +
+            event.replyError(MessageHelper.syntaxError(event, this)+"Les arguments disponibles sont **create** et **bot**.\n" +
                     "L'argument **create** crée un lien d'invitation du serveur où a été fait la commande.\n" +
                     "L'argument **bot** envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur.");
             return;
@@ -38,7 +38,7 @@ public class InviteCommand extends Command {
                 event.replySuccess("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n"+String.format(discordInviteURL, event.getJDA().getSelfUser().getId()));
                 break;
             default:
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this)+"Les arguments disponibles sont **create** et **bot**.\n" +
+                event.replyError(MessageHelper.syntaxError(event, this)+"Les arguments disponibles sont **create** et **bot**.\n" +
                         "L'argument **create** crée un lien d'invitation du serveur où a été fait la commande.\n" +
                         "L'argument **bot** envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur.");
                 break;

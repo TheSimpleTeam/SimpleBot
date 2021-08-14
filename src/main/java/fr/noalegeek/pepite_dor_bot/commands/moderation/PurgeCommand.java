@@ -27,7 +27,7 @@ public class PurgeCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split(" \\s+");
         if(event.getArgs().isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + "Le nombre de messages à spécifier doit se situer entre 1 et 100.");
+            event.replyError(MessageHelper.syntaxError(event, this) + "Le nombre de messages à spécifier doit se situer entre 1 et 100.");
             return;
         }
         int clearMessages = 1;

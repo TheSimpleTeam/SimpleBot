@@ -31,7 +31,7 @@ public class ProhibitCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this) + "Les arguments disponibles sont **add**, **rem** et **reset**.\n" +
+            event.replyError(MessageHelper.syntaxError(event,this) + "Les arguments disponibles sont **add**, **rem** et **reset**.\n" +
                     "- **add** ajoutera un mot à la liste des mots interdits.\n" +
                     "- **rem** enlèvera un mot présent dans la liste des mots interdits.\n" +
                     "- **reset** réinitialisera la liste des mots interdits au complet.\n" +
@@ -69,7 +69,7 @@ public class ProhibitCommand extends Command {
                 Main.getServerConfig().prohibitWords.remove(event.getGuild().getId());
                 break;
             default:
-                event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + "");
+                event.replyError(MessageHelper.syntaxError(event, this) + "");
                 break;
         }
     }

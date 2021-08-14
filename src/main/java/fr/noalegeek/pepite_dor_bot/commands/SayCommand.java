@@ -22,7 +22,7 @@ public class SayCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()){
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Si vous n'avez pas les permissions de gérer les messages, le bot va vour mentionner.");
+            event.replyError(MessageHelper.syntaxError(event,this)+"Si vous n'avez pas les permissions de gérer les messages, le bot va vour mentionner.");
             return;
         }
         if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
