@@ -5,10 +5,8 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import net.dv8tion.jda.api.Permission;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class LocalizationCommand extends Command {
 
