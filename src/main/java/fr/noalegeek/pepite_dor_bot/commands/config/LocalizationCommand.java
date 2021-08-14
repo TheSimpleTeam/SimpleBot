@@ -16,7 +16,7 @@ public class LocalizationCommand extends Command {
         this.help = "help.localization";
         this.example = "en";
         this.aliases = new String[]{"l","lo","local","loc"};
-        this.arguments = "arguments.localization";
+        this.arguments = "<us/fr>";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;
     }
@@ -25,14 +25,14 @@ public class LocalizationCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length == 0) {
-            MessageHelper.syntaxError(event, this);
+            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event.getGuild().getId()));
             return;
         }
         if(Arrays.stream(Main.getLangs()).noneMatch(s -> s.equalsIgnoreCase(args[0]))) {
-            event.replyError("This lang does not exist !");
+            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event.getGuild().getId()));
             return;
         }
         Main.getServerConfig().language.put(event.getGuild().getId(), args[0]);
-        event.replySuccess(String.format(MessageHelper.translateMessage("success.localization.configured", event.getGuild().getId()), ":flag_" + args[0] + ':'));
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event.getGuild().getId()), ":flag_" + args[0] + ':'));
     }
 }

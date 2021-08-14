@@ -35,10 +35,13 @@
   "success.channelMember.leave.configured": "Le salon %s a bien été défini comme salon pour les messages de départs.",
   "success.channelMember.leave.reset": "Le salon %s n'est plus le salon pour les messages de départs.",
   "success.joinRole.configured": "Le rôle %s a bien été défini.",
-  "success.localization.configured": "La nouvelle langue pour le serveur a bien été mise sur %s",
+  "success.localization.configured": "La nouvelle langue pour le serveur a bien été mise sur %s.",
 
-  "syntax.commands": "",
+  "messageHelper.sendError": "Une erreur est survenue. Veuillez contacter les développeurs et envoyez ce message :\n",
+  "messageHelper.syntaxError.syntax": "Syntaxe de la commande ",
+  "messageHelper.syntaxError.example": "Par exemple : `",
 
   "syntax.channelMember": "Les arguments disponibles sont **join** et **remove** :\n- **join** définira le salon où les annonces de bienvenues apparaîtront.\n- **leave** définira le salon où les annonces de départs apparaîtront.\n\nAprès ces arguments, les arguments disponibles sont **identifiant/mention du salon**, **reset** et **this** :\n- **identifiant/mention du salon** définira le salon grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le salon qui a été configuré.\n- **this** définira le salon où a été fait la commande.",
-  "syntax.joinRole": "Les arguments disponibles sont :\n- **identifiant/mention du salon** définira le rôle grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le rôle qui a été configuré."
+  "syntax.joinRole": "Les arguments disponibles sont :\n- **identifiant/mention du salon** définira le rôle grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le rôle qui a été configuré.",
+  "syntax.localization": "Les langues disponibles sont :\n:flag_fr: fr\n:flag_us: us\nSi la langue n'est pas configurée, elle sera configurée par défaut sur la langue anglaise."
 }

@@ -6,7 +6,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.entities.User;
 
-import javax.annotation.Nullable;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
@@ -21,17 +20,17 @@ public class MessageHelper {
     }
 
     public static String syntaxError(CommandEvent event, Command command) {
-        String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + "Syntaxe de la commande " + Main.getInfos().prefix + command.getName() + " : `" +
+        String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + translateMessage("messageHelper.syntaxError.syntax", event.getGuild().getId()) + Main.getInfos().prefix + command.getName() + " : `" +
                 Main.getInfos().prefix + command.getName();
         if(!command.getArguments().isEmpty()) syntaxMessage += " " + command.getArguments() + "`.\n";
         else syntaxMessage += "`.\n";
         if(!command.getHelp().isEmpty()) syntaxMessage += command.getHelp() + "\n";
-        if(!command.getExample().isEmpty()) syntaxMessage += "Par exemple : `"+Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.\n";
+        if(!command.getExample().isEmpty()) syntaxMessage += translateMessage("messageHelper.syntaxError.example", event.getGuild().getId()) + Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.\n";
         return syntaxMessage;
     }
 
     public static void sendError(Exception ex, CommandEvent event) {
-        event.replyError("Une erreur est survenue. Veuillez contacter les développeurs et envoyez ce message :\n" + ex.getMessage());
+        event.replyError(translateMessage("messageHelper.sendError", event.getGuild().getId()) + ex.getMessage());
         Main.LOGGER.severe(ex.getMessage());
     }
 
@@ -58,7 +57,7 @@ public class MessageHelper {
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
         if (Main.getLocalizations().get("en").get(key) == null) {
-            throw new NullPointerException("This key does not exist in any localization file !");
+            throw new NullPointerException("This key does not exist in any localization file!");
         }
         return Main.getLocalizations().get("en").get(key).getAsString();
     }

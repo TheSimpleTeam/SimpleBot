@@ -37,6 +37,11 @@
   "success.joinRole.configured": "The role %s has been defined.",
   "success.localization.configured": "The language has been set to %s",
 
+  "messageHelper.sendError": "An error has occurred. Please contact the developers and send this message:\n",
+  "messageHelper.syntaxError.syntax": "Command syntax ",
+  "messageHelper.syntaxError.example": "For example: `",
+
   "syntax.channelMember": "The available arguments are:\n- **join** will define the channel where the welcome announcements will appear.\n- **leave** will define the channel where the departure announcements will appear.\n\nAfter these arguments, the available arguments are **channel ID/mention**, **reset** and **this** :\n- **channel ID/mention** will define the channel by its ID or mention.\n- **reset** will reset the channel that has been configured.\n- **this** will define the channel where the order was made.",
-  "syntax.joinRole": "The available arguments are:\n- **channel ID/mention** will define the role thanks to its ID or its mention.\n- **reset** will reset the role that has been configured."
+  "syntax.joinRole": "The available arguments are:\n- **channel ID/mention** will define the role thanks to its ID or its mention.\n- **reset** will reset the role that has been configured.",
+  "syntax.localization": "The available languages are:\n:flag_fr: fr\n:flag_us: us\nIf the language is not configured, it will default to English."
 }
