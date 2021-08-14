@@ -1,29 +1,27 @@
 {
-  "arguments.channelmember": "<join|remove> <channel ID/mention|reset|this>",
+  "arguments.channelMember": "<join|remove> <channel ID/mention|reset|this>",
+  "arguments.joinRole": "<channel ID/mention|reset>",
 
-  "help.channelmember": "Defines the room where the announcements of the people who join or leave the server with his ID.",
-
-  "error.channelmember.join.channelnull": "The channel you want to change for the welcome messages does not exist.",
-  "error.channelmember.join.notconfigured": "The channel for welcome messages has not been configured so you can't reset it.",
-  "error.channelmember.join.sameasconfigured": "The channel you want to change for the welcome messages is the same as the one currently configured.",
-  "error.channelmember.leave.channelnull": "The channel you want to change for the departure messages does not exist.",
-  "error.channelmember.leave.notconfigured": "The channel for the departure messages has not been configured so you cannot reset it.",
-  "error.channelmember.leave.sameasconfigured": "The channel you want to change for the departure messages is the same as the one currently configured.",
-  "error.joinrole.notconfigured": "The role has not been configured so you cannot reset it.",
-  "error.joinrole.rolenull": "This role does not exist.",
-  "error.joinrole.rolemanaged": "This role cannot be assigned to a user.",
-  "error.joinrole.sameasconfigured": "The role you want to change is the same as the one currently configured.",
-
-  "error.commands.notowner": "Only the server owner can configure the server.",
+  "error.channelMember.join.channelNull": "The channel you want to change for the welcome messages does not exist.",
+  "error.channelMember.join.notConfigured": "The channel for welcome messages has not been configured so you can't reset it.",
+  "error.channelMember.join.sameAsConfigured": "The channel you want to change for the welcome messages is the same as the one currently configured.",
+  "error.channelMember.leave.channelNull": "The channel you want to change for the departure messages does not exist.",
+  "error.channelMember.leave.notConfigured": "The channel for the departure messages has not been configured so you cannot reset it.",
+  "error.channelMember.leave.sameAsConfigured": "The channel you want to change for the departure messages is the same as the one currently configured.",
+  "error.joinRole.notConfigured": "The role has not been configured so you cannot reset it.",
+  "error.joinRole.roleNull": "This role does not exist.",
+  "error.joinRole.roleManaged": "This role cannot be assigned to a user.",
+  "error.joinRole.sameAsConfigured": "The role you want to change is the same as the one currently configured.",
+  "error.commands.notOwner": "Only the server owner can configure the server.",
 
   "msg.example": "Here is an example!",
-  "msg.languageconfig": "The language has been set to %s",
 
+  "help.channelMember": "Defines the room where the announcements of the people who join or leave the server with his ID.",
   "help.commands": "**%s** commands:",
-  "help.command.localization": "Idk man",
   "help.contact": "For additional help, contact",
-  "help.discord": "or join",
+  "help.discord": "or join the discord",
   "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
+  "help.joinRole": "Defines the role that a user will have when he arrives on a server.",
 
   "category.fun": "Fun",
   "category.mod": "Staff",
@@ -32,12 +30,13 @@
   "category.config": "Config",
   "category.noCategory": "No category",
 
-  "success.channelmember.join.configured": "The channel %s has been defined as a channel for welcome messages.",
-  "success.channelmember.join.reset": "The channel %s is no longer the channel for welcome messages.",
-  "success.channelmember.leave.configured": "The channel %s has been defined as a channel for departure messages.",
-  "success.channelmember.leave.reset": "The channel %s is no longer the channel for departure messages.",
-  "success.joinrole.configured": "The role %s has been defined.",
+  "success.channelMember.join.configured": "The channel %s has been defined as a channel for welcome messages.",
+  "success.channelMember.join.reset": "The channel %s is no longer the channel for welcome messages.",
+  "success.channelMember.leave.configured": "The channel %s has been defined as a channel for departure messages.",
+  "success.channelMember.leave.reset": "The channel %s is no longer the channel for departure messages.",
+  "success.joinRole.configured": "The role %s has been defined.",
+  "success.localization.configured": "The language has been set to %s",
 
-  "syntax.channelmember": "The available arguments are:\n- **join** will define the channel where the welcome announcements will appear.\n- **leave** will define the channel where the departure announcements will appear.\n\nAfter these arguments, the available arguments are **channel ID/mention**, **reset** and **this** :\n- **channel ID/mention** will define the channel by its ID or mention.\n- **reset** will reset the channel that has been configured.\n- **this** will define the channel where the order was made.",
-  "syntax.joinrole": "The available arguments are:\n- **channel ID/mention** will define the role thanks to its ID or its mention.\n- **reset** will reset the role that has been configured."
+  "syntax.channelMember": "The available arguments are:\n- **join** will define the channel where the welcome announcements will appear.\n- **leave** will define the channel where the departure announcements will appear.\n\nAfter these arguments, the available arguments are **channel ID/mention**, **reset** and **this** :\n- **channel ID/mention** will define the channel by its ID or mention.\n- **reset** will reset the channel that has been configured.\n- **this** will define the channel where the order was made.",
+  "syntax.joinRole": "The available arguments are:\n- **channel ID/mention** will define the role thanks to its ID or its mention.\n- **reset** will reset the role that has been configured."
 }
