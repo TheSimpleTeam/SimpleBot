@@ -29,21 +29,21 @@ public class JoinRoleCommand extends Command {
         }
         String[] args = event.getArgs().split(" \\s+");
         if (args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event,this) + MessageHelper.translateMessage("syntax.joinrole", event.getGuild().getId()));
+            event.replyError(MessageHelper.syntaxError(event,this) + MessageHelper.translateMessage("syntax.joinRole", event.getGuild().getId()));
             return;
         }
         Role joinRole = event.getGuild().getRoleById(args[0].replaceAll("\\D+",""));
         if (joinRole == null) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinrole.roleNull", event.getGuild().getId()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.roleNull", event.getGuild().getId()));
             return;
         } else if (joinRole.isManaged()) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinrole.roleManaged", event.getGuild().getId()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.roleManaged", event.getGuild().getId()));
             return;
         }
         String joinRoleId = Main.getServerConfig().guildJoinRole.get(event.getGuild().getId());
         if(args[0].equalsIgnoreCase("reset")){
             if(joinRoleId == null){
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinrole.notConfigured", event.getGuild().getId()));
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.notConfigured", event.getGuild().getId()));
                 return;
             }
             Main.getServerConfig().guildJoinRole.remove(event.getGuild().getId());

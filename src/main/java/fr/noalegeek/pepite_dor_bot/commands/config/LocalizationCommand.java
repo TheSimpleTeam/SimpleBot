@@ -16,7 +16,7 @@ public class LocalizationCommand extends Command {
         this.help = "help.localization";
         this.example = "en";
         this.aliases = new String[]{"l","lo","local","loc"};
-        this.arguments = "<us/fr>";
+        this.arguments = "<en/fr>";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;
     }
@@ -32,7 +32,11 @@ public class LocalizationCommand extends Command {
             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event.getGuild().getId()));
             return;
         }
+        if(args[0].equals(Main.getServerConfig().language.get(event.getGuild().getId()))){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.localization.sameAsConfigured", event.getGuild().getId()));
+            return;
+        }
         Main.getServerConfig().language.put(event.getGuild().getId(), args[0]);
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event.getGuild().getId()), ":flag_" + args[0] + ':'));
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event.getGuild().getId()), ":flag_" + args[0].replace("en","us: / :flag_gb") + ':'));
     }
 }

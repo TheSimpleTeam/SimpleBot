@@ -21,12 +21,19 @@ public class MessageHelper {
 
     public static String syntaxError(CommandEvent event, Command command) {
         String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + translateMessage("messageHelper.syntaxError.syntax", event.getGuild().getId()) + Main.getInfos().prefix + command.getName() + " : `" +
-                Main.getInfos().prefix + command.getName();
-        if(!command.getArguments().isEmpty()) syntaxMessage += " " + command.getArguments() + "`.\n";
-        else syntaxMessage += "`.\n";
-        if(!command.getHelp().isEmpty()) syntaxMessage += command.getHelp() + "\n";
-        if(!command.getExample().isEmpty()) syntaxMessage += translateMessage("messageHelper.syntaxError.example", event.getGuild().getId()) + Main.getInfos().prefix+command.getName()+" "+command.getExample()+"`.\n";
-        return syntaxMessage;
+                Main.getInfos().prefix + command.getName() + " ";
+        if(!command.getArguments().isEmpty()){
+            if(command.getArguments().startsWith("arguments.")) syntaxMessage += translateMessage(command.getArguments(), event.getGuild().getId());
+            else syntaxMessage += command.getArguments();
+        }
+        syntaxMessage += "`.\n";
+        if(!command.getHelp().isEmpty()) syntaxMessage += translateMessage(command.getHelp(), event.getGuild().getId()) + "\n";
+        if(!command.getExample().isEmpty()){
+            syntaxMessage += translateMessage("messageHelper.syntaxError.example", event.getGuild().getId()) + Main.getInfos().prefix + command.getName() + " ";
+            if(command.getExample().startsWith("example.")) syntaxMessage += translateMessage(command.getExample(), event.getGuild().getId());
+            else syntaxMessage += command.getHelp();
+        }
+        return syntaxMessage + ".\n";
     }
 
     public static void sendError(Exception ex, CommandEvent event) {
@@ -39,7 +46,7 @@ public class MessageHelper {
         int month = date.getMonthValue();
         int year = date.getYear();
         if(month < 10){
-            String strMonth = "0"+month;
+            String strMonth = "0" + month;
             return day + "/" + strMonth + "/" + year;
         }
         return day + "/" + month + "/" + year;

@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import okhttp3.OkHttpClient;
@@ -105,7 +104,7 @@ public class Main {
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
         String id = event.getGuild().getId();
-        StringBuilder builder = new StringBuilder(String.format(MessageHelper.translateMessage("help.commands", id), event.getSelfUser().getName()));
+        StringBuilder help = new StringBuilder(String.format(MessageHelper.translateMessage("help.commands", id), event.getSelfUser().getName()));
         Command.Category category = null;
         List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> {
             String key = o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName();
@@ -116,26 +115,26 @@ public class Main {
                 if (!Objects.equals(category, command.getCategory())) {
                     category = command.getCategory();
                     category = category == null ? CommandCategories.NONE.category : category;
-                    builder.append("\n\n__").append(MessageHelper.translateMessage(category.getName(), id)).append("__:\n");
+                    help.append("\n\n__").append(MessageHelper.translateMessage(category.getName(), id)).append("__:\n");
                 }
-                String help;
+                String helpCommand;
                 try {
-                    help = MessageHelper.translateMessage(command.getHelp(), id);
+                    helpCommand = MessageHelper.translateMessage(command.getHelp(), id);
                 } catch (NullPointerException ignored) {
-                    help = command.getHelp();
+                    helpCommand = command.getHelp();
                 }
-                builder.append("\n`").append(infos.prefix).append(infos.prefix == null ? " " : "").append(command.getName())
+                help.append("\n`").append(infos.prefix).append(infos.prefix == null ? " " : "").append(command.getName())
                         .append(command.getArguments() == null ? "`" : " " + command.getArguments() + "`")
-                        .append(" - ").append(help);
+                        .append(" - ").append(helpCommand);
             }
         }
         User owner = event.getJDA().getUserById(b.ownerID);
         if (owner != null) {
-            builder.append("\n\n").append(MessageHelper.translateMessage("help.contact", id)).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
+            help.append("\n\n").append(MessageHelper.translateMessage("help.contact", id)).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
             if (event.getClient().getServerInvite() != null)
-                builder.append(' ').append(MessageHelper.translateMessage("help.discord", id)).append(' ').append(b.serverInvite);
+                help.append(' ').append(MessageHelper.translateMessage("help.discord", id)).append(' ').append(b.serverInvite);
         }
-        event.replyInDm(builder.toString(), unused -> {} , t -> event.replyError(MessageHelper.translateMessage("help.DMBlocked", id)));
+        event.replyInDm(help.toString(), unused -> {} , t -> event.replyError(MessageHelper.translateMessage("help.DMBlocked", id)));
     }
 
     private static void setupLocalizations() throws IOException {

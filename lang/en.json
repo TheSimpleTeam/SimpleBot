@@ -1,7 +1,16 @@
 {
-  "arguments.channelMember": "<join|remove> <channel ID/mention|reset|this>",
-  "arguments.joinRole": "<channel ID/mention|reset>",
+  "arguments.ban": "<member's ID/mention> <time> [reason]",
+  "arguments.channelMember": "<join|remove> <channel's ID/mention|reset|this>",
+  "arguments.joinRole": "<channel's ID/mention|reset>",
 
+  "error.ban.notAnNumber": "The time to be specified must be a number.",
+  "error.commands.botCantInteractTarget": "I don't have the permission to do that.",
+  "error.commands.botHasNotPermission": "I need **%s** permission to run this command.",
+  "error.commands.memberNull": "You must specify a person present on the server.",
+  "error.commands.notOwner": "Only the server owner can configure the server.",
+  "error.commands.userCantInteractTarget": "You do not have permission to ban this member.",
+  "error.commands.userHasNotPermission": "You cannot execute this command because you do not have **%s** permission.",
+  "error.commands.userNull": "You must specify an existing person.",
   "error.channelMember.join.channelNull": "The channel you want to change for the welcome messages does not exist.",
   "error.channelMember.join.notConfigured": "The channel for welcome messages has not been configured so you can't reset it.",
   "error.channelMember.join.sameAsConfigured": "The channel you want to change for the welcome messages is the same as the one currently configured.",
@@ -12,16 +21,16 @@
   "error.joinRole.roleNull": "This role does not exist.",
   "error.joinRole.roleManaged": "This role cannot be assigned to a user.",
   "error.joinRole.sameAsConfigured": "The role you want to change is the same as the one currently configured.",
-  "error.commands.notOwner": "Only the server owner can configure the server.",
+  "error.localization.sameAsConfigured": "The language you want to change for the server is the same as the one currently configured.",
 
-  "msg.example": "Here is an example!",
-
+  "help.ban": "Bans members permanently from the server. The number to specify corresponds to the messages that will be deleted over time.",
   "help.channelMember": "Defines the room where the announcements of the people who join or leave the server with his ID.",
   "help.commands": "**%s** commands:",
   "help.contact": "For additional help, contact",
   "help.discord": "or join the discord",
   "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
   "help.joinRole": "Defines the role that a user will have when he arrives on a server.",
+  "help.localization": "Set the bot language for the server.",
 
   "category.fun": "Fun",
   "category.mod": "Staff",
@@ -30,18 +39,26 @@
   "category.config": "Config",
   "category.noCategory": "No category",
 
+  "success.ban": "%s has been successfully banned %s.",
   "success.channelMember.join.configured": "The channel %s has been defined as a channel for welcome messages.",
   "success.channelMember.join.reset": "The channel %s is no longer the channel for welcome messages.",
   "success.channelMember.leave.configured": "The channel %s has been defined as a channel for departure messages.",
   "success.channelMember.leave.reset": "The channel %s is no longer the channel for departure messages.",
   "success.joinRole.configured": "The role %s has been defined.",
-  "success.localization.configured": "The language has been set to %s",
+  "success.localization.configured": "The language has been set to %s.",
+  "success.unban": "The user %s has been successfully unbanned.",
 
   "messageHelper.sendError": "An error has occurred. Please contact the developers and send this message:\n",
   "messageHelper.syntaxError.syntax": "Command syntax ",
   "messageHelper.syntaxError.example": "For example: `",
 
+  "syntax.ban": "The time limit to be specified is 7 days.\nIf the specified time exceeds 7 days, it will be reset to 7 days.\nThe messages will be deleted according to the specified time.\nPutting a reason is not mandatory.",
   "syntax.channelMember": "The available arguments are:\n- **join** will define the channel where the welcome announcements will appear.\n- **leave** will define the channel where the departure announcements will appear.\n\nAfter these arguments, the available arguments are **channel ID/mention**, **reset** and **this** :\n- **channel ID/mention** will define the channel by its ID or mention.\n- **reset** will reset the channel that has been configured.\n- **this** will define the channel where the order was made.",
   "syntax.joinRole": "The available arguments are:\n- **channel ID/mention** will define the role thanks to its ID or its mention.\n- **reset** will reset the role that has been configured.",
-  "syntax.localization": "The available languages are:\n:flag_fr: fr\n:flag_us: us\nIf the language is not configured, it will default to English."
+  "syntax.localization": "The available languages are:\n:flag_us: / :flag_gb: en\n:flag_fr: fr\nIf the language is not configured, it will default to English.",
+
+  "text.ban.reasonNull": "for no reason",
+  "text.ban.reason": "for the reason",
+
+  "warning.ban": ":warning: The ban time has been set to 7 days because the limit has been exceeded!"
 }
