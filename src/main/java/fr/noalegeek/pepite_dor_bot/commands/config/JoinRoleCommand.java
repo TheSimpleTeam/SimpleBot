@@ -28,7 +28,7 @@ public class JoinRoleCommand extends Command {
             return;
         }
         String[] args = event.getArgs().split(" \\s+");
-        if (args.length != 2) {
+        if (args.length != 1) {
             event.replyError(MessageHelper.syntaxError(event,this) + MessageHelper.translateMessage("syntax.joinRole", event.getGuild().getId()));
             return;
         }

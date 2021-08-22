@@ -2,6 +2,8 @@
   "arguments.ban": "<identifiant/mention du membre> <temps> [raison]",
   "arguments.channelMember": "<join|remove> <identifiant/mention du salon|reset|this>",
   "arguments.joinRole": "<identifiant/mention du role|reset>",
+  "arguments.kick": "<identifiant/mention du membre> [raison]",
+  "arguments.mute": "<identifiant/mention du membre> [raison]",
 
   "error.ban.notAnNumber": "Le temps à spécifier doit être un nombre.",
   "error.commands.botCantInteractTarget": "Je n'ai pas la permissions de faire cela.",
@@ -30,7 +32,9 @@
   "help.discord": "ou rejoignez le discord",
   "help.DMBlocked": "Aucune aide ne peut vous être envoyé car vous avez bloqué vos messages privés.",
   "help.joinRole": "Défini le rôle que va avoir un utilisateur lors de son arrivée sur un serveur.",
+  "help.kick": "Kick un membre du serveur, la personne pourra rejoindre après.",
   "help.localization": "Défini la langue du bot pour le serveur.",
+  "help.mute": "Mute définitivement un membre avec une raison ou non. Unmute si la personne est déjà mute.",
 
   "category.fun": "Fun",
   "category.mod": "Staff",
@@ -45,8 +49,11 @@
   "success.channelMember.leave.configured": "Le salon %s a bien été défini comme salon pour les messages de départs.",
   "success.channelMember.leave.reset": "Le salon %s n'est plus le salon pour les messages de départs.",
   "success.joinRole.configured": "Le rôle %s a bien été défini.",
+  "success.kick": "%s a bien été kick du serveur %s.",
   "success.localization.configured": "La nouvelle langue pour le serveur a bien été mise sur %s.",
+  "success.mute": "%s a bien été muter %s.",
   "success.unban": "L'utilisateur %s a bien été débanni.",
+  "success.unmute": "%s a bien été démuter %s.",
 
   "messageHelper.sendError": "Une erreur est survenue. Veuillez contacter les développeurs et envoyez ce message :\n",
   "messageHelper.syntaxError.syntax": "Syntaxe de la commande ",
@@ -56,9 +63,11 @@
   "syntax.channelMember": "Les arguments disponibles sont **join** et **remove** :\n- **join** définira le salon où les annonces de bienvenues apparaîtront.\n- **leave** définira le salon où les annonces de départs apparaîtront.\n\nAprès ces arguments, les arguments disponibles sont **identifiant/mention du salon**, **reset** et **this** :\n- **identifiant/mention du salon** définira le salon grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le salon qui a été configuré.\n- **this** définira le salon où a été fait la commande.",
   "syntax.joinRole": "Les arguments disponibles sont :\n- **identifiant/mention du salon** définira le rôle grâce à son indentifiant ou sa mention.\n- **reset** réinitialisera le rôle qui a été configuré.",
   "syntax.localization": "Les langues disponibles sont :\n:flag_us: / :flag_gb: en\n:flag_fr: fr\nSi la langue n'est pas configurée, elle sera configurée par défaut sur la langue anglaise.",
+  "syntax.mute": "Mettre une raison n'est pas obligatoire.",
 
-  "text.ban.reasonNull": "pour aucune raison",
-  "text.ban.reason": "pour la raison",
+  "text.commands.reasonNull": "pour aucune raison",
+  "text.commands.reason": "pour la raison",
 
-  "warning.ban": ":warning: Le temps de ban a été défini à 7 jours en raison du dépassement de la limite !"
+  "warning.ban": ":warning: Le temps de ban a été défini à 7 jours en raison du dépassement de la limite !",
+  "warning.mute": ":warning: Le rôle configuré par défaut n'est pas présent donc j'ai créé un nouveau rôle nommé \"Muted Role\"."
 }

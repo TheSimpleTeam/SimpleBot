@@ -31,17 +31,17 @@ public class BanCommand extends Command {
             return;
         }
         String[] args = event.getArgs().split("\\s+");
-        if (args.length == 1) {
+        if (args.length != 1 && args.length != 2 && args.length != 3) {
             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.ban", event.getGuild().getId()));
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
-            if (!event.getSelfMember().canInteract(member)) {
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event.getGuild().getId()));
-                return;
-            }
             if (!event.getMember().canInteract(member)) {
                 event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event.getGuild().getId()));
+                return;
+            }
+            if (!event.getSelfMember().canInteract(member)) {
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event.getGuild().getId()));
                 return;
             }
             if (event.getGuild().retrieveBanList().complete().contains(user)) { // Unban
@@ -49,8 +49,8 @@ public class BanCommand extends Command {
             } else { // Ban
                 if (args[1] == null || args[1].isEmpty()) args[1] = "7";
                 String reason;
-                if (args[2] == null || args[2].isEmpty()) reason = MessageHelper.translateMessage("text.ban.reasonNull", event.getGuild().getId());
-                else reason = MessageHelper.translateMessage("text.ban.reason", event.getGuild().getId()) + args[2];
+                if (args[2] == null || args[2].isEmpty()) reason = MessageHelper.translateMessage("text.commands.reasonNull", event.getGuild().getId());
+                else reason = MessageHelper.translateMessage("text.commands.reason", event.getGuild().getId()) + args[2];
                 try {
                     int banTime = Integer.parseInt(args[1]);
                     if (banTime > 7) {

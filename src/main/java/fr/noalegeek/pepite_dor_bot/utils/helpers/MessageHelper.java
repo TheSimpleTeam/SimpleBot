@@ -31,9 +31,9 @@ public class MessageHelper {
         if(!command.getExample().isEmpty()){
             syntaxMessage += translateMessage("messageHelper.syntaxError.example", event.getGuild().getId()) + Main.getInfos().prefix + command.getName() + " ";
             if(command.getExample().startsWith("example.")) syntaxMessage += translateMessage(command.getExample(), event.getGuild().getId());
-            else syntaxMessage += command.getHelp();
+            else syntaxMessage += command.getExample();
         }
-        return syntaxMessage + ".\n";
+        return syntaxMessage + "`.\n";
     }
 
     public static void sendError(Exception ex, CommandEvent event) {

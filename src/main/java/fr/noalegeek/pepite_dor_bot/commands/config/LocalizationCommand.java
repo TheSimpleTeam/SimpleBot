@@ -24,7 +24,7 @@ public class LocalizationCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(args.length == 0) {
+        if(args.length != 1) {
             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event.getGuild().getId()));
             return;
         }

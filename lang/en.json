@@ -2,6 +2,8 @@
   "arguments.ban": "<member's ID/mention> <time> [reason]",
   "arguments.channelMember": "<join|remove> <channel's ID/mention|reset|this>",
   "arguments.joinRole": "<channel's ID/mention|reset>",
+  "arguments.kick": "<member's ID/mention> [reason]",
+  "arguments.mute": "<member's ID/mention> [reason]",
 
   "error.ban.notAnNumber": "The time to be specified must be a number.",
   "error.commands.botCantInteractTarget": "I don't have the permission to do that.",
@@ -30,7 +32,9 @@
   "help.discord": "or join the discord",
   "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
   "help.joinRole": "Defines the role that a user will have when he arrives on a server.",
+  "help.kick": "Kick a server member, the person can join afterwards.",
   "help.localization": "Set the bot language for the server.",
+  "help.mute": "Permanently mute a member with or without a reason. Unmute if the person is already muted.",
 
   "category.fun": "Fun",
   "category.mod": "Staff",
@@ -45,8 +49,11 @@
   "success.channelMember.leave.configured": "The channel %s has been defined as a channel for departure messages.",
   "success.channelMember.leave.reset": "The channel %s is no longer the channel for departure messages.",
   "success.joinRole.configured": "The role %s has been defined.",
+  "success.kick": "%s has been successfully kicked %s.",
   "success.localization.configured": "The language has been set to %s.",
+  "success.mute": "%s has been successfully muted %s.",
   "success.unban": "The user %s has been successfully unbanned.",
+  "success.unmute": "%s has been successfully unmuted %s.",
 
   "messageHelper.sendError": "An error has occurred. Please contact the developers and send this message:\n",
   "messageHelper.syntaxError.syntax": "Command syntax ",
@@ -56,9 +63,11 @@
   "syntax.channelMember": "The available arguments are:\n- **join** will define the channel where the welcome announcements will appear.\n- **leave** will define the channel where the departure announcements will appear.\n\nAfter these arguments, the available arguments are **channel ID/mention**, **reset** and **this** :\n- **channel ID/mention** will define the channel by its ID or mention.\n- **reset** will reset the channel that has been configured.\n- **this** will define the channel where the order was made.",
   "syntax.joinRole": "The available arguments are:\n- **channel ID/mention** will define the role thanks to its ID or its mention.\n- **reset** will reset the role that has been configured.",
   "syntax.localization": "The available languages are:\n:flag_us: / :flag_gb: en\n:flag_fr: fr\nIf the language is not configured, it will default to English.",
+  "syntax.mute": "Putting a reason is not mandatory.",
 
-  "text.ban.reasonNull": "for no reason",
-  "text.ban.reason": "for the reason",
+  "text.commands.reasonNull": "for no reason",
+  "text.commands.reason": "for the reason",
 
-  "warning.ban": ":warning: The ban time has been set to 7 days because the limit has been exceeded!"
+  "warning.ban": ":warning: The ban time has been set to 7 days because the limit has been exceeded!",
+  "warning.mute": ":warning: The default role is not present so I created a new role named \"Muted Role\"."
 }
