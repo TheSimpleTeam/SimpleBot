@@ -77,5 +77,8 @@
   "warning.purge.numberTooLarge": ":warning: La valeur maximale est de 100. La valeur a donc été défini à 100 !",
   "warning.purge.numberTooSmall": ":warning: La valeur minimum est de 1. La valeur a donc été défini à 1 !",
   "error.purge": "Il y a des messages datant de plus de 2 semaines donc je ne peux pas les supprimer !",
-  "success.purge": "%s messages ont bien été supprimés."
+  "success.purge": "%s messages ont bien été supprimés.",
+  "help.unban": "Débanni un membre seulement la personne est déjà banni du serveur.",
+  "arguments.unban": "\u003cidentifiant/mention du membre\u003e [raison]",
+  "error.unban": "Vous ne pouvez pas débannir %s car il n\u0027est pas banni du serveur."
 }

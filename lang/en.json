@@ -77,5 +77,8 @@
   "warning.purge.numberTooLarge": ":warning: The maximum value is 100. The value has been set to 100!",
   "warning.purge.numberTooSmall": ":warning: The minimum value is 1, so the value has been set to 1!",
   "error.purge": "There are messages older than 2 weeks so I can\u0027t delete them!",
-  "success.purge": "%s messages have been deleted."
+  "success.purge": "%s messages have been deleted.",
+  "help.unban": "Unban a member only the person is already banned from the server.",
+  "arguments.unban": "\u003cmember\u0027s ID/mention\u003e [reason]",
+  "error.unban": "You cannot unban %s because it is not banned from the server."
 }
