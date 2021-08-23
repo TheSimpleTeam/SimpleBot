@@ -43,7 +43,7 @@ dependencies {
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
     //Other
     implementation group: 'org.kohsuke', name: 'github-api', version: '1.131'
-    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'org.jsoup:jsoup:1.14.2'
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.9.12'
     implementation 'com.google.code.gson:gson:2.8.7'
