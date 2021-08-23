@@ -70,5 +70,12 @@
   "error.prohibit.wordNotHere": "The word `%s` is not present in the list of forbidden words so you cannot remove it from the list.",
   "success.prohibit.wordRemoved": "The word `%s` has been removed from the list of forbidden words.",
   "error.prohibit.listNull": "You cannot reset the list of forbidden words because it is already empty.",
-  "success.prohibit.listReseted": "The list of forbidden words on your server has been reset."
+  "success.prohibit.listReseted": "The list of forbidden words on your server has been reset.",
+  "help.purge": "Deletes messages that are less than 2 weeks old by a given number between 0 and 101.",
+  "arguments.purge": "\u003cnumber of messages\u003e",
+  "syntax.purge": "The number of messages to specify must be between **0** and **101**.",
+  "warning.purge.numberTooLarge": ":warning: The maximum value is 100. The value has been set to 100!",
+  "warning.purge.numberTooSmall": ":warning: The minimum value is 1, so the value has been set to 1!",
+  "error.purge": "There are messages older than 2 weeks so I can\u0027t delete them!",
+  "success.purge": "%s messages have been deleted."
 }
