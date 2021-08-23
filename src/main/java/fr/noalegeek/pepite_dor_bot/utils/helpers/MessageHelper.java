@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
-import java.util.Locale;
 import java.util.Optional;
 
 public class MessageHelper {
@@ -60,7 +59,7 @@ public class MessageHelper {
         if(s.isPresent()) return s.get().getAsString();
 
         if (Main.getLocalizations().get("en").get(key) == null) {
-            throw new NullPointerException("This key does not exist in any localization file !");
+            throw new IllegalArgumentException("This key does not exist in any localization file !");
         }
         return Main.getLocalizations().get("en").get(key).getAsString();
 

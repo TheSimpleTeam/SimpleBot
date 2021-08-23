@@ -13,7 +13,6 @@ public class EvalCommand extends Command {
 
     private final ScriptEngine engine;
     private final StringWriter writer;
-    private final ScriptContext context;
 
     public EvalCommand() {
         this.name = "eval";
@@ -22,7 +21,7 @@ public class EvalCommand extends Command {
         this.guildOnly = true;
         System.setProperty("polyglot.js.nashorn-compat", "true");
         this.engine = new ScriptEngineManager().getEngineByName("graal.js");
-        this.context = engine.getContext();
+        ScriptContext context = engine.getContext();
         this.writer = new StringWriter();
         context.setWriter(writer);
     }

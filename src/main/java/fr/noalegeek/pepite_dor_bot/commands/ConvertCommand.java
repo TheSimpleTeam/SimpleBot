@@ -15,6 +15,9 @@ import java.util.Locale;
 
 public class ConvertCommand extends Command {
 
+    //https://github.com/jrshutske/unit-conversion-api
+    private final String BASE_URL = "https://java-unit-conversion.herokuapp.com/api/";
+
     public ConvertCommand() {
         this.name = "convert";
         this.aliases = new String[]{"co"};
@@ -23,9 +26,6 @@ public class ConvertCommand extends Command {
         this.example = "lenght meter 10 centimeter";
         this.category = CommandCategories.FUN.category;
     }
-
-    //https://github.com/jrshutske/unit-conversion-api
-    private final String BASE_URL = "https://java-unit-conversion.herokuapp.com/api/";
 
     private String capitalize(String string) {
         if (string == null || string.length() == 0) {

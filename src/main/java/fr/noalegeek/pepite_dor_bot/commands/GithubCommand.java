@@ -133,8 +133,8 @@ public class GithubCommand extends Command {
 
     private int getColor(String language) {
         try {
-            Map<String, Map<String, String>> lang = Main.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json")
-                            .openStream()), Map.class);
+            Map<String, Map<String, String>> lang = Main.gson.fromJson(new InputStreamReader
+                    (new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
             return getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"));
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -142,12 +142,11 @@ public class GithubCommand extends Command {
         }
     }
 
-    private int getDecimal(String hex){
+    private int getDecimal(String hex) {
         String digits = "0123456789ABCDEF";
-        hex = hex.toUpperCase();
         int val = 0;
         for (int i = 0; i < hex.length(); i++) {
-            char c = hex.charAt(i);
+            char c = hex.toUpperCase().charAt(i);
             int d = digits.indexOf(c);
             val = 16*val + d;
         }

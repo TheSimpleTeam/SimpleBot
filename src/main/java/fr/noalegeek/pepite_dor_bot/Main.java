@@ -54,7 +54,8 @@ public class Main {
 
     private static class Bot {
         public final List<Command> commands;
-        public final String ownerID, serverInvite;
+        public final String ownerID,
+                serverInvite;
 
         public Bot(List<Command> commands, String ownerID, String serverInvite) {
             this.commands = commands;
