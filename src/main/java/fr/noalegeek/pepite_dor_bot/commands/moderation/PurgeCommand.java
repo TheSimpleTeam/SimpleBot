@@ -25,6 +25,15 @@ public class PurgeCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        if(event.getAuthor().isBot()) return;
+        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event.getGuild().getId()), Permission.MESSAGE_MANAGE.getName()));
+            return;
+        }
+        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event.getGuild().getId()), Permission.MESSAGE_MANAGE.getName()));
+            return;
+        }
         String[] args = event.getArgs().split(" \\s+");
         if(event.getArgs().isEmpty()) {
             event.replyError(MessageHelper.syntaxError(event, this) + "Le nombre de messages à spécifier doit se situer entre 1 et 100.");

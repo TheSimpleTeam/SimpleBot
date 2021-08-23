@@ -33,7 +33,7 @@ public class MuteCommand extends Command {
         if (event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         event.reply(Arrays.toString(args));
-        if (args.length != 1 && args.length != 2) {
+        if (args.length != 2 && args.length != 3) {
             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.mute", event.getGuild().getId()));
             return;
         }
