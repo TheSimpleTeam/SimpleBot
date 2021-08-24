@@ -6,7 +6,9 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 
 import java.util.Arrays;
 
@@ -24,7 +26,6 @@ public class MuteCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         event.reply(Arrays.toString(args));
         if (args.length != 2 && args.length != 3) {

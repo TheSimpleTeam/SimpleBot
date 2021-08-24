@@ -24,7 +24,6 @@ public class UnmuteCommand extends Command {
     }
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if (event.getArgs().split(" ").length == 1) {
             event.replyError(MessageHelper.syntaxError(event, this));

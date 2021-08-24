@@ -6,7 +6,6 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.User;
 
 public class UnbanCommand extends Command {
 
@@ -22,7 +21,6 @@ public class UnbanCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
         if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event.getGuild().getId()), Permission.BAN_MEMBERS.getName()));
             return;

@@ -24,8 +24,7 @@ public class ChannelMemberCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
-        if(!event.getMember().isOwner()){
+       if(!event.getMember().isOwner()){
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notOwner", event.getGuild().getId()));
             return;
         }
