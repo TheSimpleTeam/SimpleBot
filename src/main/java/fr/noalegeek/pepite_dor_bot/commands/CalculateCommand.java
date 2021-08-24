@@ -28,7 +28,7 @@ public class CalculateCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] argsArray = event.getMessage().getContentRaw().split(" ");
         if(argsArray.length == 1){
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"\nVous pouvez mettre plusieurs nombres après le second en mettant les opérateurs disponibles.");
+            event.replyError(MessageHelper.syntaxError(event,this)+"\nVous pouvez mettre plusieurs nombres après le second en mettant les opérateurs disponibles.");
             return;
         }
         String regex = "\"^[-+](?:[0-9]*[.])?[0-9]+|(?<=\\(|\\/|\\*)[+-](?:[0-9]*[.])?[0-9]+|(?:[0-9]*[.])?[0-9]+|[-+*\\/()]\"g";

@@ -31,7 +31,7 @@ public class BotInfoCommand extends Command {
                 .addField("Date de création du compte", MessageHelper.formatShortDate(event.getSelfMember().getTimeCreated()), false)
                 .addField("Cet utilisateur à rejoint le", MessageHelper.formatShortDate(event.getSelfMember().getTimeJoined()), false)
                 .addField("Joue actuellement à", event.getSelfUser().getJDA().getPresence().getActivity().getName(), false)
-                .addField("Status", StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT)), false)
+                .addField("Status", StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT).replaceAll("_", "")), false)
                 .setAuthor(MessageHelper.getTag(event.getSelfUser()), null, event.getSelfUser().getEffectiveAvatarUrl())
                 .build();
         event.getSelfUser().getJDA().getPresence().getStatus();

@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import okhttp3.OkHttpClient;
@@ -69,7 +68,8 @@ public class Main {
             String arg = "";
             try {
                 arg = args[0];
-            }catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {
+            }
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
@@ -80,7 +80,7 @@ public class Main {
         try {
             jda = JDABuilder.createDefault(infos.token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
         } catch (LoginException e) {
-            LOGGER.log(Level.SEVERE,"Le token est invalide");
+            LOGGER.log(Level.SEVERE, "Le token est invalide");
         }
         Random randomActivity = new Random();
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
@@ -105,47 +105,37 @@ public class Main {
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
         String id = event.getGuild().getId();
-        StringBuilder builder = new StringBuilder(String.format(MessageHelper.sendTranslatedMessage("help.commands", id), event.getSelfUser().getName()) + "\n");
+        StringBuilder help = new StringBuilder(String.format(MessageHelper.translateMessage("help.commands", id), event.getSelfUser().getName()));
         Command.Category category = null;
         List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> {
             String key = o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName();
-            return MessageHelper.sendTranslatedMessage(key, id);
+            return MessageHelper.translateMessage(key, id);
         })).collect(Collectors.toList());
-        for(Command command : botCommands)
-        {
-            if(!command.isHidden() && (!command.isOwnerCommand() || event.isOwner()))
-            {
-                if(!Objects.equals(category, command.getCategory()))
-                {
+        for (Command command : botCommands) {
+            if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
+                if (!Objects.equals(category, command.getCategory())) {
                     category = command.getCategory();
                     category = category == null ? CommandCategories.NONE.category : category;
-                    builder.append("\n\n  __").append(MessageHelper.sendTranslatedMessage(category.getName(), id)).append("__:\n");
+                    help.append("\n\n__").append(MessageHelper.translateMessage(category.getName(), id)).append("__:\n");
                 }
-
-                String help;
+                String helpCommand;
                 try {
-                    help = MessageHelper.sendTranslatedMessage(command.getHelp(), id);
+                    helpCommand = MessageHelper.translateMessage(command.getHelp(), id);
                 } catch (NullPointerException ignored) {
-                    help = command.getHelp();
+                    helpCommand = command.getHelp();
                 }
-
-                builder.append("\n`").append(infos.prefix).append(infos.prefix==null ? " " : "").append(command.getName())
-                        .append(command.getArguments()==null ? "`" : " "+command.getArguments()+"`")
-                        .append(" - ").append(help);
+                help.append("\n`").append(infos.prefix).append(infos.prefix == null ? " " : "").append(command.getName())
+                        .append(command.getArguments() == null ? "`" : " " + command.getArguments() + "`")
+                        .append(" - ").append(helpCommand);
             }
         }
         User owner = event.getJDA().getUserById(b.ownerID);
-        if(owner!=null)
-        {
-            builder.append("\n\n" + MessageHelper.sendTranslatedMessage("help.contact", id) + " **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
-            if(event.getClient().getServerInvite()!=null)
-                builder.append(' ').append(MessageHelper.sendTranslatedMessage("help.discord", id)).append(' ').append(b.serverInvite);
+        if (owner != null) {
+            help.append("\n\n").append(MessageHelper.translateMessage("help.contact", id)).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
+            if (event.getClient().getServerInvite() != null)
+                help.append(' ').append(MessageHelper.translateMessage("help.discord", id)).append(' ').append(b.serverInvite);
         }
-        event.replyInDm(builder.toString(), unused ->
-        {
-            if(event.isFromType(ChannelType.TEXT))
-                event.reactSuccess();
-        }, t -> event.replyWarning(MessageHelper.sendTranslatedMessage("help.DMBlocked", id)));
+        event.replyInDm(help.toString(), unused -> {} , t -> event.replyError(MessageHelper.translateMessage("help.DMBlocked", id)));
     }
 
     private static void setupLocalizations() throws IOException {
@@ -197,13 +187,13 @@ public class Main {
         if (!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            if(arg.equalsIgnoreCase("--nosetup")) {
+            if (arg.equalsIgnoreCase("--nosetup")) {
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "!");
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
                 map.put("timeBetweenStatusChange", 15);
                 map.put("autoSaveDelay", 15);
-                map.put("activities", new String[]{"ban everyone","example","check my mentions"});
+                map.put("activities", new String[]{"ban everyone", "example", "check my mentions"});
                 map.put("githubToken", "YOUR-GITHUB-TOKEN");
             } else {
                 Console console = System.console();
@@ -222,7 +212,7 @@ public class Main {
                 System.out.println("What will be the delay between each automatic save ?");
                 map.put("autoSaveDelay", console.readLine().isEmpty() ? 15 : console.readLine());
                 System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
-                map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions","example","ban everyone"} : console.readLine().split(";"));
+                map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : console.readLine().split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");
                 map.put("githubToken", "YOUR-GITHUB-TOKEN");
             }
@@ -240,7 +230,7 @@ public class Main {
 
     public static ServerConfig setupServerConfig() throws IOException {
         File serverConfigFile = new File("config/server-config.json");
-        if(!serverConfigFile.exists()) {
+        if (!serverConfigFile.exists()) {
             serverConfigFile.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
             Map<String, String> defaultGuildJoinRole = new HashMap<>();
@@ -287,7 +277,7 @@ public class Main {
         return serverConfig;
     }
 
-    public static EventWaiter getEventWaiter(){
+    public static EventWaiter getEventWaiter() {
         return waiter;
     }
 

@@ -40,7 +40,7 @@ public class CreateChannelCommand extends Command {
                     break;
             }
         } catch (ArrayIndexOutOfBoundsException e){
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(),this)+"Le type à spécifier doit être soit **texte** soit **vocal**.\n" +
+            event.replyError(MessageHelper.syntaxError(event,this)+"Le type à spécifier doit être soit **texte** soit **vocal**.\n" +
                     "Le nom du nouveau salon ne doit pas dépasser les 100 caractères.\n" +
                     "Mettre une catégorie n'est pas obligatoire.");
         }

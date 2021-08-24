@@ -12,12 +12,10 @@ public class PurgeCommand extends Command {
 
     public PurgeCommand() {
         this.name = "purge";
-        this.aliases = new String[]{"p", "cl", "clear", "pu"};
+        this.aliases = new String[]{"p", "cl", "clear", "pu", "pur", "purg", "cle", "clea"};
         this.guildOnly = true;
-        this.botPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
-        this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.arguments = "<nombre de messages>";
-        this.help = "Supprime les messages datant de moins de 2 semaines selon un nombre donné en-dessous de 101.";
+        this.help = "help.purge";
         this.category = CommandCategories.STAFF.category;
         this.cooldown = 5;
         this.example = "6";
@@ -25,30 +23,39 @@ public class PurgeCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split(" \\s+");
-        if(event.getArgs().isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this) + "Le nombre de messages à spécifier doit se situer entre 1 et 100.");
+        if(event.getAuthor().isBot()) return;
+        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event.getGuild().getId()), Permission.MESSAGE_MANAGE.getName()));
+            return;
+        }
+        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event.getGuild().getId()), Permission.MESSAGE_MANAGE.getName()));
+            return;
+        }
+        String[] args = event.getArgs().split("\\s+");
+        if(args.length != 1) {
+            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.purge", event.getGuild().getId()));
             return;
         }
         int clearMessages = 1;
         try {
             if(Integer.parseInt(args[0]) < 0) {
-                event.replyWarning("La valeur minimum est de 1.\n:warning: La valeur a donc été défini à 1 !");
+                event.replyWarning(MessageHelper.translateMessage("warning.purge.numberTooSmall", event.getGuild().getId()));
             } else if (Integer.parseInt(args[0]) > 100) {
-                event.replyWarning("La valeur maximale est de 100.\n:warning: La valeur a donc été défini à 100 !");
+                event.replyWarning(MessageHelper.translateMessage("warning.purge.numberTooLarge", event.getGuild().getId()));
                 clearMessages = 100;
             } else {
                 clearMessages = Integer.parseInt(args[0]);
             }
         } catch (NumberFormatException ignore) {
-            event.replyError("Le nombre à spécifier doit être un nombre de **1** à **100**.");
+            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.purge", event.getGuild().getId()));
             return;
         }
         try {
             event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete().queue(unused -> event.getTextChannel().purgeMessages(messages)));
         } catch (IllegalArgumentException ex){
-            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + "Il y a des messages datant de plus de 2 semaines donc je ne peux pas les supprimer !").queueAfter(10, TimeUnit.SECONDS);
+            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.purge", event.getGuild().getId())).queueAfter(10, TimeUnit.SECONDS);
         }
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + clearMessages + " messages ont bien été supprimés.", messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event.getGuild().getId()), clearMessages), messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
     }
 }

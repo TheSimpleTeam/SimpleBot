@@ -28,7 +28,7 @@ public class UnshortURLCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event.getAuthor(), this));
+            event.replyError(MessageHelper.syntaxError(event, this));
             return;
         }
         try {
