@@ -37,11 +37,11 @@ public class UnbanCommand extends Command {
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
-            if(event.getGuild().retrieveBanList().complete().contains(user)) {
+            if(event.getGuild().retrieveBanList().complete().stream().anyMatch(ban -> ban.getUser() == user)) {
                 String reason;
                 if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.commands.reasonNull", event.getGuild().getId());
-                reason = MessageHelper.translateMessage("text.commands.reason", event.getGuild().getId()) + args[1];
-                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event.getGuild().getId()), user.getName()));
+                else reason = MessageHelper.translateMessage("text.commands.reason", event.getGuild().getId()) + args[1];
+                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event.getGuild().getId()), user.getName(), reason));
                 event.getGuild().unban(user).queue();
                 return;
             }

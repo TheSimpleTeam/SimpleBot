@@ -36,7 +36,7 @@ public class BanCommand extends Command {
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
-            if (event.getGuild().retrieveBanList().complete().contains(user)) {
+            if (event.getGuild().retrieveBanList().complete().stream().anyMatch(ban -> ban.getUser() == user)) {
                 event.getGuild().unban(user).queue(unused -> event.replySuccess(String.format(MessageHelper.translateMessage("success.unban", event.getGuild().getId()), user.getName())));
             } else {
                 event.getGuild().retrieveMember(user).queue(member -> {

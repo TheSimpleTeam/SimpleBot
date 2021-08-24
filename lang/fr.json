@@ -48,7 +48,7 @@
   "success.kick": "%s a bien été kické du serveur %s.",
   "success.localization.configured": "La nouvelle langue pour le serveur a bien été mise sur %s.",
   "success.mute": "%s a bien été muté %s.",
-  "success.unban": "L\u0027utilisateur %s a bien été débanni.",
+  "success.unban": "%s a bien été débanni %s.",
   "success.unmute": "%s a bien été démuté %s.",
   "messageHelper.sendError": "Une erreur est survenue. Veuillez contacter les développeurs et envoyez ce message :\n",
   "messageHelper.syntaxError.syntax": "Syntaxe de la commande ",
@@ -80,5 +80,6 @@
   "success.purge": "%s messages ont bien été supprimés.",
   "help.unban": "Débanni un membre seulement la personne est déjà banni du serveur.",
   "arguments.unban": "\u003cidentifiant/mention du membre\u003e [raison]",
-  "error.unban": "Vous ne pouvez pas débannir %s car il n\u0027est pas banni du serveur."
+  "error.unban": "Vous ne pouvez pas débannir %s car il n\u0027est pas banni du serveur.",
+  "error.unmute": "Vous ne pouvez pas démuter %s car il n\u0027est pas muté."
 }

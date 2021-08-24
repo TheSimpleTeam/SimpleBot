@@ -17,34 +17,35 @@ public class UnmuteCommand extends Command {
         this.cooldown = 5;
         this.arguments = "<identifiant/mention du membre> <raison>";
         this.example = "363811352688721930";
-        this.botPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
-        this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
         this.category = CommandCategories.STAFF.category;
         this.help = "Démute un membre seulement si la personne est déjà mute.";
     }
     @Override
     protected void execute(CommandEvent event) {
         if (event.getAuthor().isBot()) return;
+        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event.getGuild().getId()), Permission.MESSAGE_MANAGE.getName()));
+            return;
+        }
+        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event.getGuild().getId()), Permission.MESSAGE_MANAGE.getName()));
+            return;
+        }
         String[] args = event.getArgs().split("\\s+");
-        if (event.getArgs().split(" ").length == 1) {
+        if (args.length != 1 && args.length != 2) {
             event.replyError(MessageHelper.syntaxError(event, this));
             return;
         }
-        User target = event.getGuild().getMemberById(args[0].replace("<@!", "").replace(">", "")).getUser();
-        if (target == null) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Vous devez spécifié un membre existant.");
-            return;
-        }
-        Member targetMember = event.getGuild().getMemberById(args[0].replace("<@", "").replace(">", ""));
-        if(targetMember.getRoles().contains(event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event.getGuild().getId())))) {
-            event.getGuild().unban(target).queue();
-            if(args[1] == null){
-                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "L'utilisateur " + target.getName() + " à bien été démuter.");
-            } else {
-                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "L'utilisateur " + target.getName() + " à bien été démuter pour la raison " + args[1] + ".");
+        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+            if(!member.getRoles().contains(event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event.getGuild().getId()))) || !MuteCommand.isMutedRoleHere(event)){
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unmute", event.getGuild().getId()), user.getName()));
+                return;
             }
-            return;
-        }
-        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Vous ne pouvez pas démuter " + target.getName() + " car il n'est pas mute");
+            String reason;
+            if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.reasonNull", event.getGuild().getId());
+            else reason = MessageHelper.translateMessage("text.reason", event.getGuild().getId()) + args[1];
+            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unmute", event.getGuild().getId()), user.getName(), reason));
+            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event.getGuild().getId()))).queue();
+        }), userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event.getGuild().getId())));
     }
 }

@@ -80,5 +80,6 @@
   "success.purge": "%s messages have been deleted.",
   "help.unban": "Unban a member only the person is already banned from the server.",
   "arguments.unban": "\u003cmember\u0027s ID/mention\u003e [reason]",
-  "error.unban": "You cannot unban %s because it is not banned from the server."
+  "error.unban": "You cannot unban %s because it is not banned from the server.",
+  "error.unmute": "You can\u0027t unmute %s because it is not muted."
 }
