@@ -25,18 +25,18 @@ public class LocalizationCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event.getGuild().getId()));
+            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event));
             return;
         }
         if(Arrays.stream(Main.getLangs()).noneMatch(s -> s.equalsIgnoreCase(args[0]))) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event.getGuild().getId()));
+            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event));
             return;
         }
-        if(args[0].equals(Main.getServerConfig().language.get(event.getGuild().getId()))){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.localization.sameAsConfigured", event.getGuild().getId()));
+        if(args[0].equals(Main.getServerConfig().language.get(event))){
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.localization.sameAsConfigured", event));
             return;
         }
-        Main.getServerConfig().language.put(event.getGuild().getId(), args[0]);
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event.getGuild().getId()), ":flag_" + args[0].replace("en","us: / :flag_gb") + ':'));
+        Main.getServerConfig().language.put(event, args[0]);
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event), ":flag_" + args[0].replace("en","us: / :flag_gb") + ':'));
     }
 }

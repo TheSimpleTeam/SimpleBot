@@ -23,51 +23,51 @@ public class BanCommand extends Command {
     protected void execute(CommandEvent event) {
         if (event.getAuthor().isBot()) return;
         if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event.getGuild().getId()), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event.getGuild().getId()), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2 && args.length != 3) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.ban", event.getGuild().getId()));
+            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.ban", event));
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
             if (event.getGuild().retrieveBanList().complete().stream().anyMatch(ban -> ban.getUser() == user)) {
-                event.getGuild().unban(user).queue(unused -> event.replySuccess(String.format(MessageHelper.translateMessage("success.unban", event.getGuild().getId()), user.getName())));
+                event.getGuild().unban(user).queue(unused -> event.replySuccess(String.format(MessageHelper.translateMessage("success.unban", event), user.getName())));
             } else {
                 event.getGuild().retrieveMember(user).queue(member -> {
                     if (!event.getMember().canInteract(member)) {
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event.getGuild().getId()));
+                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event));
                         return;
                     }
                     if (!event.getSelfMember().canInteract(member)) {
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event.getGuild().getId()));
+                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
                         return;
                     }
                     if (args[1] == null || args[1].isEmpty()) args[1] = "7";
                     String reason;
                     if (args[2] == null || args[2].isEmpty())
-                        reason = MessageHelper.translateMessage("text.commands.reasonNull", event.getGuild().getId());
+                        reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
                     else
-                        reason = MessageHelper.translateMessage("text.commands.reason", event.getGuild().getId()) + args[2];
+                        reason = MessageHelper.translateMessage("text.commands.reason", event) + args[2];
                     try {
                         int banTime = Integer.parseInt(args[1]);
                         if (banTime > 7) {
                             banTime = 7;
-                            event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event.getGuild().getId()));
+                            event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
                         }
                         event.getGuild().ban(user, banTime).queue();
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event.getGuild().getId()), user.getName(), reason));
+                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), reason));
                     } catch (NumberFormatException ex) {
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event.getGuild().getId()));
+                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
                     }
-                }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event.getGuild().getId())));
+                }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event)));
             }
-        }, userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event.getGuild().getId())));
+        }, userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }
 }
 

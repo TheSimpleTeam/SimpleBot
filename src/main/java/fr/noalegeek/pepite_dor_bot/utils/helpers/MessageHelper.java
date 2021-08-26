@@ -20,24 +20,24 @@ public class MessageHelper {
     }
 
     public static String syntaxError(CommandEvent event, Command command) {
-        String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + translateMessage("messageHelper.syntaxError.syntax", event.getGuild().getId()) + Main.getInfos().prefix + command.getName() + " : `" +
+        String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + translateMessage("text.syntaxError.syntax", event) + Main.getInfos().prefix + command.getName() + " : `" +
                 Main.getInfos().prefix + command.getName() + " ";
         if(!command.getArguments().isEmpty()){
-            if(command.getArguments().startsWith("arguments.")) syntaxMessage += translateMessage(command.getArguments(), event.getGuild().getId());
+            if(command.getArguments().startsWith("arguments.")) syntaxMessage += translateMessage(command.getArguments(), event);
             else syntaxMessage += command.getArguments();
         }
         syntaxMessage += "`.\n";
-        if(!command.getHelp().isEmpty()) syntaxMessage += translateMessage(command.getHelp(), event.getGuild().getId()) + "\n";
+        if(!command.getHelp().isEmpty()) syntaxMessage += translateMessage(command.getHelp(), event) + "\n";
         if(!command.getExample().isEmpty()){
-            syntaxMessage += translateMessage("messageHelper.syntaxError.example", event.getGuild().getId()) + Main.getInfos().prefix + command.getName() + " ";
-            if(command.getExample().startsWith("example.")) syntaxMessage += translateMessage(command.getExample(), event.getGuild().getId());
+            syntaxMessage += translateMessage("text.syntaxError.example", event) + Main.getInfos().prefix + command.getName() + " ";
+            if(command.getExample().startsWith("example.")) syntaxMessage += translateMessage(command.getExample(), event);
             else syntaxMessage += command.getExample();
         }
         return syntaxMessage + "`.\n";
     }
 
     public static void sendError(Exception ex, CommandEvent event) {
-        event.replyError(translateMessage("messageHelper.sendError", event.getGuild().getId()) + ex.getMessage());
+        event.replyError(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + ex.getMessage());
         Main.LOGGER.severe(ex.getMessage());
     }
 
@@ -55,16 +55,17 @@ public class MessageHelper {
     /**
      *
      * @param key the localization key
-     * @param guildID ID of the guild
+     * @param event for getting the guild's ID
      * @return the translated value
      * @throws NullPointerException if the key does not exist in any localization files.
      */
-    public static String translateMessage(String key, String guildID) {
-        String lang = Main.getServerConfig().language.getOrDefault(guildID, "en");
+    public static String translateMessage(String key, CommandEvent event) {
+        String lang = Main.getServerConfig().language.getOrDefault(event.getGuild().getId(), "en");
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
         if (Main.getLocalizations().get("en").get(key) == null) {
-            throw new NullPointerException("This key does not exist in any localization file!");
+            event.replyError(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + String.format(translateMessage("error.translateMessage", event), key));
+            throw new NullPointerException(String.format(translateMessage("error.translateMessage", event), key));
         }
         return Main.getLocalizations().get("en").get(key).getAsString();
     }

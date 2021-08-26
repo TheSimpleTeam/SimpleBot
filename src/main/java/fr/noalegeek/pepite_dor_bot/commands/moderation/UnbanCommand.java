@@ -24,11 +24,11 @@ public class UnbanCommand extends Command {
     protected void execute(CommandEvent event) {
         if (event.getAuthor().isBot()) return;
         if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event.getGuild().getId()), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event.getGuild().getId()), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
@@ -39,13 +39,13 @@ public class UnbanCommand extends Command {
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
             if(event.getGuild().retrieveBanList().complete().stream().anyMatch(ban -> ban.getUser() == user)) {
                 String reason;
-                if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.commands.reasonNull", event.getGuild().getId());
-                else reason = MessageHelper.translateMessage("text.commands.reason", event.getGuild().getId()) + args[1];
-                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event.getGuild().getId()), user.getName(), reason));
+                if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
+                else reason = MessageHelper.translateMessage("text.commands.reason", event) + args[1];
+                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event), user.getName(), reason));
                 event.getGuild().unban(user).queue();
                 return;
             }
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unban", event.getGuild().getId()), user.getName()));
-        }, userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event.getGuild().getId())));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unban", event), user.getName()));
+        }, userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }
 }
