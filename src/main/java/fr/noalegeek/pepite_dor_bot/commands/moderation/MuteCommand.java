@@ -65,12 +65,12 @@ public class MuteCommand extends Command {
     }
 
     public static boolean isMutedRoleHere(CommandEvent event){
-        if(Main.getServerConfig().mutedRole.get(event) == null || event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event)) == null){
+        if(Main.getServerConfig().mutedRole.get(event.getGuild().getId()) == null || event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event)) == null){
             event.getGuild().createRole()
                     .setName("Muted Role")
                     .setColor(0x010101)
                     .queue(mutedRole -> {
-                        Main.getServerConfig().mutedRole.put(event, mutedRole.getId());
+                        Main.getServerConfig().mutedRole.put(event.getGuild().getId(), mutedRole.getId());
                         for (GuildChannel guildChannel : event.getGuild().getChannels()) {
                             guildChannel.putPermissionOverride(mutedRole).setDeny(Permission.MESSAGE_WRITE).queue();
                         }

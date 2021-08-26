@@ -43,34 +43,34 @@ public class ProhibitCommand extends Command {
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "add":
-                List<String> prohibitWords = Main.getServerConfig().prohibitWords.get(event) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords.get(event);
+                List<String> prohibitWords = Main.getServerConfig().prohibitWords.get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords.get(event.getGuild().getId());
                 if(prohibitWords.contains(args[1])){
                     event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.prohibit.wordAlreadyHere", event), args[1]));
                     return;
                 }
                 prohibitWords.add(args[1]);
                 Main.getServerConfig().prohibitWords.clear();
-                Main.getServerConfig().prohibitWords.put(event, prohibitWords);
+                Main.getServerConfig().prohibitWords.put(event.getGuild().getId(), prohibitWords);
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.prohibit.wordAdded", event), args[1]));
                 break;
             case "rem":
-                prohibitWords = Main.getServerConfig().prohibitWords.get(event) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords.get(event);
+                prohibitWords = Main.getServerConfig().prohibitWords.get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords.get(event.getGuild().getId());
                 if(!prohibitWords.contains(args[1])){
                     event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.prohibit.wordNotHere", event), args[1]));
                     return;
                 }
                 prohibitWords.remove(args[1]);
                 Main.getServerConfig().prohibitWords.clear();
-                Main.getServerConfig().prohibitWords.put(event, prohibitWords);
+                Main.getServerConfig().prohibitWords.put(event.getGuild().getId(), prohibitWords);
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.prohibit.wordRemoved", event), args[1]));
                 break;
             case "reset":
-                if (Main.getServerConfig().prohibitWords.get(event) == null) {
+                if (Main.getServerConfig().prohibitWords.get(event.getGuild().getId()) == null) {
                     event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.prohibit.listNull", event));
                     return;
                 }
                 event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("success.prohibit.listReseted", event));
-                Main.getServerConfig().prohibitWords.remove(event);
+                Main.getServerConfig().prohibitWords.remove(event.getGuild().getId());
                 break;
             default:
                 event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.prohibit", event));
