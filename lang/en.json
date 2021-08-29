@@ -40,6 +40,7 @@
   "error.translateMessage": "`%s` does not exist in any localization file!",
   "error.unban": "You cannot unban %s because it is not banned from the server.",
   "error.unmute": "You can\u0027t unmute %s because it is not muted.",
+  "example.calculate": "Please read the README file through the link https://github.com/mariuszgromada/MathParser.org-mXparser to see the possibilities of this command.",
   "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
   "help.ban": "Bans members permanently from the server. The number to specify corresponds to the messages that will be deleted over time.",
   "help.botInfo": "Gives information about the bot.",

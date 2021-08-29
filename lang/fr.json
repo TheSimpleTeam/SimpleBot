@@ -40,6 +40,7 @@
   "error.translateMessage": "`%s` n\u0027existe dans aucun fichier de localisation !",
   "error.unban": "Vous ne pouvez pas débannir %s car il n\u0027est pas banni du serveur.",
   "error.unmute": "Vous ne pouvez pas démuter %s car il n\u0027est pas muté.",
+  "example.calculate": "Veuillez lire le fichier README grâce au lien https://github.com/mariuszgromada/MathParser.org-mXparser pour voir les possibilités de cette commande.",
   "help.DMBlocked": "Aucune aide ne peut vous être envoyé car vous avez bloqué vos messages privés.",
   "help.ban": "Banni les membres définitivement du serveur. Le nombre à spécifier correspond aux messages qui vont être supprimés en fonction du temps.",
   "help.botInfo": "Donne des informations sur le bot.",
