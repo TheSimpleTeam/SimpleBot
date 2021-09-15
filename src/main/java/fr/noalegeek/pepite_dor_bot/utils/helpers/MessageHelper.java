@@ -60,12 +60,23 @@ public class MessageHelper {
      * @throws NullPointerException if the key does not exist in any localization files.
      */
     public static String translateMessage(String key, String guildID) {
+        return translateMessage(key, guildID, false);
+    }
+
+    /**
+     *
+     * @param key the localization key
+     * @param guildID ID of the guild
+     * @return the translated value
+     * @throws NullPointerException if the key does not exist in any localization files.
+     */
+    public static String translateMessage(String key, String guildID, boolean ignoreError) {
         String lang = Main.getServerConfig().language.getOrDefault(guildID, "en");
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
-        if (Main.getLocalizations().get("en").get(key) == null) {
-            throw new NullPointerException("This key does not exist in any localization file!");
+        if(!ignoreError && Main.getLocalizations().get("en").get(key) == null) {
+            throw new IllegalArgumentException("This key does not exist in any localization file !");
         }
-        return Main.getLocalizations().get("en").get(key).getAsString();
+        return Optional.ofNullable(Main.getLocalizations().get("en").get(key).getAsString()).orElse(key);
     }
 }
