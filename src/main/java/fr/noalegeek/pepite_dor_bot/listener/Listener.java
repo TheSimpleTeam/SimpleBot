@@ -48,9 +48,7 @@ public class Listener extends ListenerAdapter {
                 event.getJDA().getPresence().setActivity(Activity.playing(getInfos().activities[new Random().nextInt(getInfos().activities.length)]));
             }
         }, 0, getInfos().timeBetweenStatusChange * 1000);
-
-        Timer autoSave = new Timer();
-        autoSave.schedule(new TimerTask() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -103,6 +101,7 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
+        //TODO verif si le salon existe
         try {
             event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin.get(event)).sendMessage(embedMemberJoin).queue();
         } catch (InsufficientPermissionException ex) {

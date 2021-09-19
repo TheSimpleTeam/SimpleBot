@@ -23,10 +23,10 @@ public class JoinRoleCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
-        if(!event.getMember().isOwner()){
+        /*if(!event.getMember().isOwner()){
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notOwner", event));
             return;
-        }
+        }*/
         String[] args = event.getArgs().split(" \\s+");
         if (args.length != 1) {
             event.replyError(MessageHelper.syntaxError(event,this) + MessageHelper.translateMessage("syntax.joinRole", event));
@@ -48,12 +48,12 @@ public class JoinRoleCommand extends Command {
             }
             Main.getServerConfig().guildJoinRole.remove(event.getGuild().getId());
         } else {
-            if(joinRoleId.equals(joinRole.getId())){
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinrole.sameAsConfigured", event));
+            if(joinRoleId == null || joinRoleId.equals(joinRole.getId())){
+                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.sameAsConfigured", event));
                 return;
             }
             Main.getServerConfig().guildJoinRole.put(event.getGuild().getId(), joinRole.getId());
-            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("success.joinrole.configured", event));
+            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("success.joinRole.configured", event));
         }
     }
 }

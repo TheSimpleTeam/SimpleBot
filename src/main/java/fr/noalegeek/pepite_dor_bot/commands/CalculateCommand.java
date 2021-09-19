@@ -39,6 +39,7 @@ public class CalculateCommand extends Command {
                     builder.append('.');
                     break;
                 case 'x':
+                case '×':
                     builder.append('*');
                     break;
                 default:
