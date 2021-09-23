@@ -1,33 +1,23 @@
 package fr.noalegeek.pepite_dor_bot.commands;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.sun.org.apache.bcel.internal.generic.ATHROW;
-import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.RequestHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import okhttp3.Response;
-import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
-import java.io.IOException;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Objects;
 
 public class ConvertCommand extends Command {
 
     public ConvertCommand() {
         this.name = "convert";
         this.aliases = new String[]{"co"};
-        this.arguments = "<nombre> <unité de mesure> <unité de mesure>";
-        this.help = "Convertis une unité de mesure en une autre.";
-        this.example = "10 meter centimeter";
+        this.arguments = "arguments.convert";
+        this.help = "help.convert";
+        this.example = "10 m cm";
         this.category = CommandCategories.FUN.category;
     }
 

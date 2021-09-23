@@ -1,6 +1,7 @@
 {
   "arguments.ban": "\u003cidentifiant/mention du membre\u003e \u003ctemps\u003e [raison]",
   "arguments.channelMember": "\u003cjoin|remove\u003e \u003cidentifiant/mention du salon|reset|this\u003e",
+  "arguments.convert": "\u003cnombre\u003e \u003cunité de mesure\u003e \u003cunité de mesure\u003e",
   "arguments.joinRole": "\u003cidentifiant/mention du role|reset\u003e",
   "arguments.kick": "\u003cidentifiant/mention du membre\u003e [raison]",
   "arguments.mute": "\u003cidentifiant/mention du membre\u003e [raison]",
@@ -53,6 +54,7 @@
   "help.channelMember": "Défini le salon où les annonces des personnes qui rejoignent ou qui quittent le serveur avec son identifiant.",
   "help.commands": "Commandes de **%s** :",
   "help.contact": "Pour plus d\u0027aide, contactez",
+  "help.convert": "Convertis une unité de mesure en une autre.",
   "help.discord": "ou rejoignez le discord",
   "help.joinRole": "Défini le rôle que va avoir un utilisateur lors de son arrivée sur un serveur.",
   "help.kick": "Kick un membre du serveur, la personne pourra rejoindre après.",
