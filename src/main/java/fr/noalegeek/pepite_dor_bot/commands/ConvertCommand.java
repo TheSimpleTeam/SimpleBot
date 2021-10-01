@@ -26,7 +26,14 @@ public class ConvertCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-
+        for(int i = 0 ; i < Unit.values().length; i++){
+            for(Unit unit : Unit.values()) {
+                if (Unit.values()[i].symbol.equals(unit.symbol) && Unit.values()[i] != unit) {
+                    event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("text.sendError", event) + String.format(MessageHelper.translateMessage("error.convert.sameSymbols", event), MessageHelper.translateMessage(Unit.values()[i].unitName, event), MessageHelper.translateMessage(unit.unitName, event), Unit.values()[i].symbol));
+                    return;
+                }
+            }
+        }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 3) {
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "syntax");
@@ -76,6 +83,7 @@ public class ConvertCommand extends Command {
     }
 
     private enum Unit {
+        //Units of length
         PARSEC(UnitType.LENGTH, 308567758149136760000000000000000D, "pc", "text.convert.parsec"),
         YOTTAMETER(UnitType.LENGTH, 1000000000000000000000000D, "Ym", "text.convert.yottameter"),
         ZETTAMETER(UnitType.LENGTH, 1000000000000000000000D, "Zm", "text.convert.zettameter"),
@@ -88,7 +96,7 @@ public class ConvertCommand extends Command {
         MEGAMETER(UnitType.LENGTH, 1000000D, "Mm", "text.convert.megameter"),
         MYRIAMETER(UnitType.LENGTH, 10000D, "mam", "text.convert.myriameter"),
         LEAGUE(UnitType.LENGTH, 4828.032D, "lg", "text.convert.league"),
-        NAUTICALMILE(UnitType.LENGTH, 1852D, "nm", "text.convert.nauticalMile"),
+        NAUTICALMILE(UnitType.LENGTH, 1852D, "NM", "text.convert.nauticalMile"),
         MILE(UnitType.LENGTH, 1609.344D, "mi", "text.convert.mile"),
         KILOMETER(UnitType.LENGTH, 1000D, "km", "text.convert.kilometer"),
         FURLONG(UnitType.LENGTH, 201.16840233680466D, "fur", "text.convert.furlong"),
@@ -96,26 +104,26 @@ public class ConvertCommand extends Command {
         CHAIN(UnitType.LENGTH, 20.116840233680466D, "ch", "text.convert.chain"),
         DECAMETER(UnitType.LENGTH, 10D, "dam", "text.convert.decameter"),
         ROD(UnitType.LENGTH, 5.0292D, "ro", "text.convert.rod"),
-        FATHOM(UnitType.LENGTH, 1.8288D, "fm", "text.convert.fathom"),
+        FATHOM(UnitType.LENGTH, 1.8288D, "fhm", "text.convert.fathom"),
         ELL(UnitType.LENGTH, 1.143, "ell", "text.convert.ell"),
         METER(UnitType.LENGTH, 1.0D, "m", "text.convert.meter"),
         YARD(UnitType.LENGTH, 0.9144D, "yd", "text.convert.yard"),
         FOOT(UnitType.LENGTH, 0.3048D, "ft", "text.convert.foot"),
         SPAN(UnitType.LENGTH, 0.2286D, "sp", "text.convert.span"),
-        NATURALSPAN(UnitType.LENGTH, 0.2032D, "", "text.convert.naturalSpan"),
+        NATURALSPAN(UnitType.LENGTH, 0.2032D, "ns", "text.convert.naturalSpan"),
         LINK(UnitType.LENGTH, 0.20116840233680466D, "lnk", "text.convert.link"),
         SHAFTMENT(UnitType.LENGTH, 0.1524D, "st", "text.convert.shaftment"),
         HAND(UnitType.LENGTH, 0.1016D, "ha", "text.convert.hand"),
         DECIMETER(UnitType.LENGTH, 0.1D, "dm", "text.convert.decimeter"),
         POPPYSEED(UnitType.LENGTH, 0.088194D, "ps", "text.convert.poppySeed"),
-        PALM(UnitType.LENGTH, 0.0762D, "pa", "text.convert.palm"),
+        PALM(UnitType.LENGTH, 0.0762D, "plm", "text.convert.palm"),
         NAIL(UnitType.LENGTH,  0.05715D, "na", "text.convert.nail"),
         INCH(UnitType.LENGTH, 0.0254D, "in", "text.convert.inch"),
         FINGER(UnitType.LENGTH, 0.022225D, "fg", "text.convert.finger"),
         DIGIT(UnitType.LENGTH, 0.01905D, "dg", "text.convert.digit"),
         CENTIMETER(UnitType.LENGTH, 0.01D, "cm", "text.convert.centimeter"),
         BARLEYCORN(UnitType.LENGTH, 0.008466666D, "bc", "text.convert.barleyCorn"),
-        PICA(UnitType.LENGTH, 0.004233333D, "pc", "text.convert.pica"),
+        PICA(UnitType.LENGTH, 0.004233333D, "pa", "text.convert.pica"),
         LINE(UnitType.LENGTH, 0.002116D, "lin", "text.convert.line"),
         MILLIMETER(UnitType.LENGTH, 0.001D, "mm", "text.convert.millimeter"),
         PICAPOINT(UnitType.LENGTH, 0.0003527778D, "pt", "text.convert.picaPoint"),
@@ -132,7 +140,37 @@ public class ConvertCommand extends Command {
         SIEGBAHN(UnitType.LENGTH, 0.00000000000010021D, "xu", "text.convert.siegbahn"),
         ATTOMETER(UnitType.LENGTH, 0.000000000000000001D, "am", "text.convert.attometer"),
         ZEPTOMETER(UnitType.LENGTH, 0.000000000000000000001D, "zm", "text.convert.zeptometer"),
-        YOCTOMETER(UnitType.LENGTH, 0.000000000000000000000001D, "ym", "text.convert.yoctometer");
+        YOCTOMETER(UnitType.LENGTH, 0.000000000000000000000001D, "ym", "text.convert.yoctometer"),
+        //Units of time
+        YOTTASECOND(UnitType.TIME, 1000000000000000000000000D, "Ys", "text.convert.yottasecond"),
+        ZETTASECOND(UnitType.TIME, 1000000000000000000000D, "Zs", "text.convert.zettasecond"),
+        EXASECOND(UnitType.TIME, 1000000000000000000D, "Es", "text.convert.exasecond"),
+        PETASECOND(UnitType.TIME, 1000000000000000D, "Ps", "text.convert.petasecond"),
+        TERASECOND(UnitType.TIME, 1000000000000D, "Ts", "text.convert.terasecond"),
+        MILLENNIUM(UnitType.TIME, 31557600000D, "my", "text.convert.millennium"),
+        CENTURY(UnitType.TIME, 3155760000D, "ky", "text.convert.century"),
+        GIGASECOND(UnitType.TIME, 1000000000D, "Gs", "text.convert.gigasecond"),
+        YEAR(UnitType.TIME, 31557600D, "y", "text.convert.year"),
+        MONTH(UnitType.TIME, 2629800D, "m", "text.convert.month"),
+        MEGASECOND(UnitType.TIME, 1000000D, "Ms", "text.convert.megasecond"),
+        WEEK(UnitType.TIME, 604800D, "w", "text.convert.week"),
+        DAY(UnitType.TIME, 86400D, "d", "text.convert.day"),
+        HOUR(UnitType.TIME, 3600D, "h", "text.convert.hour"),
+        KILOSECOND(UnitType.TIME, 1000D, "ks", "text.convert.kilosecond"),
+        MINUTE(UnitType.TIME, 60D, "min", "text.convert.minute"),
+        HECTOSECOND(UnitType.TIME, 100D, "hs", "text.convert.hectosecond"),
+        DECASECOND(UnitType.TIME, 10D, "das", "text.convert.decasecond"),
+        SECOND(UnitType.TIME, 1D, "s", "text.convert.second"),
+        DECISECOND(UnitType.TIME, 0.1D, "ds", "text.convert.decisecond"),
+        CENTISECOND(UnitType.TIME, 0.01D, "cs", "text.convert.centisecond"),
+        MILLISECOND(UnitType.TIME, 0.001D, "ms", "text.convert.millisecond"),
+        MICROSECOND(UnitType.TIME, 0.000001D,"µs", "text.convert.microsecond"),
+        NANOSECOND(UnitType.TIME, 0.000000001D, "ns", "text.convert.nanosecond"),
+        PICOSECOND(UnitType.TIME, 0.000000000001D, "ps", "text.convert.picosecond"),
+        FEMTOSECOND(UnitType.TIME, 0.000000000000001D, "fs", "text.convert.femtosecond"),
+        ATTOSECONDE(UnitType.TIME, 0.000000000000000001D, "as","text.convert.attosecond"),
+        ZEPTOSECOND(UnitType.TIME, 0.000000000000000000001D, "zs", "text.convert.zeptosecond"),
+        YOCTOSECOND(UnitType.TIME, 0.000000000000000000000001D, "ys", "text.convert.yoctosecond");
 
         private final UnitType unitType;
         private final double factor;
@@ -148,7 +186,8 @@ public class ConvertCommand extends Command {
     }
 
     private enum UnitType {
-        LENGTH("text.convert.length");
+        LENGTH("text.convert.length"),
+        TIME("text.convert.time");
 
         private final String unitTypeName;
 
@@ -157,3 +196,4 @@ public class ConvertCommand extends Command {
         }
     }
 }
+//TODO enlever majuscule sur unitName de tous (barleyCorn)
