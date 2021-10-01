@@ -12,7 +12,7 @@ version '1.0'
 
 mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
 
-sourceCompatibility = targetCompatibility = 17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
 
 graal {
