@@ -20,7 +20,6 @@ public class KickCommand extends Command {
     }
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
         if(!event.getMember().hasPermission(Permission.KICK_MEMBERS)){
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.KICK_MEMBERS.getName()));
             return;

@@ -22,7 +22,6 @@ public class MuteCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.mute", event));

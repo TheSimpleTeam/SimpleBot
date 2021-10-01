@@ -6,7 +6,10 @@ import java.util.Map;
 public class ServerConfig {
 
     public final Map<String, Boolean> withoutMutedRole;
-    public final Map<String, String> guildJoinRole,channelMemberJoin,channelMemberRemove, mutedRole;
+    public final Map<String, String> guildJoinRole,
+            channelMemberJoin,
+            channelMemberRemove,
+            mutedRole;
     public final Map<String, List<String>> prohibitWords;
     public final Map<String, String> language;
 

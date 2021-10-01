@@ -21,7 +21,6 @@ public class BanCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
         if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
             return;

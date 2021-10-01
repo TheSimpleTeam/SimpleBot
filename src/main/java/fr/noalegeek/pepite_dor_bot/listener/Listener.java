@@ -1,7 +1,5 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
-import fr.noalegeek.pepite_dor_bot.Main;
-import fr.noalegeek.pepite_dor_bot.commands.moderation.ProhibitCommand;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,8 +10,6 @@ import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.Clock;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
@@ -75,9 +69,9 @@ public class Listener extends ListenerAdapter {
             new File(configPath.toUri()).createNewFile();
         }
         Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
-        if (gson.fromJson(reader, ServerConfig.class) == Main.getServerConfig()) return;
+        if (gson.fromJson(reader, ServerConfig.class) == getServerConfig()) return;
         Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
-        gson.toJson(Main.getServerConfig(), writer);
+        gson.toJson(getServerConfig(), writer);
         writer.close();
         LOGGER.info("Server config updated");
     }
@@ -145,17 +139,11 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event.getAuthor() == event.getJDA().getSelfUser()) return;
-        LOGGER.info(MessageHelper.getTag(event.getAuthor()) + " a dit :\n" +
-                event.getMessage().getContentRaw());
-        /*try {
-            saveConfigs();
-        } catch (IOException ex) {
-            LOGGER.severe(ex.getMessage());
-        }*/
+        LOGGER.info(MessageHelper.getTag(event.getAuthor()) + " a dit :\n" + event.getMessage().getContentRaw());
         if (getServerConfig().prohibitWords == null) {
             new File("config/server-config.json").delete();
             try {
-                Main.setupServerConfig();
+                setupServerConfig();
             } catch (IOException ex) {
                 LOGGER.severe(ex.getMessage());
             }

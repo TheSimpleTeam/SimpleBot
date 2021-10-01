@@ -12,6 +12,9 @@ import java.time.Instant;
 
 public class ConvertCommand extends Command {
 
+    //https://github.com/jrshutske/unit-conversion-api
+    private final String BASE_URL = "https://java-unit-conversion.herokuapp.com/api/";
+
     public ConvertCommand() {
         this.name = "convert";
         this.aliases = new String[]{"co"};

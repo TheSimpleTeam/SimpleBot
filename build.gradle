@@ -1,16 +1,23 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
 }
+
+ext.graalVersion = '21.2.0'
 
 group 'fr.noalegeek'
 version '1.0'
 
 mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
 
-sourceCompatibility = targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = 17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
+
+graal {
+    version "$graalVersion"
+}
 
 repositories {
     mavenCentral()
@@ -23,18 +30,26 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.kohsuke', name: 'github-api', version: '1.131'
-    implementation 'org.jsoup:jsoup:1.14.2'
-    implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
-    implementation 'org.reflections:reflections:0.9.12'
-    implementation 'com.google.code.gson:gson:2.8.7'
-    implementation("net.dv8tion:JDA:4.3.0_277")
-    implementation('pw.chew:jda-chewtils:1.20.4') {
-        exclude group: 'pw.chew:jda-chewtils-command:1.20.4'
+    //JDA & JDA-Utilities
+    implementation("net.dv8tion:JDA:4.3.0_310")
+    implementation('pw.chew:jda-chewtils:1.22.0') {
+        exclude group: 'pw.chew:jda-chewtils-command:1.22.0'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    //GraalJS
+    implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
+    implementation "org.graalvm.js:js:$graalVersion"
+    // necessary to integrate with legacy ScriptEngine based implementation
+    implementation "org.graalvm.js:js-scriptengine:$graalVersion"
+    //Other
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.133'
+    implementation 'org.jsoup:jsoup:1.14.3'
+    implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
+    implementation 'org.reflections:reflections:0.9.12'
+    implementation 'com.google.code.gson:gson:2.8.8'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 test {
