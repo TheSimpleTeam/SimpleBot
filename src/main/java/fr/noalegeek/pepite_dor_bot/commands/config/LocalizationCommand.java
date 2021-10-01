@@ -32,11 +32,11 @@ public class LocalizationCommand extends Command {
             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event));
             return;
         }
-        if(args[0].equals(Main.getServerConfig().language.get(event.getGuild().getId()))){
+        if(args[0].equals(Main.getServerConfig().language().get(event.getGuild().getId()))){
             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.localization.sameAsConfigured", event));
             return;
         }
-        Main.getServerConfig().language.put(event.getGuild().getId(), args[0]);
+        Main.getServerConfig().language().put(event.getGuild().getId(), args[0]);
         event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event), ":flag_" + args[0].replace("en","us: / :flag_gb") + ':'));
     }
 }
