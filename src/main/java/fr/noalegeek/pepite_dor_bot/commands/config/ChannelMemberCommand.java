@@ -36,83 +36,83 @@ public class ChannelMemberCommand extends Command {
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "join":
-                String channelMemberId = Main.getServerConfig().channelMemberJoin.get(event.getGuild().getId());
+                String channelMemberId = Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId());
                 switch (args[1].toLowerCase(Locale.ROOT)) {
-                    case "reset":
+                    case "reset" -> {
                         if (channelMemberId == null) {
                             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.notConfigured", event));
                             return;
                         }
                         event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.reset", event), event.getGuild().getGuildChannelById(channelMemberId).getAsMention()));
-                        Main.getServerConfig().channelMemberJoin.remove(event.getGuild().getId());
-                        break;
-                    case "this":
+                        Main.getServerConfig().channelMemberJoin().remove(event.getGuild().getId());
+                    }
+                    case "this" -> {
                         GuildChannel channelMember = (GuildChannel) event.getChannel();
                         if (channelMemberId == null || !channelMember.getId().equals(event.getChannel().getId())) {
-                            Main.getServerConfig().channelMemberJoin.put(event.getGuild().getId(), channelMember.getId());
+                            Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), channelMember.getId());
                             event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), channelMember.getAsMention()));
                             return;
                         }
                         event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
-                        break;
-                    default:
+                    }
+                    default -> {
                         String channelId = args[1].replaceAll("\\D+", "");
                         if (channelId.isEmpty()) {
                             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.channelMember", event));
                             return;
                         }
-                        channelMember = event.getGuild().getGuildChannelById(channelId);
+                        GuildChannel channelMember = event.getGuild().getGuildChannelById(channelId);
                         if (channelMember == null) {
                             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.channelNull", event));
                             return;
                         }
                         if (channelMemberId == null || !channelMemberId.equals(channelId)) {
-                            Main.getServerConfig().channelMemberJoin.put(event.getGuild().getId(), channelMember.getId());
+                            Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), channelMember.getId());
                             event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), channelMember.getAsMention()));
                             return;
                         }
                         event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
-                        break;
+                    }
                 }
                 break;
             case "leave":
-                channelMemberId = Main.getServerConfig().channelMemberRemove.get(event.getGuild().getId());
+                channelMemberId = Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId());
                 switch (args[1].toLowerCase(Locale.ROOT)) {
-                    case "reset":
+                    case "reset" -> {
                         if (channelMemberId == null) {
                             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.notConfigured", event));
                             return;
                         }
-                        Main.getServerConfig().channelMemberRemove.remove(event.getGuild().getId());
+                        Main.getServerConfig().channelMemberRemove().remove(event.getGuild().getId());
                         event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.reset", event), event.getGuild().getGuildChannelById(channelMemberId).getAsMention()));
-                        break;
-                    case "this":
+                    }
+                    case "this" -> {
                         GuildChannel channelMember = (GuildChannel) event.getChannel();
                         if (channelMemberId == null || !channelMemberId.equals(event.getChannel().getId())) {
-                            Main.getServerConfig().channelMemberRemove.put(event.getGuild().getId(), channelMember.getId());
+                            Main.getServerConfig().channelMemberRemove().put(event.getGuild().getId(), channelMember.getId());
                             event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), channelMember.getAsMention()));
                             return;
                         }
                         event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.sameAsConfigured", event));
-                        break;
-                    default:
+                    }
+                    default -> {
                         String channelId = args[1].replaceAll("\\D+", "");
                         if (channelId.isEmpty()) {
                             event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.channelMember", event));
                             return;
                         }
-                        channelMember = event.getGuild().getGuildChannelById(channelId);
+                        GuildChannel channelMember = event.getGuild().getGuildChannelById(channelId);
                         if (channelMember == null) {
                             event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.channelNull", event));
                             return;
                         }
                         if (channelMemberId == null || !channelMemberId.equals(channelId)) {
-                            Main.getServerConfig().channelMemberRemove.put(event.getGuild().getId(), channelMember.getId());
+                            Main.getServerConfig().channelMemberRemove().put(event.getGuild().getId(), channelMember.getId());
                             event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), channelMember.getAsMention()));
                             return;
                         }
                         event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.sameAsConfigured", event));
-                        break;
+                    }
                 }
                 break;
             default:
