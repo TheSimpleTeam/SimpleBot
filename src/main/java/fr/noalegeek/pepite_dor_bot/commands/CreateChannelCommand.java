@@ -29,15 +29,9 @@ public class CreateChannelCommand extends Command {
                 return;
             }
             switch (args[0]) {
-                case "texte":
-                    event.getGuild().createTextChannel(args[2], event.getGuild().getCategoryById(args[3])).queue();
-                    break;
-                case "vocal":
-                    event.getGuild().createVoiceChannel(args[2], event.getGuild().getCategoryById(args[3])).queue();
-                    break;
-                default:
-                    event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le type à spécifier doit être soit **texte** soit **vocal** !");
-                    break;
+                case "texte" -> event.getGuild().createTextChannel(args[2], event.getGuild().getCategoryById(args[3])).queue();
+                case "vocal" -> event.getGuild().createVoiceChannel(args[2], event.getGuild().getCategoryById(args[3])).queue();
+                default -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "Le type à spécifier doit être soit **texte** soit **vocal** !");
             }
         } catch (ArrayIndexOutOfBoundsException e){
             event.replyError(MessageHelper.syntaxError(event,this)+"Le type à spécifier doit être soit **texte** soit **vocal**.\n" +

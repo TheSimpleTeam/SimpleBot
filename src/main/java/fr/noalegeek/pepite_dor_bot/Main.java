@@ -78,7 +78,7 @@ public class Main {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
         }
         try {
-            jda = JDABuilder.createDefault(infos.token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
+            jda = JDABuilder.createDefault(infos.token()).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE, "Le token est invalide");
         }
@@ -87,10 +87,10 @@ public class Main {
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId(b.ownerID)
                 .setCoOwnerIds("363811352688721930")
-                .setPrefix(infos.prefix)
+                .setPrefix(infos.prefix())
                 .useHelpBuilder(true)
                 .setServerInvite(b.serverInvite)
-                .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
+                .setActivity(Activity.playing(infos.activities()[randomActivity.nextInt(infos.activities().length)]))
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
@@ -123,7 +123,7 @@ public class Main {
                 } catch (NullPointerException ignored) {
                     helpCommand = command.getHelp();
                 }
-                help.append("\n`").append(infos.prefix).append(infos.prefix == null ? " " : "").append(command.getName())
+                help.append("\n`").append(infos.prefix()).append(infos.prefix() == null ? " " : "").append(command.getName())
                         .append(command.getArguments() == null ? "`" : " " + command.getArguments() + "`")
                         .append(" - ").append(helpCommand);
             }

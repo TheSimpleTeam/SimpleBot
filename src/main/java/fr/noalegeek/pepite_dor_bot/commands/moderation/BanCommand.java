@@ -22,11 +22,13 @@ public class BanCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
+                    Permission.BAN_MEMBERS.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
+                    Permission.BAN_MEMBERS.getName()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
@@ -60,7 +62,8 @@ public class BanCommand extends Command {
                             event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
                         }
                         event.getGuild().ban(user, banTime).queue();
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), reason));
+                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(),
+                                reason));
                     } catch (NumberFormatException ex) {
                         event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
                     }

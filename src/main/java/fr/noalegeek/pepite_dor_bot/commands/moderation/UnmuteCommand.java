@@ -6,8 +6,6 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 
 public class UnmuteCommand extends Command {
     public UnmuteCommand() {
@@ -37,7 +35,7 @@ public class UnmuteCommand extends Command {
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
-            if(!member.getRoles().contains(event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event))) || !MuteCommand.isMutedRoleHere(event)){
+            if(!member.getRoles().contains(event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId()))) || !MuteCommand.isMutedRoleHere(event)){
                 event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unmute", event), user.getName()));
                 return;
             }
@@ -45,7 +43,7 @@ public class UnmuteCommand extends Command {
             if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.reasonNull", event);
             else reason = MessageHelper.translateMessage("text.reason", event) + args[1];
             event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unmute", event), user.getName(), reason));
-            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event))).queue();
+            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId()))).queue();
         }), userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }
 }

@@ -2,7 +2,6 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.command.impl.CommandClientImpl;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,10 +11,6 @@ import java.awt.Color;
 import java.time.Instant;
 
 public class GuildInfoCommand extends Command {
-
-    /**
-     * {@link CommandClientImpl}
-     */
 
     public GuildInfoCommand() {
         this.name = "guildinfo";

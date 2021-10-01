@@ -20,8 +20,8 @@ public class MessageHelper {
     }
 
     public static String syntaxError(CommandEvent event, Command command) {
-        String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + translateMessage("text.syntaxError.syntax", event) + Main.getInfos().prefix + command.getName() + " : `" +
-                Main.getInfos().prefix + command.getName() + " ";
+        String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + translateMessage("text.syntaxError.syntax", event) + Main.getInfos().prefix() +
+                command.getName() + " : `" + Main.getInfos().prefix() + command.getName() + " ";
         if(!command.getArguments().isEmpty()){
             if(command.getArguments().startsWith("arguments.")) syntaxMessage += translateMessage(command.getArguments(), event);
             else syntaxMessage += command.getArguments();
@@ -29,7 +29,7 @@ public class MessageHelper {
         syntaxMessage += "`.\n";
         if(!command.getHelp().isEmpty()) syntaxMessage += translateMessage(command.getHelp(), event) + "\n";
         if(!command.getExample().isEmpty()){
-            syntaxMessage += translateMessage("text.syntaxError.example", event) + Main.getInfos().prefix + command.getName() + " ";
+            syntaxMessage += translateMessage("text.syntaxError.example", event) + Main.getInfos().prefix() + command.getName() + " ";
             if(command.getExample().startsWith("example.")) syntaxMessage += translateMessage(command.getExample(), event);
             else syntaxMessage += command.getExample();
         }
@@ -64,11 +64,12 @@ public class MessageHelper {
     }
 
     private static String translateMessage(String key, CommandEvent event, boolean ignoreError) {
-        String lang = Main.getServerConfig().language.getOrDefault(event.getGuild().getId(), "en");
+        String lang = Main.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en");
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
         if (!ignoreError && Main.getLocalizations().get("en").get(key) == null) {
-            event.replyError(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + String.format(translateMessage("error.translateMessage", event), key));
+            event.replyError(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + String.format(translateMessage("error.translateMessage",
+                    event), key));
             throw new NullPointerException(String.format(translateMessage("error.translateMessage", event), key));
         }
         return Optional.ofNullable(Main.getLocalizations().get("en").get(key).getAsString()).orElse(key);

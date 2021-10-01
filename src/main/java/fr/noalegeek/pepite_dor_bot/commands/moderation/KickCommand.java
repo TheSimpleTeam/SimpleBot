@@ -21,11 +21,13 @@ public class KickCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getMember().hasPermission(Permission.KICK_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.KICK_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
+                    Permission.KICK_MEMBERS.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.KICK_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.KICK_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
+                    Permission.KICK_MEMBERS.getName()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
@@ -39,6 +41,7 @@ public class KickCommand extends Command {
             else reason = MessageHelper.translateMessage("text.commands.reason", event) + args[1];
             event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.kick", event), user.getName(), reason));
             event.getGuild().kick(member).queue();
-        }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))), userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+        }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
+                userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }
 }

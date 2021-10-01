@@ -25,26 +25,21 @@ public class CalculateCommand extends Command {
             return;
         }
         if(!new Expression(replaceAll(event.getArgs().replaceAll("\\s+", ""))).checkSyntax()){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.calculate", event), event.getArgs().replaceAll("\\s+", "")));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.calculate", event),
+                    event.getArgs().replaceAll("\\s+", "")));
             return;
         }
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.calculate", event), replaceAll(event.getArgs().replaceAll("\\s+", "")), new Expression(replaceAll(event.getArgs().replaceAll("\\s+", ""))).calculate()));
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.calculate", event),
+                replaceAll(event.getArgs().replaceAll("\\s+", "")), new Expression(replaceAll(event.getArgs().replaceAll("\\s+", ""))).calculate()));
     }
 
     public String replaceAll(String calculation) {
         StringBuilder builder = new StringBuilder();
         for (char c : calculation.toCharArray()) {
             switch (c) {
-                case ',':
-                    builder.append('.');
-                    break;
-                case 'x':
-                case '×':
-                    builder.append('*');
-                    break;
-                default:
-                    builder.append(c);
-                    break;
+                case ',' -> builder.append('.');
+                case 'x', '×' -> builder.append('*');
+                default -> builder.append(c);
             }
         }
         return builder.toString();

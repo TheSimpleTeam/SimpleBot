@@ -22,11 +22,13 @@ public class UnbanCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
+                    Permission.BAN_MEMBERS.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
+                    Permission.BAN_MEMBERS.getName()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");

@@ -31,10 +31,11 @@ public class GithubCommand extends Command {
         this.cooldown = 5;
         this.arguments = "<recherche/liste> <utilisateur GitHub> [nom du répertoire GitHub]";
         this.category = CommandCategories.MISC.category;
-        this.example = "Liste tous les répertoires GitHub d'un utilisateur GitHub ou donne des informations sur un répertoire GitHub d'un utilisateur GitHub.\nL'utilisateur GitHub peut être remplacé par une organisation GitHub.";
+        this.example = "Liste tous les répertoires GitHub d'un utilisateur GitHub ou donne des informations sur un répertoire GitHub d'un utilisateur GitHub." +
+                "\nL'utilisateur GitHub peut être remplacé par une organisation GitHub.";
         this.help = "recherche PufferTeam SuperPack";
         this.aliases = new String[]{"ghub","gith","gh"};
-        this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().githubToken).build();
+        this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().githubToken()).build();
     }
 
     @Override

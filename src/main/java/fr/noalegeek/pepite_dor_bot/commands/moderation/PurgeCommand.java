@@ -25,11 +25,13 @@ public class PurgeCommand extends Command {
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
         if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
+                    Permission.MESSAGE_MANAGE.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
+                    Permission.MESSAGE_MANAGE.getName()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
@@ -52,10 +54,13 @@ public class PurgeCommand extends Command {
             return;
         }
         try {
-            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete().queue(unused -> event.getTextChannel().purgeMessages(messages)));
+            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete()
+                    .queue(unused -> event.getTextChannel().purgeMessages(messages)));
         } catch (IllegalArgumentException ex){
-            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.purge", event)).queueAfter(10, TimeUnit.SECONDS);
+            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.purge", event))
+                    .queueAfter(10, TimeUnit.SECONDS);
         }
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event), clearMessages), messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
+        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event), clearMessages),
+                messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
     }
 }

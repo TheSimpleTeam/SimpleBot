@@ -6,7 +6,9 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 
 public class MuteCommand extends Command {
     public MuteCommand() {
@@ -28,11 +30,13 @@ public class MuteCommand extends Command {
             return;
         }
         if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
+                    Permission.MESSAGE_MANAGE.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
+            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
+                    Permission.MESSAGE_MANAGE.getName()));
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user ->
@@ -49,27 +53,31 @@ public class MuteCommand extends Command {
                 if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.reasonNull", event);
                 else reason = MessageHelper.translateMessage("text.reason", event) + args[1];
                 isMutedRoleHere(event);
-                mute(event, member, reason, event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event)));
-            }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))), userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+                mute(event, member, reason, event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
+            }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
+                userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }
 
     public static void mute(CommandEvent event, Member targetMember, String reason, Role mutedRole) {
         if (targetMember.getRoles().contains(mutedRole)) { // Unmute
             event.getGuild().removeRoleFromMember(targetMember, mutedRole).queue();
-            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unmute", event), targetMember.getEffectiveName(), reason));
+            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unmute", event),
+                    targetMember.getEffectiveName(), reason));
         } else { // Mute
             event.getGuild().addRoleToMember(targetMember, mutedRole).queue();
-            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.mute", event), targetMember.getEffectiveName(), reason));
+            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.mute", event),
+                    targetMember.getEffectiveName(), reason));
         }
     }
 
     public static boolean isMutedRoleHere(CommandEvent event){
-        if(Main.getServerConfig().mutedRole.get(event.getGuild().getId()) == null || event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event)) == null){
+        if(Main.getServerConfig().mutedRole().get(event.getGuild().getId()) == null ||
+                event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())) == null){
             event.getGuild().createRole()
                     .setName("Muted Role")
                     .setColor(0x010101)
                     .queue(mutedRole -> {
-                        Main.getServerConfig().mutedRole.put(event.getGuild().getId(), mutedRole.getId());
+                        Main.getServerConfig().mutedRole().put(event.getGuild().getId(), mutedRole.getId());
                         for (GuildChannel guildChannel : event.getGuild().getChannels()) {
                             guildChannel.putPermissionOverride(mutedRole).setDeny(Permission.MESSAGE_WRITE).queue();
                         }
