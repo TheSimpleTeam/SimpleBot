@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
+import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -86,7 +87,7 @@ public class Listener extends ListenerAdapter {
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .build();
-        if (!getServerConfig().channelMemberJoin.containsKey(event)) {
+        if (!getServerConfig().channelMemberJoin.containsKey(event.getGuild().getId())) {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(embedMemberJoin).queue();
             } catch (InsufficientPermissionException ex) {
@@ -97,13 +98,13 @@ public class Listener extends ListenerAdapter {
         }
         //TODO verif si le salon existe
         try {
-            event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin.get(event)).sendMessage(embedMemberJoin).queue();
+            event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin.get(event.getGuild().getId())).sendMessage(embedMemberJoin).queue();
         } catch (InsufficientPermissionException ex) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) + " a rejoint votre serveur **" + event.getGuild().getName() + "** mais je n'ai pas pu envoyer le message de bienvenue car je n'ai pas accès au salon configuré.\n" +
                     "(Vous avez configurer le salon des messages de bienvenue, c'est pour cela que j'ai choisi le salon configuré. Vous pouvez changer tout cela en faisant `" + getInfos().prefix + "channelmember join reset`)"));
         }
-        if (getServerConfig().guildJoinRole.containsKey(event)) {
-            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole.get(event)))).queue();
+        if (getServerConfig().guildJoinRole.containsKey(event.getGuild().getId())) {
+            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole.get(event.getGuild().getId())))).queue();
         }
         LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " a rejoint le serveur " + event.getGuild().getName() + ".");
     }
@@ -118,7 +119,7 @@ public class Listener extends ListenerAdapter {
                 .setTimestamp(Instant.now())
                 .setColor(Color.RED)
                 .build();
-        if (!getServerConfig().channelMemberRemove.containsKey(event)) {
+        if (!getServerConfig().channelMemberRemove.containsKey(event.getGuild().getId())) {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(embedMemberRemove).queue();
             } catch (InsufficientPermissionException ex) {
@@ -149,8 +150,8 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
-        if (!getServerConfig().prohibitWords.containsKey(event)) return;
-        for (String s : getServerConfig().prohibitWords.get(event)) {
+        if (!getServerConfig().prohibitWords.containsKey(event.getGuild().getId())) return;
+        for (String s : getServerConfig().prohibitWords.get(event.getGuild().getId())) {
             for(String alias : new String[]{"prohibitw","prohitbitwrd","pw","pwrd","pword"}){
                 if(event.getMessage().getContentRaw().toLowerCase().startsWith(alias)){
                     return;
