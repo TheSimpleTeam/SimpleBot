@@ -104,23 +104,22 @@ public class Main {
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
-        String id = event.getGuild().getId();
-        StringBuilder help = new StringBuilder(String.format(MessageHelper.translateMessage("help.commands", id), event.getSelfUser().getName()));
+        StringBuilder help = new StringBuilder(String.format(MessageHelper.translateMessage("help.commands", event), event.getSelfUser().getName()));
         Command.Category category = null;
         List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> {
             String key = o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName();
-            return MessageHelper.translateMessage(key, id);
+            return MessageHelper.translateMessage(key, event);
         })).collect(Collectors.toList());
         for (Command command : botCommands) {
             if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
                 if (!Objects.equals(category, command.getCategory())) {
                     category = command.getCategory();
                     category = category == null ? CommandCategories.NONE.category : category;
-                    help.append("\n\n__").append(MessageHelper.translateMessage(category.getName(), id)).append("__:\n");
+                    help.append("\n\n__").append(MessageHelper.translateMessage(category.getName(), event)).append("__:\n");
                 }
                 String helpCommand;
                 try {
-                    helpCommand = MessageHelper.translateMessage(command.getHelp(), id);
+                    helpCommand = MessageHelper.translateMessage(command.getHelp(), event);
                 } catch (NullPointerException ignored) {
                     helpCommand = command.getHelp();
                 }
@@ -131,11 +130,11 @@ public class Main {
         }
         User owner = event.getJDA().getUserById(b.ownerID);
         if (owner != null) {
-            help.append("\n\n").append(MessageHelper.translateMessage("help.contact", id)).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
+            help.append("\n\n").append(MessageHelper.translateMessage("help.contact", event)).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
             if (event.getClient().getServerInvite() != null)
-                help.append(' ').append(MessageHelper.translateMessage("help.discord", id)).append(' ').append(b.serverInvite);
+                help.append(' ').append(MessageHelper.translateMessage("help.discord", event)).append(' ').append(b.serverInvite);
         }
-        event.replyInDm(help.toString(), unused -> {} , t -> event.replyError(MessageHelper.translateMessage("help.DMBlocked", id)));
+        event.replyInDm(help.toString(), unused -> {} , t -> event.replyError(MessageHelper.translateMessage("help.DMBlocked", event)));
     }
 
     private static void setupLocalizations() throws IOException {
@@ -188,6 +187,7 @@ public class Main {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
             if (arg.equalsIgnoreCase("--nosetup")) {
+                map.put("botName", "YOUR-BOT-NAME");
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "!");
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
@@ -203,9 +203,11 @@ public class Main {
                 }
                 System.out.println("I see that it's the first time that you install the bot.");
                 System.out.println("The configuration will begin.");
-                System.out.println("What is your bot token ?");
+                System.out.println("What is your bot's name?");
+                map.put("botName", console.readLine());
+                System.out.println("What is your bot token?");
                 map.put("token", console.readLine());
-                System.out.println("What will be the bot's prefix ?");
+                System.out.println("What will be the bot's prefix?");
                 map.put("prefix", console.readLine().isEmpty() ? "!" : console.readLine());
                 System.out.println("How long will it take between each status change ?");
                 map.put("timeBetweenStatusChange", console.readLine().isEmpty() ? 15 : console.readLine());

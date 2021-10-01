@@ -42,9 +42,7 @@ public class Listener extends ListenerAdapter {
                 event.getJDA().getPresence().setActivity(Activity.playing(getInfos().activities[new Random().nextInt(getInfos().activities.length)]));
             }
         }, 0, getInfos().timeBetweenStatusChange * 1000);
-
-        Timer autoSave = new Timer();
-        autoSave.schedule(new TimerTask() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -88,7 +86,7 @@ public class Listener extends ListenerAdapter {
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .build();
-        if (!getServerConfig().channelMemberJoin.containsKey(event.getGuild().getId())) {
+        if (!getServerConfig().channelMemberJoin.containsKey(event)) {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(embedMemberJoin).queue();
             } catch (InsufficientPermissionException ex) {
@@ -97,14 +95,15 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
+        //TODO verif si le salon existe
         try {
-            event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin.get(event.getGuild().getId())).sendMessage(embedMemberJoin).queue();
+            event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin.get(event)).sendMessage(embedMemberJoin).queue();
         } catch (InsufficientPermissionException ex) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) + " a rejoint votre serveur **" + event.getGuild().getName() + "** mais je n'ai pas pu envoyer le message de bienvenue car je n'ai pas accès au salon configuré.\n" +
                     "(Vous avez configurer le salon des messages de bienvenue, c'est pour cela que j'ai choisi le salon configuré. Vous pouvez changer tout cela en faisant `" + getInfos().prefix + "channelmember join reset`)"));
         }
-        if (getServerConfig().guildJoinRole.containsKey(event.getGuild().getId())) {
-            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(getServerConfig().guildJoinRole.get(event.getGuild().getId())))).queue();
+        if (getServerConfig().guildJoinRole.containsKey(event)) {
+            event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole.get(event)))).queue();
         }
         LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " a rejoint le serveur " + event.getGuild().getName() + ".");
     }
@@ -119,7 +118,7 @@ public class Listener extends ListenerAdapter {
                 .setTimestamp(Instant.now())
                 .setColor(Color.RED)
                 .build();
-        if (!getServerConfig().channelMemberRemove.containsKey(event.getGuild().getId())) {
+        if (!getServerConfig().channelMemberRemove.containsKey(event)) {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(embedMemberRemove).queue();
             } catch (InsufficientPermissionException ex) {
@@ -129,7 +128,7 @@ public class Listener extends ListenerAdapter {
             return;
         }
         try {
-            event.getGuild().getTextChannelById(getServerConfig().channelMemberRemove.get(event.getGuild().getId())).sendMessage(embedMemberRemove).queue();
+            event.getGuild().getTextChannelById(getServerConfig().channelMemberRemove.get(event)).sendMessage(embedMemberRemove).queue();
         } catch (InsufficientPermissionException ex) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) + " a quitté votre serveur **" + event.getGuild().getName() + "** mais je n'ai pas pu envoyer le message de départ car je n'ai pas accès au salon configuré.\n" +
                     "(Vous avez configurer le salon des messages de départ, c'est pour cela que j'ai choisi le salon configuré. Vous pouvez changer tout cela en faisant `" + getInfos().prefix + "channelmember remove reset`)"));
@@ -150,8 +149,8 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
-        if (!getServerConfig().prohibitWords.containsKey(event.getGuild().getId())) return;
-        for (String s : getServerConfig().prohibitWords.get(event.getGuild().getId())) {
+        if (!getServerConfig().prohibitWords.containsKey(event)) return;
+        for (String s : getServerConfig().prohibitWords.get(event)) {
             for(String alias : new String[]{"prohibitw","prohitbitwrd","pw","pwrd","pword"}){
                 if(event.getMessage().getContentRaw().toLowerCase().startsWith(alias)){
                     return;
