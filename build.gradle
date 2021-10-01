@@ -32,7 +32,7 @@ repositories {
 dependencies {
     //JDA & JDA-Utilities
     implementation("net.dv8tion:JDA:4.3.0_310")
-    implementation('pw.chew:jda-chewtils:1.21.0') {
+    implementation('pw.chew:jda-chewtils:1.22.0') {
         exclude group: 'pw.chew:jda-chewtils-command:1.21.0'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
