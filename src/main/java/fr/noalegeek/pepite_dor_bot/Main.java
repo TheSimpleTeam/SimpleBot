@@ -52,16 +52,8 @@ public class Main {
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
 
-    private static class Bot {
-        public final List<Command> commands;
-        public final String ownerID,
-                serverInvite;
-
-        public Bot(List<Command> commands, String ownerID, String serverInvite) {
-            this.commands = commands;
-            this.ownerID = ownerID;
-            this.serverInvite = serverInvite;
-        }
+    private record Bot(List<Command> commands, String ownerID,
+                       String serverInvite) {
     }
 
     public static void main(String[] args) throws IOException {

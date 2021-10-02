@@ -53,7 +53,7 @@ public class RecordTypeAdapterFactory implements TypeAdapterFactory {
         }
         TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
 
-        return new TypeAdapter<T>() {
+        return new TypeAdapter<>() {
             @Override
             public void write(JsonWriter out, T value) throws IOException {
                 delegate.write(out, value);
