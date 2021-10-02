@@ -11,6 +11,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.gson.RecordTypeAdapterFactory;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
 import net.dv8tion.jda.api.JDA;
@@ -45,7 +46,7 @@ public class Main {
     private static Infos infos;
     private static ServerConfig serverConfig;
     private static final EventWaiter waiter = new EventWaiter();
-    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new RecordTypeAdapterFactory()).setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
     private static Map<String, JsonObject> localizations;
