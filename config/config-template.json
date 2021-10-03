@@ -1,4 +1,5 @@
 {
+  "botName": "YOUR-BOT-NAME",
   "token": "YOUR-TOKEN-HERE",
   "prefix": "!",
   "defaultRoleID": "YOUR-ROLE-ID",

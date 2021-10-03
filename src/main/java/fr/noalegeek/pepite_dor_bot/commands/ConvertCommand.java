@@ -12,9 +12,6 @@ import java.time.Instant;
 
 public class ConvertCommand extends Command {
 
-    //https://github.com/jrshutske/unit-conversion-api
-    private final String BASE_URL = "https://java-unit-conversion.herokuapp.com/api/";
-
     public ConvertCommand() {
         this.name = "convert";
         this.aliases = new String[]{"co"};
@@ -110,19 +107,19 @@ public class ConvertCommand extends Command {
         YARD(UnitType.LENGTH, 0.9144D, "yd", "text.convert.yard"),
         FOOT(UnitType.LENGTH, 0.3048D, "ft", "text.convert.foot"),
         SPAN(UnitType.LENGTH, 0.2286D, "sp", "text.convert.span"),
-        NATURALSPAN(UnitType.LENGTH, 0.2032D, "ns", "text.convert.naturalSpan"),
+        NATURALSPAN(UnitType.LENGTH, 0.2032D, "nasp", "text.convert.naturalSpan"),
         LINK(UnitType.LENGTH, 0.20116840233680466D, "lnk", "text.convert.link"),
         SHAFTMENT(UnitType.LENGTH, 0.1524D, "st", "text.convert.shaftment"),
         HAND(UnitType.LENGTH, 0.1016D, "ha", "text.convert.hand"),
         DECIMETER(UnitType.LENGTH, 0.1D, "dm", "text.convert.decimeter"),
-        POPPYSEED(UnitType.LENGTH, 0.088194D, "ps", "text.convert.poppySeed"),
+        POPPYSEED(UnitType.LENGTH, 0.088194D, "pose", "text.convert.poppyseed"),
         PALM(UnitType.LENGTH, 0.0762D, "plm", "text.convert.palm"),
         NAIL(UnitType.LENGTH,  0.05715D, "na", "text.convert.nail"),
         INCH(UnitType.LENGTH, 0.0254D, "in", "text.convert.inch"),
         FINGER(UnitType.LENGTH, 0.022225D, "fg", "text.convert.finger"),
         DIGIT(UnitType.LENGTH, 0.01905D, "dg", "text.convert.digit"),
         CENTIMETER(UnitType.LENGTH, 0.01D, "cm", "text.convert.centimeter"),
-        BARLEYCORN(UnitType.LENGTH, 0.008466666D, "bc", "text.convert.barleyCorn"),
+        BARLEYCORN(UnitType.LENGTH, 0.008466666D, "bc", "text.convert.barleycorn"),
         PICA(UnitType.LENGTH, 0.004233333D, "pa", "text.convert.pica"),
         LINE(UnitType.LENGTH, 0.002116D, "lin", "text.convert.line"),
         MILLIMETER(UnitType.LENGTH, 0.001D, "mm", "text.convert.millimeter"),
@@ -133,7 +130,7 @@ public class ConvertCommand extends Command {
         MICROMETER(UnitType.LENGTH, 0.000001D, "µm", "text.convert.micrometer"),
         NANOMETER(UnitType.LENGTH, 0.000000001D, "nm", "text.convert.nanometer"),
         BOHRRADIUS(UnitType.LENGTH, 0.0000000000529177210903D, "br", "text.convert.bohrradius"),
-        ANGSTROM(UnitType.LENGTH, 0.0000000001D, "as", "text.convert.angstrom"),
+        ANGSTROM(UnitType.LENGTH, 0.0000000001D, "anst", "text.convert.angstrom"),
         PICOMETER(UnitType.LENGTH, 0.000000000001D, "pm", "text.convert.picometer"),
         TWIP(UnitType.LENGTH, 0.00000000001764D, "tp", "text.convert.twip"),
         FEMTOMETER(UnitType.LENGTH, 0.000000000000001D, "fm", "text.convert.femtometer"),
@@ -150,15 +147,16 @@ public class ConvertCommand extends Command {
         MILLENNIUM(UnitType.TIME, 31557600000D, "my", "text.convert.millennium"),
         CENTURY(UnitType.TIME, 3155760000D, "ky", "text.convert.century"),
         GIGASECOND(UnitType.TIME, 1000000000D, "Gs", "text.convert.gigasecond"),
+        DECADE(UnitType.TIME, 315576000D, "dy", "text.convert.decade"),
         YEAR(UnitType.TIME, 31557600D, "y", "text.convert.year"),
-        MONTH(UnitType.TIME, 2629800D, "m", "text.convert.month"),
+        MONTH(UnitType.TIME, 2629800D, "M", "text.convert.month"),
         MEGASECOND(UnitType.TIME, 1000000D, "Ms", "text.convert.megasecond"),
         WEEK(UnitType.TIME, 604800D, "w", "text.convert.week"),
         DAY(UnitType.TIME, 86400D, "d", "text.convert.day"),
         HOUR(UnitType.TIME, 3600D, "h", "text.convert.hour"),
         KILOSECOND(UnitType.TIME, 1000D, "ks", "text.convert.kilosecond"),
-        MINUTE(UnitType.TIME, 60D, "min", "text.convert.minute"),
         HECTOSECOND(UnitType.TIME, 100D, "hs", "text.convert.hectosecond"),
+        MINUTE(UnitType.TIME, 60D, "min", "text.convert.minute"),
         DECASECOND(UnitType.TIME, 10D, "das", "text.convert.decasecond"),
         SECOND(UnitType.TIME, 1D, "s", "text.convert.second"),
         DECISECOND(UnitType.TIME, 0.1D, "ds", "text.convert.decisecond"),
@@ -196,4 +194,3 @@ public class ConvertCommand extends Command {
         }
     }
 }
-//TODO enlever majuscule sur unitName de tous (barleyCorn)
