@@ -160,6 +160,7 @@ public class ConvertCommand extends Command {
         DECASECOND(UnitType.TIME, 10D, "das", "text.convert.decasecond"),
         SECOND(UnitType.TIME, 1D, "s", "text.convert.second"),
         DECISECOND(UnitType.TIME, 0.1D, "ds", "text.convert.decisecond"),
+        TIERCE(UnitType.TIME, 0.01666666666D, "t", "text.convert.tierce"),
         CENTISECOND(UnitType.TIME, 0.01D, "cs", "text.convert.centisecond"),
         MILLISECOND(UnitType.TIME, 0.001D, "ms", "text.convert.millisecond"),
         MICROSECOND(UnitType.TIME, 0.000001D,"µs", "text.convert.microsecond"),
