@@ -3,7 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.MessageBuilder;
 
 public class PrimeNumberCommand extends Command {
@@ -21,7 +21,7 @@ public class PrimeNumberCommand extends Command {
         if(event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event,this) + "Le nombre à spécifier a pour limite " + Long.MAX_VALUE  + ".");
+            event.reply(MessageHelper.syntaxError(event,this, null) + "Le nombre à spécifier a pour limite " + Long.MAX_VALUE  + ".");
             return;
         }
         try {
@@ -29,9 +29,9 @@ public class PrimeNumberCommand extends Command {
             switch (args[0]) {
                 case "nombre":
                     if(isPrime(number)) {
-                        event.replySuccess("Le nombre " + number + " est un nombre premier.");
+                        event.reply("Le nombre " + number + " est un nombre premier.");
                     } else {
-                        event.replySuccess("Le nombre " + number + " n'est pas un nombre premier.");
+                        event.reply("Le nombre " + number + " n'est pas un nombre premier.");
                     }
                     break;
                 case "liste":
@@ -48,11 +48,11 @@ public class PrimeNumberCommand extends Command {
                     event.reply(MessageHelper.formattedMention(event.getAuthor())+"Voici la liste des nombres premiers jusqu'à "+number+" :\n"+list.build());
                     break;
                 default:
-                    MessageHelper.syntaxError(event, this);
+                    MessageHelper.syntaxError(event, this, null);
                     break;
             }
         } catch(NumberFormatException ex) {
-            event.replyError("Le second argument ne peut contenir des lettres.\n " + MessageHelper.syntaxError(event, this));
+            event.reply("Le second argument ne peut contenir des lettres.\n " + MessageHelper.syntaxError(event, this, null));
         }
     }
 

@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.io.IOUtils;
@@ -42,18 +42,18 @@ public class GithubCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         if(isCommandDisabled()) {
-            event.replyError("Cette commande est désactivée.");
+            event.reply("Cette commande est désactivée.");
             return;
         }
         String user = args[1];
         switch (args[0]) {
             case "recherche":
                 if(args.length != 3) {
-                    MessageHelper.syntaxError(event, this);
+                    MessageHelper.syntaxError(event, this, null);
                     return;
                 }
                 String strRepo = args[2];
@@ -61,7 +61,7 @@ public class GithubCommand extends Command {
                 try {
                     repo = github.getRepository(user + "/" + strRepo);
                 } catch (IOException ignored) {
-                    event.replyError(MessageHelper.formattedMention(event.getAuthor())+"Ce répertoire Github n'existe pas.");
+                    event.reply(MessageHelper.formattedMention(event.getAuthor())+"Ce répertoire Github n'existe pas.");
                     return;
                 }
                 try {
@@ -102,7 +102,7 @@ public class GithubCommand extends Command {
                 }
                 break;
             default:
-                MessageHelper.syntaxError(event, this);
+                MessageHelper.syntaxError(event, this, null);
                 break;
         }
     }

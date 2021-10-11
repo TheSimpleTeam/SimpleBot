@@ -5,8 +5,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.RequestHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -38,7 +38,7 @@ public class MCServerCommand extends Command {
         try {
             JsonObject object = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(baseURL + args[0])), JsonObject.class);
             if (!object.get("online").getAsBoolean()) {
-                event.replyError("Le serveur est hors-ligne.");
+                event.reply("Le serveur est hors-ligne.");
                 return;
             }
             getServerInfos(object, event);

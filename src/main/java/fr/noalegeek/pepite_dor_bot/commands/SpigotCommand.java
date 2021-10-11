@@ -26,7 +26,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import me.bluetree.spiget.Author;
 import me.bluetree.spiget.Resource;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -49,9 +49,9 @@ public class SpigotCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        var args = event.getArgs().split("\\s+");
+        String[] args = event.getArgs().split("\\s+");
         if(args.length == 0) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         if(args[0].chars().allMatch(Character::isDigit)) {

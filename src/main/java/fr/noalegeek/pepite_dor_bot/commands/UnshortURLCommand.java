@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -28,11 +28,11 @@ public class UnshortURLCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event, this));
+            event.reply(MessageHelper.syntaxError(event, this, null));
             return;
         }
         try {
-            event.replySuccess(String.format("`%s`", getURL(event.getArgs().split("\\s")[0])));
+            event.reply(String.format("`%s`", getURL(event.getArgs().split("\\s")[0])));
         } catch (IOException e) {
             MessageHelper.sendError(e, event);
         }

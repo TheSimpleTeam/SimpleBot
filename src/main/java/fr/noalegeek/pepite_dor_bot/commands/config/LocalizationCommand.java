@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 
 import java.util.Arrays;
 
@@ -25,14 +25,14 @@ public class LocalizationCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1 || Arrays.stream(Main.getLangs()).noneMatch(s -> s.equalsIgnoreCase(args[0]))) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.localization", event));
+            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.localization", event)));
             return;
         }
         if(args[0].equals(Main.getServerConfig().language().get(event.getGuild().getId()))){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.localization.sameAsConfigured", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.localization.sameAsConfigured", event));
             return;
         }
         Main.getServerConfig().language().put(event.getGuild().getId(), args[0]);
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event), ":flag_" + args[0].replace("en","us: / :flag_gb") + ':'));
+        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.localization.configured", event), ":flag_" + args[0].replace("en","us: / :flag_gb") + ':'));
     }
 }

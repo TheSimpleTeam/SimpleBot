@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.utils.helpers;
+package fr.noalegeek.pepite_dor_bot.utils;
 
 import fr.noalegeek.pepite_dor_bot.Main;
 import okhttp3.MediaType;

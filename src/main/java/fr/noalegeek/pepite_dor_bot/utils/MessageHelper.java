@@ -1,11 +1,15 @@
-package fr.noalegeek.pepite_dor_bot.utils.helpers;
+package fr.noalegeek.pepite_dor_bot.utils;
 
 import com.google.gson.JsonElement;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
+import java.awt.*;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
@@ -19,25 +23,23 @@ public class MessageHelper {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
 
-    public static String syntaxError(CommandEvent event, Command command) {
-        String syntaxMessage = MessageHelper.formattedMention(event.getAuthor()) + translateMessage("text.syntaxError.syntax", event) + Main.getInfos().prefix() +
-                command.getName() + " : `" + Main.getInfos().prefix() + command.getName() + " ";
-        if(!command.getArguments().isEmpty()){
-            if(command.getArguments().startsWith("arguments.")) syntaxMessage += translateMessage(command.getArguments(), event);
-            else syntaxMessage += command.getArguments();
+    public static MessageEmbed syntaxError(CommandEvent event, Command command, String informations) {
+        EmbedBuilder syntaxEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setTimestamp(Instant.now())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
+                .setTitle("\u274C " + String.format(translateMessage("text.commands.syntaxError", event), Main.getInfos().prefix() + command.getName()))
+                .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(),false)
+                .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null ? translateMessage("text.commands.syntaxError.help", event) : translateMessage(command.getHelp(), event), false)
+                .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
+        if(informations != null){
+            syntaxEmbed.addField("", "", false);
         }
-        syntaxMessage += "`.\n";
-        if(!command.getHelp().isEmpty()) syntaxMessage += translateMessage(command.getHelp(), event) + "\n";
-        if(!command.getExample().isEmpty()){
-            syntaxMessage += translateMessage("text.syntaxError.example", event) + Main.getInfos().prefix() + command.getName() + " ";
-            if(command.getExample().startsWith("example.")) syntaxMessage += translateMessage(command.getExample(), event);
-            else syntaxMessage += command.getExample();
-        }
-        return syntaxMessage + "`.\n";
+        return syntaxEmbed.build();
     }
 
     public static void sendError(Exception ex, CommandEvent event) {
-        event.replyError(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + ex.getMessage());
+        event.reply(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + ex.getMessage());
         Main.LOGGER.severe(ex.getMessage());
     }
 
@@ -68,7 +70,7 @@ public class MessageHelper {
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
         if (!ignoreError && Main.getLocalizations().get("en").get(key) == null) {
-            event.replyError(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + String.format(translateMessage("error.translateMessage",
+            event.reply(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + String.format(translateMessage("error.translateMessage",
                     event), key));
             throw new NullPointerException(String.format(translateMessage("error.translateMessage", event), key));
         }

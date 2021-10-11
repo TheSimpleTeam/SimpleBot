@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -40,9 +40,9 @@ public class EvalCommand extends Command {
             engine.eval(args);
 
             if(writer.toString() == null){
-                event.replySuccess("Evaluated Successfully");
+                event.reply("Evaluated Successfully");
             }else{
-                event.replySuccess("Evaluated Successfully:\n```\n" + writer + " ```");
+                event.reply("Evaluated Successfully:\n```\n" + writer + " ```");
             }
         } catch (Exception ex) {
             MessageHelper.sendError(ex, event);

@@ -3,7 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 
 public class ShutdownCommand extends Command {
 
@@ -18,7 +18,7 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Le bot a bien été éteint.");
+        event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Le bot a bien été éteint.");
         event.getJDA().shutdown();
     }
 }

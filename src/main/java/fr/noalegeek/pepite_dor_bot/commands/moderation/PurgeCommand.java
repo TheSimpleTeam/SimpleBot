@@ -3,7 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 
 import java.util.concurrent.TimeUnit;
@@ -23,20 +23,19 @@ public class PurgeCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(event.getAuthor().isBot()) return;
         if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
                     Permission.MESSAGE_MANAGE.getName()));
             return;
         }
         if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
                     Permission.MESSAGE_MANAGE.getName()));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.purge", event));
+            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event)));
             return;
         }
         int clearMessages = 1;
@@ -50,7 +49,7 @@ public class PurgeCommand extends Command {
                 clearMessages = Integer.parseInt(args[0]);
             }
         } catch (NumberFormatException ignore) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.purge", event));
+            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event)));
             return;
         }
         try {
@@ -60,7 +59,7 @@ public class PurgeCommand extends Command {
             event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.purge", event))
                     .queueAfter(10, TimeUnit.SECONDS);
         }
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event), clearMessages),
+        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event), clearMessages),
                 messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
     }
 }

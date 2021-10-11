@@ -5,8 +5,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.RequestHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
 import okhttp3.Response;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class TranslateCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getMessage().getContentRaw().contains("--lang")) {
-            event.replyError(MessageHelper.syntaxError(event, this));
+            event.reply(MessageHelper.syntaxError(event, this, null));
             return;
         }
         String[] args = event.getArgs().split(" --lang ");
@@ -35,10 +35,10 @@ public class TranslateCommand extends Command {
         String secondLang = langs[1];
         try {
             Response response = RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", firstLang, secondLang, URLEncoder.encode(text, "UTF-8")));
-            event.replySuccess(Main.gson.fromJson(response.body().string(), JsonObject.class).get("translation").getAsString());
+            event.reply(Main.gson.fromJson(response.body().string(), JsonObject.class).get("translation").getAsString());
         } catch (IOException ex) {
             Main.LOGGER.severe(ex.getMessage());
-            event.replyError("Une erreur est survenue. Veuillez contacter le développeur et envoyez lui ce message :\n" +
+            event.reply("Une erreur est survenue. Veuillez contacter le développeur et envoyez lui ce message :\n" +
                     ex.getMessage());
         }
     }

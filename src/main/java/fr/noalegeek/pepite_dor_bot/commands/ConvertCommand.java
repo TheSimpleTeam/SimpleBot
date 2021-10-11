@@ -3,7 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -26,14 +26,14 @@ public class ConvertCommand extends Command {
         for(int i = 0 ; i < Unit.values().length; i++){
             for(Unit unit : Unit.values()) {
                 if (Unit.values()[i].symbol.equals(unit.symbol) && Unit.values()[i] != unit) {
-                    event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("text.sendError", event) + String.format(MessageHelper.translateMessage("error.convert.sameSymbols", event), MessageHelper.translateMessage(Unit.values()[i].unitName, event), MessageHelper.translateMessage(unit.unitName, event), Unit.values()[i].symbol));
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("text.sendError", event) + String.format(MessageHelper.translateMessage("error.convert.sameSymbols", event), MessageHelper.translateMessage(Unit.values()[i].unitName, event), MessageHelper.translateMessage(unit.unitName, event), Unit.values()[i].symbol));
                     return;
                 }
             }
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 3) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + "syntax");
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + "syntax");
             return;
         }
         try {
@@ -49,17 +49,17 @@ public class ConvertCommand extends Command {
                 }
             }
             if (unit1 == null && unit2 == null) {
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.unitsDontExist", event));
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.unitsDontExist", event));
                 return;
             } else if (unit1 == null) {
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.firstUnitDontExist", event));
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.firstUnitDontExist", event));
                 return;
             } else if (unit2 == null) {
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.secondUnitDontExist", event));
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.secondUnitDontExist", event));
                 return;
             }
             if(unit1.unitType != unit2.unitType){
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.notSameUnitType", event));
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.convert.notSameUnitType", event));
                 return;
             }
             String factor = String.valueOf(unit1.factor / unit2.factor);
@@ -75,7 +75,7 @@ public class ConvertCommand extends Command {
                     .build();
             event.reply(successEmbed);
         } catch (NumberFormatException ignore) {
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notAnNumber", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notAnNumber", event));
         }
     }
 

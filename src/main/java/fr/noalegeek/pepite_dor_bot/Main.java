@@ -13,7 +13,7 @@ import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.gson.RecordTypeAdapterFactory;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -127,7 +127,7 @@ public class Main {
             if (event.getClient().getServerInvite() != null)
                 help.append(' ').append(MessageHelper.translateMessage("help.discord", event)).append(' ').append(b.serverInvite);
         }
-        event.replyInDm(help.toString(), unused -> {} , t -> event.replyError(MessageHelper.translateMessage("help.DMBlocked", event)));
+        event.replyInDm(help.toString(), unused -> {} , t -> event.reply(MessageHelper.translateMessage("help.DMBlocked", event)));
     }
 
     private static void setupLocalizations() throws IOException {

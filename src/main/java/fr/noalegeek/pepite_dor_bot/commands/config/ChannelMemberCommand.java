@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
 import java.util.Locale;
@@ -26,12 +26,12 @@ public class ChannelMemberCommand extends Command {
     protected void execute(CommandEvent event) {
         if (event.getAuthor().isBot()) return;
         if(!event.getMember().isOwner()){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notOwner", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notOwner", event));
             return;
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.channelMember", event));
+            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -39,36 +39,36 @@ public class ChannelMemberCommand extends Command {
                 switch (args[1].toLowerCase(Locale.ROOT)) {
                     case "reset" -> {
                         if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null) {
-                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.notConfigured", event));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.notConfigured", event));
                             return;
                         }
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
                         Main.getServerConfig().channelMemberJoin().remove(event.getGuild().getId());
                     }
                     case "this" -> {
                         GuildChannel channelMember = (GuildChannel) event.getChannel();
                         if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !event.getChannel().getId().equals(event.getChannel().getId())) {
                             Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), channelMember.getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured", event), channelMember.getAsMention()));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured", event), channelMember.getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
                     }
                     default -> {
                         if (args[1].replaceAll("\\D+", "").isEmpty()) {
-                            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.channelMember", event));
+                            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
                             return;
                         }
                         if (event.getGuild().getGuildChannelById(args[1].replaceAll("\\D+", "")) == null) {
-                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.channelNull", event));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.channelNull", event));
                             return;
                         }
                         if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()).equals(args[1].replaceAll("\\D+", ""))) {
                             Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured.configuredBefore", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured.configuredBefore", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
                     }
                 }
                 break;
@@ -76,41 +76,41 @@ public class ChannelMemberCommand extends Command {
                 switch (args[1].toLowerCase(Locale.ROOT)) {
                     case "reset" -> {
                         if (Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()) == null) {
-                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.notConfigured", event));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.notConfigured", event));
                             return;
                         }
                         Main.getServerConfig().channelMemberRemove().remove(event.getGuild().getId());
-                        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId())).getAsMention()));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId())).getAsMention()));
                     }
                     case "this" -> {
                         GuildChannel channelMember = (GuildChannel) event.getChannel();
                         if (Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()).equals(event.getChannel().getId())) {
                             Main.getServerConfig().channelMemberRemove().put(event.getGuild().getId(), channelMember.getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), channelMember.getAsMention()));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), channelMember.getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.sameAsConfigured", event));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.sameAsConfigured", event));
                     }
                     default -> {
                         if (args[1].replaceAll("\\D+", "").isEmpty()) {
-                            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.channelMember", event));
+                            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
                             return;
                         }
                         if (event.getGuild().getGuildChannelById(args[1].replaceAll("\\D+", "")) == null) {
-                            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.channelNull", event));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.channelNull", event));
                             return;
                         }
                         if (Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()).equals(args[1].replaceAll("\\D+", ""))) {
                             Main.getServerConfig().channelMemberRemove().put(event.getGuild().getId(), event.getGuild().getGuildChannelById(args[1].replaceAll("\\D+", "")).getId());
-                            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId())).getAsMention()));
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId())).getAsMention()));
                             return;
                         }
-                        event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.sameAsConfigured", event));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.sameAsConfigured", event));
                     }
                 }
                 break;
             default:
-                event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.channelMember", event));
+                event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
         }
     }
 }
