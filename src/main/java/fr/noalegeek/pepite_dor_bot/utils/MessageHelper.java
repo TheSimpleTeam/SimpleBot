@@ -33,8 +33,9 @@ public class MessageHelper {
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null ? translateMessage("text.commands.syntaxError.help", event) : translateMessage(command.getHelp(), event), false)
                 .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
         if(informations != null){
-            syntaxEmbed.addField("", "", false);
+            syntaxEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);
         }
+        //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
         return syntaxEmbed.build();
     }
 

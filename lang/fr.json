@@ -113,6 +113,7 @@
   "text.commands.syntaxError.example": "Exemple",
   "text.commands.syntaxError.example.exampleNull": "Aucun exemple disponible.",
   "text.commands.syntaxError.help": "Aucune aide disponible.",
+  "text.commands.syntaxError.informations": "Informations",
   "text.commands.syntaxError.syntax": "Syntaxe",
   "text.convert.angstrom": "Ångström",
   "text.convert.astronomicalUnit": "Unité astronomique",
