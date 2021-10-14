@@ -41,17 +41,17 @@ public class CreateChannelCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3){
-            event.reply(MessageHelper.syntaxError(event, this, "Le type à spécifier doit être soit **text** soit **vocal**.\nLe nom du nouveau salon ne doit pas dépasser les 100 caractères.\nMettre une catégorie n'est pas obligatoire."));
+            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.createChannel", event)));
             return;
         }
         if (args[1].toCharArray().length > 100) {
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Le nom du channel ne doit pas dépasser les 100 caractères !");
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.createChannel.tooManyCharacters", event));
             return;
         }
         switch (args[0]) {
             case "text" -> event.getGuild().createTextChannel(args[2], event.getGuild().getCategoryById(args[2])).queue();
             case "voice" -> event.getGuild().createVoiceChannel(args[2], event.getGuild().getCategoryById(args[2])).queue();
-            default -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Le type à spécifier doit être soit **texte** soit **vocal** !");
+            default -> event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.createChannel", event)));
         }
     }
 }
