@@ -15,11 +15,11 @@ public class EvalCommand extends Command {
     private final StringWriter writer;
 
     public EvalCommand() {
+        System.setProperty("polyglot.js.nashorn-compat", "true");
         this.name = "eval";
         this.ownerCommand = true;
         this.hidden = true;
         this.guildOnly = true;
-        System.setProperty("polyglot.js.nashorn-compat", "true");
         this.engine = new ScriptEngineManager().getEngineByName("graal.js");
         ScriptContext context = engine.getContext();
         this.writer = new StringWriter();
@@ -38,7 +38,6 @@ public class EvalCommand extends Command {
             engine.put("guild", event.getGuild());
             engine.put("member", event.getMember());
             engine.eval(args);
-
             if(writer.toString() == null){
                 event.reply("Evaluated Successfully");
             }else{

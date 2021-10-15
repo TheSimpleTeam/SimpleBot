@@ -16,7 +16,7 @@ public class TranslateCommand extends Command {
 
     public TranslateCommand() {
         this.name = "translate";
-        this.aliases = new String[]{"t","tr","tra","tran","trans","transl","transla","translat"};
+        this.aliases = new String[]{"tr","tra","tran","trans","transl","transla","translat"};
         this.example = "Hello everyone. --lang en fr";
         this.arguments = "<text> <--lang> <from> <to>";
         this.help = "Traduit la phrase spécifiée. Il faut spécifié la langue de la phrase et la langue dans laquelle vous voulez qu'elle soit traduit.";
