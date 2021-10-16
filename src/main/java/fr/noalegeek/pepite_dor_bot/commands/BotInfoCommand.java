@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.Locale;
 
 public class BotInfoCommand extends Command {
+
     public BotInfoCommand() {
         this.name = "botinfo";
         this.aliases = new String[]{"bi","boti","binfo"};
@@ -21,6 +22,7 @@ public class BotInfoCommand extends Command {
         this.help = "help.botInfo";
         this.category = CommandCategories.INFO.category;
     }
+
     @Override
     protected void execute(CommandEvent event) {
         MessageEmbed embedBotInfo = new EmbedBuilder()

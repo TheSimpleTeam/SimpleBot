@@ -6,6 +6,7 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +35,7 @@ public class GithubCommand extends Command {
         this.arguments = "arguments.github";
         this.category = CommandCategories.MISC.category;
         this.help = "help.github";
-        this.example = "research PufferTeam SuperPack";
+        this.example = "search PufferTeam SuperPack";
         this.aliases = new String[]{"ghub","gith","gh"};
         this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().githubToken()).build();
     }
@@ -43,7 +44,7 @@ public class GithubCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3) {
-            MessageHelper.syntaxError(event, this, null);
+            event.reply(new MessageBuilder(MessageHelper.syntaxError(event, this)).build());
             return;
         }
         if(isCommandDisabled()) {
@@ -57,7 +58,7 @@ public class GithubCommand extends Command {
             return;
         }
         switch (args[0]) {
-            case "research":
+            case "search":
                 if(args.length != 3) {
                     MessageHelper.syntaxError(event, this, null);
                     return;
@@ -66,7 +67,7 @@ public class GithubCommand extends Command {
                 try {
                     repository = github.getRepository(args[1] + "/" + args[2]);
                 } catch (IOException ignored) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.github.research.repositoryDontExist", event));
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.github.search.repositoryDontExist", event));
                     return;
                 }
                 try {
@@ -76,11 +77,11 @@ public class GithubCommand extends Command {
                             .setTitle(repository.getName(), repository.getUrl().toString())
                             .setThumbnail(repository.getOwner().getAvatarUrl())
                             .setColor(getColor(repository.getLanguage()))
-                            .addField(MessageHelper.translateMessage("success.github.research.author", event), repository.getOwnerName(), false)
-                            .addField(MessageHelper.translateMessage("success.github.research.description", event), repository.getDescription(), false)
-                            .addField(MessageHelper.translateMessage("success.github.research.fileREADME", event), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
-                            .addField(MessageHelper.translateMessage("success.github.research.license", event), getLicense(repository, event), false)
-                            .addField(MessageHelper.translateMessage("success.github.research.mainLanguage", event), repository.getLanguage(), false)
+                            .addField(MessageHelper.translateMessage("success.github.search.author", event), repository.getOwnerName(), false)
+                            .addField(MessageHelper.translateMessage("success.github.search.description", event), repository.getDescription(), false)
+                            .addField(MessageHelper.translateMessage("success.github.search.fileREADME", event), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
+                            .addField(MessageHelper.translateMessage("success.github.search.license", event), getLicense(repository, event), false)
+                            .addField(MessageHelper.translateMessage("success.github.search.mainLanguage", event), repository.getLanguage(), false)
                             .build();
                     event.reply(embedResearch);
                 } catch (IOException ex) {
@@ -135,6 +136,7 @@ public class GithubCommand extends Command {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     private int getColor(String language) {
         try {
             Map<String, Map<String, String>> lang = Main.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);

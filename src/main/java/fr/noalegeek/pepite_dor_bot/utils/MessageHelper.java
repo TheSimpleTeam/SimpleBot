@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
-import java.awt.*;
+import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -23,6 +23,10 @@ public class MessageHelper {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
 
+    public static MessageEmbed syntaxError(CommandEvent event, Command command) {
+        return syntaxError(event, command, null);
+    }
+
     public static MessageEmbed syntaxError(CommandEvent event, Command command, String informations) {
         EmbedBuilder syntaxEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
@@ -32,7 +36,7 @@ public class MessageHelper {
                 .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(),false)
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null ? translateMessage("text.commands.syntaxError.help", event) : translateMessage(command.getHelp(), event), false)
                 .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
-        if(informations != null){
+        if(informations != null) {
             syntaxEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);
         }
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
