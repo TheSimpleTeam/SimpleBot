@@ -5,7 +5,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
@@ -23,11 +24,11 @@ public class MessageHelper {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
 
-    public static MessageEmbed syntaxError(CommandEvent event, Command command) {
+    public static Message syntaxError(CommandEvent event, Command command) {
         return syntaxError(event, command, null);
     }
 
-    public static MessageEmbed syntaxError(CommandEvent event, Command command, String informations) {
+    public static Message syntaxError(CommandEvent event, Command command, String informations) {
         EmbedBuilder syntaxEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
                 .setTimestamp(Instant.now())
@@ -40,7 +41,7 @@ public class MessageHelper {
             syntaxEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);
         }
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
-        return syntaxEmbed.build();
+        return new MessageBuilder(syntaxEmbed.build()).build();
     }
 
     public static void sendError(Exception ex, CommandEvent event) {
