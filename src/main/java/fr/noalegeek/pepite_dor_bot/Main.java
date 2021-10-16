@@ -20,11 +20,13 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -52,9 +54,7 @@ public class Main {
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
 
-    private record Bot(List<Command> commands, String ownerID,
-                       String serverInvite) {
-    }
+    private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
     public static void main(String[] args) throws IOException {
         try {
@@ -71,7 +71,7 @@ public class Main {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
         }
         try {
-            jda = JDABuilder.createDefault(infos.token()).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
+            jda = JDABuilder.createDefault(infos.token()).enableIntents(EnumSet.allOf(GatewayIntent.class)).enableCache(CacheFlag.ONLINE_STATUS).build();
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE, "Le token est invalide");
         }
@@ -151,10 +151,10 @@ public class Main {
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
             try {
-                Command instance = command.newInstance();
+                Command instance = command.getDeclaredConstructor().newInstance();
                 clientBuilder.addCommands(instance);
                 b.commands.add(instance);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
