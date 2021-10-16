@@ -23,15 +23,13 @@ public class InviteCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(event.getArgs().length() == 0) {
-            event.reply(MessageHelper.syntaxError(event, this, "Les arguments disponibles sont **create** et **bot**.\nL'argument **create** crée un lien d'invitation du serveur où a été fait la commande.\nL'argument **bot** envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur."));
+            event.reply(MessageHelper.syntaxError(event, this, "syntax.invite"));
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "create" -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Voici ton lien d'invitation du serveur " + event.getGuild().getName() +
-                    ", n'hésite pas à faire venir plein de personnes !\n" + event.getTextChannel().createInvite().complete().getUrl());
+            case "create" -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Voici ton lien d'invitation du serveur " + event.getGuild().getName() + ", n'hésite pas à faire venir plein de personnes !\n" + event.getTextChannel().createInvite().complete().getUrl());
             case "bot" -> {
-                String discordInviteURL = "https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591";
-                event.reply("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n" + String.format(discordInviteURL, event.getJDA().getSelfUser().getId()));
+                event.reply("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n" + String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()));
             }
             default -> event.reply(MessageHelper.syntaxError(event, this, "Les arguments disponibles sont **create** et **bot**.\nL'argument **create** crée un lien d'invitation du serveur où a été fait la commande.\nL'argument **bot** envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur."));
         }

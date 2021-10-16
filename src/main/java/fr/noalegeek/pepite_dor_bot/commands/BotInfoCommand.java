@@ -35,6 +35,7 @@ public class BotInfoCommand extends Command {
                 .addField(MessageHelper.translateMessage("text.botInfo.activity", event), getActivity(event), false)
                 .addField(MessageHelper.translateMessage("text.botInfo.status", event), StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT).replaceAll("_", "")), false)
                 .addField(MessageHelper.translateMessage("text.botInfo.github", event), "https://github.com/TheSimpleTeam/SimpleBot", false)
+                .addField(MessageHelper.translateMessage("text.botInfo.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
                 .setAuthor(MessageHelper.getTag(event.getSelfUser()), null, event.getSelfUser().getEffectiveAvatarUrl())
                 .build();
         event.reply(embedBotInfo);
