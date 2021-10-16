@@ -30,8 +30,6 @@ public class GithubCommand extends Command {
     public GithubCommand() throws IOException {
         this.name = "github";
         this.cooldown = 5;
-        this.hidden = true;
-        this.ownerCommand = true;
         this.arguments = "arguments.github";
         this.category = CommandCategories.MISC.category;
         this.help = "help.github";
