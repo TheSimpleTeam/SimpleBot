@@ -34,6 +34,7 @@ public class BotInfoCommand extends Command {
                 .addField(MessageHelper.translateMessage("text.botInfo.joinDate", event), MessageHelper.formatShortDate(event.getSelfMember().getTimeJoined()), false)
                 .addField(MessageHelper.translateMessage("text.botInfo.activity", event), getActivity(event), false)
                 .addField(MessageHelper.translateMessage("text.botInfo.status", event), StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT).replaceAll("_", "")), false)
+                .addField("Github", "https://github.com/TheSimpleTeam/SimpleBot", false)
                 .setAuthor(MessageHelper.getTag(event.getSelfUser()), null, event.getSelfUser().getEffectiveAvatarUrl())
                 .build();
         event.reply(embedBotInfo);
