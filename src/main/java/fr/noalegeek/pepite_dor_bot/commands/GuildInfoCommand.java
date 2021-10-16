@@ -31,7 +31,7 @@ public class GuildInfoCommand extends Command {
                 .addField("Membres sur le discord", String.valueOf(event.getGuild().getMemberCount()), false)
                 .setColor(Color.GREEN)
                 .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                 .build();
         event.reply(embedGuildInfo);
     }
