@@ -96,7 +96,7 @@
   "success.guildInfo.membersConnectedToTheServer": "Membres connectés sur le serveur",
   "success.guildInfo.membersOnTheServer": "Membres présents sur le serveur",
   "success.guildInfo.nitroLevel": "Niveau de nitro",
-  "success.guildInfo.serverName": "Informations sur le serveur **%s**",
+  "success.guildInfo.serverName": "Informations sur le serveur __%s__",
   "success.guildInfo.serverOwner": "Propriétaire du serveur",
   "success.joinRole.configured": "Le rôle %s a bien été configuré.",
   "success.joinRole.reset": "Le rôle configuré a bien été réinitialiser.",
