@@ -69,11 +69,19 @@ public class Main {
             LOGGER.info("Servers config loaded");
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
+            return;
         }
         try {
             jda = JDABuilder.createDefault(infos.token()).enableIntents(EnumSet.allOf(GatewayIntent.class)).enableCache(CacheFlag.ONLINE_STATUS).build();
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE, "Le token est invalide");
+            return;
+        }
+        try {
+            setupLogs();
+            setupLocalizations();
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage());
         }
         Random randomActivity = new Random();
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
@@ -88,12 +96,6 @@ public class Main {
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
-        try {
-            setupLogs();
-            setupLocalizations();
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage());
-        }
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
