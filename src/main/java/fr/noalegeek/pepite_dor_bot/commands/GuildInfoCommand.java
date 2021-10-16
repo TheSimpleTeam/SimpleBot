@@ -24,14 +24,14 @@ public class GuildInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         MessageEmbed embedGuildInfo = new EmbedBuilder()
-                .setAuthor(MessageHelper.getTag(event.getMember().getUser()), null, event.getMember().getUser().getEffectiveAvatarUrl())
                 .setThumbnail(event.getGuild().getIconUrl())
-                .addField("Nom du serveur", event.getGuild().getName(), false)
+                .setTitle("Informations sur le serveur " + event.getGuild().getName())
                 .addField("Niveau de nitro", String.valueOf(event.getGuild().getBoostTier().getKey()), false)
                 .addField("Créateur du serveur", event.getGuild().getOwner().getNickname() == null ? event.getGuild().getOwner().getUser().getName() : event.getGuild().getOwner().getNickname(), false)
                 .addField("Membres sur le discord", String.valueOf(event.getGuild().getMemberCount()), false)
                 .setColor(Color.GREEN)
-                .setFooter("ℹ "+ Instant.now())
+                .setTimestamp(Instant.now())
+                .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getAvatarUrl())
                 .build();
         event.reply(embedGuildInfo);
     }
