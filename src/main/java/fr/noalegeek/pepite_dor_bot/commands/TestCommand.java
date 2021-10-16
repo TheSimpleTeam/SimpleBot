@@ -4,8 +4,6 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 
-import java.util.ArrayList;
-
 public class TestCommand extends Command {
 
     public TestCommand(){

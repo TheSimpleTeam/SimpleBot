@@ -29,11 +29,12 @@ public class GithubCommand extends Command {
     public GithubCommand() throws IOException {
         this.name = "github";
         this.cooldown = 5;
-        this.arguments = "<recherche/liste> <utilisateur GitHub> [nom du répertoire GitHub]";
+        this.hidden = true;
+        this.ownerCommand = true;
+        this.arguments = "arguments.github";
         this.category = CommandCategories.MISC.category;
-        this.example = "Liste tous les répertoires GitHub d'un utilisateur GitHub ou donne des informations sur un répertoire GitHub d'un utilisateur GitHub." +
-                "\nL'utilisateur GitHub peut être remplacé par une organisation GitHub.";
-        this.help = "recherche PufferTeam SuperPack";
+        this.help = "help.github";
+        this.example = "research PufferTeam SuperPack";
         this.aliases = new String[]{"ghub","gith","gh"};
         this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().githubToken()).build();
     }
@@ -46,54 +47,56 @@ public class GithubCommand extends Command {
             return;
         }
         if(isCommandDisabled()) {
-            event.reply("Cette commande est désactivée.");
+            MessageEmbed disabledCommandEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTitle("\u274C " + MessageHelper.translateMessage("error.github.disabled", event))
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getAvatarUrl())
+                    .build();
+            event.reply(disabledCommandEmbed);
             return;
         }
-        String user = args[1];
         switch (args[0]) {
-            case "recherche":
+            case "research":
                 if(args.length != 3) {
                     MessageHelper.syntaxError(event, this, null);
                     return;
                 }
-                String strRepo = args[2];
-                GHRepository repo;
+                GHRepository repository;
                 try {
-                    repo = github.getRepository(user + "/" + strRepo);
+                    repository = github.getRepository(args[1] + "/" + args[2]);
                 } catch (IOException ignored) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor())+"Ce répertoire Github n'existe pas.");
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.github.research.repositoryDontExist", event));
                     return;
                 }
                 try {
-                    MessageEmbed embedSearch = new EmbedBuilder()
+                    MessageEmbed embedResearch = new EmbedBuilder()
                             .setTimestamp(Instant.now())
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                            .setTitle(repo.getName(), repo.getUrl().toString())
-                            .setThumbnail(repo.getOwner().getAvatarUrl())
-                            .setColor(getColor(repo.getLanguage()))
-                            .addField("Auteur :", repo.getOwnerName(), false)
-                            .addField("Description :", repo.getDescription(), false)
-                            .addField("README :", readmeString(IOUtils.toString(repo.getReadme().read(), StandardCharsets.UTF_8)), false)
-                            .addField("License :", getLicense(repo), false)
-                            .addField("Language principal :", repo.getLanguage(), false)
+                            .setTitle(repository.getName(), repository.getUrl().toString())
+                            .setThumbnail(repository.getOwner().getAvatarUrl())
+                            .setColor(getColor(repository.getLanguage()))
+                            .addField(MessageHelper.translateMessage("success.github.research.author", event), repository.getOwnerName(), false)
+                            .addField(MessageHelper.translateMessage("success.github.research.description", event), repository.getDescription(), false)
+                            .addField(MessageHelper.translateMessage("success.github.research.fileREADME", event), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
+                            .addField(MessageHelper.translateMessage("success.github.research.license", event), getLicense(repository, event), false)
+                            .addField(MessageHelper.translateMessage("success.github.research.mainLanguage", event), repository.getLanguage(), false)
                             .build();
-                    event.reply(embedSearch);
+                    event.reply(embedResearch);
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event);
                 }
                 break;
-            case "liste":
+            case "list":
                 try {
-                    GHUser ghuser = github.getUser(user);
+                    GHUser ghuser = github.getUser(args[1]);
                     EmbedBuilder embedList = new EmbedBuilder()
                             .setTimestamp(Instant.now())
-                            .setTitle("Liste des projets de " + name + " :")
+                            .setTitle("\u2705 " + String.format(MessageHelper.translateMessage("success.github.list", event), name))
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                             .setThumbnail(ghuser.getAvatarUrl());
-                    Map<String, GHRepository> repositories = ghuser.getRepositories();
-                    for (String ghname : repositories.keySet()) {
-                        embedList.addField(ghname, repositories.get(ghname).getHtmlUrl().toString(), false);
-                        Main.LOGGER.info("Added " + ghname);
+                    for (String ghname : ghuser.getRepositories().keySet()) {
+                        embedList.addField(ghname, ghuser.getRepositories().get(ghname).getHtmlUrl().toString(), false);
                     }
                     event.reply(embedList.build());
                 } catch (IOException ex) {
@@ -107,8 +110,8 @@ public class GithubCommand extends Command {
         }
     }
 
-    private String getLicense(GHRepository repo) throws IOException {
-        return repo.getLicense() == null ? "Aucune license" : repo.getLicense().getName();
+    private String getLicense(GHRepository repo, CommandEvent event) throws IOException {
+        return repo.getLicense() == null ? MessageHelper.translateMessage("text.github.noLicense", event) : repo.getLicense().getName();
     }
 
     private String readmeString(String readme) {
@@ -134,8 +137,7 @@ public class GithubCommand extends Command {
 
     private int getColor(String language) {
         try {
-            Map<String, Map<String, String>> lang = Main.gson.fromJson(new InputStreamReader
-                    (new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
+            Map<String, Map<String, String>> lang = Main.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
             return getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"));
         } catch (IOException exception) {
             exception.printStackTrace();

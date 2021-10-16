@@ -11,7 +11,7 @@ public class CalculateCommand extends Command {
     public CalculateCommand() {
         this.name = "calculate";
         this.aliases = new String[]{"c", "calc", "ca", "cal", "calcul", "calcu", "calcula", "calculat"};
-        this.arguments = "syntax.calculate";
+        this.arguments = "arguments.calculate";
         this.cooldown = 5;
         this.help = "help.calculate";
         this.example = "example.calculate";
@@ -20,7 +20,7 @@ public class CalculateCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getArgs().split("\\s+").length == 0) {
+        if (event.getArgs().split("\\s+").length == 0 || event.getArgs().isEmpty()) {
             event.reply(MessageHelper.syntaxError(event, this, null));
             return;
         }
@@ -37,6 +37,7 @@ public class CalculateCommand extends Command {
         StringBuilder builder = new StringBuilder();
         for (char c : calculation.toCharArray()) {
             switch (c) {
+                case '²' -> builder.append("^2");
                 case ',' -> builder.append('.');
                 case 'x', '×' -> builder.append('*');
                 default -> builder.append(c);
