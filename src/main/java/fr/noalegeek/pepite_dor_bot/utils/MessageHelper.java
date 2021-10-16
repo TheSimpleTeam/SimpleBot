@@ -33,9 +33,9 @@ public class MessageHelper {
                 .setColor(Color.RED)
                 .setTimestamp(Instant.now())
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                .setTitle("\u274C " + String.format(translateMessage("text.commands.syntaxError", event), Main.getInfos().prefix() + command.getName()))
+                .setTitle("\u274C " + String.format(translateMessage("text.commands.syntaxError", event), command.getName()))
                 .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(),false)
-                .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null ? translateMessage("text.commands.syntaxError.help", event) : translateMessage(command.getHelp(), event), false)
+                .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event), false)
                 .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
         if(informations != null) {
             syntaxEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);

@@ -21,8 +21,6 @@ public class CreateChannelCommand extends Command {
         this.help = "help.createChannel";
         this.example = "text général 846048803554852905";
         this.category = CommandCategories.STAFF.category;
-        this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
-        this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
         this.guildOnly = true;
         this.aliases = new String[]{"createc", "cc", "ccommand"};
     }
