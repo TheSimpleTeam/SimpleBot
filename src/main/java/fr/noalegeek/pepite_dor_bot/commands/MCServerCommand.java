@@ -8,7 +8,7 @@ import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -54,15 +54,13 @@ public class MCServerCommand extends Command {
         String age = jo.get("version").getAsString();
         JsonObject player = jo.get("players").getAsJsonObject();
         int playerList = player.get("online").getAsInt();
-
-        MessageEmbed embed = new EmbedBuilder()
+        EmbedBuilder successEmbed = new EmbedBuilder()
                 .setTimestamp(Instant.now())
                 .addField("IP :", ip, false)
                 .addField("Port :", port, false)
                 .addField("Version :", age, false)
                 .addField("Nombre de joueurs :", String.valueOf(playerList), false)
-                .setColor(Color.GREEN)
-                .build();
-        event.reply(embed);
+                .setColor(Color.GREEN);
+        event.reply(new MessageBuilder(successEmbed.build()).build());
     }
 }

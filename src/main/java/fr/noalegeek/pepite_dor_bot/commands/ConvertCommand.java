@@ -5,7 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.*;
 import java.time.Instant;
@@ -63,7 +63,7 @@ public class ConvertCommand extends Command {
                 return;
             }
             String factor = String.valueOf(unit1.factor / unit2.factor);
-            MessageEmbed successEmbed = new EmbedBuilder()
+            EmbedBuilder successEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)
                     .setTitle("\u2705 " + MessageHelper.translateMessage("success.convert.success", event))
                     .addField(MessageHelper.translateMessage("success.convert.from", event), args[0] + " " + args[1] + " (" + MessageHelper.translateMessage(unit1.unitName, event) + ")", false)
@@ -71,9 +71,8 @@ public class ConvertCommand extends Command {
                     .addField(MessageHelper.translateMessage("success.convert.factor", event), factor, false)
                     .addField(MessageHelper.translateMessage("success.convert.unitType", event), MessageHelper.translateMessage(unit1.unitType.unitTypeName, event), true)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                    .build();
-            event.reply(successEmbed);
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+            event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (NumberFormatException ignore) {
             event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notAnNumber", event));
         }

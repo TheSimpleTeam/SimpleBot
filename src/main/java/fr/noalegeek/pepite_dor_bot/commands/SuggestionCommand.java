@@ -5,7 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.Color;
@@ -28,16 +28,15 @@ public class SuggestionCommand extends Command {
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
         TextChannel suggestionChannel = event.getJDA().getGuildById(846048803554852904L).getTextChannelById(848599555540123648L);
-        MessageEmbed embedSuggestion = new EmbedBuilder()
+        EmbedBuilder embedSuggestion = new EmbedBuilder()
                 .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
                 .setColor(Color.YELLOW)
                 .setFooter("💡 "+OffsetDateTime.now(Clock.systemUTC()))
-                .addField("Suggestion  ", "```" + event.getArgs() + "```", false)
-                .build();
+                .addField("Suggestion  ", "```" + event.getArgs() + "```", false);
         if(event.getArgs().isEmpty()){
             event.reply(MessageHelper.syntaxError(event,this, null));
         }
-        suggestionChannel.sendMessage(embedSuggestion).queue();
+        suggestionChannel.sendMessage(new MessageBuilder(embedSuggestion.build()).build()).queue();
         event.reply(MessageHelper.formattedMention(event.getAuthor()) + "La suggestion à bien été envoyée.");
         event.getMessage().delete().queue();
     }

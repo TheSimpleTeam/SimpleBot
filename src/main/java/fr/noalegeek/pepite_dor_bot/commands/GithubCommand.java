@@ -7,7 +7,6 @@ import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.GHRepository;
@@ -46,13 +45,12 @@ public class GithubCommand extends Command {
             return;
         }
         if(isCommandDisabled()) {
-            MessageEmbed disabledCommandEmbed = new EmbedBuilder()
+            EmbedBuilder disabledCommandEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTitle("\u274C " + MessageHelper.translateMessage("error.github.disabled", event))
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getAvatarUrl())
-                    .build();
-            event.reply(disabledCommandEmbed);
+                    .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getAvatarUrl());
+            event.reply(new MessageBuilder(disabledCommandEmbed.build()).build());
             return;
         }
         switch (args[0]) {
@@ -69,7 +67,7 @@ public class GithubCommand extends Command {
                     return;
                 }
                 try {
-                    MessageEmbed embedResearch = new EmbedBuilder()
+                    EmbedBuilder successSearchEmbed = new EmbedBuilder()
                             .setTimestamp(Instant.now())
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                             .setTitle(repository.getName(), repository.getUrl().toString())
@@ -79,9 +77,8 @@ public class GithubCommand extends Command {
                             .addField(MessageHelper.translateMessage("success.github.search.description", event), repository.getDescription(), false)
                             .addField(MessageHelper.translateMessage("success.github.search.fileREADME", event), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
                             .addField(MessageHelper.translateMessage("success.github.search.license", event), getLicense(repository, event), false)
-                            .addField(MessageHelper.translateMessage("success.github.search.mainLanguage", event), repository.getLanguage(), false)
-                            .build();
-                    event.reply(embedResearch);
+                            .addField(MessageHelper.translateMessage("success.github.search.mainLanguage", event), repository.getLanguage(), false);
+                    event.reply(new MessageBuilder(successSearchEmbed.build()).build());
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event);
                 }

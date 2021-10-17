@@ -5,8 +5,8 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
@@ -37,7 +37,7 @@ public class UserInfoCommand extends Command {
                 event.getMessage().getMentionedUsers().get(0) != null) {
             user = event.getMessage().getMentionedUsers().get(0);
         }
-        MessageEmbed embedUserInfo = new EmbedBuilder()
+        EmbedBuilder embedUserInfo = new EmbedBuilder()
                 .setFooter("ℹ "+Instant.now())
                 .setColor(Color.BLUE)
                 .addField("Nom d'utilistateur", member.getNickname() == null ? member.getUser().getName() : member.getNickname(), false)
@@ -45,9 +45,8 @@ public class UserInfoCommand extends Command {
                 .addField("Date de création du compte", MessageHelper.formatShortDate(member.getTimeCreated()), true)
                 .addField("Cet utilisateur à rejoint le", MessageHelper.formatShortDate(member.getTimeJoined()), false)
                 .addField("Joue à", getUserActivityName(member), false)
-                .setAuthor(MessageHelper.getTag(user), null, user.getEffectiveAvatarUrl())
-                .build();
-        event.reply(embedUserInfo);
+                .setAuthor(MessageHelper.getTag(user), null, user.getEffectiveAvatarUrl());
+        event.reply(new MessageBuilder(embedUserInfo.build()).build());
     }
 
     private String getUserActivityName(Member member) {

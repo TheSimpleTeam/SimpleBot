@@ -6,7 +6,6 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -80,14 +79,13 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        MessageEmbed embedMemberJoin = new EmbedBuilder()
+        EmbedBuilder embedMemberJoin = new EmbedBuilder()
                 .setThumbnail(event.getMember().getUser().getAvatarUrl())
                 .setTitle("**" + event.getMember().getEffectiveName() + " a rejoint le serveur __" + event.getGuild().getName() + "__ !**")
                 .addField("Membre", event.getMember().getAsMention(), false)
                 .addField("➕ Nouveau membre", "Nous sommes maintenant " + event.getGuild().getMemberCount() + " membres sur le serveur !", false)
                 .setTimestamp(Instant.now())
-                .setColor(Color.GREEN)
-                .build();
+                .setColor(Color.GREEN);
         if (!getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())) {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(embedMemberJoin).build()).queue();
@@ -121,14 +119,13 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        MessageEmbed embedMemberRemove = new EmbedBuilder()
+        EmbedBuilder embedMemberRemove = new EmbedBuilder()
                 .setThumbnail(event.getUser().getAvatarUrl())
                 .setTitle("**" + (event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**")
                 .addField("Membre", event.getUser().getAsMention(), false)
                 .addField("➖ Membre perdu", "Nous sommes de nouveau à " + event.getGuild().getMemberCount() + " membres sur le serveur...", false)
                 .setTimestamp(Instant.now())
-                .setColor(Color.RED)
-                .build();
+                .setColor(Color.RED);
         if (!getServerConfig().channelMemberRemove().containsKey(event.getGuild().getId())) {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(embedMemberRemove).build()).queue();

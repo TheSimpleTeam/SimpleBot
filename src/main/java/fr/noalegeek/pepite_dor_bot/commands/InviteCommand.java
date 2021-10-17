@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Locale;
 
@@ -31,7 +32,7 @@ public class InviteCommand extends Command {
             case "bot" -> {
                 event.reply("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n" + String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()));
             }
-            default -> event.reply(MessageHelper.syntaxError(event, this, "Les arguments disponibles sont **create** et **bot**.\nL'argument **create** crée un lien d'invitation du serveur où a été fait la commande.\nL'argument **bot** envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur."));
+            default -> event.reply(MessageHelper.syntaxError(event, this, "syntax.invite"));
         }
     }
 }

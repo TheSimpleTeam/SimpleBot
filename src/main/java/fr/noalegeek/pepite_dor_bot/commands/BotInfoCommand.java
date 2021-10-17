@@ -5,7 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.Color;
@@ -25,27 +25,31 @@ public class BotInfoCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        MessageEmbed embedBotInfo = new EmbedBuilder()
+        EmbedBuilder successEmbed = new EmbedBuilder()
+                .setTitle("\u2139 " + String.format(MessageHelper.translateMessage("success.botInfo.informations", event), event.getSelfMember().getEffectiveName()))
                 .setTimestamp(Instant.now())
                 .setColor(Color.BLUE)
-                .addField(MessageHelper.translateMessage("text.botInfo.name", event), event.getSelfMember().getNickname() == null ? event.getSelfUser().getName() : event.getSelfMember().getNickname(), false)
-                .addField(MessageHelper.translateMessage("text.botInfo.id", event), event.getSelfUser().getId(), false)
-                .addField(MessageHelper.translateMessage("text.botInfo.creationDate", event), MessageHelper.formatShortDate(event.getSelfMember().getTimeCreated()), false)
-                .addField(MessageHelper.translateMessage("text.botInfo.joinDate", event), MessageHelper.formatShortDate(event.getSelfMember().getTimeJoined()), false)
-                .addField(MessageHelper.translateMessage("text.botInfo.activity", event), getActivity(event), false)
-                .addField(MessageHelper.translateMessage("text.botInfo.status", event), StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT).replaceAll("_", "")), false)
-                .addField(MessageHelper.translateMessage("text.botInfo.github", event), "https://github.com/TheSimpleTeam/SimpleBot", false)
-                .addField(MessageHelper.translateMessage("text.botInfo.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
-                .setAuthor(MessageHelper.getTag(event.getSelfUser()), null, event.getSelfUser().getEffectiveAvatarUrl())
-                .build();
-        event.reply(embedBotInfo);
+                .setThumbnail(event.getSelfUser().getEffectiveAvatarUrl())
+                .addField(MessageHelper.translateMessage("success.botInfo.id", event), event.getSelfUser().getId(), false)
+                .addField(MessageHelper.translateMessage("success.botInfo.tag", event), "#" + event.getSelfUser().getDiscriminator(), false)
+                .addField(MessageHelper.translateMessage("success.botInfo.creationDate", event), MessageHelper.formatShortDate(event.getSelfMember().getTimeCreated()), false)
+                .addField(MessageHelper.translateMessage("success.botInfo.joinDate", event), MessageHelper.formatShortDate(event.getSelfMember().getTimeJoined()), false)
+                .addField(MessageHelper.translateMessage("success.botInfo.activity", event), getActivity(event), false)
+                .addField(MessageHelper.translateMessage("success.botInfo.status", event), StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT).replaceAll("_", "")), false)
+                .addField(MessageHelper.translateMessage("success.botInfo.github", event), "https://github.com/TheSimpleTeam/SimpleBot", false)
+                .addField(MessageHelper.translateMessage("success.botInfo.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
+        if(event.getSelfMember().getNickname() != null){
+            successEmbed.addField(MessageHelper.translateMessage("success.botInfo.name", event), event.getSelfUser().getName(), false);
+        }
+        event.reply(new MessageBuilder(successEmbed.build()).build());
     }
 
     private String getActivity(CommandEvent event) {
         try {
             return event.getSelfUser().getJDA().getPresence().getActivity().getName();
         } catch (NullPointerException ignore){
-            return MessageHelper.translateMessage("test.botInfo.getActivity", event);
+            return MessageHelper.translateMessage("success.botInfo.getActivity", event);
         }
     }
 }
