@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.Locale;
 
@@ -28,7 +28,11 @@ public class InviteCommand extends Command {
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "create" -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Voici ton lien d'invitation du serveur " + event.getGuild().getName() + ", n'hésite pas à faire venir plein de personnes !\n" + event.getTextChannel().createInvite().complete().getUrl());
+            case "create" -> {
+                EmbedBuilder successCreateEmbed = new EmbedBuilder();
+
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Voici ton lien d'invitation du serveur " + event.getGuild().getName() + ", n'hésite pas à faire venir plein de personnes !\n" + event.getTextChannel().createInvite().complete().getUrl());
+            }
             case "bot" -> {
                 event.reply("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n" + String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()));
             }

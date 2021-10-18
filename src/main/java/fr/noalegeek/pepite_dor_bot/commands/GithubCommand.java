@@ -70,9 +70,10 @@ public class GithubCommand extends Command {
                     EmbedBuilder successSearchEmbed = new EmbedBuilder()
                             .setTimestamp(Instant.now())
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                            .setTitle(repository.getName(), repository.getUrl().toString())
+                            .setTitle("\u2705 " + MessageHelper.translateMessage("success.github.search.success", event))
                             .setThumbnail(repository.getOwner().getAvatarUrl())
                             .setColor(getColor(repository.getLanguage()))
+                            .addField(MessageHelper.translateMessage("success.github.search.repositoryName", event), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
                             .addField(MessageHelper.translateMessage("success.github.search.author", event), repository.getOwnerName(), false)
                             .addField(MessageHelper.translateMessage("success.github.search.description", event), repository.getDescription(), false)
                             .addField(MessageHelper.translateMessage("success.github.search.fileREADME", event), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
@@ -85,16 +86,15 @@ public class GithubCommand extends Command {
                 break;
             case "list":
                 try {
-                    GHUser ghuser = github.getUser(args[1]);
-                    EmbedBuilder embedList = new EmbedBuilder()
+                    EmbedBuilder successListEmbed = new EmbedBuilder()
                             .setTimestamp(Instant.now())
                             .setTitle("\u2705 " + String.format(MessageHelper.translateMessage("success.github.list", event), name))
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                            .setThumbnail(ghuser.getAvatarUrl());
-                    for (String ghname : ghuser.getRepositories().keySet()) {
-                        embedList.addField(ghname, ghuser.getRepositories().get(ghname).getHtmlUrl().toString(), false);
+                            .setThumbnail(github.getUser(args[1]).getAvatarUrl());
+                    for (String ghname : github.getUser(args[1]).getRepositories().keySet()) {
+                        successListEmbed.addField(ghname, github.getUser(args[1]).getRepositories().get(ghname).getHtmlUrl().toString(), false);
                     }
-                    event.reply(embedList.build());
+                    event.reply(new MessageBuilder(successListEmbed.build()).build());
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event);
                     return;

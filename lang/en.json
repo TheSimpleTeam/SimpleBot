@@ -106,6 +106,7 @@
   "success.github.search.license": "License",
   "success.github.search.mainLanguage": "Main language:",
   "success.github.search.repositoryName": "Name of the repository",
+  "success.github.search.success": "Repository found",
   "success.guildInfo.membersConnectedToTheServer": "Members connected to the server",
   "success.guildInfo.membersOnTheServer": "Members present on the server",
   "success.guildInfo.nitroLevel": "Nitro level",

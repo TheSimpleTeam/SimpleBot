@@ -18,6 +18,14 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-
+        String[] args = event.getArgs().split("\\s+");
+        long number = Long.parseLong(args[0]);
+        StringBuilder stringBuilder = new StringBuilder().append(number).append(" ");
+        while (number != 1){
+            if(number % 2 == 0) number /= 2;
+            else number = number * 3 + 1;
+            stringBuilder.append("; ").append(number).append(" ");
+        }
+        event.reply(String.valueOf(stringBuilder));
     }
 }
