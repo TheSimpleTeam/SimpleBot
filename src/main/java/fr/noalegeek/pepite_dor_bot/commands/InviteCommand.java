@@ -42,7 +42,13 @@ public class InviteCommand extends Command {
                 event.reply(new MessageBuilder(successCreateEmbed.build()).build());
             }
             case "bot" -> {
-                event.reply("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n" + String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()));
+                EmbedBuilder successBotEmbed = new EmbedBuilder()
+                        .setColor(Color.GREEN)
+                        .setTimestamp(Instant.now())
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
+                        .setTitle("\u2705 " + String.format(MessageHelper.translateMessage("success.invite.bot.success", event), event.getSelfMember().getEffectiveName()))
+                        .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false);
+                event.reply(new MessageBuilder(successBotEmbed.build()).build());
             }
             default -> event.reply(MessageHelper.syntaxError(event, this, "syntax.invite"));
         }

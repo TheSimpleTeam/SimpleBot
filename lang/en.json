@@ -112,6 +112,8 @@
   "success.guildInfo.nitroLevel": "Nitro level",
   "success.guildInfo.serverName": "Informations about the server __%s__",
   "success.guildInfo.serverOwner": "Server owner",
+  "success.invite.bot.invitationLink": "Bot invitation link",
+  "success.invite.bot.success": "Invitation link of the bot __%s__ given",
   "success.invite.create.invitationLink": "Invitation link",
   "success.invite.create.success": "Invitation of the server __%s__ created",
   "success.joinRole.configured": "The role %s has been configured.",
