@@ -33,7 +33,7 @@ public class ConvertCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 3) {
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + "syntax");
+            event.reply(MessageHelper.syntaxError(event, this, null));
             return;
         }
         try {
