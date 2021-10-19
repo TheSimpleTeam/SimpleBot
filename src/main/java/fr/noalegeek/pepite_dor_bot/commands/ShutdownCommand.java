@@ -15,7 +15,7 @@ public class ShutdownCommand extends Command {
 
     public ShutdownCommand() {
         this.name = "shutdown";
-        this.help = "Éteint le bot.";
+        this.help = "help.shutdown";
         this.aliases = new String[]{"sd","shutd","sdown"};
         this.guildOnly = false;
         this.ownerCommand = true;

@@ -81,6 +81,7 @@
   "help.prohibit": "Ajoute ou enlève un mot dans la liste de mots interdits. Peut même réinitialiser la liste complète des mots interdits.",
   "help.purge": "Supprime les messages datant de moins de 2 semaines selon un nombre donné se situant entre 0 et 101.",
   "help.say": "Envoie le message spécifié et inclus votre nom si vous n\u0027avez pas les permissions de gérer les messages.",
+  "help.shutdown": "Éteint le bot.",
   "help.unban": "Débanni un membre seulement la personne est déjà banni du serveur.",
   "success.ban": "%s a bien été banni %s.",
   "success.botInfo.activity": "Joue actuellement à",
