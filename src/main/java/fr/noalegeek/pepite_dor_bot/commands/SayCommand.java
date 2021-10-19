@@ -11,9 +11,9 @@ public class SayCommand extends Command {
     public SayCommand() {
         this.name = "say";
         this.cooldown = 5;
-        this.arguments = "<texte>";
+        this.arguments = "arguments.say";
         this.aliases = new String[]{"s","sa"};
-        this.help = "Envoie le un message avec le texte défini après la commande sans supprimer le message d'origine.";
+        this.help = "help.say";
         this.example = "Hey, je suis un robot !";
         this.category = CommandCategories.STAFF.category;
         this.guildOnly = true;
@@ -22,7 +22,7 @@ public class SayCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()){
-            event.reply(MessageHelper.syntaxError(event,this, null)+"Si vous n'avez pas les permissions de gérer les messages, le bot va vour mentionner.");
+            event.reply(MessageHelper.syntaxError(event,this, null) + "Si vous n'avez pas les permissions de gérer les messages, le bot va vour mentionner.");
             return;
         }
         if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
