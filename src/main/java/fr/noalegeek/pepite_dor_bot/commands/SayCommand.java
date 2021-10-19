@@ -14,7 +14,7 @@ public class SayCommand extends Command {
         this.arguments = "arguments.say";
         this.aliases = new String[]{"s","sa"};
         this.help = "help.say";
-        this.example = "Hey, je suis un robot !";
+        this.example = "example.say";
         this.category = CommandCategories.STAFF.category;
         this.guildOnly = true;
     }
