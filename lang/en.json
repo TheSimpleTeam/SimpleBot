@@ -137,6 +137,7 @@
   "success.purge": "%s messages have been deleted.",
   "success.say.success": "Someone said...",
   "success.say.text": "Text",
+  "success.shutdown": "The bot has been turned off!",
   "success.unban": "The user %s has been successfully unbanned.",
   "success.unmute": "%s has been successfully unmuted %s.",
   "syntax.ban": "The time limit to be specified is 7 days.\nIf the specified time exceeds 7 days, it will be reset to 7 days.\nThe messages will be deleted according to the specified time.\nPutting a reason is not mandatory.",

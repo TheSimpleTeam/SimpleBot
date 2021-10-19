@@ -4,12 +4,18 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.awt.*;
+import java.time.Instant;
 
 public class ShutdownCommand extends Command {
 
     public ShutdownCommand() {
         this.name = "shutdown";
-        this.help = "Eteint le bot \"proprement\".";
+        this.help = "Éteint le bot.";
         this.aliases = new String[]{"sd","shutd","sdown"};
         this.guildOnly = false;
         this.ownerCommand = true;
@@ -18,7 +24,12 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply(MessageHelper.formattedMention(event.getAuthor()) + "Le bot a bien été éteint.");
+        EmbedBuilder successEmbed = new EmbedBuilder()
+                .setTimestamp(Instant.now())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
+                .setTitle("\u2705 " + MessageHelper.translateMessage("success.shutdown", event))
+                .setColor(Color.GREEN);
+        event.reply(new MessageBuilder(successEmbed.build()).build());
         event.getJDA().shutdown();
     }
 }
