@@ -19,10 +19,10 @@ public class MCServerCommand extends Command {
     public MCServerCommand() {
         this.name = "minecraftserver";
         this.cooldown = 5;
-        this.help = "Donne la version, le nombre de joueurs connectés et le port d'un serveur.";
+        this.help = "help.mcServer";
         this.example = "hypixel.net";
         this.aliases = new String[]{"minecrafts","minecraftse","minecraftser","minecraftserv","minecraftserve","minecs","minecse","minecser","minecserv","minecserve","minecserver","mcrafts","mcraftse","mcraftser","mcraftserv","mcraftserve","mcraftserver","mcs","mcse","mcser","mcserv","mcserve","mcserver"};
-        this.arguments = "<IP d'un serveur Minecraft>";
+        this.arguments = "arguments.mcServer";
         this.category = CommandCategories.FUN.category;
         this.guildOnly = true;
     }
