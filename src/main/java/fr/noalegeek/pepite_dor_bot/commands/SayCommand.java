@@ -4,7 +4,12 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
+
+import java.awt.*;
+import java.time.Instant;
 
 public class SayCommand extends Command {
 
@@ -22,14 +27,16 @@ public class SayCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()){
-            event.reply(MessageHelper.syntaxError(event,this, null) + "Si vous n'avez pas les permissions de gérer les messages, le bot va vour mentionner.");
+            event.reply(MessageHelper.syntaxError(event,this, "syntax.say"));
             return;
         }
-        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
-                event.reply(MessageHelper.formattedMention(event.getAuthor()) + event.getArgs());
-        } else {
-            event.reply(event.getArgs());
-        }
+        EmbedBuilder successEmbed = new EmbedBuilder()
+                .setTitle("\u2705 " + MessageHelper.translateMessage("success.say.success", event))
+                .setTimestamp(Instant.now())
+                .setColor(Color.GREEN)
+                .addField(MessageHelper.translateMessage("success.say.text", event), event.getArgs(), false);
+        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) successEmbed.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+        event.reply(new MessageBuilder(successEmbed.build()).build());
         event.getMessage().delete().queue();
     }
 }
