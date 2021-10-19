@@ -21,6 +21,7 @@ graal {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
@@ -33,9 +34,9 @@ dependencies {
     //JDA & JDA-Utilities
     implementation("net.dv8tion:JDA:4.3.0_334")
     implementation('pw.chew:jda-chewtils:1.22.0') {
-        exclude group: 'pw.chew:jda-chewtils-command:1.22.0'
+        exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
-    implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
+    implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:1759267058'
     //GraalJS
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"

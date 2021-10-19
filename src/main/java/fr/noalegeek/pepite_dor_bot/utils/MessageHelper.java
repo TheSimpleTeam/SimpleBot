@@ -80,6 +80,10 @@ public class MessageHelper {
                     event), key));
             throw new NullPointerException(String.format(translateMessage("error.translateMessage", event), key));
         }
-        return Optional.ofNullable(Main.getLocalizations().get("en").get(key).getAsString()).orElse(key);
+        try {
+            return Main.getLocalizations().get("en").get(key).getAsString();
+        } catch (NullPointerException ex) {
+            return key;
+        }
     }
 }
