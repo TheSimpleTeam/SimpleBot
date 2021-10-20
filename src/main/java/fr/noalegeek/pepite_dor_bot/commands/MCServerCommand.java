@@ -23,7 +23,7 @@ public class MCServerCommand extends Command {
         this.example = "hypixel.net";
         this.aliases = new String[]{"minecrafts","minecraftse","minecraftser","minecraftserv","minecraftserve","minecs","minecse","minecser","minecserv","minecserve","minecserver","mcrafts","mcraftse","mcraftser","mcraftserv","mcraftserve","mcraftserver","mcs","mcse","mcser","mcserv","mcserve","mcserver"};
         this.arguments = "arguments.mcServer";
-        this.category = CommandCategories.FUN.category;
+        this.category = CommandCategories.INFO.category;
         this.guildOnly = true;
     }
 

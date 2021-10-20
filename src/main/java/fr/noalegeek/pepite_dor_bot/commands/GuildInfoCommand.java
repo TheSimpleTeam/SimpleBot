@@ -17,7 +17,7 @@ public class GuildInfoCommand extends Command {
         this.name = "guildinfo";
         this.aliases = new String[]{"guildi", "gi","ginfo"};
         this.guildOnly = true;
-        this.help = "Donne des informations sur le serveur.";
+        this.help = "help.guildInfo";
         this.cooldown = 5;
         this.category = CommandCategories.INFO.category;
     }

@@ -26,6 +26,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import me.bluetree.spiget.Author;
 import me.bluetree.spiget.Resource;
@@ -43,8 +44,10 @@ public class SpigotCommand extends Command {
         this.name = "spigot";
         this.aliases = new String[]{"spiget", "plugin", "pl", "plugins"};
         this.cooldown = 5;
-        this.example = "!spigot 80802";
-        this.arguments = "<spigot plugin id> OR <user/plugin> name";
+        this.example = "80802";
+        this.help = "Donne ";
+        this.category = CommandCategories.INFO.category;
+        this.arguments = "arguments.spigot";
     }
 
     @Override
@@ -55,15 +58,14 @@ public class SpigotCommand extends Command {
             return;
         }
         if(args[0].chars().allMatch(Character::isDigit)) {
-            //Args 0 = plugin id
             try {
-                Resource r = new Resource(Integer.parseInt(args[0]));
+                Resource pluginId = new Resource(Integer.parseInt(args[0]));
                 EmbedBuilder builder = new EmbedBuilder()
-                        .setTitle(r.getResourceName(), r.getResourceLink())
+                        .setTitle(pluginId.getResourceName(), pluginId.getResourceLink())
                         .setColor(Color.yellow)
-                        .setThumbnail(r.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : r.getResourceIconLink().toString())
+                        .setThumbnail(pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString())
                         .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()));
-                builder.setDescription(getDescription(r.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")));
+                builder.setDescription(getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")));
                 event.reply(builder.build());
             } catch (Exception e) {
                 MessageHelper.sendError(e, event);
