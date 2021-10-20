@@ -44,12 +44,4 @@ public class BotInfoCommand extends Command {
         }
         event.reply(new MessageBuilder(successEmbed.build()).build());
     }
-
-    private String getActivity(CommandEvent event) {
-        try {
-            return event.getSelfUser().getJDA().getPresence().getActivity().getName();
-        } catch (NullPointerException ignore){
-            return MessageHelper.translateMessage("text.commands.nothing", event);
-        }
-    }
 }
