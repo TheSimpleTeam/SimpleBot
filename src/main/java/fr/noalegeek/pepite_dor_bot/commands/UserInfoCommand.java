@@ -18,30 +18,46 @@ public class UserInfoCommand extends Command {
     public UserInfoCommand() {
         this.name = "userinfo";
         this.aliases = new String[]{"useri", "ui","uinfo"};
-        this.arguments = "<ID ou mention de l'utilisateur>";
+        this.arguments = "arguments.userInfo";
         this.guildOnly = true;
         this.cooldown = 5;
-        this.help = "Donne des informations sur l'auteur ou sur la personne mentionnée.";
-        this.example = "@minemobs";
+        this.help = "help.userInfo";
+        this.example = "363811352688721930";
         this.category = CommandCategories.INFO.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        Main.getJda().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
-                        event.getGuild().retrieveMember(user).queue(member -> {
-                            EmbedBuilder successEmbed = new EmbedBuilder()
-                                    .setTitle("\u2139 " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), MessageHelper.getTag(user)))
-                                    .setFooter(MessageHelper.getTag(user), user.getEffectiveAvatarUrl())
-                                    .setTimestamp(Instant.now())
-                                    .setColor(Color.BLUE)
-                                    .addField(MessageHelper.translateMessage("error.commands.userID", event), member.getUser().getId(), false)
-                                    .addField(MessageHelper.translateMessage("error.commands.joinDate", event), MessageHelper.formatShortDate(member.getTimeJoined()), false)
-                                    .addField(MessageHelper.translateMessage("error.commands.creationDate", event), MessageHelper.formatShortDate(member.getTimeCreated()), false)
-                                    .addField(MessageHelper.translateMessage("error.commands.activity", event), member.getActivities().isEmpty() ? MessageHelper.translateMessage("text.commands.nothing", event) : member.getActivities().toString(), false);
-                            if(member.getNickname() != null) successEmbed.addField(MessageHelper.translateMessage("success.userInfo.nickname", event), member.getNickname(), false);
-                            event.reply(new MessageBuilder(successEmbed.build()).build());
-                        }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
-                userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+        if(event.getArgs().isEmpty() || event.getArgs().isBlank()){
+            EmbedBuilder successEmbed = new EmbedBuilder()
+                    .setTitle("\u2139 " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), MessageHelper.getTag(event.getAuthor())))
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTimestamp(Instant.now())
+                    .setColor(Color.BLUE)
+                    .addField(MessageHelper.translateMessage("error.commands.userID", event), event.getMember().getUser().getId(), false)
+                    .addField(MessageHelper.translateMessage("error.commands.joinDate", event), MessageHelper.formatShortDate(event.getMember().getTimeJoined()), false)
+                    .addField(MessageHelper.translateMessage("error.commands.creationDate", event), MessageHelper.formatShortDate(event.getMember().getTimeCreated()), false)
+                    .addField(MessageHelper.translateMessage("error.commands.activity", event), event.getMember().getActivities().isEmpty() ? MessageHelper.translateMessage("text.commands.nothing", event) : event.getMember().getActivities().toString(), false);
+            if (event.getMember().getNickname() != null)
+                successEmbed.addField(MessageHelper.translateMessage("success.userInfo.nickname", event), event.getMember().getNickname(), false);
+            event.reply(new MessageBuilder(successEmbed.build()).build());
+        } else {
+            Main.getJda().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
+                            event.getGuild().retrieveMember(user).queue(member -> {
+                                EmbedBuilder successEmbed = new EmbedBuilder()
+                                        .setTitle("\u2139 " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), MessageHelper.getTag(user)))
+                                        .setFooter(MessageHelper.getTag(user), user.getEffectiveAvatarUrl())
+                                        .setTimestamp(Instant.now())
+                                        .setColor(Color.BLUE)
+                                        .addField(MessageHelper.translateMessage("error.commands.userID", event), member.getUser().getId(), false)
+                                        .addField(MessageHelper.translateMessage("error.commands.joinDate", event), MessageHelper.formatShortDate(member.getTimeJoined()), false)
+                                        .addField(MessageHelper.translateMessage("error.commands.creationDate", event), MessageHelper.formatShortDate(member.getTimeCreated()), false)
+                                        .addField(MessageHelper.translateMessage("error.commands.activity", event), member.getActivities().isEmpty() ? MessageHelper.translateMessage("text.commands.nothing", event) : member.getActivities().toString(), false);
+                                if (member.getNickname() != null)
+                                    successEmbed.addField(MessageHelper.translateMessage("success.userInfo.nickname", event), member.getNickname(), false);
+                                event.reply(new MessageBuilder(successEmbed.build()).build());
+                            }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
+                    userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+        }
     }
 }

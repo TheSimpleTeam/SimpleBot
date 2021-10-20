@@ -83,7 +83,6 @@ public class Main {
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage());
         }
-        Random randomActivity = new Random();
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId(b.ownerID)
@@ -91,7 +90,7 @@ public class Main {
                 .setPrefix(infos.prefix())
                 .useHelpBuilder(true)
                 .setServerInvite(b.serverInvite)
-                .setActivity(Activity.playing(infos.activities()[randomActivity.nextInt(infos.activities().length)]))
+                .setActivity(Activity.playing(infos.activities()[new Random().nextInt(infos.activities().length)]))
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
