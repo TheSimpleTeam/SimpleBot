@@ -1,7 +1,9 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
+import com.jagrosh.jdautilities.command.Command;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
+import fr.noalegeek.pepite_dor_bot.utils.LevenshteinDistance;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -25,10 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Level;
 
 import static fr.noalegeek.pepite_dor_bot.Main.*;
@@ -154,7 +153,8 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event.getAuthor() == event.getJDA().getSelfUser()) return;
-        LOGGER.info(MessageHelper.getTag(event.getAuthor()) + " a dit :\n" + event.getMessage().getContentRaw());
+        String message = event.getMessage().getContentRaw();
+        LOGGER.info(MessageHelper.getTag(event.getAuthor()) + " a dit :\n" + message);
         if (getServerConfig().prohibitWords() == null) {
             new File("config/server-config.json").delete();
             try {
@@ -164,14 +164,37 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
+        if(message.startsWith("!")) {
+            String[] args = message.substring(1).split("\\s+");
+            if(args.length == 0) return;
+            String cmdName = args[0];
+            if(Main.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) ||
+                    Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase))) return;
+            double highestResult = 0;
+            String cmd = null;
+            for (Command command : getClient().getCommands()) {
+                double _highestResult = LevenshteinDistance.getDistance(cmdName, command.getName());
+                double b = 0;
+                String _alias = command.getName();
+
+                if(b > _highestResult) {
+                    _highestResult = b;
+                }
+                if(highestResult < _highestResult) {
+                    cmd = _alias;
+                    highestResult = _highestResult;
+                }
+            }
+            event.getChannel().sendMessage("Did you meant " + cmd).mention(event.getAuthor()).complete();
+        }
         if (!getServerConfig().prohibitWords().containsKey(event.getGuild().getId())) return;
         for (String s : getServerConfig().prohibitWords().get(event.getGuild().getId())) {
             for(String alias : new String[]{"prohibitw","prohitbitwrd","pw","pwrd","pword"}){
-                if(event.getMessage().getContentRaw().toLowerCase().startsWith(alias)){
+                if(message.toLowerCase().startsWith(alias)){
                     return;
                 }
             }
-            if (event.getMessage().getContentRaw().toLowerCase().contains(s.toLowerCase())) {
+            if (message.toLowerCase().contains(s.toLowerCase())) {
                 event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + s + "` fait parti de la liste des mots interdits.").queue());
             }
         }
