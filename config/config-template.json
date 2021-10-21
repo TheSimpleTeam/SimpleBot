@@ -10,5 +10,5 @@
     "example",
     "check my mentions"
   ],
-  "githubToken": "YOUR-GITHUB-TOKEN"
+  "botGithubToken": "YOUR-GITHUB-TOKEN"
 }

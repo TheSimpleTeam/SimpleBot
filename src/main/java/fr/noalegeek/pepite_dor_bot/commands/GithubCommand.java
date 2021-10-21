@@ -3,6 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,7 +11,6 @@ import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Map;
 
+@RequireConfig("botGithubToken")
 public class GithubCommand extends Command {
 
     private final GitHub github;
@@ -34,7 +35,7 @@ public class GithubCommand extends Command {
         this.help = "help.github";
         this.example = "search PufferTeam SuperPack";
         this.aliases = new String[]{"ghub","gith","gh"};
-        this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().githubToken()).build();
+        this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().botGithubToken()).build();
     }
 
     @Override
@@ -125,7 +126,7 @@ public class GithubCommand extends Command {
     private boolean isCommandDisabled() {
         try {
             github.checkApiUrlValidity();
-        }catch (IOException ignored) {
+        } catch (IOException ignored) {
             return true;
         }
         return false;

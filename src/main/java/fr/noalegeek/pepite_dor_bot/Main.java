@@ -8,6 +8,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
@@ -151,14 +152,33 @@ public class Main {
         Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
-            try {
-                Command instance = command.getDeclaredConstructor().newInstance();
-                clientBuilder.addCommands(instance);
-                b.commands.add(instance);
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
+            if(hasConfig(command)) {
+                try {
+                    addCommand(command, b, clientBuilder);
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                LOGGER.info(command.getName() + " need " + command.getAnnotation(RequireConfig.class).value() + " key in config.json");
             }
         }
+    }
+
+    private static boolean hasConfig(Class<? extends Command> clazz) {
+        if(clazz.getAnnotation(RequireConfig.class) == null) return true;
+        RequireConfig c = clazz.getAnnotation(RequireConfig.class);
+        try {
+            return Infos.class.getMethod(c.value()).invoke(infos) != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static void addCommand(Class<? extends Command> clazz, Bot b, CommandClientBuilder builder)
+            throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Command instance = clazz.getDeclaredConstructor().newInstance();
+        builder.addCommands(instance);
+        b.commands.add(instance);
     }
 
     private static void setupLogs() throws IOException {
@@ -188,7 +208,7 @@ public class Main {
                 map.put("timeBetweenStatusChange", 15);
                 map.put("autoSaveDelay", 15);
                 map.put("activities", new String[]{"ban everyone", "example", "check my mentions"});
-                map.put("githubToken", "YOUR-GITHUB-TOKEN");
+                map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             } else {
                 Console console = System.console();
                 if (console == null) {
@@ -210,7 +230,7 @@ public class Main {
                 System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
                 map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : console.readLine().split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");
-                map.put("githubToken", "YOUR-GITHUB-TOKEN");
+                map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             }
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
