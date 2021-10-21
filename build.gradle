@@ -5,7 +5,7 @@ plugins {
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
 }
 
-ext.graalVersion = '21.2.0'
+ext.graalVersion = '21.3.0'
 
 group 'fr.noalegeek'
 version '1.0'
