@@ -106,6 +106,7 @@ public class Main {
                 jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)]));
             }
         }, 0, TimeUnit.SECONDS.toMillis(getInfos().timeBetweenStatusChange()));
+
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

@@ -7,7 +7,7 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
-import java.awt.*;
+import java.awt.Color;
 import java.time.Instant;
 
 public class ShutdownCommand extends Command {
@@ -29,6 +29,6 @@ public class ShutdownCommand extends Command {
                 .setTitle("\u2705 " + MessageHelper.translateMessage("success.shutdown", event))
                 .setColor(Color.GREEN);
         event.reply(new MessageBuilder(successEmbed.build()).build());
-        event.getJDA().shutdown();
+        event.getJDA().shutdownNow();
     }
 }
