@@ -39,7 +39,7 @@ public class Listener extends ListenerAdapter {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                event.getJDA().getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)]));
+                event.getJDA().getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length - 1)]));
             }
         }, 0, getInfos().timeBetweenStatusChange() * 1000);
         new Timer().schedule(new TimerTask() {
