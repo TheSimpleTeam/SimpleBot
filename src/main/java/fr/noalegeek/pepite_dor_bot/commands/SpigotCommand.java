@@ -53,61 +53,62 @@ public class SpigotCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(args.length == 0) {
+        if(args.length != 1) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
         if(args[0].chars().allMatch(Character::isDigit)) {
+            //Search for plugin with a ID
             try {
                 Resource pluginId = new Resource(Integer.parseInt(args[0]));
-                EmbedBuilder builder = new EmbedBuilder()
-                        .setTitle(pluginId.getResourceName(), pluginId.getResourceLink())
-                        .setColor(Color.yellow)
+                EmbedBuilder successPluginIDEmbed = new EmbedBuilder()
+                        .setTitle("\u2705 " + MessageHelper.translateMessage("success.spigot.pluginID.success", event))
+                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginName", event), pluginId.getResourceName(), false)
+                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginLink", event), pluginId.getResourceLink(), false)
+                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginID", event), args[0], false)
+                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.description", event), getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
+                        .setColor(Color.GREEN)
                         .setThumbnail(pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString())
-                        .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()));
-                builder.setDescription(getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")));
-                event.reply(builder.build());
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+                event.reply(successPluginIDEmbed.build());
             } catch (Exception e) {
                 MessageHelper.sendError(e, event);
             }
         } else {
-            //Search for plugin
+            //Search for a Spigot user
             if(args[0].equalsIgnoreCase("user")) {
-                List<Author> authors;
                 try {
-                    authors = Author.getByName(args[1]);
+                    List<Author> authors = Author.getByName(args[1]);
+                    EmbedBuilder b = new EmbedBuilder()
+                            .setTitle("User list")
+                            .setTimestamp(Instant.now())
+                            .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()));
+
+                    for (Author author : authors) {
+                        b.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
+                    }
+                    b.setThumbnail(authors.stream().findFirst().get().getIconURL());
+                    event.reply(b.build());
                 } catch (IOException exception) {
                     MessageHelper.sendError(exception, event);
-                    return;
                 }
-                EmbedBuilder b = new EmbedBuilder()
-                        .setTitle("User list")
-                        .setTimestamp(Instant.now())
-                        .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()));
-
-                for (Author author : authors) {
-                    b.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
-                }
-                b.setThumbnail(authors.stream().findFirst().get().getIconURL());
-                event.reply(b.build());
             } else {
-                List<Resource> resources;
+                //Search for plugin with his name
                 try {
-                    resources = Resource.getResourcesByName(args.length == 1 ? args[0] : args[1]);
+                    List<Resource> resources = Resource.getResourcesByName(args.length == 1 ? args[0] : args[1]);
+                    EmbedBuilder successPluginNameEmbed = new EmbedBuilder()
+                            .setTitle("Resources list")
+                            .setThumbnail("https://static.spigotmc.org/img/spigot.png")
+                            .setTimestamp(Instant.now())
+                            .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()))
+                            .setColor(Color.GREEN);
+                    for (Resource resource : resources) {
+                        successPluginNameEmbed.addField(resource.getResourceName(), resource.getResourceLink(), true);
+                    }
+                    event.reply(successPluginNameEmbed.build());
                 } catch (IOException | NullPointerException exception) {
                     MessageHelper.sendError(exception, event);
-                    return;
                 }
-                EmbedBuilder b = new EmbedBuilder()
-                        .setTitle("Resources list")
-                        .setThumbnail("https://static.spigotmc.org/img/spigot.png")
-                        .setTimestamp(Instant.now())
-                        .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()));
-
-                for (Resource resource : resources) {
-                    b.addField(resource.getResourceName(), resource.getResourceLink(), true);
-                }
-                event.reply(b.build());
             }
         }
     }

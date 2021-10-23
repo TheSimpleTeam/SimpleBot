@@ -34,7 +34,7 @@ public class SayCommand extends Command {
                 .setTitle("\u2705 " + MessageHelper.translateMessage("success.say.success", event))
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
-                .addField(MessageHelper.translateMessage("success.say.text", event), event.getArgs(), false);
+                .setDescription(event.getArgs());
         if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) successEmbed.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
         event.reply(new MessageBuilder(successEmbed.build()).build());
         event.getMessage().delete().queue();
