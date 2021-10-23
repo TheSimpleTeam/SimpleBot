@@ -36,6 +36,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public class Main {
 
     private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         try {
             String arg = "";
             try {
@@ -73,7 +74,7 @@ public class Main {
             return;
         }
         try {
-            jda = JDABuilder.createDefault(infos.token()).enableIntents(EnumSet.allOf(GatewayIntent.class)).enableCache(CacheFlag.ONLINE_STATUS).build();
+            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing(getInfos().activities()[1])).enableIntents(EnumSet.allOf(GatewayIntent.class)).enableCache(CacheFlag.ONLINE_STATUS).build();
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE, "Le token est invalide");
             return;
@@ -91,11 +92,30 @@ public class Main {
                 .setPrefix(infos.prefix())
                 .useHelpBuilder(true)
                 .setServerInvite(b.serverInvite)
-                .setActivity(Activity.playing(infos.activities()[new Random().nextInt(infos.activities().length)]))
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
+
+        jda.awaitReady();
+
+        //Removed onReady
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)]));
+            }
+        }, 0, TimeUnit.SECONDS.toMillis(getInfos().timeBetweenStatusChange()));
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    Listener.saveConfigs();
+                } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, ex.getMessage());
+                }
+            }
+        }, 120_000, TimeUnit.MINUTES.toMillis(getInfos().autoSaveDelay()));
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {

@@ -7,8 +7,6 @@ import fr.noalegeek.pepite_dor_bot.utils.LevenshteinDistance;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
@@ -27,32 +25,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.logging.Level;
 
 import static fr.noalegeek.pepite_dor_bot.Main.*;
 
 public class Listener extends ListenerAdapter {
-
-    @Override
-    public void onReady(@NotNull ReadyEvent event) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                event.getJDA().getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length - 1)]));
-            }
-        }, 0, getInfos().timeBetweenStatusChange() * 1000);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    saveConfigs();
-                } catch (IOException ex) {
-                    LOGGER.log(Level.SEVERE, ex.getMessage());
-                }
-            }
-        }, 120_000, getInfos().autoSaveDelay() * 1000 * 60);
-    }
 
     @Override
     public void onShutdown(@NotNull ShutdownEvent event) {

@@ -19,8 +19,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        StringBuilder b = new StringBuilder();
-        Main.getClient().getCommands().stream().map(Command::getName).sorted().forEachOrdered(e -> b.append(e).append('\n'));
-        event.reply(b.toString());
+        event.reply(String.valueOf(Main.getJda().getPresence().getActivity() == null));
     }
 }
