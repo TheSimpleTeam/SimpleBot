@@ -49,6 +49,7 @@ dependencies {
     implementation 'org.reflections:reflections:0.10.1'
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.github.TheSimpleTeam:Spiget:main-SNAPSHOT'
+    implementation 'commons-cli:commons-cli:1.4'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
