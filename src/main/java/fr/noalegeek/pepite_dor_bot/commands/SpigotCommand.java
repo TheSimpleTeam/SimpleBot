@@ -53,7 +53,7 @@ public class SpigotCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(args.length != 1) {
+        if(args.length == 0) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
