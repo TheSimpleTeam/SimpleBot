@@ -19,6 +19,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply(String.valueOf(Main.getJda().getPresence().getActivity() == null));
+
     }
 }
