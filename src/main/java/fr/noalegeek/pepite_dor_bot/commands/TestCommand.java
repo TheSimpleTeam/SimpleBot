@@ -19,6 +19,10 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = "spigot".toCharArray().length - 1; i > 0; i--){
+            stringBuilder.append("\"").append("spigot".substring(0, i)).append("\",");
+        }
+        event.reply(stringBuilder.toString());
     }
 }
