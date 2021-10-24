@@ -8,6 +8,10 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import fr.noalegeek.pepite_dor_bot.cli.CLI;
+import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
+import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
+import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
@@ -17,7 +21,6 @@ import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -86,7 +89,7 @@ public class Main {
             LOGGER.log(Level.SEVERE, ex.getMessage());
         }
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
-        CommandClientBuilder clientBuilder = new CommandClientBuilder()
+        /*CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId(b.ownerID)
                 .setCoOwnerIds("363811352688721930")
                 .setPrefix(infos.prefix())
@@ -95,7 +98,11 @@ public class Main {
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
-        jda.addEventListener(new Listener(), waiter, client);
+        jda.addEventListener(new Listener(), waiter, client);*/
+        jda.addEventListener(new Listener(), waiter);
+
+        CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand()).build();
+        cli.commandsListener();
 
         jda.awaitReady();
 
