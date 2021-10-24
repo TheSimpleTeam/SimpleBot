@@ -67,8 +67,8 @@ public class ConvertCommand extends Command {
                     .setColor(Color.GREEN)
                     .setTitle("\u2705 " + MessageHelper.translateMessage("success.convert.success", event))
                     .addField(MessageHelper.translateMessage("success.convert.from", event), args[0] + " " + args[1] + " (" + MessageHelper.translateMessage(unit1.unitName, event) + ")", false)
-                    .addField(MessageHelper.translateMessage("success.convert.to", event), number * Double.parseDouble(factor) + " " + args[2] + " (" + MessageHelper.translateMessage(unit2.unitName, event) + ")", false)
-                    .addField(MessageHelper.translateMessage("success.convert.factor", event), factor, false)
+                    .addField(MessageHelper.translateMessage("success.convert.to", event), String.valueOf(number * Double.parseDouble(factor)).replace("E", "x10^") + " " + args[2] + " (" + MessageHelper.translateMessage(unit2.unitName, event) + ")", false)
+                    .addField(MessageHelper.translateMessage("success.convert.factor", event), factor.replace("E", "x10^"), false)
                     .addField(MessageHelper.translateMessage("success.convert.unitType", event), MessageHelper.translateMessage(unit1.unitType.unitTypeName, event), true)
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
