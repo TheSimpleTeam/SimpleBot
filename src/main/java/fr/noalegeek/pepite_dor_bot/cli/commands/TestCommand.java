@@ -25,11 +25,12 @@
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
 import fr.noalegeek.pepite_dor_bot.Main;
+import org.jetbrains.annotations.NotNull;
 
-public class TestCommand implements Command {
+public class TestCommand implements CLICommand {
 
     @Override
-    public String name() {
+    public @NotNull String name() {
         return "test";
     }
 

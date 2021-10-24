@@ -24,6 +24,7 @@
 
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
+import fr.noalegeek.pepite_dor_bot.cli.CLI;
 import net.dv8tion.jda.api.JDA;
 
-public record CommandEvent(String[] args, JDA jda) {}
+public record CommandEvent(String[] args, JDA jda, CLI cli) {}

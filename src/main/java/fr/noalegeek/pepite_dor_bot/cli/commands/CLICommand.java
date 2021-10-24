@@ -22,16 +22,23 @@
  * SOFTWARE.
  */
 
-package fr.noalegeek.pepite_dor_bot.utils;
+package fr.noalegeek.pepite_dor_bot.cli.commands;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Lists {
+public interface CLICommand {
 
-    public static <E> E getOrDefault(int index, E defaultValue, List<E> list) {
-        if (index < 0) {
-            return defaultValue;
-        }
-        return index <= list.size() - 1 ? list.get(index) : defaultValue;
+    @NotNull
+    String name();
+
+    default String[] aliases() {
+        return new String[]{name()};
     }
+
+    @Nullable
+    String help();
+
+    void execute(CommandEvent event);
+
 }

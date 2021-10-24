@@ -10,6 +10,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.noalegeek.pepite_dor_bot.cli.CLI;
 import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
+import fr.noalegeek.pepite_dor_bot.cli.commands.HelpCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
@@ -101,7 +102,7 @@ public class Main {
         jda.addEventListener(new Listener(), waiter, client);*/
         jda.addEventListener(new Listener(), waiter);
 
-        CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand()).build();
+        CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
         cli.commandsListener();
 
         jda.awaitReady();

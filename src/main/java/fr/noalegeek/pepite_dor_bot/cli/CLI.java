@@ -26,7 +26,7 @@ package fr.noalegeek.pepite_dor_bot.cli;
 
 import com.google.common.collect.ImmutableList;
 import fr.noalegeek.pepite_dor_bot.Main;
-import fr.noalegeek.pepite_dor_bot.cli.commands.Command;
+import fr.noalegeek.pepite_dor_bot.cli.commands.CLICommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.CommandEvent;
 import net.dv8tion.jda.api.JDA;
 
@@ -38,11 +38,11 @@ import java.util.Optional;
 
 public class CLI {
 
-    private final ImmutableList<Command> commands;
+    private final ImmutableList<CLICommand> commands;
     private final JDA jda;
 
-    public CLI(JDA jda, Command[] commands) {
-        this.commands = ImmutableList.<Command>builder().addAll(Arrays.asList(commands)).build();
+    public CLI(JDA jda, CLICommand[] commands) {
+        this.commands = ImmutableList.<CLICommand>builder().addAll(Arrays.asList(commands)).build();
         this.jda = jda;
     }
 
@@ -53,14 +53,18 @@ public class CLI {
             BufferedReader reader = new BufferedReader(r);
             String nextLine = reader.readLine();
             String[] arg = nextLine.split("\\s+");
-            Optional<Command> opCommand = commands.stream().filter(cmd -> cmd.name().equalsIgnoreCase(arg[0]) || Arrays.stream(cmd.aliases())
+            Optional<CLICommand> opCommand = commands.stream().filter(cmd -> cmd.name().equalsIgnoreCase(arg[0]) || Arrays.stream(cmd.aliases())
                     .anyMatch(s -> s.equalsIgnoreCase(arg[0]))).findAny();
             if (opCommand.isPresent()) {
-                Command command = opCommand.get();
-                command.execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), jda));
+                CLICommand command = opCommand.get();
+                command.execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), jda, this));
             } else {
                 Main.LOGGER.warning("This command does not exist !");
             }
         } while (true);
+    }
+
+    public ImmutableList<CLICommand> getCommands() {
+        return commands;
     }
 }

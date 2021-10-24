@@ -24,14 +24,19 @@
 
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
-import fr.noalegeek.pepite_dor_bot.Main;
 import org.jetbrains.annotations.NotNull;
 
-public class SendMessageCommand implements CLICommand {
+import java.util.Arrays;
+import java.util.Optional;
 
+import static fr.noalegeek.pepite_dor_bot.utils.Color.*;
+
+public class HelpCommand implements CLICommand {
+
+    @NotNull
     @Override
-    public @NotNull String name() {
-        return "msg";
+    public String name() {
+        return "help";
     }
 
     @Override
@@ -41,12 +46,27 @@ public class SendMessageCommand implements CLICommand {
 
     @Override
     public void execute(CommandEvent event) {
-        String msg = "Hello from CLI Commands";
         if(event.args().length == 0) {
-            Main.LOGGER.warning("You should use arguments !");
-        } else {
-            msg = String.join(" ", event.args());
+            for (CLICommand command : event.cli().getCommands()) {
+                System.out.println();
+                System.out.println(getHelp(command));
+            }
+            return;
         }
-        event.jda().getTextChannelById(754418833841717350L).sendMessage(msg).queue();
+        Optional<CLICommand> command = event.cli().getCommands().stream().filter(cmd -> cmd.name().equalsIgnoreCase(event.args()[0]) || Arrays.stream(cmd.aliases())
+                .anyMatch(s -> s.equalsIgnoreCase(event.args()[0]))).findAny();
+        if(command.isEmpty()) {
+            System.out.println("This command does not exist !");
+            return;
+        }
+        System.out.println();
+        System.out.println(getHelp(command.get()));
     }
+
+    private String getHelp(CLICommand command) {
+        return String.format("%s              %s", colorize(command.name(), RED),
+                command.help() == null ? colorize("No help available", ANSI_ITALIC, BLACK_BOLD_BRIGHT) : colorize(command.help(), ANSI_ITALIC, BLACK_BOLD_BRIGHT));
+    }
+
+
 }
