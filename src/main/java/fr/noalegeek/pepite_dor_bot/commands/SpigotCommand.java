@@ -31,6 +31,8 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import me.bluetree.spiget.Author;
 import me.bluetree.spiget.Resource;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
@@ -46,7 +48,7 @@ public class SpigotCommand extends Command {
         this.aliases = new String[]{"spiget", "plugin", "pl", "plugins"};
         this.cooldown = 5;
         this.example = "80802";
-        this.help = "Donne ";
+        this.help = "help.spigot";
         this.category = CommandCategories.INFO.category;
         this.arguments = "arguments.spigot";
     }
@@ -54,8 +56,8 @@ public class SpigotCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(args.length == 0) {
-            MessageHelper.syntaxError(event, this, null);
+        if(event.getArgs().replaceAll("\\s+", "").isEmpty()) {
+            event.reply(MessageHelper.syntaxError(event, this, null));
             return;
         }
         if(args[0].chars().allMatch(Character::isDigit)) {
@@ -70,33 +72,50 @@ public class SpigotCommand extends Command {
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.description", event), getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
                         .setColor(Color.GREEN)
                         .setThumbnail(pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl());
                 event.reply(successPluginIDEmbed.build());
             } catch (IOException e) {
                 if(e instanceof FileNotFoundException) {
-                    event.replyError("This resource does not exist");
+                    EmbedBuilder errorEmptyUserListEmbed = new EmbedBuilder()
+                            .setColor(Color.RED)
+                            .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                            .setTimestamp(Instant.now())
+                            .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.pluginNull", event), args[0]));
+                    event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
                     return;
                 }
                 MessageHelper.sendError(e, event);
+            } catch (NumberFormatException e){
+                EmbedBuilder errorNumberTooLargeEmbed = new EmbedBuilder()
+                        .setColor(Color.RED)
+                        .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                        .setTimestamp(Instant.now())
+                        .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.numberTooLarge", event), args[0]));
+                event.reply(new MessageBuilder(errorNumberTooLargeEmbed.build()).build());
             }
         } else {
             //Search for a Spigot user
             if(args[0].equalsIgnoreCase("user")) {
                 try {
-                    List<Author> authors = Author.getByName(args[1]);
-                    EmbedBuilder b = new EmbedBuilder()
-                            .setTitle("User list")
+                    List<Author> users = Author.getByName(args[1]);
+                    EmbedBuilder successUserEmbed = new EmbedBuilder()
+                            .setTitle("\u2705 " + String.format(MessageHelper.translateMessage("success.spigot.user.success", event), args[1]))
                             .setTimestamp(Instant.now())
-                            .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()));
-
-                    for (Author author : authors) {
-                        b.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
+                            .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                            .setColor(Color.GREEN)
+                            .setThumbnail(users.stream().findFirst().get().getIconURL());
+                    for (Author author : users) {
+                        successUserEmbed.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
                     }
-                    b.setThumbnail(authors.stream().findFirst().get().getIconURL());
-                    event.reply(b.build());
-                } catch (IOException exception) {
+                    event.reply(successUserEmbed.build());
+                } catch (IOException exception){
                     if(exception instanceof FileNotFoundException) {
-                        event.replyError("This user does not exist");
+                        EmbedBuilder errorEmptyUserListEmbed = new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                                .setTimestamp(Instant.now())
+                                .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.user.listNull", event), args[1]));
+                        event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
                         return;
                     }
                     MessageHelper.sendError(exception, event);
@@ -104,12 +123,12 @@ public class SpigotCommand extends Command {
             } else {
                 //Search for plugin with his name
                 try {
-                    List<Resource> resources = Resource.getResourcesByName(args.length == 1 ? args[0] : args[1]);
+                    List<Resource> resources = Resource.getResourcesByName(event.getArgs());
                     EmbedBuilder successPluginNameEmbed = new EmbedBuilder()
                             .setTitle("Resources list")
                             .setThumbnail("https://static.spigotmc.org/img/spigot.png")
                             .setTimestamp(Instant.now())
-                            .setFooter(event.getAuthor().getName(), getAvatarURL(event.getAuthor()))
+                            .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                             .setColor(Color.GREEN);
                     for (Resource resource : resources) {
                         successPluginNameEmbed.addField(resource.getResourceName(), resource.getResourceLink(), true);
@@ -129,16 +148,12 @@ public class SpigotCommand extends Command {
     private String getDescription(String desc) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < desc.toCharArray().length; i++) {
-            if(i == 1020) {
+            if (i == 1020) {
                 builder.append("...");
                 break;
             }
             builder.append(desc.toCharArray()[i]);
         }
         return builder.toString();
-    }
-
-    private String getAvatarURL(User user) {
-        return user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl();
     }
 }

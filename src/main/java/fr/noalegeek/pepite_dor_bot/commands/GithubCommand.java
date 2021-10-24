@@ -46,12 +46,12 @@ public class GithubCommand extends Command {
             return;
         }
         if(isCommandDisabled()) {
-            EmbedBuilder disabledCommandEmbed = new EmbedBuilder()
+            EmbedBuilder errorDisabledCommandEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTitle("\u274C " + MessageHelper.translateMessage("error.github.disabled", event))
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getAvatarUrl());
-            event.reply(new MessageBuilder(disabledCommandEmbed.build()).build());
+            event.reply(new MessageBuilder(errorDisabledCommandEmbed.build()).build());
             return;
         }
         switch (args[0]) {
