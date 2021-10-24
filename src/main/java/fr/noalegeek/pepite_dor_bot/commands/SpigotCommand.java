@@ -43,7 +43,7 @@ public class SpigotCommand extends Command {
 
     public SpigotCommand() {
         this.name = "spigot";
-        this.aliases = new String[]{"spiget", "plugin", "pl", "plugins"};
+        this.aliases = new String[]{"spigo", "spig", "spi", "sp", "plugin", "spige", "plu", "plug", "plugi", "spiget", "pl", "plugins"};
         this.cooldown = 5;
         this.example = "80802";
         this.help = "help.spigot";
