@@ -32,8 +32,6 @@ import me.bluetree.spiget.Author;
 import me.bluetree.spiget.Resource;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
 import java.io.FileNotFoundException;
@@ -76,12 +74,12 @@ public class SpigotCommand extends Command {
                 event.reply(successPluginIDEmbed.build());
             } catch (IOException e) {
                 if(e instanceof FileNotFoundException) {
-                    EmbedBuilder errorEmptyUserListEmbed = new EmbedBuilder()
+                    EmbedBuilder errorPluginIDNullEmbed = new EmbedBuilder()
                             .setColor(Color.RED)
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                             .setTimestamp(Instant.now())
                             .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.pluginNull", event), args[0]));
-                    event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
+                    event.reply(new MessageBuilder(errorPluginIDNullEmbed.build()).build());
                     return;
                 }
                 MessageHelper.sendError(e, event);
@@ -114,7 +112,7 @@ public class SpigotCommand extends Command {
                                 .setColor(Color.RED)
                                 .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.user.listNull", event), args[1]));
+                                .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.user", event), args[1]));
                         event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
                         return;
                     }
@@ -125,7 +123,7 @@ public class SpigotCommand extends Command {
                 try {
                     List<Resource> resources = Resource.getResourcesByName(event.getArgs());
                     EmbedBuilder successPluginNameEmbed = new EmbedBuilder()
-                            .setTitle("Resources list")
+                            .setTitle(resources.size() == 1 ? String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.singular", event), "\u2705") : String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.plural", event), "\u2705"))
                             .setThumbnail("https://static.spigotmc.org/img/spigot.png")
                             .setTimestamp(Instant.now())
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
@@ -134,12 +132,17 @@ public class SpigotCommand extends Command {
                         successPluginNameEmbed.addField(resource.getResourceName(), resource.getResourceLink(), true);
                     }
                     event.reply(successPluginNameEmbed.build());
-                } catch (IOException | NullPointerException exception) {
-                    if(exception instanceof FileNotFoundException) {
-                        event.replyError("This resource does not exist");
+                } catch (IOException | NullPointerException e) {
+                    if(e instanceof FileNotFoundException) {
+                        EmbedBuilder errorPluginNameNullEmbed = new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                                .setTimestamp(Instant.now())
+                                .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.pluginName", event), event.getArgs()));
+                        event.reply(new MessageBuilder(errorPluginNameNullEmbed.build()).build());
                         return;
                     }
-                    MessageHelper.sendError(exception, event);
+                    MessageHelper.sendError(e, event);
                 }
             }
         }
