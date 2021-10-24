@@ -34,6 +34,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
@@ -71,7 +72,11 @@ public class SpigotCommand extends Command {
                         .setThumbnail(pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString())
                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
                 event.reply(successPluginIDEmbed.build());
-            } catch (Exception e) {
+            } catch (IOException e) {
+                if(e instanceof FileNotFoundException) {
+                    event.replyError("This resource does not exist");
+                    return;
+                }
                 MessageHelper.sendError(e, event);
             }
         } else {
@@ -90,6 +95,10 @@ public class SpigotCommand extends Command {
                     b.setThumbnail(authors.stream().findFirst().get().getIconURL());
                     event.reply(b.build());
                 } catch (IOException exception) {
+                    if(exception instanceof FileNotFoundException) {
+                        event.replyError("This user does not exist");
+                        return;
+                    }
                     MessageHelper.sendError(exception, event);
                 }
             } else {
@@ -107,6 +116,10 @@ public class SpigotCommand extends Command {
                     }
                     event.reply(successPluginNameEmbed.build());
                 } catch (IOException | NullPointerException exception) {
+                    if(exception instanceof FileNotFoundException) {
+                        event.replyError("This resource does not exist");
+                        return;
+                    }
                     MessageHelper.sendError(exception, event);
                 }
             }
