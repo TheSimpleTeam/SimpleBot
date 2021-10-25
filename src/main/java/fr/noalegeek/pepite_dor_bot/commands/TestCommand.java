@@ -2,8 +2,9 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+
+import java.util.ArrayList;
 
 public class TestCommand extends Command {
 
@@ -19,10 +20,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i = "spigot".toCharArray().length - 1; i > 0; i--){
-            stringBuilder.append("\"").append("spigot".substring(0, i)).append("\",");
-        }
-        event.reply(stringBuilder.toString());
+
     }
 }
