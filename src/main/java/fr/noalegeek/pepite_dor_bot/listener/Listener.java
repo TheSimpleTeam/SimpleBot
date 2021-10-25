@@ -48,7 +48,10 @@ public class Listener extends ListenerAdapter {
             new File(configPath.toUri()).createNewFile();
         }
         Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
-        if (gson.fromJson(reader, ServerConfig.class) == getServerConfig()) return;
+        if (gson.fromJson(reader, ServerConfig.class) == getServerConfig()) {
+            System.out.println("It is");
+            return;
+        }
         Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
         gson.toJson(getServerConfig(), writer);
         writer.close();
@@ -152,7 +155,7 @@ public class Listener extends ListenerAdapter {
             return;
         }
         if(message.startsWith(Main.getPrefix(event.getGuild()))) {
-            String[] args = message.substring(1).split("\\s+");
+            String[] args = message.substring(Main.getPrefix(event.getGuild()).length()).split("\\s+");
             if(args.length == 0) return;
             String cmdName = args[0];
             if(Main.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) ||

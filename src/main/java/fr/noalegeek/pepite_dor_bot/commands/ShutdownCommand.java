@@ -29,6 +29,6 @@ public class ShutdownCommand extends Command {
                 .setTitle("\u2705 " + MessageHelper.translateMessage("success.shutdown", event))
                 .setColor(Color.GREEN);
         event.reply(new MessageBuilder(successEmbed.build()).build());
-        event.getJDA().shutdownNow();
+        event.getJDA().shutdown();
     }
 }

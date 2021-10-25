@@ -27,6 +27,7 @@ package fr.noalegeek.pepite_dor_bot.utils;
 import com.caoccao.javet.exceptions.JavetException;
 import com.caoccao.javet.interop.V8Host;
 import com.caoccao.javet.interop.V8Runtime;
+import com.caoccao.javet.interop.converters.JavetProxyConverter;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -37,6 +38,7 @@ public class Eval {
 
     private final ScriptEngine engine;
     private V8Runtime v8Runtime;
+    private final JavetProxyConverter javetProxyConverter = new JavetProxyConverter();
     private final StringWriter writer;
 
     public Eval() {
@@ -47,17 +49,27 @@ public class Eval {
         context.setWriter(writer);
         try {
             this.v8Runtime = V8Host.getNodeInstance().createV8Runtime();
+            this.v8Runtime.setConverter(javetProxyConverter);
         } catch (JavetException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * @deprecated {@link Eval#getV8Runtime()}
+     * @return GraalJS's Script Engine
+     */
+    @Deprecated
     public ScriptEngine getEngine() {
         return engine;
     }
 
     public V8Runtime getV8Runtime() {
         return v8Runtime;
+    }
+
+    public JavetProxyConverter getJavetProxyConverter() {
+        return javetProxyConverter;
     }
 
     public StringWriter getWriter() {

@@ -29,6 +29,10 @@ public class MCServerCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        if(event.getArgs().isEmpty()) {
+            event.replyError("F U");
+            return;
+        }
         String[] args = event.getArgs().split("\\s+");
         Main.LOGGER.info(args[0]);
         try {
