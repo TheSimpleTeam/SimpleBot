@@ -2,11 +2,10 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.io.StringWriter;
 
 public class EvalCommand extends Command {
@@ -15,15 +14,12 @@ public class EvalCommand extends Command {
     private final StringWriter writer;
 
     public EvalCommand() {
-        System.setProperty("polyglot.js.nashorn-compat", "true");
         this.name = "eval";
         this.ownerCommand = true;
         this.hidden = true;
         this.guildOnly = true;
-        this.engine = new ScriptEngineManager().getEngineByName("graal.js");
-        ScriptContext context = engine.getContext();
-        this.writer = new StringWriter();
-        context.setWriter(writer);
+        this.engine = Main.eval.getEngine();
+        this.writer = Main.eval.getWriter();
     }
 
     @Override

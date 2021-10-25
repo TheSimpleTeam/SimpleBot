@@ -130,8 +130,16 @@ public class Listener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor() == event.getJDA().getSelfUser()) return;
+        if(event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
+            if(Main.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
+                event.getMessage().reply("My prefix is **" + Main.getServerConfig().prefix().get(event.getGuild().getId()) + "**").queue();
+                return;
+            }
+            event.getMessage().reply("My prefix is **" + Main.getClient().getPrefix() + "**").queue();
+            return;
+        }
         String message = event.getMessage().getContentRaw();
         LOGGER.info(MessageHelper.getTag(event.getAuthor()) + " a dit :\n" + message);
         if (getServerConfig().prohibitWords() == null) {
@@ -143,7 +151,7 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
-        if(message.startsWith("!")) {
+        if(message.startsWith(Main.getPrefix(event.getGuild()))) {
             String[] args = message.substring(1).split("\\s+");
             if(args.length == 0) return;
             String cmdName = args[0];

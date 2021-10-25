@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot;
 
+import com.caoccao.javet.exceptions.JavetException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -19,12 +20,15 @@ import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.gson.RecordTypeAdapterFactory;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
+import fr.noalegeek.pepite_dor_bot.utils.Eval;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
@@ -58,37 +62,32 @@ public class Main {
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new RecordTypeAdapterFactory()).setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
+    public static final Eval eval = new Eval();
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
 
     private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, JavetException {
         try {
             String arg = "";
             try {
                 arg = args[0];
-            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {
-            }
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) { }
+            setupLogs();
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
             LOGGER.info("Servers config loaded");
+            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing(getInfos().activities()[1])).enableIntents(EnumSet.allOf(GatewayIntent.class))
+                    .enableCache(CacheFlag.ONLINE_STATUS).build();
+            setupLocalizations();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
             return;
-        }
-        try {
-            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing(getInfos().activities()[1])).enableIntents(EnumSet.allOf(GatewayIntent.class)).enableCache(CacheFlag.ONLINE_STATUS).build();
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE, "Le token est invalide");
             return;
-        }
-        try {
-            setupLogs();
-            setupLocalizations();
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage());
         }
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
@@ -97,6 +96,7 @@ public class Main {
                 .setPrefix(infos.prefix())
                 .useHelpBuilder(true)
                 .setServerInvite(b.serverInvite)
+                .setPrefixFunction(Main::getPrefix)
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
@@ -304,6 +304,14 @@ public class Main {
         ServerConfig config = gson.fromJson(reader, ServerConfig.class);
         reader.close();
         return config;
+    }
+
+    public static String getPrefix(MessageReceivedEvent event) {
+        return getPrefix(event.isFromGuild() ? event.getGuild() : null);
+    }
+
+    public static String getPrefix(Guild guild) {
+        return guild != null && serverConfig.prefix().containsKey(guild.getId()) ? serverConfig.prefix().get(guild.getId()) : infos.prefix();
     }
 
     public static JDA getJda() {
