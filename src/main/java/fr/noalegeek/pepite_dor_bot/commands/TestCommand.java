@@ -3,12 +3,11 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-
-import java.util.ArrayList;
+import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
 
 public class TestCommand extends Command {
 
-    public TestCommand(){
+    public TestCommand() {
         this.category = CommandCategories.MISC.category;
         this.help = "Une commande de test selon les tests à faire.";
         this.cooldown = 5;
@@ -20,6 +19,22 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-
+        event.reply(DiscordFormatUtils.formatMultilineCodeBlock("""
+                package fr.noalegeek.pepite_dor_bot.commands;
+                
+                import import com.jagrosh.jdautilities.command.*
+                
+                public class ACommand extends Command {
+                    public ACommand() {
+                        this.name = "acommand";
+                    }
+                    
+                    @Override
+                    protected void execute(CommandEvent event) {
+                        event.reply(this);
+                    }
+                    
+                }
+                """, "java"));
     }
 }
