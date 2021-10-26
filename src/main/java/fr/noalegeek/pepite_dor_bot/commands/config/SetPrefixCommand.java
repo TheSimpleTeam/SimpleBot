@@ -55,6 +55,13 @@ public class SetPrefixCommand extends Command {
                 exception.printStackTrace();
             }
         }
+
+        if(Main.getInfos().prefix().equalsIgnoreCase(args[0]) && Main.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
+            Main.getServerConfig().prefix().remove(event.getGuild().getId());
+            event.reply("This prefix has been reset.");
+            return;
+        }
+
         Main.getServerConfig().prefix().put(event.getGuild().getId(), args[0]);
         try {
             Listener.saveConfigs();
