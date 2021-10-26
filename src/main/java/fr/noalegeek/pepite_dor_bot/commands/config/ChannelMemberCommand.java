@@ -15,8 +15,8 @@ public class ChannelMemberCommand extends Command {
         this.name = "channelmember";
         this.cooldown = 5;
         this.help = "help.channelMember";
-        this.example = "join 848965362971574282";
-        this.aliases = new String[]{"channelm", "cmember", "cm"};
+        this.example = "join 848965362971574282\nleave reset";
+        this.aliases = new String[]{"channelmembe","channelmemb","channelmem","channelme","channelm","channemember","channemembe","channememb","channemem","channeme","channem","channmember","channmembe","channmemb","channmem","channme","channm","chanmember","chanmembe","chanmemb","chanmem","chanme","chanm","chamember","chamembe","chamemb","chamem","chame","cham","chmember","chmembe","chmemb","chmem","chme","chm","cmember","cmembe","cmemb","cmem","cme","cm"};
         this.arguments = "arguments.channelMember";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;
@@ -75,17 +75,17 @@ public class ChannelMemberCommand extends Command {
             case "leave":
                 switch (args[1].toLowerCase(Locale.ROOT)) {
                     case "reset" -> {
-                        if (Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()) == null) {
+                        if (Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null) {
                             event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.notConfigured", event));
                             return;
                         }
-                        Main.getServerConfig().channelMemberRemove().remove(event.getGuild().getId());
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId())).getAsMention()));
+                        Main.getServerConfig().channelMemberLeave().remove(event.getGuild().getId());
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).getAsMention()));
                     }
                     case "this" -> {
                         GuildChannel channelMember = (GuildChannel) event.getChannel();
-                        if (Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()).equals(event.getChannel().getId())) {
-                            Main.getServerConfig().channelMemberRemove().put(event.getGuild().getId(), channelMember.getId());
+                        if (Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()).equals(event.getChannel().getId())) {
+                            Main.getServerConfig().channelMemberLeave().put(event.getGuild().getId(), channelMember.getId());
                             event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), channelMember.getAsMention()));
                             return;
                         }
@@ -100,9 +100,9 @@ public class ChannelMemberCommand extends Command {
                             event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.channelNull", event));
                             return;
                         }
-                        if (Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId()).equals(args[1].replaceAll("\\D+", ""))) {
-                            Main.getServerConfig().channelMemberRemove().put(event.getGuild().getId(), event.getGuild().getGuildChannelById(args[1].replaceAll("\\D+", "")).getId());
-                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberRemove().get(event.getGuild().getId())).getAsMention()));
+                        if (Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()).equals(args[1].replaceAll("\\D+", ""))) {
+                            Main.getServerConfig().channelMemberLeave().put(event.getGuild().getId(), event.getGuild().getGuildChannelById(args[1].replaceAll("\\D+", "")).getId());
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).getAsMention()));
                             return;
                         }
                         event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.leave.sameAsConfigured", event));

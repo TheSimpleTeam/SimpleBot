@@ -52,7 +52,7 @@ public class MessageHelper {
                 .setTitle("\u274C " + MessageHelper.translateMessage("text.commands.sendError.error", event))
                 .addField(MessageHelper.translateMessage("text.commands.sendError.sendError", event), exception.getMessage(), false)
                 .addField(MessageHelper.translateMessage("text.commands.sendError.command", event), Main.getPrefix(event.getGuild()) + command.getName(), false);
-        if(command.getArguments().length() != 0) sendErrorEmbed.addField(command.getArguments().length() == 1 ? MessageHelper.translateMessage("text.commands.sendError.arguments.singular", event) : MessageHelper.translateMessage("text.commands.sendError.arguments.plural", event), event.getMessage().getContentRaw(), false);
+        if(command.getArguments() == null || command.getArguments().length() != 0) sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event), event.getMessage().getContentRaw(), false);
         event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
     }
 
