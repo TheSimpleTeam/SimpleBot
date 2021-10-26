@@ -14,6 +14,7 @@ import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
 import fr.noalegeek.pepite_dor_bot.cli.commands.HelpCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
+import fr.noalegeek.pepite_dor_bot.commands.TempbanCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
@@ -45,6 +46,8 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -69,6 +72,7 @@ public class Main {
     private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
     public static void main(String[] args) throws IOException, InterruptedException, JavetException {
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
         try {
             String arg = "";
             try {
@@ -102,9 +106,6 @@ public class Main {
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
 
-        CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
-        cli.commandsListener();
-
         jda.awaitReady();
 
         //Removed onReady
@@ -125,6 +126,24 @@ public class Main {
                 }
             }
         }, 120_000, TimeUnit.MINUTES.toMillis(getInfos().autoSaveDelay()));
+
+        executorService.scheduleAtFixedRate(() -> serverConfig.tempBan().entrySet().stream()
+                .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
+                .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
+            serverConfig.tempBan().remove(e.getKey());
+            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue();
+            jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
+                    .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue();
+        }), 0, 1, TimeUnit.SECONDS);
+
+        executorService.schedule(() -> {
+            try {
+                CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
+                cli.commandsListener();
+            } catch (InterruptedException | IOException e) {
+                e.printStackTrace();
+            }
+        }, 5, TimeUnit.SECONDS);
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {

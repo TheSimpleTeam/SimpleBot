@@ -46,7 +46,9 @@ public class TestCommand implements CLICommand {
 
     @Override
     public void execute(CommandEvent event) {
-        if(event.args().length == 0) Main.LOGGER.info("Caca prout ?");
-        Main.LOGGER.info("You said " + String.join(" ", event.args()));
+        System.out.println(Main.getServerConfig().tempBan().size());
+        Main.getServerConfig().tempBan().forEach((s, s2) -> System.out.printf("""
+                Id: %s              GuildID: %s                  Time: %s
+                """, s.split("-")[0], s.split("-")[1], s2));
     }
 }
