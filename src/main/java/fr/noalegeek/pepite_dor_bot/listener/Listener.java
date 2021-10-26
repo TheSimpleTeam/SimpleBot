@@ -100,7 +100,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        EmbedBuilder embedMemberRemove = new EmbedBuilder()
+        EmbedBuilder embedMemberLeave = new EmbedBuilder()
                 .setThumbnail(event.getUser().getAvatarUrl())
                 .setTitle("**" + (event.getUser()).getName() + " a quitté le serveur __" + event.getGuild().getName() + "__ !**")
                 .addField("Membre", event.getUser().getAsMention(), false)
@@ -109,7 +109,7 @@ public class Listener extends ListenerAdapter {
                 .setColor(Color.RED);
         if (!getServerConfig().channelMemberLeave().containsKey(event.getGuild().getId())) {
             try {
-                event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(embedMemberRemove).build()).queue();
+                event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(embedMemberLeave).build()).queue();
             } catch (InsufficientPermissionException ex) {
                 event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) +
@@ -121,7 +121,7 @@ public class Listener extends ListenerAdapter {
             return;
         }
         try {
-            event.getGuild().getTextChannelById(getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(embedMemberRemove).build()).queue();
+            event.getGuild().getTextChannelById(getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(embedMemberLeave).build()).queue();
         } catch (InsufficientPermissionException ex) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.
                     sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) +
