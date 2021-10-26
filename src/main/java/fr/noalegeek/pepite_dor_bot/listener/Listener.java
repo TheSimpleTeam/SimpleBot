@@ -107,7 +107,7 @@ public class Listener extends ListenerAdapter {
                 .addField("➖ Membre perdu", "Nous sommes de nouveau à " + event.getGuild().getMemberCount() + " membres sur le serveur...", false)
                 .setTimestamp(Instant.now())
                 .setColor(Color.RED);
-        if (!getServerConfig().channelMemberRemove().containsKey(event.getGuild().getId())) {
+        if (!getServerConfig().channelMemberLeave().containsKey(event.getGuild().getId())) {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(embedMemberRemove).build()).queue();
             } catch (InsufficientPermissionException ex) {
@@ -121,7 +121,7 @@ public class Listener extends ListenerAdapter {
             return;
         }
         try {
-            event.getGuild().getTextChannelById(getServerConfig().channelMemberRemove().get(event.getGuild().getId())).sendMessage(new MessageBuilder(embedMemberRemove).build()).queue();
+            event.getGuild().getTextChannelById(getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(embedMemberRemove).build()).queue();
         } catch (InsufficientPermissionException ex) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.
                     sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) +
