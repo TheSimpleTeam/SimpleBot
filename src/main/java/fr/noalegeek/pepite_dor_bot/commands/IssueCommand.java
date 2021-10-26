@@ -81,7 +81,7 @@ public class IssueCommand extends Command {
                 """, event.getAuthor().getName(), event.getGuild().getName(), String.join(" ", getOrDefault(cmd, "body", event.getArgs()))));
             builder.create();
         } catch (IOException | ParseException exception) {
-            MessageHelper.sendError(exception, event);
+            MessageHelper.sendError(exception, event, this);
         }
     }
 

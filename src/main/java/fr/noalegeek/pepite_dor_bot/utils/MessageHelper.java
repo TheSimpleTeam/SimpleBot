@@ -29,7 +29,7 @@ public class MessageHelper {
     }
 
     public static Message syntaxError(CommandEvent event, Command command, String informations) {
-        EmbedBuilder syntaxEmbed = new EmbedBuilder()
+        EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
                 .setTimestamp(Instant.now())
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
@@ -38,15 +38,22 @@ public class MessageHelper {
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event), false)
                 .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
         if(informations != null) {
-            syntaxEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);
+            syntaxErrorEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);
         }
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
-        return new MessageBuilder(syntaxEmbed.build()).build();
+        return new MessageBuilder(syntaxErrorEmbed.build()).build();
     }
 
-    public static void sendError(Exception ex, CommandEvent event) {
-        event.reply(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + ex.getMessage());
-        Main.LOGGER.severe(ex.getMessage());
+    public static void sendError(Exception exception, CommandEvent event, Command command) {
+        EmbedBuilder sendErrorEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTimestamp(Instant.now())
+                .setTitle("\u274C " + MessageHelper.translateMessage("text.commands.sendError.error", event))
+                .addField(MessageHelper.translateMessage("text.commands.sendError.sendError", event), exception.getMessage(), false)
+                .addField(MessageHelper.translateMessage("text.commands.sendError.command", event), Main.getPrefix(event.getGuild()) + command.getName(), false);
+        if(command.getArguments().length() != 0) sendErrorEmbed.addField(command.getArguments().length() == 1 ? MessageHelper.translateMessage("text.commands.sendError.arguments.singular", event) : MessageHelper.translateMessage("text.commands.sendError.arguments.plural", event), event.getMessage().getContentRaw(), false);
+        event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
     }
 
     public static String formatShortDate(OffsetDateTime date) {

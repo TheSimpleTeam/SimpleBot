@@ -19,22 +19,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply(DiscordFormatUtils.formatMultilineCodeBlock("""
-                package fr.noalegeek.pepite_dor_bot.commands;
-                
-                import import com.jagrosh.jdautilities.command.*
-                
-                public class ACommand extends Command {
-                    public ACommand() {
-                        this.name = "acommand";
-                    }
-                    
-                    @Override
-                    protected void execute(CommandEvent event) {
-                        event.reply(this);
-                    }
-                    
-                }
-                """, "java"));
+
     }
 }

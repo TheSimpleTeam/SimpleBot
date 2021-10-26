@@ -25,7 +25,7 @@ public class GetBotIpCommand extends Command {
         try {
             event.replyInDm(String.format(MessageHelper.translateMessage("success.getBotIp", event), RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.ipify.org/"))));
         } catch (IOException ex) {
-            MessageHelper.sendError(ex, event);
+            MessageHelper.sendError(ex, event, this);
         }
     }
 }

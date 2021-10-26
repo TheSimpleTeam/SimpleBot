@@ -56,7 +56,7 @@ public class MCServerCommand extends Command {
                     .setColor(Color.GREEN);
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (IOException exception) {
-            MessageHelper.sendError(exception, event);
+            MessageHelper.sendError(exception, event, this);
         }
     }
 }

@@ -34,7 +34,7 @@ public class UnshortURLCommand extends Command {
         try {
             event.reply(String.format("`%s`", getURL(event.getArgs().split("\\s")[0])));
         } catch (IOException e) {
-            MessageHelper.sendError(e, event);
+            MessageHelper.sendError(e, event, this);
         }
     }
 

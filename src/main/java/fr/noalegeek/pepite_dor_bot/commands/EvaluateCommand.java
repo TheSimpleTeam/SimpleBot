@@ -17,17 +17,18 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class EvalCommand extends Command {
+public class EvaluateCommand extends Command {
 
     private final V8Runtime engine;
     private final PythonInterpreter pyInterpreter;
     private final StringWriter writer;
 
-    public EvalCommand() {
-        this.name = "eval";
+    public EvaluateCommand() {
+        this.name = "evaluate";
         this.ownerCommand = true;
-        this.hidden = true;
-        this.guildOnly = true;
+        this.help = "help.eval";
+        this.aliases = new String[]{"eval", "evaluat", "evalua", "eva", "ev", "e", "evalu"};
+        this.arguments = "arguments.eval";
         this.engine = Main.eval.getV8Runtime();
         this.pyInterpreter = Main.eval.getPyInterpreter();
         this.writer = Main.eval.getWriter();
@@ -71,18 +72,14 @@ public class EvalCommand extends Command {
             addV8Module(EmbedBuilder.class);
             addV8Module(MessageHelper.class);
             Object eval = engine.getExecutor(args).executeObject();
-            if(eval == null) {
-                event.reply("Evaluated Successfully");
-            } else {
-                event.reply("Evaluated Successfully:\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
-            }
+            event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : MessageHelper.translateMessage("success.eval", event) + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
             engine.getGlobalObject().forEach(value -> engine.getGlobalObject().delete(value));
         } catch (JavetException e) {
             if(e.getMessage().startsWith("ReferenceError") || e.getMessage().startsWith("TypeError")) {
                 event.replyError(e.getMessage());
                 return;
             }
-            MessageHelper.sendError(e, event);
+            MessageHelper.sendError(e, event, this);
         }
     }
 
@@ -97,11 +94,7 @@ public class EvalCommand extends Command {
         pyInterpreter.set("member", event.getMember());
         pyInterpreter.exec(args);
         String eval = writer.toString();
-        if(eval == null || eval.isEmpty()) {
-            event.reply("Evaluated Successfully");
-        } else {
-            event.reply("Evaluated Successfully:\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
-        }
+        event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : MessageHelper.translateMessage("success.eval", event) + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
         pyInterpreter.cleanup();
         writer.getBuffer().setLength(0);
     }

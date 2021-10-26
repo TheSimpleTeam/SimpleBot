@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-package fr.noalegeek.pepite_dor_bot.commands;
+package fr.noalegeek.pepite_dor_bot.commands.config;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import net.dv8tion.jda.api.Permission;
 
 import java.io.File;
@@ -55,6 +56,11 @@ public class SetPrefixCommand extends Command {
             }
         }
         Main.getServerConfig().prefix().put(event.getGuild().getId(), args[0]);
+        try {
+            Listener.saveConfigs();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         event.replySuccess("My new prefix is **" + args[0] + "**");
     }
 

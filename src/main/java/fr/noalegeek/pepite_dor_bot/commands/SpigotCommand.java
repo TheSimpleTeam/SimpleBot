@@ -82,7 +82,7 @@ public class SpigotCommand extends Command {
                     event.reply(new MessageBuilder(errorPluginIDNullEmbed.build()).build());
                     return;
                 }
-                MessageHelper.sendError(e, event);
+                MessageHelper.sendError(e, event, this);
             } catch (NumberFormatException e){
                 EmbedBuilder errorNumberTooLargeEmbed = new EmbedBuilder()
                         .setColor(Color.RED)
@@ -116,7 +116,7 @@ public class SpigotCommand extends Command {
                         event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
                         return;
                     }
-                    MessageHelper.sendError(exception, event);
+                    MessageHelper.sendError(exception, event, this);
                 }
             } else {
                 //Search for plugin with his name
@@ -142,7 +142,7 @@ public class SpigotCommand extends Command {
                         event.reply(new MessageBuilder(errorPluginNameNullEmbed.build()).build());
                         return;
                     }
-                    MessageHelper.sendError(e, event);
+                    MessageHelper.sendError(e, event, this);
                 }
             }
         }

@@ -82,7 +82,7 @@ public class GithubCommand extends Command {
                             .addField(MessageHelper.translateMessage("success.github.search.mainLanguage", event), repository.getLanguage(), false);
                     event.reply(new MessageBuilder(successSearchEmbed.build()).build());
                 } catch (IOException ex) {
-                    MessageHelper.sendError(ex, event);
+                    MessageHelper.sendError(ex, event, this);
                 }
                 break;
             case "list":
@@ -97,7 +97,7 @@ public class GithubCommand extends Command {
                     }
                     event.reply(new MessageBuilder(successListEmbed.build()).build());
                 } catch (IOException ex) {
-                    MessageHelper.sendError(ex, event);
+                    MessageHelper.sendError(ex, event, this);
                     return;
                 }
                 break;
