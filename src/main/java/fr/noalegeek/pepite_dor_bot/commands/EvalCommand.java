@@ -6,13 +6,22 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
+import fr.noalegeek.pepite_dor_bot.utils.Eval;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import org.python.util.PythonInterpreter;
+
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class EvalCommand extends Command {
 
     private final V8Runtime engine;
+    private final PythonInterpreter pyInterpreter;
+    private final StringWriter writer;
 
     public EvalCommand() {
         this.name = "eval";
@@ -20,37 +29,40 @@ public class EvalCommand extends Command {
         this.hidden = true;
         this.guildOnly = true;
         this.engine = Main.eval.getV8Runtime();
+        this.pyInterpreter = Main.eval.getPyInterpreter();
+        this.writer = Main.eval.getWriter();
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        String args = event.getArgs().replaceAll("([^(]+?)\\s*->", "function($1)");
-        /*try {
-            engine.put("event", event);
-            engine.put("message", event.getMessage());
-            engine.put("channel", event.getChannel());
-            engine.put("args", event.getArgs().split("\\s+"));
-            engine.put("api", event.getJDA());
-            engine.put("guild", event.getGuild());
-            engine.put("member", event.getMember());
-            engine.eval(args);
-            if(writer.toString() == null){
-                event.reply("Evaluated Successfully");
-            }else{
-                event.reply("Evaluated Successfully:\n```\n" + writer + " ```");
+        String args = event.getArgs();
+        Eval.Languages language = Eval.Languages.JS;
+        if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format)) {
+            if(Eval.Languages.isLanguageAvailable(args.split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")).isPresent()) {
+                language = Eval.Languages.isLanguageAvailable(args.split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")).get();
             }
-        } catch (Exception ex) {
-            MessageHelper.sendError(ex, event);
-        }*/
+            List<String> list = new LinkedList<>(Arrays.asList(args.split("\n")));
+            list.remove(0);
+            list.remove(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
+            args = String.join("\n", list);
+        }
+        eval(language, args, event);
+    }
+
+    private void eval(Eval.Languages language, String arg, CommandEvent event) {
+        switch (language) {
+            case JS -> evalJS(arg, event);
+            case PY -> evalPY(arg, event);
+        }
+    }
+
+    private void evalJS(String args, CommandEvent event) {
         try {
-            /*IV8Module _event = engine.toV8Value(event);
-            _event.setResourceName("event");
-            engine.addV8Module(_event);*/
             addV8Module(event, "event");
             addV8Module(event.getMessage(), "message");
             addV8Module(event.getChannel(), "channel");
             addV8Module(args, "args");
-            addV8Module(event.getJDA(), "api");
+            addV8Module(event.getJDA(), "jda");
             addV8Module(event.getClient(), "client");
             addV8Module(event.getGuild(), "guild");
             addV8Module(event.getMember(), "member");
@@ -66,12 +78,32 @@ public class EvalCommand extends Command {
             }
             engine.getGlobalObject().forEach(value -> engine.getGlobalObject().delete(value));
         } catch (JavetException e) {
-            if(e.getMessage().startsWith("ReferenceError")) {
+            if(e.getMessage().startsWith("ReferenceError") || e.getMessage().startsWith("TypeError")) {
                 event.replyError(e.getMessage());
                 return;
             }
             MessageHelper.sendError(e, event);
         }
+    }
+
+    private void evalPY(String args, CommandEvent event) {
+        pyInterpreter.set("event", event);
+        pyInterpreter.set("message", event.getMessage());
+        pyInterpreter.set("channel", event.getChannel());
+        pyInterpreter.set("args", args);
+        pyInterpreter.set("jda", event.getJDA());
+        pyInterpreter.set("client", event.getClient());
+        pyInterpreter.set("guild", event.getGuild());
+        pyInterpreter.set("member", event.getMember());
+        pyInterpreter.exec(args);
+        String eval = writer.toString();
+        if(eval == null || eval.isEmpty()) {
+            event.reply("Evaluated Successfully");
+        } else {
+            event.reply("Evaluated Successfully:\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
+        }
+        pyInterpreter.cleanup();
+        writer.getBuffer().setLength(0);
     }
 
     private void addV8Module(Object o, String name) throws JavetException {

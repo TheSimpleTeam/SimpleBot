@@ -28,17 +28,42 @@ import com.caoccao.javet.exceptions.JavetException;
 import com.caoccao.javet.interop.V8Host;
 import com.caoccao.javet.interop.V8Runtime;
 import com.caoccao.javet.interop.converters.JavetProxyConverter;
+import org.python.util.PythonInterpreter;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class Eval {
 
+    public enum Languages {
+        JS("javascript"),
+        PY("python"),
+        ;
+
+        private final String[] aliases;
+
+        Languages(String... aliases) {
+            this.aliases = aliases;
+        }
+
+        public String[] getAliases() {
+            return aliases;
+        }
+
+        public static Optional<Languages> isLanguageAvailable(String language) {
+            return Arrays.stream(values()).filter(languages -> languages.name().equalsIgnoreCase(language) ||
+                    Arrays.stream(languages.getAliases()).anyMatch(s -> s.equalsIgnoreCase(language))).findFirst();
+        }
+    }
+
     private final ScriptEngine engine;
     private V8Runtime v8Runtime;
-    private final JavetProxyConverter javetProxyConverter = new JavetProxyConverter();
+    private final JavetProxyConverter javetProxyConverter;
+    private final PythonInterpreter pyInterpreter;
     private final StringWriter writer;
 
     public Eval() {
@@ -47,6 +72,9 @@ public class Eval {
         ScriptContext context = engine.getContext();
         this.writer = new StringWriter();
         context.setWriter(writer);
+        this.javetProxyConverter = new JavetProxyConverter();
+        this.pyInterpreter = new PythonInterpreter();
+        this.pyInterpreter.setOut(writer);
         try {
             this.v8Runtime = V8Host.getNodeInstance().createV8Runtime();
             this.v8Runtime.setConverter(javetProxyConverter);
@@ -70,6 +98,10 @@ public class Eval {
 
     public JavetProxyConverter getJavetProxyConverter() {
         return javetProxyConverter;
+    }
+
+    public PythonInterpreter getPyInterpreter() {
+        return pyInterpreter;
     }
 
     public StringWriter getWriter() {

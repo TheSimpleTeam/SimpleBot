@@ -37,11 +37,12 @@ dependencies {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:1759267058'
-    //GraalJS
+    //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
-    // necessary to integrate with legacy ScriptEngine based implementation
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
+    implementation("com.caoccao.javet:javet:1.0.2")
+    implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.4'
     //Other
@@ -49,7 +50,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation("com.google.guava:guava:31.0.1-jre")
     implementation group: 'org.kohsuke', name: 'github-api', version: '1.135'
-    implementation("com.caoccao.javet:javet:1.0.2")
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.10.1'
