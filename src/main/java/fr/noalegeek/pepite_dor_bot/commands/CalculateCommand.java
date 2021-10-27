@@ -21,7 +21,7 @@ public class CalculateCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if (event.getArgs().split("\\s+").length == 0 || event.getArgs().isEmpty()) {
-            event.reply(MessageHelper.syntaxError(event, this, null));
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         if(!new Expression(replaceAll(event.getArgs().replaceAll("\\s+", ""))).checkSyntax()){

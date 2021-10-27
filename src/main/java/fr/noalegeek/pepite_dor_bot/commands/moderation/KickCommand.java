@@ -32,7 +32,7 @@ public class KickCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
-            event.reply(MessageHelper.syntaxError(event, this, null));
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         Main.getJda().retrieveUserById(args[1].replaceAll("\\D+","")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {

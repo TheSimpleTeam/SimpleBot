@@ -97,6 +97,7 @@
   "help.shutdown": "Éteint le bot.",
   "help.spigot": "Donne le nom, le lien, l\u0027ID et la description d\u0027un plugin Spigot en le cherchant par son ID ou par son nom ou cherche un utilisateur Spigot.",
   "help.suggestion": "Envoie une suggestion aux développeurs.",
+  "help.tempban": "Banni temporairement selon le temps spécifié un membre avec son identifiant/sa mention.",
   "help.unban": "Débanni un membre seulement la personne est déjà banni du serveur.",
   "help.userInfo": "Donne l\u0027identifiant, la date de création du compte, la date de quand a-t-il rejoint le serveur, son activité et son surnom s\u0027il en a un du membre/de l\u0027utilisateur avec son identifiant et sa mention. Si vous ne mettez pas d\u0027arguments, le bot va vous donner vos informations.",
   "success.ban": "%s a bien été banni %s.",

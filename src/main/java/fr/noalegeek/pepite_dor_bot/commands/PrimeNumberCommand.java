@@ -21,7 +21,7 @@ public class PrimeNumberCommand extends Command {
         if(event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2) {
-            event.reply(MessageHelper.syntaxError(event,this, null) + "Le nombre à spécifier a pour limite " + Long.MAX_VALUE  + ".");
+            MessageHelper.syntaxError(event,this, "Le nombre à spécifier a pour limite " + Long.MAX_VALUE  + ".");
             return;
         }
         try {
@@ -52,7 +52,8 @@ public class PrimeNumberCommand extends Command {
                     break;
             }
         } catch(NumberFormatException ex) {
-            event.reply("Le second argument ne peut contenir des lettres.\n " + MessageHelper.syntaxError(event, this, null));
+            event.reply("Le second argument ne peut contenir des lettres.");
+            MessageHelper.syntaxError(event, this, null);
         }
     }
 

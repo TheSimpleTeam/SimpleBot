@@ -33,7 +33,7 @@ public class BanCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2 && args.length != 3) {
-            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.ban", event)));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.ban", event));
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {

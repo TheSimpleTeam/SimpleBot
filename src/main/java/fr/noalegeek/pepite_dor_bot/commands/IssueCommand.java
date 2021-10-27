@@ -53,7 +53,7 @@ public class IssueCommand extends Command {
         CommandLineParser parser = new DefaultParser();
 
         if(args.length == 0) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
 

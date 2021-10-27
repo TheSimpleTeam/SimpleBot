@@ -25,7 +25,7 @@ public class LocalizationCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1 || Arrays.stream(Main.getLangs()).noneMatch(s -> s.equalsIgnoreCase(args[0]))) {
-            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.localization", event)));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.localization", event));
             return;
         }
         if(args[0].equals(Main.getServerConfig().language().get(event.getGuild().getId()))){

@@ -31,7 +31,7 @@ public class ChannelMemberCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2) {
-            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event));
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -56,7 +56,7 @@ public class ChannelMemberCommand extends Command {
                     }
                     default -> {
                         if (args[1].replaceAll("\\D+", "").isEmpty()) {
-                            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
+                            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event));
                             return;
                         }
                         if (event.getGuild().getGuildChannelById(args[1].replaceAll("\\D+", "")) == null) {
@@ -93,7 +93,7 @@ public class ChannelMemberCommand extends Command {
                     }
                     default -> {
                         if (args[1].replaceAll("\\D+", "").isEmpty()) {
-                            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
+                            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event));
                             return;
                         }
                         if (event.getGuild().getGuildChannelById(args[1].replaceAll("\\D+", "")) == null) {
@@ -110,7 +110,7 @@ public class ChannelMemberCommand extends Command {
                 }
                 break;
             default:
-                event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event)));
+                MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event));
         }
     }
 }

@@ -56,7 +56,7 @@ public class SpigotCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(event.getArgs().replaceAll("\\s+", "").isEmpty()) {
-            event.reply(MessageHelper.syntaxError(event, this, null));
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         if(args[0].chars().allMatch(Character::isDigit)) {

@@ -27,7 +27,7 @@ public class SayCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()){
-            event.reply(MessageHelper.syntaxError(event,this, "syntax.say"));
+            MessageHelper.syntaxError(event,this, "syntax.say");
             return;
         }
         EmbedBuilder successEmbed = new EmbedBuilder()

@@ -33,7 +33,7 @@ public class UnbanCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
-            event.reply(MessageHelper.syntaxError(event, this, null));
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {

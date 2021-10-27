@@ -25,7 +25,7 @@ public class TranslateCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getMessage().getContentRaw().contains("--lang")) {
-            event.reply(MessageHelper.syntaxError(event, this, null));
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         String[] args = event.getArgs().split(" --lang ");

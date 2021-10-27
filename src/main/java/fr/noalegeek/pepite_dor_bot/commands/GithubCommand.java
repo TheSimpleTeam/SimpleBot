@@ -43,7 +43,7 @@ public class GithubCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3) {
-            event.reply(new MessageBuilder(MessageHelper.syntaxError(event, this)).build());
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         if(isCommandDisabled()) {

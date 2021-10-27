@@ -39,7 +39,7 @@ public class ProhibitCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2) {
-            event.reply(MessageHelper.syntaxError(event,this, MessageHelper.translateMessage("syntax.prohibit", event)));
+            MessageHelper.syntaxError(event,this, MessageHelper.translateMessage("syntax.prohibit", event));
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -76,7 +76,7 @@ public class ProhibitCommand extends Command {
                 Main.getServerConfig().prohibitWords().remove(event.getGuild().getId());
                 break;
             default:
-                event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.prohibit", event)));
+                MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.prohibit", event));
                 break;
         }
     }

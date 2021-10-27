@@ -35,7 +35,7 @@ public class PurgeCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1) {
-            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event)));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event));
             return;
         }
         int clearMessages = 1;
@@ -49,7 +49,7 @@ public class PurgeCommand extends Command {
                 clearMessages = Integer.parseInt(args[0]);
             }
         } catch (NumberFormatException ignore) {
-            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event)));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event));
             return;
         }
         try {

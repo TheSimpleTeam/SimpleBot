@@ -28,7 +28,7 @@ public class InviteCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(event.getArgs().length() == 0) {
-            event.reply(MessageHelper.syntaxError(event, this, "syntax.invite"));
+            MessageHelper.syntaxError(event, this, "syntax.invite");
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -50,7 +50,7 @@ public class InviteCommand extends Command {
                         .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false);
                 event.reply(new MessageBuilder(successBotEmbed.build()).build());
             }
-            default -> event.reply(MessageHelper.syntaxError(event, this, "syntax.invite"));
+            default -> MessageHelper.syntaxError(event, this, "syntax.invite");
         }
     }
 }

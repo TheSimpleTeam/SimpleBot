@@ -26,7 +26,7 @@ public class MuteCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
-            event.reply(MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.mute", event)));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.mute", event));
             return;
         }
         if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){

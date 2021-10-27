@@ -44,7 +44,7 @@ public class TempbanCommand extends Command {
     public TempbanCommand() {
         this.name = "tempban";
         this.arguments = "<mention> <time> [Reason]";
-        this.help = "error.translateMessage";
+        this.help = "help.tempban";
     }
 
     private enum Dates {
@@ -54,8 +54,7 @@ public class TempbanCommand extends Command {
         DAYS("d"),
         WEEKS("w"),
         MONTHS("m"),
-        YEARS("y"),
-        ;
+        YEARS("y");
 
         private final String s;
 
@@ -74,14 +73,14 @@ public class TempbanCommand extends Command {
 
         String[] args = event.getArgs().split("\\s+");
         if(args.length < 2 || !DiscordRegexPattern.USER_MENTION.matcher(args[0]).matches() || event.getMessage().getMentionedMembers().isEmpty()) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
 
         String date = args[1].replaceAll("\\d+", "");
         Optional<Dates> opDate = Arrays.stream(Dates.values()).filter(dates -> dates.name().equalsIgnoreCase(date) || dates.s.equalsIgnoreCase(date)).findFirst();
         if (opDate.isEmpty()) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         Dates dates = opDate.get();
@@ -89,7 +88,7 @@ public class TempbanCommand extends Command {
         try {
             time = Integer.parseInt(args[1].replaceAll("\\D+", ""));
         } catch (NumberFormatException ex) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         String reason = "No Reason";

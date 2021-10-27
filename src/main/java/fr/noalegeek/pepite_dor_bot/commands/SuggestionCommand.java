@@ -26,7 +26,7 @@ public class SuggestionCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
-        if(event.getArgs().isEmpty()) event.reply(MessageHelper.syntaxError(event,this, null));
+        if(event.getArgs().isEmpty()) MessageHelper.syntaxError(event,this, null);
         if(event.getJDA().getGuildById(846048803554852904L).getTextChannelById(848599555540123648L) == null){
             EmbedBuilder errorChannelNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
@@ -37,7 +37,7 @@ public class SuggestionCommand extends Command {
             return;
         }
         EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle("\u1F4A" + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
+                .setTitle(UnicodeCharacters.electricLightBulbEmoji + " " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
                 .setColor(Color.YELLOW)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                 .setTimestamp(Instant.now())

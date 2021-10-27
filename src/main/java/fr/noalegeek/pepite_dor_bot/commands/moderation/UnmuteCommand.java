@@ -30,7 +30,7 @@ public class UnmuteCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
-            event.reply(MessageHelper.syntaxError(event, this, null));
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         if(MuteCommand.isMutedRoleHere(event)){
