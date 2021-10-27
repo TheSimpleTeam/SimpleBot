@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package fr.noalegeek.pepite_dor_bot.commands;
+package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
