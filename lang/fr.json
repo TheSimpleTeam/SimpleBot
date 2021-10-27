@@ -65,6 +65,7 @@
   "error.translateMessage.error": "Erreur ! Le clé `%s` n\u0027existe pas.",
   "error.translateMessage.key": "Clé",
   "error.translateMessage.lineNumber": "Numéro de la ligne où a été utilisé cette clé",
+  "error.translateMessage.method": "Méthode où a été utilisé cette clé",
   "error.unban": "Vous ne pouvez pas débannir %s car il n\u0027est pas banni du serveur.",
   "error.unmute.mutedRoleDontExist": "Le rôle configuré par défaut n\u0027est pas présent donc je ne peux pas démuter.",
   "error.unmute.notMuted": "Vous ne pouvez pas démuter %s car il n\u0027est pas muté.",

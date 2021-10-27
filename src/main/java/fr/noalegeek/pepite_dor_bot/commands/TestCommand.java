@@ -25,9 +25,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply("\uD83D\uDCA1");
-        if(event.getArgs().isEmpty()) return;
         event.reply(MessageHelper.translateMessage("sussy.baka", event));
-
     }
 }

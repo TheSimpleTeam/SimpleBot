@@ -76,15 +76,11 @@ public class MessageHelper {
      * @return the translated value
      * @throws NullPointerException if the key does not exist in any localization files.
      */
-    public static String translateMessage(String key, CommandEvent event) {
-        return translateMessage(key, event, false);
-    }
-
-    private static String translateMessage(String key, CommandEvent event, boolean ignoreError) {
+    private static String translateMessage(String key, CommandEvent event) {
         String lang = Main.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en");
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
-        if (!ignoreError && Main.getLocalizations().get("en").get(key) == null) {
+        if (Main.getLocalizations().get("en").get(key) == null) {
             EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
@@ -92,6 +88,7 @@ public class MessageHelper {
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
                     .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
                     .addField(MessageHelper.translateMessage("error.translateMessage.class", event), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getMethodName(), false)
                     .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getLineNumber()), false);
             event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
             throw new NullPointerException();
