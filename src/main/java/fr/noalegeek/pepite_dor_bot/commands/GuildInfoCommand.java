@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -25,7 +26,7 @@ public class GuildInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle("\u2139 " + String.format(MessageHelper.translateMessage("success.guildInfo.serverName", event), event.getGuild().getName()))
+                .setTitle(UnicodeCharacters.informationSourceEmoji + " " + String.format(MessageHelper.translateMessage("success.guildInfo.serverName", event), event.getGuild().getName()))
                 .setThumbnail(event.getGuild().getIconUrl())
                 .addField(MessageHelper.translateMessage("success.guildInfo.nitroLevel", event), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
                 .addField(MessageHelper.translateMessage("success.guildInfo.serverOwner", event), event.getGuild().getOwner().getEffectiveName(), false)

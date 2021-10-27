@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +28,7 @@ public class BotInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle("\u2139 " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), event.getSelfMember().getEffectiveName()))
+                .setTitle(UnicodeCharacters.informationSourceEmoji + " " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), event.getSelfMember().getEffectiveName()))
                 .setTimestamp(Instant.now())
                 .setColor(Color.BLUE)
                 .setThumbnail(event.getSelfUser().getEffectiveAvatarUrl())

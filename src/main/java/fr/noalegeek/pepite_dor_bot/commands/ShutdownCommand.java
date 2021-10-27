@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
@@ -26,7 +27,7 @@ public class ShutdownCommand extends Command {
         EmbedBuilder successEmbed = new EmbedBuilder()
                 .setTimestamp(Instant.now())
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                .setTitle("\u2705 " + MessageHelper.translateMessage("success.shutdown", event))
+                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.shutdown", event))
                 .setColor(Color.GREEN);
         event.reply(new MessageBuilder(successEmbed.build()).build());
         event.getJDA().shutdown();

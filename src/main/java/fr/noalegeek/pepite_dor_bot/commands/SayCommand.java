@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -31,7 +32,7 @@ public class SayCommand extends Command {
             return;
         }
         EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle("\u2705 " + MessageHelper.translateMessage("success.say.success", event))
+                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.say.success", event))
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .setDescription(event.getArgs());

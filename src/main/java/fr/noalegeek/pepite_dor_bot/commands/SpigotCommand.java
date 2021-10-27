@@ -64,7 +64,7 @@ public class SpigotCommand extends Command {
             try {
                 Resource pluginId = new Resource(Integer.parseInt(args[0]));
                 EmbedBuilder successPluginIDEmbed = new EmbedBuilder()
-                        .setTitle("\u2705 " + MessageHelper.translateMessage("success.spigot.pluginID.success", event))
+                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.spigot.pluginID.success", event))
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginName", event), pluginId.getResourceName(), false)
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginLink", event), pluginId.getResourceLink(), false)
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginID", event), args[0], false)
@@ -98,7 +98,7 @@ public class SpigotCommand extends Command {
                 try {
                     List<Author> users = Author.getByName(args[1]);
                     EmbedBuilder successUserEmbed = new EmbedBuilder()
-                            .setTitle("\u2705 " + String.format(MessageHelper.translateMessage("success.spigot.user.success", event), args[1]))
+                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.spigot.user.success", event), args[1]))
                             .setTimestamp(Instant.now())
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                             .setColor(Color.GREEN)
@@ -124,7 +124,7 @@ public class SpigotCommand extends Command {
                 try {
                     List<Resource> resources = Resource.getResourcesByName(event.getArgs());
                     EmbedBuilder successPluginNameEmbed = new EmbedBuilder()
-                            .setTitle(resources.size() == 1 ? String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.singular", event), "\u2705") : String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.plural", event), "\u2705"))
+                            .setTitle(resources.size() == 1 ? String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.singular", event), UnicodeCharacters.whiteHeavyCheckMarkEmoji) : String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.plural", event), UnicodeCharacters.whiteHeavyCheckMarkEmoji))
                             .setThumbnail("https://static.spigotmc.org/img/spigot.png")
                             .setTimestamp(Instant.now())
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())

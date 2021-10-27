@@ -72,7 +72,7 @@ public class GithubCommand extends Command {
                     EmbedBuilder successSearchEmbed = new EmbedBuilder()
                             .setTimestamp(Instant.now())
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                            .setTitle("\u2705 " + MessageHelper.translateMessage("success.github.search.success", event))
+                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.github.search.success", event))
                             .setThumbnail(repository.getOwner().getAvatarUrl())
                             .setColor(getColor(repository.getLanguage()))
                             .addField(MessageHelper.translateMessage("success.github.search.repositoryName", event), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
@@ -90,7 +90,7 @@ public class GithubCommand extends Command {
                 try {
                     EmbedBuilder successListEmbed = new EmbedBuilder()
                             .setTimestamp(Instant.now())
-                            .setTitle("\u2705 " + String.format(MessageHelper.translateMessage("success.github.list", event), name))
+                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.github.list", event), name))
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                             .setThumbnail(github.getUser(args[1]).getAvatarUrl());
                     for (String ghname : github.getUser(args[1]).getRepositories().keySet()) {

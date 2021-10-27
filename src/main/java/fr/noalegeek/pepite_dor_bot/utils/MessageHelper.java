@@ -76,7 +76,7 @@ public class MessageHelper {
      * @return the translated value
      * @throws NullPointerException if the key does not exist in any localization files.
      */
-    private static String translateMessage(String key, CommandEvent event) {
+    public static String translateMessage(String key, CommandEvent event) {
         String lang = Main.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en");
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
