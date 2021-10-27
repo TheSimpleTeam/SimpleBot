@@ -26,11 +26,15 @@ package fr.noalegeek.pepite_dor_bot.utils;
 
 public class UnicodeCharacters {
 
-    public static String plusExponent = "⁺";
-    public static String minusExponent = "⁻";
+    public static String crossMarkEmoji = "\u274C";
+    public static String electricLightBulbEmoji = "\uD83D\uDCA1";
+    public static String whiteHeavyCheckMarkEmoji = "\u2705";
+    public static String informationSourceEmoji = "\u2139";
 
-    public static String[] getExponents() {
-        return new String[]{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"};
+    public static String plusExponent = "\u207A";
+    public static String minusExponent = "\u207B";
+
+    public static String[] getNumeralExponents() {
+        return new String[]{"\u2070", "\u00B9", "\u00B2", "\u00B3", "\u2074", "\u2075", "\u2076", "\u2077", "\u2078", "\u2079"};
     }
-
 }
