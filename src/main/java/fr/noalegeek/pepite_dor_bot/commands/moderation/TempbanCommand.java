@@ -68,7 +68,7 @@ public class TempbanCommand extends Command {
     protected void execute(CommandEvent event) {
         //TODO: Fix syntax error message.
         if(event.getArgs().isEmpty()) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
 

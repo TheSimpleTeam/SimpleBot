@@ -78,7 +78,7 @@ public class MessageHelper {
      * @return the translated value
      * @throws NullPointerException if the key does not exist in any localization files.
      */
-    public static String translateMessage(String key, CommandEvent event) { 
+    public static String translateMessage(String key, CommandEvent event) {
         return translateMessage(key, event, false);
     }
 
@@ -87,6 +87,14 @@ public class MessageHelper {
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
         if (!ignoreError && Main.getLocalizations().get("en").get(key) == null) {
+            EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
+                    .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), );
+            event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
             event.reply(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + String.format(translateMessage("error.translateMessage",
                     event), key));
             throw new NullPointerException(String.format(translateMessage("error.translateMessage", event), key));

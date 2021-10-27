@@ -108,7 +108,7 @@ public class GithubCommand extends Command {
     }
 
     private String getLicense(GHRepository repo, CommandEvent event) throws IOException {
-        return repo.getLicense() == null ? MessageHelper.translateMessage("text.github.noLicense", event) : repo.getLicense().getName();
+        return repo.getLicense() == null ? MessageHelper.translateMessage("success.github.noLicense", event) : repo.getLicense().getName();
     }
 
     private String readmeString(String readme) {

@@ -14,7 +14,7 @@ import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
 import fr.noalegeek.pepite_dor_bot.cli.commands.HelpCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
-import fr.noalegeek.pepite_dor_bot.commands.TempbanCommand;
+import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
