@@ -14,6 +14,8 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
+import static java.lang.StackWalker.Option.RETAIN_CLASS_REFERENCE;
+
 public class MessageHelper {
 
     public static String getTag(final User user) {
@@ -33,7 +35,7 @@ public class MessageHelper {
                 .setColor(Color.RED)
                 .setTimestamp(Instant.now())
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                .setTitle("\u274C " + String.format(translateMessage("text.commands.syntaxError", event), command.getName()))
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage("text.commands.syntaxError", event), command.getName()))
                 .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(),false)
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event), false)
                 .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
@@ -49,7 +51,7 @@ public class MessageHelper {
                 .setColor(Color.RED)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                 .setTimestamp(Instant.now())
-                .setTitle("\u274C " + MessageHelper.translateMessage("text.commands.sendError.error", event))
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.sendError.error", event))
                 .addField(MessageHelper.translateMessage("text.commands.sendError.sendError", event), exception.getMessage(), false)
                 .addField(MessageHelper.translateMessage("text.commands.sendError.command", event), Main.getPrefix(event.getGuild()) + command.getName(), false);
         if(command.getArguments() == null || command.getArguments().isEmpty()){
@@ -91,13 +93,12 @@ public class MessageHelper {
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
-                    .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
                     .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), );
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getLineNumber()), false);
             event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
-            event.reply(formattedMention(event.getAuthor()) + translateMessage("text.sendError", event) + "\n" + String.format(translateMessage("error.translateMessage",
-                    event), key));
-            throw new NullPointerException(String.format(translateMessage("error.translateMessage", event), key));
+            throw new NullPointerException();
         }
         try {
             return Main.getLocalizations().get("en").get(key).getAsString();

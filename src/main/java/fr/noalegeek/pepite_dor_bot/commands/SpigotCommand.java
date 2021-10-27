@@ -78,7 +78,7 @@ public class SpigotCommand extends Command {
                             .setColor(Color.RED)
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                             .setTimestamp(Instant.now())
-                            .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.pluginNull", event), args[0]));
+                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.pluginNull", event), args[0]));
                     event.reply(new MessageBuilder(errorPluginIDNullEmbed.build()).build());
                     return;
                 }
@@ -88,7 +88,7 @@ public class SpigotCommand extends Command {
                         .setColor(Color.RED)
                         .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                         .setTimestamp(Instant.now())
-                        .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.numberTooLarge", event), args[0]));
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.numberTooLarge", event), args[0]));
                 event.reply(new MessageBuilder(errorNumberTooLargeEmbed.build()).build());
             }
         } else {
@@ -112,7 +112,7 @@ public class SpigotCommand extends Command {
                                 .setColor(Color.RED)
                                 .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.user", event), args[1]));
+                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.user", event), args[1]));
                         event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
                         return;
                     }
@@ -138,7 +138,7 @@ public class SpigotCommand extends Command {
                                 .setColor(Color.RED)
                                 .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle("\u274C " + String.format(MessageHelper.translateMessage("error.spigot.pluginName", event), event.getArgs()));
+                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginName", event), event.getArgs()));
                         event.reply(new MessageBuilder(errorPluginNameNullEmbed.build()).build());
                         return;
                     }

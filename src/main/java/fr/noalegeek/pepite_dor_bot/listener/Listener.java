@@ -134,7 +134,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getAuthor() == event.getJDA().getSelfUser()) return;
+        if (event.getAuthor().isBot()) return;
         if(event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
             if(Main.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
                 event.getMessage().reply("My prefix is **" + Main.getServerConfig().prefix().get(event.getGuild().getId()) + "**").queue();

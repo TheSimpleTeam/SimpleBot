@@ -5,7 +5,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
 
 import java.util.ArrayList;
 
@@ -23,6 +25,9 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply(MessageHelper.translateMessage("GET", event));
+        event.reply("\uD83D\uDCA1");
+        if(event.getArgs().isEmpty()) return;
+        event.reply(MessageHelper.translateMessage("sussy.baka", event));
+
     }
 }

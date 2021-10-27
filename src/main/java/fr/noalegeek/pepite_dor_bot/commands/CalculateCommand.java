@@ -25,17 +25,16 @@ public class CalculateCommand extends Command {
             return;
         }
         if(!new Expression(replaceAll(event.getArgs().replaceAll("\\s+", ""))).checkSyntax()){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.calculate", event),
-                    event.getArgs().replaceAll("\\s+", "")));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.calculate", event), event.getArgs().replaceAll("\\s+", "")));
             return;
         }
-        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.calculate", event),
-                replaceAll(event.getArgs().replaceAll("\\s+", "")), new Expression(replaceAll(event.getArgs().replaceAll("\\s+", ""))).calculate()));
+        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.calculate", event), replaceAll(event.getArgs().replaceAll("\\s+", "")), new Expression(replaceAll(event.getArgs().replaceAll("\\s+", ""))).calculate()));
     }
 
     public String replaceAll(String calculation) {
         StringBuilder builder = new StringBuilder();
         for (char c : calculation.toCharArray()) {
+
             switch (c) {
                 case '²' -> builder.append("^2");
                 case ',' -> builder.append('.');

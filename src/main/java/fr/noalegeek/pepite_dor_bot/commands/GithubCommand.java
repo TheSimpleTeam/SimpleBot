@@ -48,7 +48,7 @@ public class GithubCommand extends Command {
         if(isCommandDisabled()) {
             EmbedBuilder errorDisabledCommandEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
-                    .setTitle("\u274C " + MessageHelper.translateMessage("error.github.disabled", event))
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.github.disabled", event))
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getAvatarUrl());
             event.reply(new MessageBuilder(errorDisabledCommandEmbed.build()).build());

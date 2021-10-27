@@ -32,11 +32,12 @@ public class SuggestionCommand extends Command {
                     .setColor(Color.RED)
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle("\u274C ");
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " ");
+            //TODO Embed
             return;
         }
         EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
+                .setTitle("\u1F4A" + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
                 .setColor(Color.YELLOW)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                 .setTimestamp(Instant.now())

@@ -42,7 +42,7 @@ public class MCServerCommand extends Command {
                         .setColor(Color.RED)
                         .setTimestamp(Instant.now())
                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                        .setTitle("\u274C " + MessageHelper.translateMessage("error.mcServer.offlineServer", event));
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.mcServer.offlineServer", event));
                 event.reply(new MessageBuilder(errorServerOfflineEmbed.build()).build());
                 return;
             }
