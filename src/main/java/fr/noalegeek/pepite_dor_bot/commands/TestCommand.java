@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import jnr.ffi.annotations.In;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
@@ -25,6 +26,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply(MessageHelper.translateMessage("sussy.baka", event));
+
     }
 }

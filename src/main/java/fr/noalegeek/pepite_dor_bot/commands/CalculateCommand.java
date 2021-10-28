@@ -4,7 +4,13 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import org.apache.commons.lang3.StringUtils;
 import org.mariuszgromada.math.mxparser.Expression;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CalculateCommand extends Command {
 
@@ -34,12 +40,15 @@ public class CalculateCommand extends Command {
     public String replaceAll(String calculation) {
         StringBuilder builder = new StringBuilder();
         for (char c : calculation.toCharArray()) {
-
-            switch (c) {
-                case '²' -> builder.append("^2");
-                case ',' -> builder.append('.');
-                case 'x', '×' -> builder.append('*');
-                default -> builder.append(c);
+            if(UnicodeCharacters.getNumeralExponents().containsKey(c)){
+                builder.append('^').append(UnicodeCharacters.getNumeralExponents().get(c));
+            } else {
+                switch (c) {
+                    case '÷' -> builder.append('/');
+                    case ',' -> builder.append('.');
+                    case 'x', '×' -> builder.append('*');
+                    default -> builder.append(c);
+                }
             }
         }
         return builder.toString();

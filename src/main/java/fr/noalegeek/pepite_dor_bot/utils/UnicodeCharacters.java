@@ -24,6 +24,9 @@
 
 package fr.noalegeek.pepite_dor_bot.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UnicodeCharacters {
 
     public static String crossMarkEmoji = "\u274C";
@@ -34,7 +37,19 @@ public class UnicodeCharacters {
     public static String plusExponent = "\u207A";
     public static String minusExponent = "\u207B";
 
-    public static String[] getNumeralExponents() {
-        return new String[]{"\u2070", "\u00B9", "\u00B2", "\u00B3", "\u2074", "\u2075", "\u2076", "\u2077", "\u2078", "\u2079"};
+    public static Map<Character, Character> getNumeralExponents() {
+        Map<Character, Character> map = new HashMap<>();
+        map.put('\u2070', '0');
+        map.put('\u00B9', '1');
+        map.put('\u00B2', '2');
+        map.put('\u00B3', '3');
+        map.put('\u2074', '4');
+        map.put('\u2075', '5');
+        map.put('\u2076', '6');
+        map.put('\u2077', '7');
+        map.put('\u2078', '8');
+        map.put('\u2079', '9');
+        return map;
     }
+
 }
