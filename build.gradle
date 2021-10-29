@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.0"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
+    id 'com.bmuschko.docker-java-application' version '7.1.0'
 }
 
 ext.graalVersion = '21.3.0'
@@ -57,6 +58,16 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
+
+docker {
+    javaApplication {
+        baseImage = 'eclipse-temurin:17-jdk-alpine'
+        getApiVersion().set("1.0")
+        maintainer = 'Minemobs <minemobs.pro@gmail.com>'
+        jvmArgs = ['-Xms256m', '-Xmx1024m']
+    }
+}
+
 
 test {
     useJUnitPlatform()

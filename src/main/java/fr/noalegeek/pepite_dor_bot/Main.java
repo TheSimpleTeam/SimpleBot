@@ -14,8 +14,8 @@ import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
 import fr.noalegeek.pepite_dor_bot.cli.commands.HelpCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
-import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
+import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
@@ -73,6 +73,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException, JavetException {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
+        Console console = System.console();
+        console.printf("Hi %s", "Minemobs");
         try {
             String arg = "";
             try {
@@ -87,7 +89,7 @@ public class Main {
                     .enableCache(CacheFlag.ONLINE_STATUS).build();
             setupLocalizations();
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
+            LOGGER.log(Level.SEVERE, ex.getMessage());
             return;
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE, "Le token est invalide");
