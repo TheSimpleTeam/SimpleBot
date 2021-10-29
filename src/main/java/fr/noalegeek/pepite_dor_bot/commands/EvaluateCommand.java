@@ -71,6 +71,7 @@ public class EvaluateCommand extends Command {
             addV8Module(MessageBuilder.class);
             addV8Module(EmbedBuilder.class);
             addV8Module(MessageHelper.class);
+            addV8Module(net.dv8tion.jda.api.entities.TextChannel.class);
             Object eval = engine.getExecutor(args).executeObject();
             event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : MessageHelper.translateMessage("success.eval", event) + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
             engine.getGlobalObject().forEach(value -> engine.getGlobalObject().delete(value));
