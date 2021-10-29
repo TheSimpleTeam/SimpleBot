@@ -29,16 +29,18 @@ import java.util.Map;
 
 public class UnicodeCharacters {
 
-    public static String crossMarkEmoji = "\u274C";
-    public static String electricLightBulbEmoji = "\uD83D\uDCA1";
-    public static String whiteHeavyCheckMarkEmoji = "\u2705";
-    public static String informationSourceEmoji = "\u2139";
+    public final static String crossMarkEmoji = "\u274C";
+    public final static String electricLightBulbEmoji = "\uD83D\uDCA1";
+    public final static String whiteHeavyCheckMarkEmoji = "\u2705";
+    public final static String informationSourceEmoji = "\u2139";
 
-    public static String plusExponent = "\u207A";
-    public static String minusExponent = "\u207B";
+    public final static char plusExponent = '\u207A';
+    public final static char minusExponent = '\u207B';
+    public final static char leftParenthesisExponent = '\u207D';
+    public final static char rightParenthesisExponent = '\u207E';
 
     public static Map<Character, Character> getNumeralExponents() {
-        Map<Character, Character> map = new HashMap<>();
+        final Map<Character, Character> map = new HashMap<>();
         map.put('\u2070', '0');
         map.put('\u00B9', '1');
         map.put('\u00B2', '2');
@@ -52,4 +54,7 @@ public class UnicodeCharacters {
         return map;
     }
 
+    public static boolean isNumeralExponent(char c){
+        return getNumeralExponents().containsKey(c);
+    }
 }

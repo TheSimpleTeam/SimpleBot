@@ -5,14 +5,11 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
-import org.apache.commons.lang3.StringUtils;
 import org.mariuszgromada.math.mxparser.Expression;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class CalculateCommand extends Command {
+
+    public final static String operators = "+-*/";
 
     public CalculateCommand() {
         this.name = "calculate";
@@ -39,18 +36,78 @@ public class CalculateCommand extends Command {
 
     public String replaceAll(String calculation) {
         StringBuilder builder = new StringBuilder();
+        boolean beforeNumber = false;
+        boolean operator = false;
+        boolean afterNumber = false;
         for (char c : calculation.toCharArray()) {
-            if(UnicodeCharacters.getNumeralExponents().containsKey(c)){
-                builder.append('^').append(UnicodeCharacters.getNumeralExponents().get(c));
+            if(operators.contains(String.valueOf(c))){
+                operator = true;
+                builder.append(c);
+            } else if(UnicodeCharacters.getNumeralExponents().containsKey(c)){
+                if(beforeNumber) {
+                    beforeNumber = false;
+                    builder.append(UnicodeCharacters.getNumeralExponents().get(c));
+                } else if(operator){
+                    operator = false;
+                    builder.append(UnicodeCharacters.getNumeralExponents().get(c));
+                } else {
+                    builder.append('^').append(UnicodeCharacters.getNumeralExponents().get(c));
+                }
+                afterNumber = true;
             } else {
                 switch (c) {
-                    case '÷' -> builder.append('/');
+                    case UnicodeCharacters.leftParenthesisExponent -> {
+                        if(operator){
+                            builder.append("(");
+                            operator = false;
+                        }
+                        else builder.append("^(");
+                        beforeNumber = true;
+                    }
+                    case UnicodeCharacters.rightParenthesisExponent -> {
+                        if(operator) {
+                            builder.append(")");
+                            operator = false;
+                        } else if(afterNumber){
+                            builder.append(")");
+                            afterNumber = false;
+                        } else {
+                            builder.append("^)");
+                            beforeNumber = true;
+                        }
+                    }
+                    case UnicodeCharacters.plusExponent -> {
+                        builder.append("^+");
+                        beforeNumber = true;
+                        operator = true;
+                    }
+                    case UnicodeCharacters.minusExponent -> {
+                        builder.append("^-");
+                        beforeNumber = true;
+                        operator = true;
+                    }
+                    case '₋' -> {
+                        builder.append('-');
+                        operator = true;
+                    }
+                    case '₊' -> {
+                        builder.append('+');
+                        operator = true;
+                    }
+                    case '÷' -> {
+                        builder.append('/');
+                        operator = true;
+                    }
                     case ',' -> builder.append('.');
-                    case 'x', '×' -> builder.append('*');
+                    case 'x', '×' -> {
+                        builder.append('*');
+                        operator = true;
+                    }
                     default -> builder.append(c);
                 }
             }
         }
+        System.out.println(builder);
         return builder.toString();
     }
 }
