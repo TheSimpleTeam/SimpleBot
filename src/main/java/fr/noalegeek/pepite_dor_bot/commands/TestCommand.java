@@ -16,7 +16,7 @@ public class TestCommand extends Command {
 
     public TestCommand() {
         this.category = CommandCategories.MISC.category;
-        this.help = "Une commande de test selon les tests à faire.";
+        this.help = "help.test";
         this.cooldown = 5;
         this.name = "test";
         this.hidden = true;
@@ -26,5 +26,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        event.reply(event.getAuthor().getDiscriminator());
     }
 }
