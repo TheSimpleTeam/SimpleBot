@@ -73,8 +73,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException, JavetException {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
-        Console console = System.console();
-        console.printf("Hi %s", "Minemobs");
         try {
             String arg = "";
             try {
@@ -89,10 +87,10 @@ public class Main {
                     .enableCache(CacheFlag.ONLINE_STATUS).build();
             setupLocalizations();
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage());
+            ex.printStackTrace();
             return;
         } catch (LoginException e) {
-            LOGGER.log(Level.SEVERE, "Le token est invalide");
+            LOGGER.log(Level.SEVERE, "The token is invalid !");
             return;
         }
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
@@ -133,9 +131,10 @@ public class Main {
                 .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
                 .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
             serverConfig.tempBan().remove(e.getKey());
-            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue();
-            jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
-                    .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue();
+            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
+                    jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
+                            .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
+                    Throwable::printStackTrace);
         }), 0, 1, TimeUnit.SECONDS);
 
         executorService.schedule(() -> {
@@ -232,7 +231,7 @@ public class Main {
     }
 
     private static void setupLogs() throws IOException {
-        File logFolder = new File("logs/");
+        File logFolder = new File("logs");
         if (!Files.exists(logFolder.toPath())) {
             logFolder.mkdir();
         }
@@ -313,10 +312,12 @@ public class Main {
             languages.put("846048803554852904", "en");
             map.put("guildJoinRole", defaultGuildJoinRole);
             map.put("channelMemberJoin", defaultChannelMemberJoin);
-            map.put("channelMemberRemove", defaultChannelMemberLeave);
+            map.put("channelMemberLeave", defaultChannelMemberLeave);
             map.put("mutedRole", defaultMutedRole);
             map.put("prohibitWords", defaultProhibitWords);
             map.put("language", languages);
+            map.put("prefix", new HashMap<String, String>());
+            map.put("tempBan", new HashMap<String, String>());
             Writer writer = Files.newBufferedWriter(serverConfigFile.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
             writer.close();

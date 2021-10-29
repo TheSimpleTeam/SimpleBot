@@ -61,13 +61,12 @@ dependencies {
 
 docker {
     javaApplication {
-        baseImage = 'eclipse-temurin:17-jdk-alpine'
+        baseImage = 'eclipse-temurin:17_35-jdk-focal'
         getApiVersion().set("1.0")
         maintainer = 'Minemobs <minemobs.pro@gmail.com>'
         jvmArgs = ['-Xms256m', '-Xmx1024m']
     }
 }
-
 
 test {
     useJUnitPlatform()
