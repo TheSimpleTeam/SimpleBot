@@ -53,8 +53,4 @@ public class UnicodeCharacters {
         map.put('\u2079', '9');
         return map;
     }
-
-    public static boolean isNumeralExponent(char c){
-        return getNumeralExponents().containsKey(c);
-    }
 }
