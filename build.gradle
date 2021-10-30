@@ -68,6 +68,10 @@ docker {
     }
 }
 
+dockerCreateDockerfile {
+    instruction 'COPY lang lang/'
+}
+
 test {
     useJUnitPlatform()
 }
