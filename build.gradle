@@ -65,11 +65,8 @@ docker {
         getApiVersion().set("1.0")
         maintainer = 'Minemobs <minemobs.pro@gmail.com>'
         jvmArgs = ['-Xms256m', '-Xmx1024m']
+        addFile './lang/', '/lang/'
     }
-}
-
-dockerCreateDockerfile {
-    instruction 'COPY lang lang/'
 }
 
 test {
