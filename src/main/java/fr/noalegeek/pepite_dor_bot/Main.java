@@ -74,6 +74,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         //Todo: Séparer les Exception comme ça on sait d'ou ça vient.
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
+        tty = System.console() == null;
         try {
             String arg = "";
             try {
