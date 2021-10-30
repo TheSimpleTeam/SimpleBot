@@ -3,18 +3,20 @@ plugins {
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.0"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
-    id 'com.bmuschko.docker-java-application' version '7.1.0'
+    id 'com.bmuschko.docker-java-application' version '6.7.0'
 }
 
 ext.graalVersion = '21.3.0'
 
-group 'fr.noalegeek'
+group 'fr.thesimpleteam'
 version '1.0'
 
 mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
+
+import com.bmuschko.gradle.docker.tasks.image.*
 
 graal {
     version "$graalVersion"
@@ -61,12 +63,21 @@ dependencies {
 
 docker {
     javaApplication {
-        baseImage = 'eclipse-temurin:17_35-jdk-focal'
+        baseImage = ''
         getApiVersion().set("1.0")
         maintainer = 'Minemobs <minemobs.pro@gmail.com>'
         jvmArgs = ['-Xms256m', '-Xmx1024m']
-        addFile './lang/', '/lang/'
     }
+}
+
+task createDockerFile(type: Dockerfile) {
+    from('eclipse-temurin:17_35-jdk-focal')
+    addFile("\"./lang\"", "/lang")
+}
+
+task buildDocker(type: DockerBuildImage) {
+    dependsOn createDockerFile
+    images.add("thesimpleteam/$rootProject.name$version")
 }
 
 test {
