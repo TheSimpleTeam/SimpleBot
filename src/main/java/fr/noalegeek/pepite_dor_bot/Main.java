@@ -1,6 +1,5 @@
 package fr.noalegeek.pepite_dor_bot;
 
-import com.caoccao.javet.exceptions.JavetException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -71,7 +70,8 @@ public class Main {
 
     private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
-    public static void main(String[] args) throws IOException, InterruptedException, JavetException {
+    public static void main(String[] args) throws InterruptedException {
+        //Todo: Séparer les Exception comme ça on sait d'ou ça vient.
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
         try {
             String arg = "";
@@ -244,9 +244,11 @@ public class Main {
     }
 
     private static Infos readConfig(String arg) throws IOException {
-        File config = new File(Paths.get("config/config.json").toUri());
-        File configTemplate = new File(Paths.get("config/config-template.json").toUri());
-        if (!config.exists()) {
+        File configDir = new File(Paths.get("config").toUri());
+        File config = new File(configDir, "config.json");
+        File configTemplate = new File(configDir, "config-template.json");
+        if(!configDir.exists()) configDir.mkdir();
+        if(!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
             if (arg.equalsIgnoreCase("--nosetup")) {
