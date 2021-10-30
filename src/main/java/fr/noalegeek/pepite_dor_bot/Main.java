@@ -65,6 +65,7 @@ public class Main {
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
     public static final Eval eval = new Eval();
+    private static boolean tty;
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
 
@@ -137,14 +138,18 @@ public class Main {
                     Throwable::printStackTrace);
         }), 0, 1, TimeUnit.SECONDS);
 
-        executorService.schedule(() -> {
-            try {
-                CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
-                cli.commandsListener();
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
-        }, 5, TimeUnit.SECONDS);
+        if(tty) {
+            executorService.schedule(() -> {
+                try {
+                    CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
+                    cli.commandsListener();
+                } catch (InterruptedException | IOException e) {
+                    e.printStackTrace();
+                }
+            }, 5, TimeUnit.SECONDS);
+        } else {
+            LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
+        }
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
@@ -251,7 +256,7 @@ public class Main {
         if(!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            if (arg.equalsIgnoreCase("--nosetup")) {
+            if (arg.equalsIgnoreCase("--nosetup") || !tty) {
                 map.put("botName", "YOUR-BOT-NAME");
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "!");
@@ -262,10 +267,6 @@ public class Main {
                 map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             } else {
                 Console console = System.console();
-                if (console == null) {
-                    System.out.println("No console: non-interactive mode!");
-                    System.exit(0);
-                }
                 System.out.println("I see that it's the first time that you install the bot.");
                 System.out.println("The configuration will begin.");
                 System.out.println("What is your bot's name?");
@@ -273,13 +274,17 @@ public class Main {
                 System.out.println("What is your bot token?");
                 map.put("token", console.readLine());
                 System.out.println("What will be the bot's prefix?");
-                map.put("prefix", console.readLine().isEmpty() ? "!" : console.readLine());
+                String p = console.readLine();
+                map.put("prefix", p.isEmpty() ? "!" : p);
                 System.out.println("How long will it take between each status change ?");
-                map.put("timeBetweenStatusChange", console.readLine().isEmpty() ? 15 : console.readLine());
+                p = console.readLine();
+                map.put("timeBetweenStatusChange", p.isEmpty() ? 15 : p);
                 System.out.println("What will be the delay between each automatic save ?");
-                map.put("autoSaveDelay", console.readLine().isEmpty() ? 15 : console.readLine());
+                p = console.readLine();
+                map.put("autoSaveDelay", p.isEmpty() ? 15 : p);
                 System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
-                map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : console.readLine().split(";"));
+                p = console.readLine();
+                map.put("activities", p.isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : p.split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");
                 map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             }
@@ -364,5 +369,9 @@ public class Main {
 
     public static String[] getLangs() {
         return langs;
+    }
+
+    public static boolean isTTY() {
+        return tty;
     }
 }

@@ -1,5 +1,7 @@
 package fr.noalegeek.pepite_dor_bot.utils;
 
+import fr.noalegeek.pepite_dor_bot.Main;
+
 public enum Color {
     //Color end string, color reset
     RESET("\033[0m"),
@@ -79,7 +81,7 @@ public enum Color {
     private final String code;
 
     Color(String code) {
-        this.code = code;
+        this.code = Main.isTTY() ? code : "";
     }
 
     public static String colorize(String text, Color... colors) {
