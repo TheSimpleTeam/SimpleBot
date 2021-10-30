@@ -257,7 +257,6 @@ public class Main {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
             if (arg.equalsIgnoreCase("--nosetup") || !tty) {
-                map.put("botName", "YOUR-BOT-NAME");
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "!");
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
@@ -269,8 +268,6 @@ public class Main {
                 Console console = System.console();
                 System.out.println("I see that it's the first time that you install the bot.");
                 System.out.println("The configuration will begin.");
-                System.out.println("What is your bot's name?");
-                map.put("botName", console.readLine());
                 System.out.println("What is your bot token?");
                 map.put("token", console.readLine());
                 System.out.println("What will be the bot's prefix?");
