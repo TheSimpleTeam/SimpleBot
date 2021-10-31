@@ -7,9 +7,7 @@ on:
     branches: [ docker, master ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -22,6 +20,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Generate DockerFile
-        run: ./gradlew dockerCreateDockerfile
+        run: ./gradlew createDockerFile
+      - name: CD
+        run: cd build/docker
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag simplebot:$(date +%s)

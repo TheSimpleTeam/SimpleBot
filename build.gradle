@@ -18,6 +18,8 @@ compileJava.options.encoding = compileTestJava.options.encoding = javadoc.option
 
 import com.bmuschko.gradle.docker.tasks.image.*
 
+import java.util.concurrent.Callable
+
 graal {
     version "$graalVersion"
 }
@@ -70,9 +72,28 @@ docker {
     }
 }
 
+task copyLangs(type: Copy) {
+    from('lang')
+    into("$buildDir/docker/lang")
+}
+
 task createDockerFile(type: Dockerfile) {
+    dependsOn(clean)
+    dependsOn(dockerSyncBuildContext)
+    finalizedBy(copyLangs)
     from('eclipse-temurin:17_35-jdk-focal')
-    addFile("\"./lang\"", "/lang")
+    label([MAINTAINER: "Minemobs <minemobs.pro@gmail.com>"])
+    workingDir("/app")
+    addFile("lang", "lang/")
+    addFile("libs", "libs/")
+    addFile("classes", "classes/")
+    entryPoint(project.provider(new Callable<List<String>>() {
+        @Override
+        List<String> call() throws Exception {
+            ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "fr.noalegeek.pepite_dor_bot.Main"]
+        }
+    }))
+    exposePort(8080)
 }
 
 task buildDocker(type: DockerBuildImage) {
