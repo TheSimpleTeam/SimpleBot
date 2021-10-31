@@ -24,4 +24,4 @@ jobs:
       - name: Generate DockerFile
         run: ./gradlew dockerCreateDockerfile
       - name: Build the Docker image
-        run: docker build . --file build/docker/Dockerfile --tag simplebot:$(date +%s)
+        run: docker build . --file Dockerfile --tag simplebot:$(date +%s)
