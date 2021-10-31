@@ -32,6 +32,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
+import org.python.core.PrePy;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
@@ -68,13 +69,13 @@ public class Main {
     private static boolean tty;
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
+    private static ScheduledExecutorService executorService;
 
     private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
     public static void main(String[] args) throws InterruptedException {
-        //Todo: Séparer les Exception comme ça on sait d'ou ça vient.
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
-        tty = System.console() == null;
+        executorService = Executors.newScheduledThreadPool(3);
+        tty = PrePy.isInteractive();
         try {
             String arg = "";
             try {
@@ -118,16 +119,13 @@ public class Main {
             }
         }, 0, TimeUnit.SECONDS.toMillis(getInfos().timeBetweenStatusChange()));
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    Listener.saveConfigs();
-                } catch (IOException ex) {
-                    LOGGER.log(Level.SEVERE, ex.getMessage());
-                }
+        executorService.scheduleAtFixedRate(() -> {
+            try {
+                Listener.saveConfigs();
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, ex.getMessage());
             }
-        }, 120_000, TimeUnit.MINUTES.toMillis(getInfos().autoSaveDelay()));
+        }, getInfos().autoSaveDelay(), getInfos().autoSaveDelay(), TimeUnit.MINUTES);
 
         executorService.scheduleAtFixedRate(() -> serverConfig.tempBan().entrySet().stream()
                 .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
@@ -136,7 +134,7 @@ public class Main {
             jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
                     jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
                             .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
-                    Throwable::printStackTrace);
+                    throwable -> LOGGER.severe(throwable.getMessage()));
         }), 0, 1, TimeUnit.SECONDS);
 
         if(tty) {
@@ -191,7 +189,12 @@ public class Main {
         Map<String, JsonObject> objects = new HashMap<>();
         List<String> langS = new ArrayList<>();
         File f = new File("lang");
+        if(!f.exists()) {
+            LOGGER.severe("PLEASE DOWNLOAD THE LANG FOLDER FROM OUR REPOSITORY!");
+            System.exit(-1);
+        }
         File[] _langs = f.listFiles();
+        if(_langs == null) return;
         for (File lang : _langs) {
             langS.add(lang.getName().replaceAll(".json", ""));
             objects.put(lang.getName().replaceAll(".json", ""), gson.fromJson(Files.newBufferedReader(lang.toPath(), StandardCharsets.UTF_8), JsonObject.class));
@@ -371,5 +374,13 @@ public class Main {
 
     public static boolean isTTY() {
         return tty;
+    }
+
+    public static ScheduledExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    public static EventWaiter getWaiter() {
+        return waiter;
     }
 }

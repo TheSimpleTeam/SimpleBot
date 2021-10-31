@@ -37,7 +37,7 @@ repositories {
 
 dependencies {
     //JDA & JDA-Utilities
-    implementation("net.dv8tion:JDA:4.3.0_336")
+    implementation("net.dv8tion:JDA:4.3.0_339")
     implementation('pw.chew:jda-chewtils:1.22.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
@@ -98,7 +98,8 @@ task createDockerFile(type: Dockerfile) {
 
 task buildDocker(type: DockerBuildImage) {
     dependsOn createDockerFile
-    images.add("thesimpleteam/$rootProject.name$version")
+    dockerFile.set(file("$buildDir/docker/Dockerfile"))
+    images.add("thesimpleteam/$project.name:$project.version")
 }
 
 test {

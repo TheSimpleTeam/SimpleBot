@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.listener;
 
+import com.google.common.base.Throwables;
 import com.jagrosh.jdautilities.command.Command;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
@@ -27,7 +28,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.logging.Level;
+import java.util.concurrent.TimeUnit;
 
 import static fr.noalegeek.pepite_dor_bot.Main.*;
 
@@ -36,10 +37,16 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onShutdown(@NotNull ShutdownEvent event) {
         try {
-            saveConfigs();
+            Listener.saveConfigs();
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage());
+            LOGGER.severe(Throwables.getStackTraceAsString(ex));
         }
+        //OK SO JDA DOESNT WANT TO EXIT THE JVM. I'M GONNA DO MY OWN WAY
+        Main.getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS);
+        //A GOOD OLD SYSTEM.EXIT
+        //WHY IS IT MORE DIFFICULT THAN MAKING A DOCKERFILE
+        //PLEASE SEND HELP IT SHOULD BE AN EASY TASK TO SHUTDOWN A BOT BUT JDA WANT TO KILL ME
+        //AHHHHHHHHHHHHHHHH HELPPPPPPPPPPPPP
     }
 
     public static void saveConfigs() throws IOException {
@@ -49,10 +56,9 @@ public class Listener extends ListenerAdapter {
         }
         Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
         if (gson.fromJson(reader, ServerConfig.class) == getServerConfig()) {
-            System.out.println("It is");
             return;
         }
-        Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+        Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         gson.toJson(getServerConfig(), writer);
         writer.close();
         LOGGER.info("Server config updated");
