@@ -55,8 +55,7 @@ public class TranslateCommand extends Command {
                     .setTimestamp(Instant.now())
                     .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event))
                     .addField(MessageHelper.translateMessage("success.translate.translatedText", event), Main.gson.fromJson(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name(), language2.name(), URLEncoder.encode(args[0], StandardCharsets.UTF_8))).body().string(), JsonObject.class).get("translation").getAsString(), false)
-                    .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false)
-                    .addField()
+                    .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false);
         } catch (IOException exception) {
             MessageHelper.sendError(exception, event, this);
         }
