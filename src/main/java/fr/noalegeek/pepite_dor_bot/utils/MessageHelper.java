@@ -23,6 +23,10 @@ public class MessageHelper {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
 
+    public static void syntaxError(CommandEvent event, Command cmd) {
+        syntaxError(event, cmd, null);
+    }
+
     public static void syntaxError(CommandEvent event, Command command, String informations) {
         EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
@@ -64,6 +68,14 @@ public class MessageHelper {
             return day + "/" + strMonth + "/" + year;
         }
         return day + "/" + month + "/" + year;
+    }
+
+    public static void sendFormattedTranslatedMessage(String key, CommandEvent event, Object... format) {
+        event.replyFormatted(translateMessage(key, event), format);
+    }
+
+    public static void sendTranslatedMessage(String key, CommandEvent event) {
+        event.reply(translateMessage(key, event));
     }
 
     /**

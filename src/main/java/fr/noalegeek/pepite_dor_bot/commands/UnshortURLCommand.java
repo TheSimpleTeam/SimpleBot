@@ -19,16 +19,16 @@ public class UnshortURLCommand extends Command {
     public UnshortURLCommand() {
         this.name = "unshorturl";
         this.aliases = new String[]{"usu"};
-        this.arguments = "<URL>";
-        this.help = "Donne la redirection d'un lien.";
+        this.arguments = "arguments.unshorturl";
+        this.help = "help.unshorturl";
         this.category = CommandCategories.MISC.category;
-        this.example = "Liens AdFly";
+        this.example = "example.unshorturl";
     }
 
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this);
             return;
         }
         try {

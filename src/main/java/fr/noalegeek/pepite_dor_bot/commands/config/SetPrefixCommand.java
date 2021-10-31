@@ -27,7 +27,7 @@ package fr.noalegeek.pepite_dor_bot.commands.config;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
-import fr.noalegeek.pepite_dor_bot.listener.Listener;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 
 import java.io.File;
@@ -37,13 +37,16 @@ public class SetPrefixCommand extends Command {
 
     public SetPrefixCommand() {
         this.name = "setprefix";
+        this.arguments = "arguments.setprefix";
+        this.example = "example.setprefix";
+        this.help = "help.setprefix";
         this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
     }
 
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            event.replyError("You need at least one argument");
+            MessageHelper.syntaxError(event, this);
             return;
         }
         String[] args = event.getArgs().split("\\s+");
@@ -58,17 +61,12 @@ public class SetPrefixCommand extends Command {
 
         if(Main.getInfos().prefix().equalsIgnoreCase(args[0]) && Main.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
             Main.getServerConfig().prefix().remove(event.getGuild().getId());
-            event.reply("This prefix has been reset.");
+            MessageHelper.sendTranslatedMessage("success.setprefix.reset", event);
             return;
         }
 
         Main.getServerConfig().prefix().put(event.getGuild().getId(), args[0]);
-        try {
-            Listener.saveConfigs();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        event.replySuccess("My new prefix is **" + args[0] + "**");
+        MessageHelper.sendFormattedTranslatedMessage("success.setprefix.change", event, args[0]);
     }
 
 }
