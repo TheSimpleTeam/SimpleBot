@@ -6,15 +6,12 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-
-import static java.lang.StackWalker.Option.RETAIN_CLASS_REFERENCE;
 
 public class MessageHelper {
 
