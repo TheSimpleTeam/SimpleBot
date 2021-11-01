@@ -159,7 +159,7 @@ public class Listener extends ListenerAdapter {
             if(args.length == 0) return;
             String cmdName = args[0];
             if(Main.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) ||
-                    Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase))) return;
+                    Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase)) || Main.getClient().getHelpWord().equalsIgnoreCase(cmdName)) return;
             double highestResult = 0;
             String cmd = null;
             for (Command command : getClient().getCommands()) {
