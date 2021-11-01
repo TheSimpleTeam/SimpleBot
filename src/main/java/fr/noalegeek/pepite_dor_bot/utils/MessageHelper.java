@@ -90,17 +90,24 @@ public class MessageHelper {
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if(s.isPresent()) return s.get().getAsString();
         if (Main.getLocalizations().get("en").get(key) == null) {
+            StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+            int skip = 2;
+            if(stackWalker.walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer")) skip++;
+            final var _skip = skip;
             EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
                     .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getLineNumber()), false);
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), stackWalker.walk(stackFrameStream ->
+                            stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), stackWalker.walk(stackFrameStream ->
+                            stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(stackWalker.walk(stackFrameStream ->
+                            stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
             event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
-            throw new NullPointerException();
+            throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {
             return Main.getLocalizations().get("en").get(key).getAsString();

@@ -4,8 +4,6 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 
-import java.util.Locale;
-
 public class TestCommand extends Command {
 
     public TestCommand() {
@@ -20,13 +18,7 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        Test test = Test.TEST;
-        event.reply(test.name());
-    }
-
-    private enum Test{
-        TEST(),
-        TEST1(),
-        TEST2()
+        StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+        event.reply(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(3).findFirst().orElseThrow()).getMethodName());
     }
 }
