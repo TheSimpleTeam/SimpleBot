@@ -10,9 +10,8 @@ import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import org.checkerframework.checker.units.qual.C;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -56,11 +55,15 @@ public class TranslateCommand extends Command {
                     .setTimestamp(Instant.now())
                     .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event))
                     .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false)
-                    .addField(MessageHelper.translateMessage("success.translate.translatedText", event), Main.gson.fromJson(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8))).body().string(), JsonObject.class).get("translation").getAsString(), false)
-                    .addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), false)
-                    .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), false)
-                    .addField(MessageHelper.translateMessage("success.translate.isoCodeTranslation", event), language2.name().toLowerCase(Locale.ROOT), false)
-                    .addField(MessageHelper.translateMessage("success.translate.languageTranslation", event), MessageHelper.translateMessage(language2.languageName, event), false);
+                    .addField(MessageHelper.translateMessage("success.translate.translatedText", event),
+                            Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s",
+                                    language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))),
+                                    JsonObject.class).get("translation").getAsString(), false)
+                    .addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
+                    .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), true)
+                    .addBlankField(true)
+                    .addField(MessageHelper.translateMessage("success.translate.isoCodeTranslation", event), language2.name().toLowerCase(Locale.ROOT), true)
+                    .addField(MessageHelper.translateMessage("success.translate.languageTranslation", event), MessageHelper.translateMessage(language2.languageName, event), true);
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (IOException exception) {
             MessageHelper.sendError(exception, event, this);
