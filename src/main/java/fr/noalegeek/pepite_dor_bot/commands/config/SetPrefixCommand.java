@@ -31,8 +31,6 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 import java.io.File;
@@ -50,7 +48,7 @@ public class SetPrefixCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!MessageHelper.isServerOwner(event.getMember(), event)) return;
+        if(MessageHelper.isNotServerOwner(event.getMember(), event)) return;
         if(event.getArgs().isEmpty()) {
             MessageHelper.syntaxError(event, this, null);
             return;

@@ -22,7 +22,7 @@ public class JoinRoleCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
-        if(!MessageHelper.isServerOwner(event.getMember(), event)) return;
+        if(MessageHelper.isNotServerOwner(event.getMember(), event)) return;
         String[] args = event.getArgs().split(" \\s+");
         if (args.length != 1) {
             MessageHelper.syntaxError(event,this, MessageHelper.translateMessage("syntax.joinRole", event));

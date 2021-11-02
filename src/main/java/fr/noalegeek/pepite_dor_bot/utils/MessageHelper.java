@@ -67,15 +67,15 @@ public class MessageHelper {
         return day + "/" + month + "/" + year;
     }
 
-    public static boolean isServerOwner(Member member, CommandEvent event){
-        if(member.isOwner()) return true;
+    public static boolean isNotServerOwner(Member member, CommandEvent event){
+        if(member.isOwner()) return false;
         EmbedBuilder errorNotOwnerEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                 .setTimestamp(Instant.now())
                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.commands.notOwner", event));
         event.reply(new MessageBuilder(errorNotOwnerEmbed.build()).build());
-        return false;
+        return true;
     }
 
     public static void sendTranslatedMessage(String key, CommandEvent event) {
