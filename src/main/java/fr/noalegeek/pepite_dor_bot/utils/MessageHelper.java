@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
@@ -66,8 +67,15 @@ public class MessageHelper {
         return day + "/" + month + "/" + year;
     }
 
-    public static void sendFormattedTranslatedMessage(String key, CommandEvent event, Object... format) {
-        event.replyFormatted(translateMessage(key, event), format);
+    public static boolean isServerOwner(Member member, CommandEvent event){
+        if(member.isOwner()) return true;
+        EmbedBuilder errorNotOwnerEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTimestamp(Instant.now())
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.commands.notOwner", event));
+        event.reply(new MessageBuilder(errorNotOwnerEmbed.build()).build());
+        return false;
     }
 
     public static void sendTranslatedMessage(String key, CommandEvent event) {

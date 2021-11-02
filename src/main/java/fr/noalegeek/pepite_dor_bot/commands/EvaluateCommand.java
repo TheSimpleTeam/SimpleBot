@@ -25,7 +25,6 @@ public class EvaluateCommand extends Command {
 
     public EvaluateCommand() {
         this.name = "evaluate";
-        this.ownerCommand = true;
         this.help = "help.eval";
         this.aliases = new String[]{"eval", "evaluat", "evalua", "eva", "ev", "e", "evalu"};
         this.arguments = "arguments.eval";

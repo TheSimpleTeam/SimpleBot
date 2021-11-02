@@ -25,10 +25,7 @@ public class ChannelMemberCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if (event.getAuthor().isBot()) return;
-        if(!event.getMember().isOwner()){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notOwner", event));
-            return;
-        }
+        if(!MessageHelper.isServerOwner(event.getMember(), event)) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.channelMember", event));

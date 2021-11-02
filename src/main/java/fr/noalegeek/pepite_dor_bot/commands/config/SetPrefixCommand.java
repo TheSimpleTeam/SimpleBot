@@ -28,23 +28,29 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 
 public class SetPrefixCommand extends Command {
 
     public SetPrefixCommand() {
         this.name = "setprefix";
-        this.arguments = "arguments.setprefix";
-        this.example = "example.setprefix";
+        this.arguments = "arguments.setPrefix";
+        this.example = "@";
         this.help = "help.setprefix";
-        this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
     }
 
     @Override
     protected void execute(CommandEvent event) {
+        if(!MessageHelper.isServerOwner(event.getMember(), event)) return;
         if(event.getArgs().isEmpty()) {
             MessageHelper.syntaxError(event, this, null);
             return;
@@ -58,15 +64,36 @@ public class SetPrefixCommand extends Command {
                 exception.printStackTrace();
             }
         }
-
-        if(Main.getInfos().prefix().equalsIgnoreCase(args[0]) && Main.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
+        if(args[0].equalsIgnoreCase("reset")){
+            if(!Main.getServerConfig().prefix().containsKey(event.getGuild().getId())){
+                EmbedBuilder errorPrefixNullEmbed = new EmbedBuilder()
+                        .setColor(Color.RED)
+                        .setTimestamp(Instant.now())
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.setPrefix.notConfigured", event));
+                event.reply(new MessageBuilder(errorPrefixNullEmbed.build()).build());
+                return;
+            }
             Main.getServerConfig().prefix().remove(event.getGuild().getId());
-            MessageHelper.sendTranslatedMessage("success.setprefix.reset", event);
+            MessageHelper.sendTranslatedMessage("success.setPrefix.reset", event);
             return;
         }
-
+        if(args[0].equals(Main.getServerConfig().prefix().get(event.getGuild().getId()))){
+            EmbedBuilder errorSameAsConfiguredEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.setPrefix.sameAsConfigured", event));
+            event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
+            return;
+        }
         Main.getServerConfig().prefix().put(event.getGuild().getId(), args[0]);
-        MessageHelper.sendFormattedTranslatedMessage("success.setprefix.change", event, args[0]);
+        EmbedBuilder successEmbed = new EmbedBuilder()
+                .setColor(Color.GREEN)
+                .setTimestamp(Instant.now())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.setPrefix.configured", event), args[0]));
+        event.reply(new MessageBuilder(successEmbed.build()).build());
     }
 
 }
