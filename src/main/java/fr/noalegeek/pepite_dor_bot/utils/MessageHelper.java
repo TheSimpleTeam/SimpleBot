@@ -23,10 +23,6 @@ public class MessageHelper {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
 
-    public static void syntaxError(CommandEvent event, Command cmd) {
-        syntaxError(event, cmd, null);
-    }
-
     public static void syntaxError(CommandEvent event, Command command, String informations) {
         EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
@@ -55,7 +51,7 @@ public class MessageHelper {
             event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
             return;
         }
-        sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event), event.getMessage().getContentRaw(), false);
+        sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event), event.getArgs(), false);
         event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
     }
 

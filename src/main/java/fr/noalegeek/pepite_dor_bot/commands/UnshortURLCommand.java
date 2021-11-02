@@ -5,13 +5,19 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.awt.*;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Objects;
 
 public class UnshortURLCommand extends Command {
@@ -22,17 +28,24 @@ public class UnshortURLCommand extends Command {
         this.arguments = "arguments.unshorturl";
         this.help = "help.unshorturl";
         this.category = CommandCategories.MISC.category;
-        this.example = "example.unshorturl";
+        this.example = "shorturl.at/aszN3";
     }
 
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         try {
-            event.reply(String.format("`%s`", getURL(event.getArgs().split("\\s")[0])));
+            EmbedBuilder successEmbed = new EmbedBuilder()
+                    .setColor(Color.GREEN)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.unshortURL.success", event))
+                    .addField(MessageHelper.translateMessage("success.unshortURL.link", event), !event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0], false)
+                    .addField(MessageHelper.translateMessage("success.unshortURL.redirection", event), String.format("`%s`", getURL(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])), false);
+            event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (IOException e) {
             MessageHelper.sendError(e, event, this);
         }

@@ -18,7 +18,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
-        event.reply(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(3).findFirst().orElseThrow()).getMethodName());
+
     }
 }

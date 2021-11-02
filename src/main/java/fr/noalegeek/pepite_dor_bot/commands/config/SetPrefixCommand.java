@@ -46,7 +46,7 @@ public class SetPrefixCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            MessageHelper.syntaxError(event, this);
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         String[] args = event.getArgs().split("\\s+");
