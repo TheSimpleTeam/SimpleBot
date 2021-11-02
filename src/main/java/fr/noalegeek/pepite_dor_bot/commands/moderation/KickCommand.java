@@ -20,16 +20,8 @@ public class KickCommand extends Command {
     }
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.KICK_MEMBERS)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.KICK_MEMBERS.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.KICK_MEMBERS)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.KICK_MEMBERS.getName()));
-            return;
-        }
+        if(MessageHelper.hasNotPermission(event.getMember(), Permission.KICK_MEMBERS, event)) return;
+        if(MessageHelper.hasNotPermission(event.getSelfMember(), Permission.KICK_MEMBERS, event)) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
             MessageHelper.syntaxError(event, this, null);

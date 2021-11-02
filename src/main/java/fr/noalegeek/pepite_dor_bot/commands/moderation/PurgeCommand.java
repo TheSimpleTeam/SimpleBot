@@ -23,16 +23,8 @@ public class PurgeCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
+    if(MessageHelper.hasNotPermission(event.getMember(), Permission.MESSAGE_MANAGE, event)) return;
+    if(MessageHelper.hasNotPermission(event.getSelfMember(), Permission.MESSAGE_MANAGE, event)) return;
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event));

@@ -21,16 +21,8 @@ public class BanCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.BAN_MEMBERS.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.BAN_MEMBERS.getName()));
-            return;
-        }
+        if(MessageHelper.hasNotPermission(event.getMember(), Permission.BAN_MEMBERS, event)) return;
+        if(MessageHelper.hasNotPermission(event.getSelfMember(), Permission.BAN_MEMBERS, event)) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.ban", event));

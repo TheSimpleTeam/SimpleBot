@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
@@ -65,6 +66,17 @@ public class MessageHelper {
             return day + "/" + strMonth + "/" + year;
         }
         return day + "/" + month + "/" + year;
+    }
+
+    public static boolean hasNotPermission(Member member, Permission permission, CommandEvent event){
+        if(member.hasPermission(permission)) return false;
+        EmbedBuilder errorHasNotPermissionEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTimestamp(Instant.now())
+                .setTitle(member.getUser().isBot() ? MessageHelper.translateMessage("error.commands.botHasNotPermission", event) : MessageHelper.translateMessage("error.commands.userHasNotPermission", event), permission.getName());
+        event.reply(new MessageBuilder(errorHasNotPermissionEmbed.build()).build());
+        return true;
     }
 
     public static boolean isNotServerOwner(Member member, CommandEvent event){

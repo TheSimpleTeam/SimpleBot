@@ -21,16 +21,8 @@ public class CreateChannelCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.MANAGE_CHANNEL)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.MANAGE_CHANNEL.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.MANAGE_CHANNEL)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.MANAGE_CHANNEL.getName()));
-            return;
-        }
+        if(MessageHelper.hasNotPermission(event.getMember(), Permission.MANAGE_CHANNEL, event)) return;
+        if(MessageHelper.hasNotPermission(event.getSelfMember(), Permission.MANAGE_CHANNEL, event)) return;
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3){
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.createChannel", event));
