@@ -20,12 +20,12 @@ public class MuteCommand extends Command {
         this.cooldown = 5;
         this.example = "285829396009451522 spam";
         this.guildOnly = true;
+        this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
+        this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(MessageHelper.hasNotPermission(event.getMember(), Permission.MESSAGE_MANAGE, event)) return;
-        if(MessageHelper.hasNotPermission(event.getSelfMember(), Permission.MESSAGE_MANAGE, event)) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.mute", event));

@@ -1,5 +1,5 @@
 {
-  "arguments.ban": "\u003cmember\u0027s ID/mention\u003e \u003ctime\u003e [reason]",
+  "arguments.commands.argumentsBan": "\u003cmember\u0027s ID/mention\u003e \u003ctime\u003e [reason]",
   "arguments.calculate": "\u003cnumber\u003e \u003coperator\u003e (Follow this pattern)",
   "arguments.channelMember": "\u003cjoin|leave\u003e \u003cchannel\u0027s ID/mention|reset|this\u003e",
   "arguments.convert": "\u003cnumber\u003e \u003cunit of measurement\u003e \u003cunit of measurement\u003e",
@@ -81,7 +81,7 @@
   "example.say": "Hey, I\u0027m a robot!",
   "example.translate": "Hello everyone. --lang en fr",
   "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
-  "help.ban": "Bans members permanently from the server. The number to specify corresponds to the messages that will be deleted over time.",
+  "help.ban": "Bans members permanently from the server. The time to specify corresponds to the messages that will be deleted over time.",
   "help.botInfo": "Gives information about the bot.",
   "help.calculate": "Calculates the specified operations respecting the syntax.",
   "help.channelMember": "Defines the room where the announcements of the people who join or leave the server with his ID.",

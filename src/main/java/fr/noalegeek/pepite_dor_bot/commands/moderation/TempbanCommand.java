@@ -27,14 +27,18 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.enums.Date;
 import fr.noalegeek.pepite_dor_bot.utils.DiscordRegexPattern;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.entities.Member;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Optional;
 
 public class TempbanCommand extends Command {
@@ -43,47 +47,59 @@ public class TempbanCommand extends Command {
 
     public TempbanCommand() {
         this.name = "tempban";
-        this.arguments = "<mention> <time> [Reason]";
+        this.arguments = "arguments.commands.argumentsBan";
         this.help = "help.tempban";
-    }
-
-    private enum Dates {
-        SECONDS("s"),
-        MINUTES("min"),
-        HOURS("h"),
-        DAYS("d"),
-        WEEKS("w"),
-        MONTHS("m"),
-        YEARS("y");
-
-        private final String s;
-
-        Dates(String s) {
-            this.s = s;
-        }
+        this.category = CommandCategories.STAFF.category;
+        this.aliases = new String[]{"tempb", "tempba", "temb", "temban", "temba", "teb", "teban", "teba", "tb", "tban", "tba"};
+        this.cooldown = 5;
+        this.example = "363811352688721930 1d flood";
+        this.guildOnly = true;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        //TODO: Fix syntax error message.
-        if(event.getArgs().isEmpty()) {
-            MessageHelper.syntaxError(event, this, null);
-            return;
-        }
-
         String[] args = event.getArgs().split("\\s+");
-        if(args.length < 2 || !DiscordRegexPattern.USER_MENTION.matcher(args[0]).matches() || event.getMessage().getMentionedMembers().isEmpty()) {
+        if (args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-
+        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
+            event.getGuild().retrieveMember(user).queue(member -> {
+                if (!event.getMember().canInteract(member)) {
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event));
+                    return;
+                }
+                if (!event.getSelfMember().canInteract(member)) {
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
+                    return;
+                }
+                if (args[1] == null || args[1].isEmpty()) args[1] = "7";
+                String reason;
+                if (args[2] == null || args[2].isEmpty())
+                    reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
+                else
+                    reason = MessageHelper.translateMessage("text.commands.reason", event) + args[2];
+                try {
+                    int banTime = Integer.parseInt(args[1]);
+                    if (banTime > 7) {
+                        banTime = 7;
+                        event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
+                    }
+                    event.getGuild().ban(user, banTime).queue();
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(),
+                            reason));
+                } catch (NumberFormatException ex) {
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
+                }
+            }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event)));
+        }, userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
         String date = args[1].replaceAll("\\d+", "");
-        Optional<Dates> opDate = Arrays.stream(Dates.values()).filter(dates -> dates.name().equalsIgnoreCase(date) || dates.s.equalsIgnoreCase(date)).findFirst();
+        Optional<Date> opDate = Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(date) || dates.getSymbol().equalsIgnoreCase(date)).findFirst();
         if (opDate.isEmpty()) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        Dates dates = opDate.get();
+        Date dates = opDate.get();
         int time;
         try {
             time = Integer.parseInt(args[1].replaceAll("\\D+", ""));
@@ -92,31 +108,16 @@ public class TempbanCommand extends Command {
             return;
         }
         String reason = "No Reason";
-        if(args.length >= 3) {
+        if (args.length >= 3) {
             reason = args[2];
         }
         Member m = event.getMessage().getMentionedMembers().get(0);
         m.ban(7, reason).queue(unused -> {
             try {
-                Main.getServerConfig().tempBan().put(m.getId() + "-" + event.getGuild().getId(),
-                        ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + uppercaseFirstLetter(dates), long.class).invoke(LocalDateTime.now(), time))
-                                .format(formatter));
+                Main.getServerConfig().tempBan().put(m.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(dates.name().toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), time)).format(formatter));
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 MessageHelper.sendError(e, event, this);
             }
         });
-    }
-
-    private String uppercaseFirstLetter(Dates date) {
-        StringBuilder b = new StringBuilder();
-        char[] charArray = date.name().toLowerCase().toCharArray();
-        for (int i = 0; i < date.name().toCharArray().length; i++) {
-            if(i == 0) {
-                b.append(String.valueOf(charArray[0]).toUpperCase());
-            } else {
-                b.append(charArray[i]);
-            }
-        }
-        return b.toString();
     }
 }

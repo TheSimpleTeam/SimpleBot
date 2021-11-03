@@ -13,16 +13,16 @@ public class BanCommand extends Command {
         this.aliases = new String[]{"b", "ba"};
         this.guildOnly = true;
         this.cooldown = 5;
-        this.arguments = "arguments.ban";
-        this.example = "363811352688721930";
+        this.arguments = "arguments.commands.argumentsBan";
+        this.example = "363811352688721930 7 spam";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.ban";
+        this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
+        this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(MessageHelper.hasNotPermission(event.getMember(), Permission.BAN_MEMBERS, event)) return;
-        if(MessageHelper.hasNotPermission(event.getSelfMember(), Permission.BAN_MEMBERS, event)) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.ban", event));

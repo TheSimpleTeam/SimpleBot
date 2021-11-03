@@ -1,5 +1,5 @@
 {
-  "arguments.ban": "\u003cidentifiant/mention du membre\u003e \u003ctemps\u003e [raison]",
+  "arguments.commands.argumentsBan": "\u003cidentifiant/mention du membre\u003e \u003ctemps\u003e [raison]",
   "arguments.calculate": "\u003cnombre\u003e \u003copérateur\u003e (Suivez ce schéma)",
   "arguments.channelMember": "\u003cjoin|leave\u003e \u003cidentifiant/mention du salon|reset|this\u003e",
   "arguments.convert": "\u003cnombre\u003e \u003cunité de mesure\u003e \u003cunité de mesure\u003e",
@@ -81,7 +81,7 @@
   "example.say": "Hey, je suis un robot !",
   "example.translate": "Bonjour tout le monde. --lang fr en",
   "help.DMBlocked": "Aucune aide ne peut vous être envoyé car vous avez bloqué vos messages privés.",
-  "help.ban": "Banni les membres définitivement du serveur. Le nombre à spécifier correspond aux messages qui vont être supprimés en fonction du temps.",
+  "help.ban": "Banni les membres définitivement du serveur. Le temps à spécifier correspond aux messages qui vont être supprimés en fonction du temps.",
   "help.botInfo": "Donne des informations sur le bot.",
   "help.calculate": "Calcule les opérations spécifiés en respectant la syntaxe.",
   "help.channelMember": "Défini le salon où les annonces des personnes qui rejoignent ou qui quittent le serveur avec son identifiant.",

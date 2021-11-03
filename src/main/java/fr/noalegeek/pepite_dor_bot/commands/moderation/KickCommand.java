@@ -17,11 +17,11 @@ public class KickCommand extends Command {
         this.example = "363811352688721930";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.kick";
+        this.userPermissions = new Permission[]{Permission.KICK_MEMBERS};
+        this.botPermissions = new Permission[]{Permission.KICK_MEMBERS};
     }
     @Override
     protected void execute(CommandEvent event) {
-        if(MessageHelper.hasNotPermission(event.getMember(), Permission.KICK_MEMBERS, event)) return;
-        if(MessageHelper.hasNotPermission(event.getSelfMember(), Permission.KICK_MEMBERS, event)) return;
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
             MessageHelper.syntaxError(event, this, null);

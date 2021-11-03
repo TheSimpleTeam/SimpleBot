@@ -18,6 +18,14 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-
+        StringBuilder stringBuilder = new StringBuilder().append("\"");
+        for(String part1 : new String[]{"temp", "tem", "te", "t"}){
+            for(String part2 : new String[]{"b", "ban", "ba"}){
+                if(!(part1 + part2).equals("tempban")){
+                    stringBuilder.append(part1).append(part2).append("\",\"");
+                }
+            }
+        }
+        event.reply(stringBuilder.toString());
     }
 }
