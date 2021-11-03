@@ -102,7 +102,7 @@
   "help.prohibit": "Adds or removes a word from the list of forbidden words. Can even reset the entire list of forbidden words.",
   "help.purge": "Deletes messages that are less than 2 weeks old by a given number between 0 and 101.",
   "help.say": "Sends the specified message and includes your name if you do not have permissions to manage messages.",
-  "help.setPrefix": "Set the guild prefix",
+  "help.setPrefix": "Change the bot prefix only for the server.",
   "help.shutdown": "Turns off the bot.",
   "help.spigot": "Gives the name, link, ID and description of a Spigot plugin by searching for it by its ID or by its name or search for a Spigot user.",
   "help.suggestion": "Send a suggestion to the developers.",

@@ -103,7 +103,7 @@
   "help.prohibit": "Ajoute ou enlève un mot dans la liste de mots interdits. Peut même réinitialiser la liste complète des mots interdits.",
   "help.purge": "Supprime les messages datant de moins de 2 semaines selon un nombre donné se situant entre 0 et 101.",
   "help.say": "Envoie le message spécifié et inclus votre nom si vous n\u0027avez pas les permissions de gérer les messages.",
-  "help.setPrefix": "Change le préfixe du serveur",
+  "help.setPrefix": "Change le préfixe du bot seulement pour le serveur.",
   "help.shutdown": "Éteint le bot.",
   "help.spigot": "Donne le nom, le lien, l\u0027ID et la description d\u0027un plugin Spigot en le cherchant par son ID ou par son nom ou cherche un utilisateur Spigot.",
   "help.suggestion": "Envoie une suggestion aux développeurs.",

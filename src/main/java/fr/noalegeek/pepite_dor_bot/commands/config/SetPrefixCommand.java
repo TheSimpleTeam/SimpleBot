@@ -43,7 +43,7 @@ public class SetPrefixCommand extends Command {
         this.name = "setprefix";
         this.arguments = "arguments.setPrefix";
         this.example = "@";
-        this.help = "help.setprefix";
+        this.help = "help.setPrefix";
     }
 
     @Override
