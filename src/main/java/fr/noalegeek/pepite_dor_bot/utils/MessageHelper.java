@@ -72,17 +72,6 @@ public class MessageHelper {
         return reason == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + reason;
     }
 
-    public static boolean isNotServerOwner(Member member, CommandEvent event){
-        if(member.isOwner()) return false;
-        EmbedBuilder errorNotOwnerEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
-                .setTimestamp(Instant.now())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.commands.notOwner", event));
-        event.reply(new MessageBuilder(errorNotOwnerEmbed.build()).build());
-        return true;
-    }
-
     public static void sendTranslatedMessage(String key, CommandEvent event) {
         event.reply(translateMessage(key, event));
     }

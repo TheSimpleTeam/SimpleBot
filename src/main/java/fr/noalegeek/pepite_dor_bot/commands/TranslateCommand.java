@@ -55,10 +55,7 @@ public class TranslateCommand extends Command {
                     .setTimestamp(Instant.now())
                     .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event))
                     .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false)
-                    .addField(MessageHelper.translateMessage("success.translate.translatedText", event),
-                            Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s",
-                                    language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))),
-                                    JsonObject.class).get("translation").getAsString(), false)
+                    .addField(MessageHelper.translateMessage("success.translate.translatedText", event), Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString(), false)
                     .addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
                     .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), true)
                     .addBlankField(true)

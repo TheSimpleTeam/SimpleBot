@@ -29,9 +29,8 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.enums.Date;
-import fr.noalegeek.pepite_dor_bot.utils.DiscordRegexPattern;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -63,6 +62,7 @@ public class TempbanCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
+        User user =
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
             event.getGuild().retrieveMember(user).queue(member -> {
                 if (!event.getMember().canInteract(member)) {

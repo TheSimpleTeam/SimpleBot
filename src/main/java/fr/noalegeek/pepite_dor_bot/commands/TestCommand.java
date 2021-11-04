@@ -13,11 +13,11 @@ public class TestCommand extends Command {
         this.name = "test";
         this.hidden = true;
         this.aliases = new String[]{"t", "te", "tes"};
-        this.guildOwnerCommand = true;
+        this.ownerCommand = true;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply("Caca");
+
     }
 }
