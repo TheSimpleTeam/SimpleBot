@@ -31,7 +31,7 @@ public class TranslateCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMessage().getContentRaw().contains("--lang")) {
+        if(!event.getArgs().contains("--lang")) {
             MessageHelper.syntaxError(event, this, "syntax.translate");
             return;
         }
@@ -44,7 +44,7 @@ public class TranslateCommand extends Command {
         String[] args = event.getArgs().split(" --lang ");
         LingvaLanguage language1 = LingvaLanguage.AUTO;
         LingvaLanguage language2 = LingvaLanguage.EN;
-        for(LingvaLanguage lingvaLanguage : LingvaLanguage.values()){
+        for(LingvaLanguage lingvaLanguage : LingvaLanguage.values()) {
             if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[0])) language1 = lingvaLanguage;
             if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[1])) language2 = lingvaLanguage;
         }
