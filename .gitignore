@@ -1,6 +1,7 @@
 /.idea/
 /.gradle/
 /build/
+/bin/
 /logs/
 config.json
 config/server-config.json

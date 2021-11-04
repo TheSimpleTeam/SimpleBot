@@ -5,10 +5,11 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.RequestHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -16,53 +17,47 @@ import java.time.Instant;
 
 public class MCServerCommand extends Command {
 
-    String baseURL = "https://api.mcsrvstat.us/2/";
-
     public MCServerCommand() {
-        this.name = "minecraftserveur";
+        this.name = "minecraftserver";
         this.cooldown = 5;
-        this.help = "Donne la version, le nombre de joueurs connectés et le port d'un serveur.";
+        this.help = "help.mcServer";
         this.example = "hypixel.net";
-        this.aliases = new String[]{"minecraftserver","minecraftserveu","minecraftserve","minecraftserv","minecraftser","minecraftse","minecrafts","mcserveur",
-                "mcserver","mcserveu","mcserve","mcser","mcse","mcs","minecserveur","minecserveu","minecserver","minecserve","minecserv","minecser","minecse","minecs",
-                "mcraftserveur","mcraftserveu","mcraftserver","mcraftserve","mcraftserv","mcraftser","mcraftse","mcrafts"};
-        this.arguments = "<IP d'un serveur Minecraft>";
-        this.category = CommandCategories.FUN.category;
+        this.aliases = new String[]{"minecrafts","minecraftse","minecraftser","minecraftserv","minecraftserve","minecs","minecse","minecser","minecserv","minecserve","minecserver","mcrafts","mcraftse","mcraftser","mcraftserv","mcraftserve","mcraftserver","mcs","mcse","mcser","mcserv","mcserve","mcserver"};
+        this.arguments = "arguments.mcServer";
+        this.category = CommandCategories.INFO.category;
         this.guildOnly = true;
     }
 
     @Override
     protected void execute(CommandEvent event) {
+        if(event.getArgs().isEmpty()) {
+            event.replyError("F U");
+            return;
+        }
         String[] args = event.getArgs().split("\\s+");
         Main.LOGGER.info(args[0]);
         try {
-            JsonObject object = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(baseURL + args[0])), JsonObject.class);
-            if (!object.get("online").getAsBoolean()) {
-                event.replyError("Le serveur est hors-ligne.");
+            JsonObject serverInformations = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class);
+            if (!serverInformations.get("online").getAsBoolean()) {
+                EmbedBuilder errorServerOfflineEmbed = new EmbedBuilder()
+                        .setColor(Color.RED)
+                        .setTimestamp(Instant.now())
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.mcServer.offlineServer", event));
+                event.reply(new MessageBuilder(errorServerOfflineEmbed.build()).build());
                 return;
             }
-            getServerInfos(object, event);
-        } catch (IOException ex) {
-            MessageHelper.sendError(ex, event);
+            //We get the informations like https://github.com/Minemobs/McStatusJava/blob/master/src/main/java/fr/minemobs/test/Main.java
+            EmbedBuilder successEmbed = new EmbedBuilder()
+                    .setTimestamp(Instant.now())
+                    .addField(MessageHelper.translateMessage("success.mcServer.ipAdress", event), serverInformations.get("ip").getAsString(), false)
+                    .addField(MessageHelper.translateMessage("success.mcServer.port", event), serverInformations.get("port").getAsString(), false)
+                    .addField(MessageHelper.translateMessage("success.mcServer.version", event), serverInformations.get("version").getAsString(), false)
+                    .addField(MessageHelper.translateMessage("success.mcServer.connectedPlayers", event), String.valueOf(serverInformations.get("players").getAsJsonObject().get("online").getAsInt()), false)
+                    .setColor(Color.GREEN);
+            event.reply(new MessageBuilder(successEmbed.build()).build());
+        } catch (IOException exception) {
+            MessageHelper.sendError(exception, event, this);
         }
-    }
-
-    //From https://github.com/Minemobs/McStatusJava/blob/master/src/main/java/fr/minemobs/test/Main.java
-    private void getServerInfos(JsonObject jo, CommandEvent event) {
-        String ip = jo.get("ip").getAsString();
-        String port = jo.get("port").getAsString();
-        String age = jo.get("version").getAsString();
-        JsonObject player = jo.get("players").getAsJsonObject();
-        int playerList = player.get("online").getAsInt();
-
-        MessageEmbed embed = new EmbedBuilder()
-                .setTimestamp(Instant.now())
-                .addField("IP :", ip, false)
-                .addField("Port :", port, false)
-                .addField("Version :", age, false)
-                .addField("Nombre de joueurs :", String.valueOf(playerList), false)
-                .setColor(Color.GREEN)
-                .build();
-        event.reply(embed);
     }
 }

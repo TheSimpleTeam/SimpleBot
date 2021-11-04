@@ -3,7 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 
 import java.util.concurrent.TimeUnit;
@@ -19,22 +19,15 @@ public class PurgeCommand extends Command {
         this.category = CommandCategories.STAFF.category;
         this.cooldown = 5;
         this.example = "6";
+        this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
+        this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(event.getAuthor().isBot()) return;
-        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.purge", event));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event));
             return;
         }
         int clearMessages = 1;
@@ -48,14 +41,17 @@ public class PurgeCommand extends Command {
                 clearMessages = Integer.parseInt(args[0]);
             }
         } catch (NumberFormatException ignore) {
-            event.replyError(MessageHelper.syntaxError(event, this) + MessageHelper.translateMessage("syntax.purge", event));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event));
             return;
         }
         try {
-            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete().queue(unused -> event.getTextChannel().purgeMessages(messages)));
+            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete()
+                    .queue(unused -> event.getTextChannel().purgeMessages(messages)));
         } catch (IllegalArgumentException ex){
-            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.purge", event)).queueAfter(10, TimeUnit.SECONDS);
+            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.purge", event))
+                    .queueAfter(10, TimeUnit.SECONDS);
         }
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event), clearMessages), messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
+        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event), clearMessages),
+                messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
     }
 }
