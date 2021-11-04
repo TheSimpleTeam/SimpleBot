@@ -44,6 +44,7 @@ public class SetPrefixCommand extends Command {
         this.arguments = "arguments.setPrefix";
         this.example = "@";
         this.help = "help.setPrefix";
+        this.guildOwnerCommand = true;
     }
 
     @Override

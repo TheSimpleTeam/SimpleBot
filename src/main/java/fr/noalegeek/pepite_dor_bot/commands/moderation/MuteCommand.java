@@ -41,11 +41,8 @@ public class MuteCommand extends Command {
                     event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
                     return;
                 }
-                String reason;
-                if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.reasonNull", event);
-                else reason = MessageHelper.translateMessage("text.reason", event) + args[1];
                 isMutedRoleHere(event);
-                mute(event, member, reason, event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
+                mute(event, member, MessageHelper.setReason(args[1], event), event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
             }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
                 userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }

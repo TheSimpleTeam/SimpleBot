@@ -47,7 +47,7 @@ public class TempbanCommand extends Command {
 
     public TempbanCommand() {
         this.name = "tempban";
-        this.arguments = "arguments.commands.argumentsBan";
+        this.arguments = "arguments.tempban";
         this.help = "help.tempban";
         this.category = CommandCategories.STAFF.category;
         this.aliases = new String[]{"tempb", "tempba", "temb", "temban", "temba", "teb", "teban", "teba", "tb", "tban", "tba"};
@@ -59,7 +59,7 @@ public class TempbanCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if (args.length != 2 && args.length != 3) {
+        if (args.length != 3 && args.length != 4) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
@@ -73,51 +73,36 @@ public class TempbanCommand extends Command {
                     event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
                     return;
                 }
-                if (args[1] == null || args[1].isEmpty()) args[1] = "7";
-                String reason;
-                if (args[2] == null || args[2].isEmpty())
-                    reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
-                else
-                    reason = MessageHelper.translateMessage("text.commands.reason", event) + args[2];
                 try {
-                    int banTime = Integer.parseInt(args[1]);
-                    if (banTime > 7) {
-                        banTime = 7;
+                    int time  = Integer.parseInt(args[1]);
+                    if (time > 7) {
+                        time = 7;
                         event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
                     }
-                    event.getGuild().ban(user, banTime).queue();
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(),
-                            reason));
+                    if (Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[1].replaceAll("\\d+", "")) || dates.getSymbol().equalsIgnoreCase(args[1].replaceAll("\\d+", ""))).findFirst().isEmpty()) {
+                        MessageHelper.syntaxError(event, this, null);
+                        return;
+                    }
+                    Date date = Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[1].replaceAll("\\d+", "")) || dates.getSymbol().equalsIgnoreCase(args[1].replaceAll("\\d+", ""))).findFirst().get();
+                    int banTime;
+                    try {
+                        banTime = Integer.parseInt(args[2].replaceAll("\\D+", ""));
+                    } catch (NumberFormatException ex) {
+                        MessageHelper.syntaxError(event, this, null);
+                        return;
+                    }
+                    member.ban(time, MessageHelper.setReason(args[3], event)).queue(unused -> {
+                        try {
+                            Main.getServerConfig().tempBan().put(member.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(date.name().toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), banTime)).format(formatter));
+                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                            MessageHelper.sendError(e, event, this);
+                        }
+                    });
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), MessageHelper.setReason(args[2], event)));
                 } catch (NumberFormatException ex) {
                     event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
                 }
             }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event)));
         }, userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
-        String date = args[1].replaceAll("\\d+", "");
-        Optional<Date> opDate = Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(date) || dates.getSymbol().equalsIgnoreCase(date)).findFirst();
-        if (opDate.isEmpty()) {
-            MessageHelper.syntaxError(event, this, null);
-            return;
-        }
-        Date dates = opDate.get();
-        int time;
-        try {
-            time = Integer.parseInt(args[1].replaceAll("\\D+", ""));
-        } catch (NumberFormatException ex) {
-            MessageHelper.syntaxError(event, this, null);
-            return;
-        }
-        String reason = "No Reason";
-        if (args.length >= 3) {
-            reason = args[2];
-        }
-        Member m = event.getMessage().getMentionedMembers().get(0);
-        m.ban(7, reason).queue(unused -> {
-            try {
-                Main.getServerConfig().tempBan().put(m.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(dates.name().toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), time)).format(formatter));
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                MessageHelper.sendError(e, event, this);
-            }
-        });
     }
 }
