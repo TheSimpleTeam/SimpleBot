@@ -38,7 +38,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Optional;
 
 public class TempbanCommand extends Command {
 
@@ -62,7 +61,6 @@ public class TempbanCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        User user =
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
             event.getGuild().retrieveMember(user).queue(member -> {
                 if (!event.getMember().canInteract(member)) {
