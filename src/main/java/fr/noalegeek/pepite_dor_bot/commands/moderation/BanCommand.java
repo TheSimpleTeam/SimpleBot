@@ -13,7 +13,7 @@ public class BanCommand extends Command {
         this.aliases = new String[]{"b", "ba"};
         this.guildOnly = true;
         this.cooldown = 5;
-        this.arguments = "arguments.commands.argumentsBan";
+        this.arguments = "arguments.ban";
         this.example = "363811352688721930 7 spam";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.ban";
@@ -42,11 +42,6 @@ public class BanCommand extends Command {
                         return;
                     }
                     if (args[1] == null || args[1].isEmpty()) args[1] = "7";
-                    String reason;
-                    if (args[2] == null || args[2].isEmpty())
-                        reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
-                    else
-                        reason = MessageHelper.translateMessage("text.commands.reason", event) + args[2];
                     try {
                         int banTime = Integer.parseInt(args[1]);
                         if (banTime > 7) {
@@ -54,8 +49,7 @@ public class BanCommand extends Command {
                             event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
                         }
                         event.getGuild().ban(user, banTime).queue();
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(),
-                                reason));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), MessageHelper.setReason(args[2], event)));
                     } catch (NumberFormatException ex) {
                         event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
                     }

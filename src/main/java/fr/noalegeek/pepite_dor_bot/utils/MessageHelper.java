@@ -68,6 +68,10 @@ public class MessageHelper {
         return day + "/" + month + "/" + year;
     }
 
+    public static String setReason(String reason, CommandEvent event){
+        return reason == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + reason;
+    }
+
     public static boolean isNotServerOwner(Member member, CommandEvent event){
         if(member.isOwner()) return false;
         EmbedBuilder errorNotOwnerEmbed = new EmbedBuilder()

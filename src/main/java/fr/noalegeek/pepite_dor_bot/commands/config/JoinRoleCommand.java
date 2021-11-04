@@ -17,6 +17,7 @@ public class JoinRoleCommand extends Command {
         this.cooldown = 5;
         this.example = "660083059089080321";
         this.guildOnly = true;
+        this.guildOwnerCommand = true;
     }
 
     @Override

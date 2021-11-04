@@ -20,6 +20,7 @@ public class ChannelMemberCommand extends Command {
         this.arguments = "arguments.channelMember";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;
+        this.guildOwnerCommand = true;
     }
 
     @Override

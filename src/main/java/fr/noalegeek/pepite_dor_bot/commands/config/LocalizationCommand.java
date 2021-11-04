@@ -19,6 +19,7 @@ public class LocalizationCommand extends Command {
         this.arguments = "<en/fr>";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;
+        this.guildOwnerCommand = true;
     }
 
     @Override
