@@ -3,18 +3,24 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
+
+import java.awt.*;
+import java.time.Instant;
 
 public class SayCommand extends Command {
 
     public SayCommand() {
         this.name = "say";
         this.cooldown = 5;
-        this.arguments = "<texte>";
+        this.arguments = "arguments.say";
         this.aliases = new String[]{"s","sa"};
-        this.help = "Envoie le un message avec le texte défini après la commande sans supprimer le message d'origine.";
-        this.example = "Hey, je suis un robot !";
+        this.help = "help.say";
+        this.example = "example.say";
         this.category = CommandCategories.STAFF.category;
         this.guildOnly = true;
     }
@@ -22,14 +28,16 @@ public class SayCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()){
-            event.replyError(MessageHelper.syntaxError(event,this)+"Si vous n'avez pas les permissions de gérer les messages, le bot va vour mentionner.");
+            MessageHelper.syntaxError(event,this, "syntax.say");
             return;
         }
-        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
-                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + event.getArgs());
-        } else {
-            event.replySuccess(event.getArgs());
-        }
+        EmbedBuilder successEmbed = new EmbedBuilder()
+                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.say.success", event))
+                .setTimestamp(Instant.now())
+                .setColor(Color.GREEN)
+                .setDescription(event.getArgs());
+        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) successEmbed.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+        event.reply(new MessageBuilder(successEmbed.build()).build());
         event.getMessage().delete().queue();
     }
 }

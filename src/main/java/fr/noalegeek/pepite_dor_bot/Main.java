@@ -1,5 +1,6 @@
 package fr.noalegeek.pepite_dor_bot;
 
+import com.caoccao.javet.exceptions.JavetException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -8,22 +9,35 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import fr.noalegeek.pepite_dor_bot.cli.CLI;
+import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
+import fr.noalegeek.pepite_dor_bot.cli.commands.HelpCommand;
+import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
+import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
+import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
+import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.gson.RecordTypeAdapterFactory;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.Eval;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,6 +46,9 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,62 +62,88 @@ public class Main {
     private static Infos infos;
     private static ServerConfig serverConfig;
     private static final EventWaiter waiter = new EventWaiter();
-    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new RecordTypeAdapterFactory()).setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
+    public static final Eval eval = new Eval();
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
 
-    private static class Bot {
-        public final List<Command> commands;
-        public final String ownerID,
-                serverInvite;
+    private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
-        public Bot(List<Command> commands, String ownerID, String serverInvite) {
-            this.commands = commands;
-            this.ownerID = ownerID;
-            this.serverInvite = serverInvite;
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException, JavetException {
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
         try {
             String arg = "";
             try {
                 arg = args[0];
-            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {
-            }
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) { }
+            setupLogs();
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
             LOGGER.info("Servers config loaded");
+            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing(getInfos().activities()[1])).enableIntents(EnumSet.allOf(GatewayIntent.class))
+                    .enableCache(CacheFlag.ONLINE_STATUS).build();
+            setupLocalizations();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
-        }
-        try {
-            jda = JDABuilder.createDefault(infos.token).enableIntents(EnumSet.allOf(GatewayIntent.class)).build();
+            return;
         } catch (LoginException e) {
             LOGGER.log(Level.SEVERE, "Le token est invalide");
+            return;
         }
-        Random randomActivity = new Random();
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId(b.ownerID)
                 .setCoOwnerIds("363811352688721930")
-                .setPrefix(infos.prefix)
+                .setPrefix(infos.prefix())
                 .useHelpBuilder(true)
                 .setServerInvite(b.serverInvite)
-                .setActivity(Activity.playing(infos.activities[randomActivity.nextInt(infos.activities.length)]))
+                .setPrefixFunction(Main::getPrefix)
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
-        try {
-            setupLogs();
-            setupLocalizations();
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage());
-        }
+
+        jda.awaitReady();
+
+        //Removed onReady
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)]));
+            }
+        }, 0, TimeUnit.SECONDS.toMillis(getInfos().timeBetweenStatusChange()));
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    Listener.saveConfigs();
+                } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, ex.getMessage());
+                }
+            }
+        }, 120_000, TimeUnit.MINUTES.toMillis(getInfos().autoSaveDelay()));
+
+        executorService.scheduleAtFixedRate(() -> serverConfig.tempBan().entrySet().stream()
+                .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
+                .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
+            serverConfig.tempBan().remove(e.getKey());
+            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue();
+            jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
+                    .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue();
+        }), 0, 1, TimeUnit.SECONDS);
+
+        executorService.schedule(() -> {
+            try {
+                CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
+                cli.commandsListener();
+            } catch (InterruptedException | IOException e) {
+                e.printStackTrace();
+            }
+        }, 5, TimeUnit.SECONDS);
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
@@ -123,7 +166,7 @@ public class Main {
                 } catch (NullPointerException ignored) {
                     helpCommand = command.getHelp();
                 }
-                help.append("\n`").append(infos.prefix).append(infos.prefix == null ? " " : "").append(command.getName())
+                help.append("\n`").append(infos.prefix()).append(infos.prefix() == null ? " " : "").append(command.getName())
                         .append(command.getArguments() == null ? "`" : " " + command.getArguments() + "`")
                         .append(" - ").append(helpCommand);
             }
@@ -134,7 +177,7 @@ public class Main {
             if (event.getClient().getServerInvite() != null)
                 help.append(' ').append(MessageHelper.translateMessage("help.discord", event)).append(' ').append(b.serverInvite);
         }
-        event.replyInDm(help.toString(), unused -> {} , t -> event.replyError(MessageHelper.translateMessage("help.DMBlocked", event)));
+        event.replyInDm(help.toString(), unused -> {} , t -> event.reply(MessageHelper.translateMessage("help.DMBlocked", event)));
     }
 
     private static void setupLocalizations() throws IOException {
@@ -157,14 +200,33 @@ public class Main {
         Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
-            try {
-                Command instance = command.newInstance();
-                clientBuilder.addCommands(instance);
-                b.commands.add(instance);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+            if(hasConfig(command)) {
+                try {
+                    addCommand(command, b, clientBuilder);
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                LOGGER.info(command.getName() + " need " + command.getAnnotation(RequireConfig.class).value() + " key in config.json");
             }
         }
+    }
+
+    private static boolean hasConfig(Class<? extends Command> clazz) {
+        if(clazz.getAnnotation(RequireConfig.class) == null) return true;
+        RequireConfig c = clazz.getAnnotation(RequireConfig.class);
+        try {
+            return Infos.class.getMethod(c.value()).invoke(infos) != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static void addCommand(Class<? extends Command> clazz, Bot b, CommandClientBuilder builder)
+            throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Command instance = clazz.getDeclaredConstructor().newInstance();
+        builder.addCommands(instance);
+        b.commands.add(instance);
     }
 
     private static void setupLogs() throws IOException {
@@ -194,7 +256,7 @@ public class Main {
                 map.put("timeBetweenStatusChange", 15);
                 map.put("autoSaveDelay", 15);
                 map.put("activities", new String[]{"ban everyone", "example", "check my mentions"});
-                map.put("githubToken", "YOUR-GITHUB-TOKEN");
+                map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             } else {
                 Console console = System.console();
                 if (console == null) {
@@ -216,7 +278,7 @@ public class Main {
                 System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
                 map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : console.readLine().split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");
-                map.put("githubToken", "YOUR-GITHUB-TOKEN");
+                map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             }
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
@@ -237,19 +299,19 @@ public class Main {
             Map<String, Object> map = new LinkedHashMap<>();
             Map<String, String> defaultGuildJoinRole = new HashMap<>();
             Map<String, String> defaultChannelMemberJoin = new HashMap<>();
-            Map<String, String> defaultChannelMemberRemove = new HashMap<>();
+            Map<String, String> defaultChannelMemberLeave = new HashMap<>();
             Map<String, String> defaultMutedRole = new HashMap<>();
             Map<String, String[]> defaultProhibitWords = new HashMap<>();
             Map<String, String> languages = new HashMap<>();
             defaultGuildJoinRole.put("657966618353074206", "660083059089080321");
             defaultChannelMemberJoin.put("657966618353074206", "848965362971574282");
-            defaultChannelMemberRemove.put("657966618353074206", "660110008507432970");
+            defaultChannelMemberLeave.put("657966618353074206", "660110008507432970");
             defaultMutedRole.put("657966618353074206", "660114547646005280");
             defaultProhibitWords.put("657966618353074206", new String[]{"prout", "pute"});
             languages.put("846048803554852904", "en");
             map.put("guildJoinRole", defaultGuildJoinRole);
             map.put("channelMemberJoin", defaultChannelMemberJoin);
-            map.put("channelMemberRemove", defaultChannelMemberRemove);
+            map.put("channelMemberRemove", defaultChannelMemberLeave);
             map.put("mutedRole", defaultMutedRole);
             map.put("prohibitWords", defaultProhibitWords);
             map.put("language", languages);
@@ -261,6 +323,14 @@ public class Main {
         ServerConfig config = gson.fromJson(reader, ServerConfig.class);
         reader.close();
         return config;
+    }
+
+    public static String getPrefix(MessageReceivedEvent event) {
+        return getPrefix(event.isFromGuild() ? event.getGuild() : null);
+    }
+
+    public static String getPrefix(Guild guild) {
+        return guild != null && serverConfig.prefix().containsKey(guild.getId()) ? serverConfig.prefix().get(guild.getId()) : infos.prefix();
     }
 
     public static JDA getJda() {

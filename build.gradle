@@ -1,18 +1,18 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.1.0"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
 }
 
-ext.graalVersion = '21.2.0'
+ext.graalVersion = '21.3.0'
 
 group 'fr.noalegeek'
 version '1.0'
 
 mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
 
-sourceCompatibility = targetCompatibility = 17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
 
 graal {
@@ -21,6 +21,7 @@ graal {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
@@ -31,22 +32,29 @@ repositories {
 
 dependencies {
     //JDA & JDA-Utilities
-    implementation("net.dv8tion:JDA:4.3.0_310")
+    implementation("net.dv8tion:JDA:4.3.0_336")
     implementation('pw.chew:jda-chewtils:1.22.0') {
-        exclude group: 'pw.chew:jda-chewtils-command:1.22.0'
+        exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
-    //GraalJS
+    //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
-    // necessary to integrate with legacy ScriptEngine based implementation
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
+    implementation("com.caoccao.javet:javet:1.0.2")
+    implementation 'org.python:jython-standalone:2.7.2'
+    //CLI
+    implementation 'commons-cli:commons-cli:1.4'
     //Other
-    implementation group: 'org.kohsuke', name: 'github-api', version: '1.133'
+    implementation 'com.github.TheSimpleTeam:Spiget:main-SNAPSHOT'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation("com.google.guava:guava:31.0.1-jre")
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.135'
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
-    implementation 'org.reflections:reflections:0.9.12'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.reflections:reflections:0.10.2'
+    implementation 'sh.stein:carbon-api:1.2'
+
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
