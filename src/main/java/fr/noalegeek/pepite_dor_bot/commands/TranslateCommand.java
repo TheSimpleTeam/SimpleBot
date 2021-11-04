@@ -63,7 +63,8 @@ public class TranslateCommand extends Command {
                     .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), true)
                     .addBlankField(true)
                     .addField(MessageHelper.translateMessage("success.translate.isoCodeTranslation", event), language2.name().toLowerCase(Locale.ROOT), true)
-                    .addField(MessageHelper.translateMessage("success.translate.languageTranslation", event), MessageHelper.translateMessage(language2.languageName, event), true);
+                    .addField(MessageHelper.translateMessage("success.translate.languageTranslation", event), MessageHelper.translateMessage(language2.languageName, event), true)
+                    .addBlankField(true);
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (IOException exception) {
             MessageHelper.sendError(exception, event, this);
