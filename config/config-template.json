@@ -1,4 +1,5 @@
 {
+  "botName": "YOUR-BOT-NAME",
   "token": "YOUR-TOKEN-HERE",
   "prefix": "!",
   "defaultRoleID": "YOUR-ROLE-ID",
@@ -9,5 +10,5 @@
     "example",
     "check my mentions"
   ],
-  "githubToken": "YOUR-GITHUB-TOKEN"
+  "botGithubToken": "YOUR-GITHUB-TOKEN"
 }
