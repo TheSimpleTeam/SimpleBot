@@ -44,7 +44,7 @@ public class SnippetCommand extends Command {
 
     public SnippetCommand() {
         this.name = "snippet";
-        this.aliases = new String[]{"paste", "snip", "gist", "gists", "carbon"};
+        this.aliases = new String[]{"gists","gist","gis","g","paste","past","pas","snippet","snippe","snipp","snip","sni","sn","carbon","carbo","carb","car"};
         this.cooldown = 5;
         this.category = CommandCategories.FUN.category;
     }
