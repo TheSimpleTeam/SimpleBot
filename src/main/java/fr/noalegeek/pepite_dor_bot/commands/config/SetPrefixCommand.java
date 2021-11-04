@@ -49,7 +49,6 @@ public class SetPrefixCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(MessageHelper.isNotServerOwner(event.getMember(), event)) return;
         if(event.getArgs().isEmpty()) {
             MessageHelper.syntaxError(event, this, null);
             return;

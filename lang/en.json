@@ -222,6 +222,8 @@
   "syntax.prohibit": "The available arguments are **add**, **rem** and **reset**.\n- **add** will add a word to the list of forbidden words.\n- **rem** will remove a word from the list of prohibited words.\n- **reset** will reset the entire list of forbidden words.\nAfter the arguments **add** and **rem**, you must put the argument **word** which will correspond to the word that will be added or removed.",
   "syntax.purge": "The number of messages to specify must be between **0** and **101**.",
   "syntax.say": "When you don\u0027t have permission to manage messages, the bot will include your name. Conversely, it will not. ",
+  "text.commands.cantInteract.bot": "Error! I do not have permission to interact with this member.",
+  "text.commands.cantInteract.member": "Error! You do not have permission to interact with this member.",
   "text.commands.reason": "for the reason",
   "text.commands.reasonNull": "for no reason",
   "text.commands.sendError.arguments": "Argument(s) used",
@@ -433,7 +435,7 @@
   "text.translate.yiddish": "Yiddish",
   "text.translate.yoruba": "Yoruba",
   "text.translate.zulu": "Zulu",
-  "warning.ban": ":warning: The ban time has been set to 7 days because the limit has been exceeded!",
+  "warning.commands.commandsBan": ":warning: The ban time has been set to 7 days because the limit has been exceeded!",
   "warning.mute": ":warning: The default role is not present so I created a new role named \"Muted Role\".",
   "warning.purge.numberTooLarge": ":warning: The maximum value is 100. The value has been set to 100!",
   "warning.purge.numberTooSmall": ":warning: The minimum value is 1, so the value has been set to 1!"

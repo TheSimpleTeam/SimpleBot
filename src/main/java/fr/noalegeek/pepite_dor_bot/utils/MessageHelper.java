@@ -68,6 +68,18 @@ public class MessageHelper {
         return day + "/" + month + "/" + year;
     }
 
+    public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event){
+        if(member.canInteract(target) && bot.canInteract(target)) return false;
+        EmbedBuilder errorCantInteractEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTimestamp(Instant.now());
+        if(!member.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.member", event));
+        if(!bot.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.bot", event));
+        event.reply(new MessageBuilder(errorCantInteractEmbed.build()).build());
+        return true;
+    }
+
     public static String setReason(String reason, CommandEvent event){
         return reason == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + reason;
     }
@@ -98,12 +110,9 @@ public class MessageHelper {
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
                     .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), stackWalker.walk(stackFrameStream ->
-                            stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), stackWalker.walk(stackFrameStream ->
-                            stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(stackWalker.walk(stackFrameStream ->
-                            stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
             event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
             throw new NullPointerException("The key " + key + " does not exist!");
         }

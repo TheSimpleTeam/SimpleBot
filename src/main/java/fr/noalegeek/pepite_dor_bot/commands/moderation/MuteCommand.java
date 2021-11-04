@@ -33,14 +33,7 @@ public class MuteCommand extends Command {
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user ->
             event.getGuild().retrieveMember(user).queue(member -> {
-                if (!event.getMember().canInteract(member)) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event));
-                    return;
-                }
-                if (!event.getSelfMember().canInteract(member)) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
-                    return;
-                }
+                if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                 isMutedRoleHere(event);
                 mute(event, member, MessageHelper.setReason(args[1], event), event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
             }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),

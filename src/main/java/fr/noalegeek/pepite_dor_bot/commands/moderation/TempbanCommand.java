@@ -61,46 +61,33 @@ public class TempbanCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
-            event.getGuild().retrieveMember(user).queue(member -> {
-                if (!event.getMember().canInteract(member)) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event));
-                    return;
+        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+            if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
+            try {
+                int time  = Integer.parseInt(args[1]);
+                if (time > 7) {
+                    time = 7;
+                    event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.commands.commandsBan", event));
                 }
-                if (!event.getSelfMember().canInteract(member)) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
+                if (Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[1].replaceAll("\\d+", "")) || dates.getSymbol().equalsIgnoreCase(args[1].replaceAll("\\d+", ""))).findFirst().isEmpty()) {
+                    MessageHelper.syntaxError(event, this, null);
                     return;
                 }
                 try {
-                    int time  = Integer.parseInt(args[1]);
-                    if (time > 7) {
-                        time = 7;
-                        event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
-                    }
-                    if (Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[1].replaceAll("\\d+", "")) || dates.getSymbol().equalsIgnoreCase(args[1].replaceAll("\\d+", ""))).findFirst().isEmpty()) {
-                        MessageHelper.syntaxError(event, this, null);
-                        return;
-                    }
-                    Date date = Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[1].replaceAll("\\d+", "")) || dates.getSymbol().equalsIgnoreCase(args[1].replaceAll("\\d+", ""))).findFirst().get();
-                    int banTime;
-                    try {
-                        banTime = Integer.parseInt(args[2].replaceAll("\\D+", ""));
-                    } catch (NumberFormatException ex) {
-                        MessageHelper.syntaxError(event, this, null);
-                        return;
-                    }
                     member.ban(time, MessageHelper.setReason(args[3], event)).queue(unused -> {
                         try {
-                            Main.getServerConfig().tempBan().put(member.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(date.name().toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), banTime)).format(formatter));
+                            Main.getServerConfig().tempBan().put(member.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[1].replaceAll("\\d+", "")) || dates.getSymbol().equalsIgnoreCase(args[1].replaceAll("\\d+", ""))).findFirst().get().name().toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), Integer.parseInt(args[2].replaceAll("\\D+", "")))).format(formatter));
                         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                             MessageHelper.sendError(e, event, this);
                         }
                     });
                     event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), MessageHelper.setReason(args[2], event)));
                 } catch (NumberFormatException ex) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
+                    MessageHelper.syntaxError(event, this, null);
                 }
-            }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event)));
-        }, userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+            } catch (NumberFormatException ex) {
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
+            }
+        }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))), userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }
 }

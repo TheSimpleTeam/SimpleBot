@@ -33,14 +33,7 @@ public class BanCommand extends Command {
                 event.getGuild().unban(user).queue(unused -> event.reply(String.format(MessageHelper.translateMessage("success.unban", event), user.getName())));
             } else {
                 event.getGuild().retrieveMember(user).queue(member -> {
-                    if (!event.getMember().canInteract(member)) {
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event));
-                        return;
-                    }
-                    if (!event.getSelfMember().canInteract(member)) {
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
-                        return;
-                    }
+                    if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                     if (args[1] == null || args[1].isEmpty()) args[1] = "7";
                     try {
                         int banTime = Integer.parseInt(args[1]);
