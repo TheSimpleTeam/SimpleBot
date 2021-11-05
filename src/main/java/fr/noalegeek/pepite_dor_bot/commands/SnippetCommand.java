@@ -28,11 +28,17 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import sh.stein.carbon.CarbonService;
 import sh.stein.carbon.ImageOptions;
 import sh.stein.carbon.PlaywrightCarbonService;
 
+import java.awt.*;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,25 +57,26 @@ public class SnippetCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String args = event.getArgs();
         ImageOptions.Language language = ImageOptions.Language.Auto;
-        if(args.startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format)) {
-            if(getLanguage(args.split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) {
-                language = getLanguage(args.split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
+        if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format)) {
+            if(getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) {
+                language = getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
             }
         }
-        List<String> list = new LinkedList<>(Arrays.asList(args.split("\n")));
+        List<String> list = new LinkedList<>(Arrays.asList(event.getArgs().split("\n")));
         list.remove(0);
         list.remove(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
-        args = String.join("\n", list);
         final ImageOptions options = new ImageOptions.ImageOptionsBuilder()
                 .language(language)
                 .fontFamily(ImageOptions.FontFamily.JetBrainsMono)
                 .theme(ImageOptions.Theme.NightOwl)
                 .build();
-        AtomicReference<Message> m = new AtomicReference<>();
-        event.getMessage().reply("It might take time to execute the command !").queue(m::set);
-        event.getMessage().reply(carbon.getImage(args, options), "code.png").mentionRepliedUser(false).queue(unused -> m.get().delete().queue());
+        EmbedBuilder warningTakeTooLongEmbed = new EmbedBuilder()
+                .setColor(Color.ORANGE)
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTimestamp(Instant.now())
+                .setTitle(UnicodeCharacters.warningSignEmoji + " " + MessageHelper.translateMessage("warning.snippet", event));
+        event.getMessage().reply(new MessageBuilder(warningTakeTooLongEmbed.build()).build()).queue(warningTakeTooLongMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTooLongMessage.delete().queue()));
     }
 
     private ImageOptions.Language getLanguage(String language) {

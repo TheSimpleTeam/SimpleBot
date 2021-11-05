@@ -33,6 +33,7 @@ public class UnicodeCharacters {
     public final static String electricLightBulbEmoji = "\uD83D\uDCA1";
     public final static String whiteHeavyCheckMarkEmoji = "\u2705";
     public final static String informationSourceEmoji = "\u2139";
+    public final static String warningSignEmoji = "\u26A0";
 
     public final static char plusExponent = '\u207A';
     public final static char minusExponent = '\u207B';

@@ -438,5 +438,6 @@
   "warning.commands.commandsBan": ":warning: The ban time has been set to 7 days because the limit has been exceeded!",
   "warning.mute": ":warning: The default role is not present so I created a new role named \"Muted Role\".",
   "warning.purge.numberTooLarge": ":warning: The maximum value is 100. The value has been set to 100!",
-  "warning.purge.numberTooSmall": ":warning: The minimum value is 1, so the value has been set to 1!"
+  "warning.purge.numberTooSmall": ":warning: The minimum value is 1, so the value has been set to 1!",
+  "warning.snippet": "The result of the execution of this command may take some time to come."
 }
