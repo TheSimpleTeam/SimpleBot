@@ -15,6 +15,9 @@ import javax.annotation.Nullable;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class MessageHelper {
@@ -82,26 +85,33 @@ public class MessageHelper {
         return true;
     }
 
-    public static String deleteFinalsCharactersOneByOne(String string) {
-        return deleteFinalsCharactersOneByOne(string, null, false);
-    }
-
-    public static String deleteFinalsCharactersOneByOne(String string, boolean keepOriginal) {
-        return deleteFinalsCharactersOneByOne(string, null, keepOriginal);
-    }
-
-    public static String deleteFinalsCharactersOneByOne(String string, String delimiter) {
-        return deleteFinalsCharactersOneByOne(string, delimiter, false);
-    }
-
-    public static String deleteFinalsCharactersOneByOne(@Nonnull String string, @Nullable String delimiter, boolean keepOriginal) {
-        if (string.length() == 0) return string;
-        StringBuilder stringBuilder = keepOriginal ? delimiter != null ? new StringBuilder().append(string).append(delimiter) : new StringBuilder().append(string) : new StringBuilder();
-        for (int i = string.length(); i > 0; i--) {
-            stringBuilder.append(string, 0, i);
-            if (delimiter != null) stringBuilder.append(delimiter);
+    public static String deleteFinalsCharactersOneByOne(@Nullable String delimiter, boolean keepOriginal, @Nonnull String... strings) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String string : strings) {
+            if(string.length() == 0){
+                if(delimiter != null) stringBuilder.append(string).append(delimiter);
+                else stringBuilder.append(string);
+            } else {
+                if(keepOriginal) stringBuilder.append(string);
+                for (int i = string.length() - 1; i > 0; i--) {
+                    stringBuilder.append(string, 0, i);
+                    if (delimiter != null) stringBuilder.append(delimiter);
+                }
+            }
         }
         return stringBuilder.toString();
+    }
+
+    public static String deleteFinalsCharactersOneByOne(boolean keepOriginal, @Nonnull String... strings) {
+        return deleteFinalsCharactersOneByOne(null, keepOriginal, strings);
+    }
+
+    public static String deleteFinalsCharactersOneByOne(@Nullable String delimiter, @Nonnull String... strings) {
+        return deleteFinalsCharactersOneByOne(delimiter, false, strings);
+    }
+
+    public static String deleteFinalsCharactersOneByOne(@Nonnull String... strings) {
+        return deleteFinalsCharactersOneByOne(null, false, strings);
     }
 
     public static String setReason(String reason, CommandEvent event) {

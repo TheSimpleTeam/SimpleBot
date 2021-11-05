@@ -20,6 +20,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-
+        event.reply(MessageHelper.deleteFinalsCharactersOneByOne(true, ""));
     }
 }
