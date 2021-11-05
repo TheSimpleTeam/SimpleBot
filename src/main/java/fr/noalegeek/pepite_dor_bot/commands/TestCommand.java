@@ -20,6 +20,6 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply(MessageHelper.arrayToStringDelimiterPrefix(MessageHelper.toTextArrayWithoutFinalsCharacters(true, "create"), "\",\"", "\""));
+        event.reply(MessageHelper.arrayToStringDelimiterPrefix(MessageHelper.regroupTogetherTwoArray(MessageHelper.toTextArrayWithoutFinalsCharacters(true, "create"), MessageHelper.toTextArrayWithoutFinalsCharacters(true, "channel")), "\",\"", "\""));
     }
 }

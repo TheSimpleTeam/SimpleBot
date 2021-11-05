@@ -6,7 +6,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
@@ -16,7 +15,6 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,6 +118,38 @@ public class MessageHelper {
 
     public static String arrayToStringSuffix(List<CharSequence> charSequenceList, @Nullable String suffix){
         return arrayToString(charSequenceList, null, null, suffix);
+    }
+
+    public static List<CharSequence> regroupTogetherTwoArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2, @Nullable String... dontAddStrings){
+        if(list1.isEmpty() || list2.isEmpty()) return new ArrayList<>();
+        List<CharSequence> charSequenceList = new ArrayList<>();
+        for(CharSequence charSequence1 : list1){
+            for(CharSequence charSequence2 : list2){
+                if(dontAddStrings == null || !List.of(dontAddStrings).contains(charSequence1.toString() + charSequence2.toString())) charSequenceList.add(charSequence1.toString() + charSequence2.toString());
+            }
+        }
+        return charSequenceList;
+    }
+
+    public static List<CharSequence> regroupTogetherThreeArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2, @Nonnull List<CharSequence> list3, @Nullable String... dontAddStrings){
+        if(list1.isEmpty() || list2.isEmpty()) return new ArrayList<>();
+        List<CharSequence> charSequenceList = new ArrayList<>();
+        for(CharSequence charSequence1 : list1){
+            for(CharSequence charSequence2 : list2){
+                for(CharSequence charSequence3 : list3) {
+                    if (dontAddStrings == null || !List.of(dontAddStrings).contains(charSequence1.toString() + charSequence2.toString() + charSequence3.toString())) charSequenceList.add(charSequence1.toString() + charSequence2.toString() + charSequence3.toString());
+                }
+            }
+        }
+        return charSequenceList;
+    }
+
+    public static List<CharSequence> regroupTogetherTwoArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2){
+        return regroupTogetherTwoArray(list1, list2, (String[]) null);
+    }
+
+    public static List<CharSequence> regroupTogetherThreeArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2, @Nonnull List<CharSequence> list3){
+        return regroupTogetherThreeArray(list1, list2, list3, (String[]) null);
     }
 
     public static List<CharSequence> toTextArrayWithoutFinalsCharacters(boolean keepOriginal, String... strings){
