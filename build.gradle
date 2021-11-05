@@ -3,6 +3,8 @@ plugins {
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.0"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC2'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
 }
 
 ext.graalVersion = '21.3.0'
@@ -45,6 +47,11 @@ dependencies {
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.4'
+    //API
+    implementation('io.ktor:ktor-server-core:1.6.4')
+    implementation('io.ktor:ktor-server-host-common:1.6.4')
+    implementation('io.ktor:ktor-server-netty:1.6.4')
+    implementation('io.ktor:ktor-serialization:1.6.4')
     //Other
     implementation 'com.github.TheSimpleTeam:Spiget:main-SNAPSHOT'
     implementation 'com.google.code.gson:gson:2.8.9'
@@ -54,7 +61,7 @@ dependencies {
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
-
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0-RC2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
@@ -62,4 +69,15 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }

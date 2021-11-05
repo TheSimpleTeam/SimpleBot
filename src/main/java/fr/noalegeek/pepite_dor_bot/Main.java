@@ -14,8 +14,8 @@ import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
 import fr.noalegeek.pepite_dor_bot.cli.commands.HelpCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
-import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
+import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
@@ -23,6 +23,7 @@ import fr.noalegeek.pepite_dor_bot.gson.RecordTypeAdapterFactory;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.Eval;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.simpleteam.simplebot.api.Server;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -135,6 +136,8 @@ public class Main {
             jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
                     .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue();
         }), 0, 1, TimeUnit.SECONDS);
+
+        executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
 
         executorService.schedule(() -> {
             try {
