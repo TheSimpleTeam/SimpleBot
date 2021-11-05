@@ -85,33 +85,56 @@ public class MessageHelper {
         return true;
     }
 
-    public static String deleteFinalsCharactersOneByOne(@Nullable String delimiter, boolean keepOriginal, @Nonnull String... strings) {
-        StringBuilder stringBuilder = new StringBuilder();
+    public static String arrayToString(List<CharSequence> charSequenceList, @Nullable String delimiter, @Nullable String prefix, @Nullable String suffix){
+        StringBuilder stringBuilder = prefix != null ? new StringBuilder().append(prefix) : new StringBuilder();
+        for (CharSequence charSequence : charSequenceList) {
+            stringBuilder.append(charSequence);
+            if (delimiter != null) stringBuilder.append(delimiter);
+        }
+        return suffix != null ? stringBuilder.append(suffix).toString() : stringBuilder.toString();
+    }
+
+    public static String arrayToString(List<CharSequence> charSequenceList){
+        return arrayToString(charSequenceList, null, null, null);
+    }
+
+    public static String arrayToStringDelimiter(List<CharSequence> charSequenceList, @Nullable String delimiter){
+        return arrayToString(charSequenceList, delimiter, null, null);
+    }
+
+    public static String arrayToStringDelimiterPrefix(List<CharSequence> charSequenceList, @Nullable String delimiter, @Nullable String prefix){
+        return arrayToString(charSequenceList, delimiter, prefix, null);
+    }
+
+    public static String arrayToStringPrefixSuffix(List<CharSequence> charSequenceList, @Nullable String prefix, @Nullable String suffix){
+        return arrayToString(charSequenceList, null, prefix, suffix);
+    }
+
+    public static String arrayToStringDelimiterSuffix(List<CharSequence> charSequenceList, @Nullable String delimiter, @Nullable String suffix){
+        return arrayToString(charSequenceList, delimiter, null, suffix);
+    }
+
+    public static String arrayToStringPrefix(List<CharSequence> charSequenceList, @Nullable String prefix){
+        return arrayToString(charSequenceList, null, prefix, null);
+    }
+
+    public static String arrayToStringSuffix(List<CharSequence> charSequenceList, @Nullable String suffix){
+        return arrayToString(charSequenceList, null, null, suffix);
+    }
+
+    public static List<CharSequence> toTextArrayWithoutFinalsCharacters(boolean keepOriginal, String... strings){
+        List<CharSequence> stringList = new ArrayList<>();
         for(String string : strings) {
-            if(string.length() == 0){
-                if(delimiter != null) stringBuilder.append(string).append(delimiter);
-                else stringBuilder.append(string);
-            } else {
-                if(keepOriginal) stringBuilder.append(string);
-                for (int i = string.length() - 1; i > 0; i--) {
-                    stringBuilder.append(string, 0, i);
-                    if (delimiter != null) stringBuilder.append(delimiter);
-                }
+            if(keepOriginal) stringList.add(string);
+            for (int i = string.length() - 1; i > 0; i--) {
+                stringList.add(string.substring(0, i));
             }
         }
-        return stringBuilder.toString();
+        return stringList;
     }
 
-    public static String deleteFinalsCharactersOneByOne(boolean keepOriginal, @Nonnull String... strings) {
-        return deleteFinalsCharactersOneByOne(null, keepOriginal, strings);
-    }
-
-    public static String deleteFinalsCharactersOneByOne(@Nullable String delimiter, @Nonnull String... strings) {
-        return deleteFinalsCharactersOneByOne(delimiter, false, strings);
-    }
-
-    public static String deleteFinalsCharactersOneByOne(@Nonnull String... strings) {
-        return deleteFinalsCharactersOneByOne(null, false, strings);
+    public static List<CharSequence> toTextArrayWithoutFinalsCharacters(String... strings){
+        return toTextArrayWithoutFinalsCharacters(false, strings);
     }
 
     public static String setReason(String reason, CommandEvent event) {
