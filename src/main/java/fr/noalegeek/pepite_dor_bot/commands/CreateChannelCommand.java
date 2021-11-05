@@ -33,8 +33,8 @@ public class CreateChannelCommand extends Command {
             return;
         }
         switch (args[0]) {
-            case "text" -> event.getGuild().createTextChannel(args[2], event.getGuild().getCategoryById(args[2])).queue();
-            case "voice" -> event.getGuild().createVoiceChannel(args[2], event.getGuild().getCategoryById(args[2])).queue();
+            case "text" -> event.getGuild().createTextChannel(args[1], event.getGuild().getCategoryById(args[2])).queue();
+            case "voice" -> event.getGuild().createVoiceChannel(args[1], event.getGuild().getCategoryById(args[2])).queue();
             default -> MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.createChannel", event));
         }
     }

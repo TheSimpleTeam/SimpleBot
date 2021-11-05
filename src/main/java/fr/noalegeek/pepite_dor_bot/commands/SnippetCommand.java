@@ -42,7 +42,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SnippetCommand extends Command {
 
@@ -52,6 +51,9 @@ public class SnippetCommand extends Command {
         this.name = "snippet";
         this.aliases = new String[]{"gists","gist","gis","g","paste","past","pas","snippet","snippe","snipp","snip","sni","sn","carbon","carbo","carb","car"};
         this.cooldown = 5;
+        this.help = "";
+        this.example = "help.snippet";
+        this.arguments = "arguments.snippet";
         this.category = CommandCategories.FUN.category;
     }
 
