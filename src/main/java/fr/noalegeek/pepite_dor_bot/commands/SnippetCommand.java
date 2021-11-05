@@ -51,14 +51,22 @@ public class SnippetCommand extends Command {
         this.name = "snippet";
         this.aliases = new String[]{"gists","gist","gis","g","paste","past","pas","snippet","snippe","snipp","snip","sni","sn","carbon","carbo","carb","car"};
         this.cooldown = 5;
-        this.help = "";
-        this.example = "help.snippet";
+        this.help = "help.snippet";
+        this.example = "```" +
+                "public static void main(String[] args){\n" +
+                "  System.out.println(\"Hello World\");\n" +
+                "}" +
+                "```";
         this.arguments = "arguments.snippet";
         this.category = CommandCategories.FUN.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
+        if(event.getArgs().isEmpty()){
+            MessageHelper.syntaxError(event, this, null);
+            return;
+        }
         ImageOptions.Language language = ImageOptions.Language.Auto;
         if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format)) {
             if(getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) {

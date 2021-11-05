@@ -14,7 +14,7 @@
   "arguments.purge": "\u003cnombre de messages\u003e",
   "arguments.say": "\u003ctexte\u003e",
   "arguments.setPrefix": "\u003creset/préfixe\u003e",
-  "arguments.snippet": "```\u003cprogramme\u003e```",
+  "arguments.snippet": "\\```\u003cprogramme\u003e\\```",
   "arguments.spigot": "\u003cID du plugin Spigot/utilisateur/nom du plugin\u003e",
   "arguments.suggestion": "\u003csuggestion\u003e",
   "arguments.tempban": "\u003cidentifiant/mention du membre\u003e \u003ctemps\u003e \u003ctemps de ban\u003e [raison]",
