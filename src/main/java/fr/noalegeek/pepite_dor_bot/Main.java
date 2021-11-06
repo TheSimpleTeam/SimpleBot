@@ -1,6 +1,5 @@
 package fr.noalegeek.pepite_dor_bot;
 
-import com.caoccao.javet.exceptions.JavetException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -34,6 +33,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
+import org.python.core.PrePy;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
@@ -67,13 +67,16 @@ public class Main {
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
     public static final Eval eval = new Eval();
+    private static boolean tty;
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
+    private static ScheduledExecutorService executorService;
 
     private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
-    public static void main(String[] args) throws IOException, InterruptedException, JavetException {
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
+    public static void main(String[] args) throws InterruptedException {
+        executorService = Executors.newScheduledThreadPool(3);
+        tty = PrePy.isInteractive();
         try {
             String arg = "";
             try {
@@ -88,10 +91,10 @@ public class Main {
                     .enableCache(CacheFlag.ONLINE_STATUS).build();
             setupLocalizations();
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getCause().getMessage());
+            ex.printStackTrace();
             return;
         } catch (LoginException e) {
-            LOGGER.log(Level.SEVERE, "Le token est invalide");
+            LOGGER.log(Level.SEVERE, "The token is invalid !");
             return;
         }
         Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
@@ -117,36 +120,38 @@ public class Main {
             }
         }, 0, TimeUnit.SECONDS.toMillis(getInfos().timeBetweenStatusChange()));
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    Listener.saveConfigs();
-                } catch (IOException ex) {
-                    LOGGER.log(Level.SEVERE, ex.getMessage());
-                }
+        executorService.scheduleAtFixedRate(() -> {
+            try {
+                Listener.saveConfigs();
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, ex.getMessage());
             }
-        }, 120_000, TimeUnit.MINUTES.toMillis(getInfos().autoSaveDelay()));
+        }, getInfos().autoSaveDelay(), getInfos().autoSaveDelay(), TimeUnit.MINUTES);
 
         executorService.scheduleAtFixedRate(() -> serverConfig.tempBan().entrySet().stream()
                 .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
                 .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
             serverConfig.tempBan().remove(e.getKey());
-            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue();
-            jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
-                    .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue();
+            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
+                    jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
+                            .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
+                    throwable -> LOGGER.severe(throwable.getMessage()));
         }), 0, 1, TimeUnit.SECONDS);
 
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
 
-        executorService.schedule(() -> {
-            try {
-                CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
-                cli.commandsListener();
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
-        }, 5, TimeUnit.SECONDS);
+        if(tty) {
+            executorService.schedule(() -> {
+                try {
+                    CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
+                    cli.commandsListener();
+                } catch (InterruptedException | IOException e) {
+                    e.printStackTrace();
+                }
+            }, 5, TimeUnit.SECONDS);
+        } else {
+            LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
+        }
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
@@ -187,7 +192,12 @@ public class Main {
         Map<String, JsonObject> objects = new HashMap<>();
         List<String> langS = new ArrayList<>();
         File f = new File("lang");
+        if(!f.exists()) {
+            LOGGER.severe("PLEASE DOWNLOAD THE LANG FOLDER FROM OUR REPOSITORY!");
+            System.exit(-1);
+        }
         File[] _langs = f.listFiles();
+        if(_langs == null) return;
         for (File lang : _langs) {
             langS.add(lang.getName().replaceAll(".json", ""));
             objects.put(lang.getName().replaceAll(".json", ""), gson.fromJson(Files.newBufferedReader(lang.toPath(), StandardCharsets.UTF_8), JsonObject.class));
@@ -233,7 +243,7 @@ public class Main {
     }
 
     private static void setupLogs() throws IOException {
-        File logFolder = new File("logs/");
+        File logFolder = new File("logs");
         if (!Files.exists(logFolder.toPath())) {
             logFolder.mkdir();
         }
@@ -246,13 +256,14 @@ public class Main {
     }
 
     private static Infos readConfig(String arg) throws IOException {
-        File config = new File(Paths.get("config/config.json").toUri());
-        File configTemplate = new File(Paths.get("config/config-template.json").toUri());
-        if (!config.exists()) {
+        File configDir = new File(Paths.get("config").toUri());
+        File config = new File(configDir, "config.json");
+        File configTemplate = new File(configDir, "config-template.json");
+        if(!configDir.exists()) configDir.mkdir();
+        if(!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            if (arg.equalsIgnoreCase("--nosetup")) {
-                map.put("botName", "YOUR-BOT-NAME");
+            if (arg.equalsIgnoreCase("--nosetup") || !tty) {
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "!");
                 map.put("defaultRoleID", "YOUR-ROLE-ID");
@@ -262,24 +273,22 @@ public class Main {
                 map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             } else {
                 Console console = System.console();
-                if (console == null) {
-                    System.out.println("No console: non-interactive mode!");
-                    System.exit(0);
-                }
                 System.out.println("I see that it's the first time that you install the bot.");
                 System.out.println("The configuration will begin.");
-                System.out.println("What is your bot's name?");
-                map.put("botName", console.readLine());
                 System.out.println("What is your bot token?");
                 map.put("token", console.readLine());
                 System.out.println("What will be the bot's prefix?");
-                map.put("prefix", console.readLine().isEmpty() ? "!" : console.readLine());
+                String p = console.readLine();
+                map.put("prefix", p.isEmpty() ? "!" : p);
                 System.out.println("How long will it take between each status change ?");
-                map.put("timeBetweenStatusChange", console.readLine().isEmpty() ? 15 : console.readLine());
+                p = console.readLine();
+                map.put("timeBetweenStatusChange", p.isEmpty() ? 15 : p);
                 System.out.println("What will be the delay between each automatic save ?");
-                map.put("autoSaveDelay", console.readLine().isEmpty() ? 15 : console.readLine());
+                p = console.readLine();
+                map.put("autoSaveDelay", p.isEmpty() ? 15 : p);
                 System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
-                map.put("activities", console.readLine().isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : console.readLine().split(";"));
+                p = console.readLine();
+                map.put("activities", p.isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : p.split(";"));
                 System.out.println("The configuration is finished. Your bot will be ready to start !");
                 map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             }
@@ -314,10 +323,12 @@ public class Main {
             languages.put("846048803554852904", "en");
             map.put("guildJoinRole", defaultGuildJoinRole);
             map.put("channelMemberJoin", defaultChannelMemberJoin);
-            map.put("channelMemberRemove", defaultChannelMemberLeave);
+            map.put("channelMemberLeave", defaultChannelMemberLeave);
             map.put("mutedRole", defaultMutedRole);
             map.put("prohibitWords", defaultProhibitWords);
             map.put("language", languages);
+            map.put("prefix", new HashMap<String, String>());
+            map.put("tempBan", new HashMap<String, String>());
             Writer writer = Files.newBufferedWriter(serverConfigFile.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
             writer.close();
@@ -362,5 +373,17 @@ public class Main {
 
     public static String[] getLangs() {
         return langs;
+    }
+
+    public static boolean isTTY() {
+        return tty;
+    }
+
+    public static ScheduledExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    public static EventWaiter getWaiter() {
+        return waiter;
     }
 }
