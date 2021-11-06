@@ -6,6 +6,7 @@ import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import org.mariuszgromada.math.mxparser.Expression;
+import org.mariuszgromada.math.mxparser.mXparser;
 
 public class CalculateCommand extends Command {
 
@@ -23,6 +24,9 @@ public class CalculateCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        mXparser.disableAlmostIntRounding();
+        mXparser.disableCanonicalRounding();
+        mXparser.disableUlpRounding();
         if (event.getArgs().split("\\s+").length == 0 || event.getArgs().isEmpty()) {
             MessageHelper.syntaxError(event, this, null);
             return;
@@ -35,19 +39,20 @@ public class CalculateCommand extends Command {
     }
 
     public String replaceAll(String calculation) {
+        //TODO Delete that, it's broke and work partially
         StringBuilder builder = new StringBuilder();
         boolean beforeNumber = false;
         boolean operator = false;
         boolean afterNumber = false;
         for (char c : calculation.toCharArray()) {
-            if(operators.contains(String.valueOf(c))){
+            if (operators.contains(String.valueOf(c))) {
                 operator = true;
                 builder.append(c);
-            } else if(UnicodeCharacters.getNumeralExponents().containsKey(c)){
-                if(beforeNumber) {
+            } else if (UnicodeCharacters.getNumeralExponents().containsKey(c)) {
+                if (beforeNumber) {
                     beforeNumber = false;
                     builder.append(UnicodeCharacters.getNumeralExponents().get(c));
-                } else if(operator){
+                } else if (operator) {
                     operator = false;
                     builder.append(UnicodeCharacters.getNumeralExponents().get(c));
                 } else {
@@ -57,18 +62,17 @@ public class CalculateCommand extends Command {
             } else {
                 switch (c) {
                     case UnicodeCharacters.leftParenthesisExponent -> {
-                        if(operator){
+                        if (operator) {
                             builder.append("(");
                             operator = false;
-                        }
-                        else builder.append("^(");
+                        } else builder.append("^(");
                         beforeNumber = true;
                     }
                     case UnicodeCharacters.rightParenthesisExponent -> {
-                        if(operator) {
+                        if (operator) {
                             builder.append(")");
                             operator = false;
-                        } else if(afterNumber){
+                        } else if (afterNumber) {
                             builder.append(")");
                             afterNumber = false;
                         } else {
@@ -107,7 +111,6 @@ public class CalculateCommand extends Command {
                 }
             }
         }
-        System.out.println(builder);
         return builder.toString();
     }
 }

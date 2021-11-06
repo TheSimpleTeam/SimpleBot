@@ -27,22 +27,30 @@ package fr.noalegeek.pepite_dor_bot.commands.config;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
-import net.dv8tion.jda.api.Permission;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 
 public class SetPrefixCommand extends Command {
 
     public SetPrefixCommand() {
         this.name = "setprefix";
-        this.userPermissions = new Permission[]{Permission.MESSAGE_MANAGE};
+        this.arguments = "arguments.setPrefix";
+        this.example = "@";
+        this.help = "help.setPrefix";
+        this.guildOwnerCommand = true;
     }
 
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            event.replyError("You need at least one argument");
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         String[] args = event.getArgs().split("\\s+");
@@ -54,15 +62,36 @@ public class SetPrefixCommand extends Command {
                 exception.printStackTrace();
             }
         }
-
-        if(Main.getInfos().prefix().equalsIgnoreCase(args[0]) && Main.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
+        if(args[0].equalsIgnoreCase("reset")){
+            if(!Main.getServerConfig().prefix().containsKey(event.getGuild().getId())){
+                EmbedBuilder errorPrefixNullEmbed = new EmbedBuilder()
+                        .setColor(Color.RED)
+                        .setTimestamp(Instant.now())
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.setPrefix.notConfigured", event));
+                event.reply(new MessageBuilder(errorPrefixNullEmbed.build()).build());
+                return;
+            }
             Main.getServerConfig().prefix().remove(event.getGuild().getId());
-            event.reply("This prefix has been reset.");
+            MessageHelper.sendTranslatedMessage("success.setPrefix.reset", event);
             return;
         }
-
+        if(args[0].equals(Main.getServerConfig().prefix().get(event.getGuild().getId()))){
+            EmbedBuilder errorSameAsConfiguredEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.setPrefix.sameAsConfigured", event));
+            event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
+            return;
+        }
         Main.getServerConfig().prefix().put(event.getGuild().getId(), args[0]);
-        event.replySuccess("My new prefix is **" + args[0] + "**");
+        EmbedBuilder successEmbed = new EmbedBuilder()
+                .setColor(Color.GREEN)
+                .setTimestamp(Instant.now())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.setPrefix.configured", event), args[0]));
+        event.reply(new MessageBuilder(successEmbed.build()).build());
     }
 
 }

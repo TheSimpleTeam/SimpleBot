@@ -17,20 +17,12 @@ public class CreateChannelCommand extends Command {
         this.category = CommandCategories.STAFF.category;
         this.guildOnly = true;
         this.aliases = new String[]{"createc", "cc", "ccommand"};
+        this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
+        this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.MANAGE_CHANNEL)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.MANAGE_CHANNEL.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.MANAGE_CHANNEL)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.MANAGE_CHANNEL.getName()));
-            return;
-        }
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3){
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.createChannel", event));

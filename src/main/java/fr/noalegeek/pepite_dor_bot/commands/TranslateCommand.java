@@ -7,39 +7,184 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
-import okhttp3.Response;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Locale;
 
 public class TranslateCommand extends Command {
 
     public TranslateCommand() {
         this.name = "translate";
         this.aliases = new String[]{"tr","tra","tran","trans","transl","transla","translat"};
-        this.example = "Hello everyone. --lang en fr";
-        this.arguments = "<text> <--lang> <from> <to>";
-        this.help = "Traduit la phrase spécifiée. Il faut spécifié la langue de la phrase et la langue dans laquelle vous voulez qu'elle soit traduit.";
+        this.example = "example.translate";
+        this.arguments = "arguments.translate";
+        this.help = "help.translate";
         this.category = CommandCategories.FUN.category;
     }
+
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMessage().getContentRaw().contains("--lang")) {
-            MessageHelper.syntaxError(event, this, null);
+        if(!event.getArgs().contains("--lang")) {
+            MessageHelper.syntaxError(event, this, "syntax.translate");
             return;
         }
+        /*
+        Variables :
+        args[0] = Text to translate
+        args[1].split("\\s+")[0] and language1 = Language of the text
+        args[1].split("\\s+")[1] and language2 = Language where the text should be translated
+         */
         String[] args = event.getArgs().split(" --lang ");
-        String text = args[0];
-        String[] langs = args[1].split("\\s+");
-        String firstLang = langs[0];
-        String secondLang = langs[1];
+        LingvaLanguage language1 = LingvaLanguage.AUTO;
+        LingvaLanguage language2 = LingvaLanguage.EN;
+        for(LingvaLanguage lingvaLanguage : LingvaLanguage.values()) {
+            if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[0])) language1 = lingvaLanguage;
+            if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[1])) language2 = lingvaLanguage;
+        }
         try {
-            Response response = RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", firstLang, secondLang, URLEncoder.encode(text, "UTF-8")));
-            event.reply(Main.gson.fromJson(response.body().string(), JsonObject.class).get("translation").getAsString());
-        } catch (IOException ex) {
-            Main.LOGGER.severe(ex.getMessage());
-            event.reply("Une erreur est survenue. Veuillez contacter le développeur et envoyez lui ce message :\n" +
-                    ex.getMessage());
+            EmbedBuilder successEmbed = new EmbedBuilder()
+                    .setColor(Color.GREEN)
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setTimestamp(Instant.now())
+                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event))
+                    .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false)
+                    .addField(MessageHelper.translateMessage("success.translate.translatedText", event), Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString(), false)
+                    .addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
+                    .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), true)
+                    .addBlankField(true)
+                    .addField(MessageHelper.translateMessage("success.translate.isoCodeTranslation", event), language2.name().toLowerCase(Locale.ROOT), true)
+                    .addField(MessageHelper.translateMessage("success.translate.languageTranslation", event), MessageHelper.translateMessage(language2.languageName, event), true)
+                    .addBlankField(true);
+            event.reply(new MessageBuilder(successEmbed.build()).build());
+        } catch (IOException exception) {
+            MessageHelper.sendError(exception, event, this);
+        }
+    }
+
+    private enum LingvaLanguage{
+
+        AUTO("text.translate.detect"),
+        AF("text.translate.afrikaans"),
+        SQ("text.translate.albanian"),
+        AM("text.translate.amharic"),
+        AR("text.translate.arabic"),
+        HY("text.translate.armenian"),
+        AZ("text.translate.azerbaijani"),
+        EU("text.translate.basque"),
+        BE("text.translate.belarusian"),
+        BN("text.translate.bengali"),
+        BS("text.translate.bosnian"),
+        BG("text.translate.bulgarian"),
+        CA("text.translate.catalan"),
+        CEB("text.translate.cebuano"),
+        NY("text.translate.chichewa"),
+        ZH("text.translate.chinese"),
+        ZH_HANT("text.translate.chineseTraditional"),
+        CO("text.translate.corsican"),
+        HR("text.translate.croatian"),
+        CS("text.translate.czech"),
+        DA("text.translate.danish"),
+        NL("text.translate.dutch"),
+        EN("text.translate.english"),
+        EO("text.translate.esperanto"),
+        ET("text.translate.estonian"),
+        TL("text.translate.filipino"),
+        FI("text.translate.finnish"),
+        FR("text.translate.french"),
+        FY("text.translate.frisian"),
+        GL("text.translate.galician"),
+        KA("text.translate.georgian"),
+        DE("text.translate.german"),
+        EL("text.translate.greek"),
+        GU("text.translate.gujarati"),
+        HT("text.translate.haitianCreole"),
+        HA("text.translate.hausa"),
+        HAW("text.translate.hawaiian"),
+        IW("text.translate.hebrew"),
+        HI("text.translate.hindi"),
+        HMN("text.translate.hmong"),
+        HU("text.translate.hungarian"),
+        IS("text.translate.icelandic"),
+        IG("text.translate.igbo"),
+        ID("text.translate.indonesian"),
+        GA("text.translate.irish"),
+        IT("text.translate.italian"),
+        JA("text.translate.japanese"),
+        JW("text.translate.javanese"),
+        KN("text.translate.kannada"),
+        KK("text.translate.kazakh"),
+        KM("text.translate.khmer"),
+        RW("text.translate.kinyarwanda"),
+        KO("text.translate.korean"),
+        KU("text.translate.kurdishKurmanji"),
+        KY("text.translate.kyrgyz"),
+        LO("text.translate.lao"),
+        LA("text.translate.latin"),
+        LV("text.translate.latvian"),
+        LT("text.translate.lithuanian"),
+        LB("text.translate.luxembourgish"),
+        MK("text.translate.macedonian"),
+        MG("text.translate.malagasy"),
+        MS("text.translate.malay"),
+        ML("text.translate.malayalam"),
+        MT("text.translate.maltese"),
+        MI("text.translate.maori"),
+        MR("text.translate.marathi"),
+        MN("text.translate.mongolian"),
+        MY("text.translate.myanmarBurmese"),
+        NE("text.translate.nepali"),
+        NO("text.translate.norwegian"),
+        OR("text.translate.odiaOriya"),
+        PS("text.translate.pashto"),
+        FA("text.translate.persian"),
+        PL("text.translate.polish"),
+        PT("text.translate.portuguese"),
+        PA("text.translate.punjabi"),
+        RO("text.translate.romanian"),
+        RU("text.translate.russian"),
+        SM("text.translate.samoan"),
+        GD("text.translate.scotsGaelic"),
+        SR("text.translate.serbian"),
+        ST("text.translate.sesotho"),
+        SN("text.translate.shona"),
+        SD("text.translate.sindhi"),
+        SI("text.translate.sinhala"),
+        SK("text.translate.slovak"),
+        SL("text.translate.slovenian"),
+        SO("text.translate.somali"),
+        ES("text.translate.spanish"),
+        SU("text.translate.sundanese"),
+        SW("text.translate.swahili"),
+        SV("text.translate.swedish"),
+        TG("text.translate.tajik"),
+        TA("text.translate.tamil"),
+        TT("text.translate.tatar"),
+        TE("text.translate.telugu"),
+        TH("text.translate.thai"),
+        TR("text.translate.turkish"),
+        TK("text.translate.turkmen"),
+        UK("text.translate.ukrainian"),
+        UR("text.translate.urdu"),
+        UG("text.translate.uyghur"),
+        UZ("text.translate.uzbek"),
+        VI("text.translate.vietnamese"),
+        CY("text.translate.welsh"),
+        XH("text.translate.xhosa"),
+        YI("text.translate.yiddish"),
+        YO("text.translate.yoruba"),
+        ZU("text.translate.zulu");
+
+        private final String languageName;
+
+        LingvaLanguage(String languageName){
+            this.languageName = languageName;
         }
     }
 }

@@ -20,6 +20,8 @@ public class MuteCommand extends Command {
         this.cooldown = 5;
         this.example = "285829396009451522 spam";
         this.guildOnly = true;
+        this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
+        this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
 
     @Override
@@ -29,31 +31,11 @@ public class MuteCommand extends Command {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.mute", event));
             return;
         }
-        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user ->
             event.getGuild().retrieveMember(user).queue(member -> {
-                if (!event.getMember().canInteract(member)) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event));
-                    return;
-                }
-                if (!event.getSelfMember().canInteract(member)) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
-                    return;
-                }
-                String reason;
-                if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.reasonNull", event);
-                else reason = MessageHelper.translateMessage("text.reason", event) + args[1];
+                if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                 isMutedRoleHere(event);
-                mute(event, member, reason, event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
+                mute(event, member, MessageHelper.setReason(args[1], event), event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
             }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
                 userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }

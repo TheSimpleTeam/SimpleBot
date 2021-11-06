@@ -23,20 +23,12 @@ public class ProhibitCommand extends Command {
         this.category = CommandCategories.STAFF.category;
         this.cooldown = 5;
         this.guildOnly = true;
+        this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
+        this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2) {
             MessageHelper.syntaxError(event,this, MessageHelper.translateMessage("syntax.prohibit", event));

@@ -22,6 +22,7 @@ import fr.noalegeek.pepite_dor_bot.gson.RecordTypeAdapterFactory;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.Eval;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.simpleteam.simplebot.api.Server;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -136,6 +137,8 @@ public class Main {
                             .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
                     throwable -> LOGGER.severe(throwable.getMessage()));
         }), 0, 1, TimeUnit.SECONDS);
+
+        executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
 
         if(tty) {
             executorService.schedule(() -> {

@@ -6,15 +6,16 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-
-import static java.lang.StackWalker.Option.RETAIN_CLASS_REFERENCE;
 
 public class MessageHelper {
 
@@ -32,10 +33,10 @@ public class MessageHelper {
                 .setTimestamp(Instant.now())
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage("text.commands.syntaxError", event), command.getName()))
-                .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(),false)
+                .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(), false)
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event), false)
                 .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
-        if(informations != null) {
+        if (informations != null) {
             syntaxErrorEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);
         }
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
@@ -50,11 +51,11 @@ public class MessageHelper {
                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.sendError.error", event))
                 .addField(MessageHelper.translateMessage("text.commands.sendError.sendError", event), exception.getMessage(), false)
                 .addField(MessageHelper.translateMessage("text.commands.sendError.command", event), Main.getPrefix(event.getGuild()) + command.getName(), false);
-        if(command.getArguments() == null || command.getArguments().isEmpty()){
+        if (command.getArguments() == null || command.getArguments().isEmpty()) {
             event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
             return;
         }
-        sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event), event.getMessage().getContentRaw(), false);
+        sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event), event.getArgs(), false);
         event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
     }
 
@@ -62,16 +63,57 @@ public class MessageHelper {
         int day = date.getDayOfMonth();
         int month = date.getMonthValue();
         int year = date.getYear();
-        if(month < 10){
+        if (month < 10) {
             String strMonth = "0" + month;
             return day + "/" + strMonth + "/" + year;
         }
         return day + "/" + month + "/" + year;
     }
 
+    public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event) {
+        if (member.canInteract(target) && bot.canInteract(target)) return false;
+        EmbedBuilder errorCantInteractEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setTimestamp(Instant.now());
+        if (!member.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.member", event));
+        if (!bot.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.bot", event));
+        event.reply(new MessageBuilder(errorCantInteractEmbed.build()).build());
+        return true;
+    }
+
+    public static String deleteFinalsCharactersOneByOne(String string) {
+        return deleteFinalsCharactersOneByOne(string, null, false);
+    }
+
+    public static String deleteFinalsCharactersOneByOne(String string, boolean keepOriginal) {
+        return deleteFinalsCharactersOneByOne(string, null, keepOriginal);
+    }
+
+    public static String deleteFinalsCharactersOneByOne(String string, String delimiter) {
+        return deleteFinalsCharactersOneByOne(string, delimiter, false);
+    }
+
+    public static String deleteFinalsCharactersOneByOne(@Nonnull String string, @Nullable String delimiter, boolean keepOriginal) {
+        if (string.length() == 0) return string;
+        StringBuilder stringBuilder = keepOriginal ? delimiter != null ? new StringBuilder().append(string).append(delimiter) : new StringBuilder().append(string) : new StringBuilder();
+        for (int i = string.length(); i > 0; i--) {
+            stringBuilder.append(string, 0, i);
+            if (delimiter != null) stringBuilder.append(delimiter);
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String setReason(String reason, CommandEvent event) {
+        return reason == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + reason;
+    }
+
+    public static void sendTranslatedMessage(String key, CommandEvent event) {
+        event.reply(translateMessage(key, event));
+    }
+
     /**
-     *
-     * @param key the localization key
+     * @param key   the localization key
      * @param event for getting the guild's ID
      * @return the translated value
      * @throws NullPointerException if the key does not exist in any localization files.
@@ -79,19 +121,24 @@ public class MessageHelper {
     public static String translateMessage(String key, CommandEvent event) {
         String lang = Main.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en");
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
-        if(s.isPresent()) return s.get().getAsString();
+        if (s.isPresent()) return s.get().getAsString();
         if (Main.getLocalizations().get("en").get(key) == null) {
+            StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+            int skip = 2;
+            if (stackWalker.walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
+                skip++;
+            final var _skip = skip;
             EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
                     .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(2).findFirst().orElseThrow()).getLineNumber()), false);
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
             event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
-            throw new NullPointerException();
+            throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {
             return Main.getLocalizations().get("en").get(key).getAsString();

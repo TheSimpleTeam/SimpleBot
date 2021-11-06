@@ -14,23 +14,15 @@ public class BanCommand extends Command {
         this.guildOnly = true;
         this.cooldown = 5;
         this.arguments = "arguments.ban";
-        this.example = "363811352688721930";
+        this.example = "363811352688721930 7 spam";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.ban";
+        this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
+        this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event),
-                    Permission.BAN_MEMBERS.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event),
-                    Permission.BAN_MEMBERS.getName()));
-            return;
-        }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.ban", event));
@@ -41,20 +33,8 @@ public class BanCommand extends Command {
                 event.getGuild().unban(user).queue(unused -> event.reply(String.format(MessageHelper.translateMessage("success.unban", event), user.getName())));
             } else {
                 event.getGuild().retrieveMember(user).queue(member -> {
-                    if (!event.getMember().canInteract(member)) {
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userCantInteractTarget", event));
-                        return;
-                    }
-                    if (!event.getSelfMember().canInteract(member)) {
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.botCantInteractTarget", event));
-                        return;
-                    }
+                    if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                     if (args[1] == null || args[1].isEmpty()) args[1] = "7";
-                    String reason;
-                    if (args[2] == null || args[2].isEmpty())
-                        reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
-                    else
-                        reason = MessageHelper.translateMessage("text.commands.reason", event) + args[2];
                     try {
                         int banTime = Integer.parseInt(args[1]);
                         if (banTime > 7) {
@@ -62,8 +42,7 @@ public class BanCommand extends Command {
                             event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
                         }
                         event.getGuild().ban(user, banTime).queue();
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(),
-                                reason));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), MessageHelper.setReason(args[2], event)));
                     } catch (NumberFormatException ex) {
                         event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
                     }
