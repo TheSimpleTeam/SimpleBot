@@ -112,13 +112,9 @@ public class Main {
 
         jda.awaitReady();
 
-        //Removed onReady
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)]));
-            }
-        }, 0, TimeUnit.SECONDS.toMillis(getInfos().timeBetweenStatusChange()));
+        executorService.scheduleAtFixedRate(() ->
+                jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)])),
+                0, getInfos().timeBetweenStatusChange(), TimeUnit.SECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             try {
@@ -132,10 +128,14 @@ public class Main {
                 .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
                 .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
             serverConfig.tempBan().remove(e.getKey());
-            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
-                    jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
-                            .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
-                    throwable -> LOGGER.severe(throwable.getMessage()));
+            jda.getGuildById(e.getKey().split("-")[1]).retrieveBanList().queue(a -> {
+                if(a.stream().anyMatch(ban -> ban.getUser().getId().equals(e.getKey().split("-")[0]))) {
+                    jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
+                                    jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
+                                            .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
+                            throwable -> LOGGER.severe(throwable.getMessage()));
+                }
+            });
         }), 0, 1, TimeUnit.SECONDS);
 
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);

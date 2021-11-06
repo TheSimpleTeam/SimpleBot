@@ -31,7 +31,10 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import org.apache.commons.cli.*;
-import org.kohsuke.github.*;
+import org.kohsuke.github.GHIssueBuilder;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import java.io.IOException;
 
@@ -71,7 +74,6 @@ public class IssueCommand extends Command {
                 return;
             }
             GHRepository repo = this.gh.getRepositoryById(GithubInfo.REPOSITORY_ID.id);
-            GHOrganization org = this.gh.getOrganization(GithubInfo.ORGANISATION_ID.name);
             GHIssueBuilder builder = repo.createIssue(String.join(" ", getOrDefault(cmd, "title", "Automatic Issue"))).body(String.format("""
                 This issue has been made by %s on %s
                 
