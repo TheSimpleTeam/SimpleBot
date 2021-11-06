@@ -3,17 +3,24 @@ plugins {
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.0"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
+    id 'com.bmuschko.docker-java-application' version '7.1.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC2'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
 }
 
 ext.graalVersion = '21.3.0'
 
-group 'fr.noalegeek'
+group 'fr.thesimpleteam'
 version '1.0'
 
 mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
+
+import com.bmuschko.gradle.docker.tasks.image.*
+
+import java.util.concurrent.Callable
 
 graal {
     version "$graalVersion"
@@ -32,7 +39,7 @@ repositories {
 
 dependencies {
     //JDA & JDA-Utilities
-    implementation("net.dv8tion:JDA:4.3.0_336")
+    implementation("net.dv8tion:JDA:4.3.0_339")
     implementation('pw.chew:jda-chewtils:1.22.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
@@ -45,6 +52,11 @@ dependencies {
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.4'
+    //API
+    implementation('io.ktor:ktor-server-core:1.6.4')
+    implementation('io.ktor:ktor-server-host-common:1.6.4')
+    implementation('io.ktor:ktor-server-netty:1.6.4')
+    implementation('io.ktor:ktor-serialization:1.6.4')
     //Other
     implementation 'com.github.TheSimpleTeam:Spiget:main-SNAPSHOT'
     implementation 'com.google.code.gson:gson:2.8.9'
@@ -54,12 +66,62 @@ dependencies {
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
-
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0-RC2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
+docker {
+    javaApplication {
+        baseImage = ''
+        getApiVersion().set("1.0")
+        maintainer = 'Minemobs <minemobs.pro@gmail.com>'
+        jvmArgs = ['-Xms256m', '-Xmx1024m']
+    }
+}
+
+task copyLangs(type: Copy) {
+    from('lang')
+    into("$buildDir/docker/lang")
+}
+
+task createDockerFile(type: Dockerfile) {
+    dependsOn(clean)
+    dependsOn(dockerSyncBuildContext)
+    finalizedBy(copyLangs)
+    from('eclipse-temurin:17_35-jdk-focal')
+    label([MAINTAINER: "Minemobs <minemobs.pro@gmail.com>"])
+    workingDir("/app")
+    addFile("lang", "lang/")
+    addFile("libs", "libs/")
+    addFile("classes", "classes/")
+    entryPoint(project.provider(new Callable<List<String>>() {
+        @Override
+        List<String> call() throws Exception {
+            ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "fr.noalegeek.pepite_dor_bot.Main"]
+        }
+    }))
+    exposePort(8080)
+}
+
+task buildDocker(type: DockerBuildImage) {
+    dependsOn createDockerFile
+    dockerFile.set(file("$buildDir/docker/Dockerfile"))
+    images.add("thesimpleteam/$project.name:$project.version")
+}
+
 test {
     useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }

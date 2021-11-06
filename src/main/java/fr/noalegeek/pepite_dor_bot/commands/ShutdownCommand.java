@@ -29,7 +29,6 @@ public class ShutdownCommand extends Command {
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
                 .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.shutdown", event))
                 .setColor(Color.GREEN);
-        event.reply(new MessageBuilder(successEmbed.build()).build());
-        event.getJDA().shutdown();
+        event.getChannel().sendMessage(new MessageBuilder(successEmbed.build()).build()).queue(e -> event.getJDA().shutdown());
     }
 }
