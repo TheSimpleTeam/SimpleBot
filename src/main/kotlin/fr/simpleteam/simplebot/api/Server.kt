@@ -29,6 +29,7 @@ import fr.noalegeek.pepite_dor_bot.Main
 import fr.simpleteam.simplebot.api.jda.Guild
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
@@ -49,9 +50,9 @@ class Server(private val jda : JDA, private val gson: Gson) {
                     call.respondText("Hello World!")
                 }
                 get("/guilds") {
-                    call.respond(gson.toJson(jda.guilds.stream()
+                    call.respondText(gson.toJson(jda.guilds.stream()
                         .map { v -> Guild(v.id, v.name, v.iconUrl, v.owner?.user?.name + "#" + v.owner?.user?.discriminator, v.memberCount, v.timeCreated.toString()) }
-                        .collect(Collectors.toList())))
+                        .collect(Collectors.toList())), ContentType.Application.Json)
                 }
                 get("/guilds/count") {
                     call.respondText(jda.guilds.size.toString())
@@ -59,6 +60,13 @@ class Server(private val jda : JDA, private val gson: Gson) {
             }
             install(ContentNegotiation) {
                 json()
+            }
+            install(CORS) {
+                header(HttpHeaders.AccessControlAllowOrigin)
+                header(HttpHeaders.ContentType)
+                allowNonSimpleContentTypes = true
+                anyHost()
+                allowSameOrigin = true
             }
             LOGGER.info("The server has been initialized !")
         }.start(wait = true)
