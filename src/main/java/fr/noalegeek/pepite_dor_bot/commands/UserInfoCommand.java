@@ -8,8 +8,6 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -31,7 +29,7 @@ public class UserInfoCommand extends Command {
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty() || event.getArgs().isBlank()){
             EmbedBuilder successEmbed = new EmbedBuilder()
-                    .setTitle(UnicodeCharacters.informationSourceEmoji + " " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), MessageHelper.getTag(event.getAuthor())))
+                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.unshortURL.success", event)))
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
                     .setColor(Color.BLUE)

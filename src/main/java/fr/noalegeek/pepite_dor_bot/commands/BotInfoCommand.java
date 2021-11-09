@@ -28,7 +28,7 @@ public class BotInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle(UnicodeCharacters.informationSourceEmoji + " " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), event.getSelfMember().getEffectiveName()))
+                .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.unshortURL.success", event)))
                 .setTimestamp(Instant.now())
                 .setColor(Color.BLUE)
                 .setThumbnail(event.getSelfUser().getEffectiveAvatarUrl())
@@ -37,7 +37,7 @@ public class BotInfoCommand extends Command {
                 .addField(MessageHelper.translateMessage("success.botInfo.creationDate", event), MessageHelper.formatShortDate(event.getSelfMember().getTimeCreated()), false)
                 .addField(MessageHelper.translateMessage("success.botInfo.joinDate", event), MessageHelper.formatShortDate(event.getSelfMember().getTimeJoined()), false)
                 .addField(MessageHelper.translateMessage("success.botInfo.activity", event), event.getSelfUser().getJDA().getPresence().getActivity() == null ? MessageHelper.translateMessage("text.commands.nothing", event) : event.getSelfUser().getJDA().getPresence().getActivity().getName(), false)
-                .addField(MessageHelper.translateMessage("success.botInfo.status", event), StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT).replaceAll("_", "")), false)
+                .addField(MessageHelper.translateMessage("success.botInfo.status", event), StringUtils.capitalize(String.valueOf(event.getSelfUser().getJDA().getPresence().getStatus()).toLowerCase(Locale.ROOT).replace("_", "")), false)
                 .addField(MessageHelper.translateMessage("success.botInfo.github", event), "https://github.com/TheSimpleTeam/SimpleBot", false)
                 .addField(MessageHelper.translateMessage("success.botInfo.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());

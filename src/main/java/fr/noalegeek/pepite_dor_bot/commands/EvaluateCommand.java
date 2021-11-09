@@ -50,9 +50,10 @@ public class EvaluateCommand extends Command {
     }
 
     private void eval(Eval.Languages language, String arg, CommandEvent event) {
-        switch (language) {
-            case JS -> evalJS(arg, event);
-            case PY -> evalPY(arg, event);
+        if(language == Eval.Languages.PY) {
+            evalPY(arg, event);
+        } else {
+            evalJS(arg, event);
         }
     }
 
@@ -72,7 +73,7 @@ public class EvaluateCommand extends Command {
             addV8Module(MessageHelper.class);
             addV8Module(net.dv8tion.jda.api.entities.TextChannel.class);
             Object eval = engine.getExecutor(args).executeObject();
-            event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : MessageHelper.translateMessage("success.eval", event) + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
+            event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : String.format("%s %n %s %n %s %n %s", MessageHelper.translateMessage("success.eval", event), DiscordFormatUtils.MULTILINE_CODE_BLOCK, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK));
             engine.getGlobalObject().forEach(value -> engine.getGlobalObject().delete(value));
         } catch (JavetException e) {
             if(e.getMessage().startsWith("ReferenceError") || e.getMessage().startsWith("TypeError")) {
@@ -94,7 +95,7 @@ public class EvaluateCommand extends Command {
         pyInterpreter.set("member", event.getMember());
         pyInterpreter.exec(args);
         String eval = writer.toString();
-        event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : MessageHelper.translateMessage("success.eval", event) + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format + "\n" + eval + "\n" + DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
+        event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : String.format("%s %n %s %n %s %n %s",MessageHelper.translateMessage("success.eval", event), DiscordFormatUtils.MULTILINE_CODE_BLOCK, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK));
         pyInterpreter.cleanup();
         writer.getBuffer().setLength(0);
     }

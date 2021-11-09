@@ -4,10 +4,10 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import net.dv8tion.jda.api.MessageBuilder;
 
 public class PrimeNumberCommand extends Command {
-    public PrimeNumberCommand(){
+
+    public PrimeNumberCommand() {
         this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"primen","prnumber","pnum","primenum","prn"};
         this.name = "primenumber";
@@ -16,14 +16,17 @@ public class PrimeNumberCommand extends Command {
         this.cooldown = 5;
         this.example = "nombre 87";
     }
+
     @Override
     protected void execute(CommandEvent event) {
         if(event.getAuthor().isBot()) return;
         String[] args = event.getArgs().split("\\s+");
+
         if(args.length != 2) {
             MessageHelper.syntaxError(event,this, "Le nombre à spécifier a pour limite " + Long.MAX_VALUE  + ".");
             return;
         }
+
         try {
             long number = Long.parseLong(args[1]);
             switch (args[0]) {
@@ -34,24 +37,27 @@ public class PrimeNumberCommand extends Command {
                         event.reply("Le nombre " + number + " n'est pas un nombre premier.");
                     }
                     break;
+
                 case "liste":
-                    MessageBuilder list = new MessageBuilder();
+                    StringBuilder list = new StringBuilder();
                     for (long i = 1; i < number; i++) {
-                        if(list.toString().length() == 1024 || (list.toString() + i + "\n").length() >= 1024) {
-                            event.replyWarning("La limite des 1024 caractères à été atteinte.");
+                        if(list.length() == 1024 || (list.toString() + i + "\n").length() >= 1024) {
+                            event.replyWarning("La limite des 1024 caractères a été atteinte.");
                             break;
                         }
                         if(isPrime(i)) {
                             list.append(i).append("\n");
                         }
                     }
-                    event.reply(MessageHelper.formattedMention(event.getAuthor())+"Voici la liste des nombres premiers jusqu'à "+number+" :\n"+list.build());
+                    event.reply(String.format("%s %s %d :%n %s", MessageHelper.formattedMention(event.getAuthor()), "Voici la liste des nombres premiers jusqu'à ", number, list));
                     break;
+
                 default:
                     MessageHelper.syntaxError(event, this, null);
                     break;
             }
         } catch(NumberFormatException ex) {
+            //TODO: Traduire ça
             event.reply("Le second argument ne peut contenir des lettres.");
             MessageHelper.syntaxError(event, this, null);
         }

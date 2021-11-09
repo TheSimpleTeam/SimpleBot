@@ -8,7 +8,7 @@ import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
-import java.awt.*;
+import java.awt.Color;
 import java.time.Instant;
 import java.util.Locale;
 
@@ -35,7 +35,8 @@ public class InviteCommand extends Command {
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "create" -> {
                 EmbedBuilder successCreateEmbed = new EmbedBuilder()
-                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.invite.create.success", event), event.getGuild().getName()))
+                        .setTitle(String.format("%s %s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.invite.create.success", event),
+                                event.getGuild().getName()))
                         .setColor(Color.GREEN)
                         .setTimestamp(Instant.now())
                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
@@ -47,8 +48,10 @@ public class InviteCommand extends Command {
                         .setColor(Color.GREEN)
                         .setTimestamp(Instant.now())
                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
-                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.invite.bot.success", event), event.getSelfMember().getEffectiveName()))
-                        .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false);
+                        .setTitle(String.format("%s %s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.invite.bot.success", event),
+                                event.getSelfMember().getEffectiveName()))
+                        .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event),
+                                String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false);
                 event.reply(new MessageBuilder(successBotEmbed.build()).build());
             }
             default -> MessageHelper.syntaxError(event, this, "syntax.invite");

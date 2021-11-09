@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 
-import java.awt.*;
+import java.awt.Color;
 import java.time.Instant;
 
 public class SayCommand extends Command {
@@ -32,7 +32,8 @@ public class SayCommand extends Command {
             return;
         }
         EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.say.success", event))
+                .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji,
+                        MessageHelper.translateMessage("success.say.success", event)))
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .setDescription(event.getArgs());

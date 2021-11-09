@@ -2,7 +2,6 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
@@ -10,11 +9,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Instant;
@@ -37,27 +34,30 @@ public class UnshortURLCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
+        String[] args = event.getArgs().split("\\s+");
         try {
             EmbedBuilder successEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
-                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.unshortURL.success", event))
-                    .addField(MessageHelper.translateMessage("success.unshortURL.link", event), !event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0], false)
-                    .addField(MessageHelper.translateMessage("success.unshortURL.redirection", event), String.format("`%s`", getURL(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])), false);
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() :
+                            event.getAuthor().getAvatarUrl())
+                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.unshortURL.success", event)))
+                    .addField(MessageHelper.translateMessage("success.unshortURL.link", event),
+                            !args[0].startsWith("https://") && !args[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : args[0],
+                            false)
+                    .addField(MessageHelper.translateMessage("success.unshortURL.redirection", event), String.format("`%s`", getURL(!args[0].startsWith("https://") &&
+                            !args[0].startsWith("http://") ? "http://" + args[0] : args[0])), false);
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (IOException e) {
             MessageHelper.sendError(e, event, this);
         }
     }
 
-    public String getURL(String _url) throws IOException {
-        String url = unshortenUrl(_url);
-        String[] urls = url.replace("https://", "").replace("http://", "").split("/");
+    public String getURL(String url) throws IOException {
+        url = unshortenUrl(url);
+        String[] urls = url.replaceFirst("http(s?)://", "").split("/");
         if(urls[0].equalsIgnoreCase("preview.tinyurl.com")) {
-            Document doc = Jsoup.connect(_url).get();
-            Elements redirectURL = doc.getElementById("contentcontainer").getElementsByAttribute("blockquote");
-            Main.LOGGER.info(String.valueOf(redirectURL.size()));
+            Document doc = Jsoup.connect(url).get();
             String docText = doc.body().text();
             return docText.substring(docText.indexOf("to: "), docText.indexOf(" Proceed")).replace("to: ", "").replace(" Proceed", "");
         }

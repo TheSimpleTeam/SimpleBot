@@ -28,9 +28,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import me.bluetree.spiget.Author;
 import me.bluetree.spiget.Resource;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
@@ -64,7 +64,7 @@ public class SpigotCommand extends Command {
             try {
                 Resource pluginId = new Resource(Integer.parseInt(args[0]));
                 EmbedBuilder successPluginIDEmbed = new EmbedBuilder()
-                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.spigot.pluginID.success", event))
+                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.spigot.pluginID.success", event)))
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginName", event), pluginId.getResourceName(), false)
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginLink", event), pluginId.getResourceLink(), false)
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginID", event), args[0], false)

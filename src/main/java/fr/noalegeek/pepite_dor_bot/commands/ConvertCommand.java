@@ -8,7 +8,7 @@ import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
-import java.awt.*;
+import java.awt.Color;
 import java.time.Instant;
 
 public class ConvertCommand extends Command {
@@ -66,7 +66,7 @@ public class ConvertCommand extends Command {
             String factor = String.valueOf(unit1.factor / unit2.factor);
             EmbedBuilder successEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)
-                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.convert.success", event))
+                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.unshortURL.success", event)))
                     .addField(MessageHelper.translateMessage("success.convert.from", event), args[0] + " " + args[1] + " (" + MessageHelper.translateMessage(unit1.unitName, event) + ")", false)
                     .addField(MessageHelper.translateMessage("success.convert.to", event), String.valueOf(number * Double.parseDouble(factor)).replace("E", "x10^") + " " + args[2] + " (" + MessageHelper.translateMessage(unit2.unitName, event) + ")", false)
                     .addField(MessageHelper.translateMessage("success.convert.factor", event), factor.replace("E", "x10^"), false)

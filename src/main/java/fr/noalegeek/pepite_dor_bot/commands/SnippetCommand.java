@@ -32,12 +32,11 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import sh.stein.carbon.CarbonService;
 import sh.stein.carbon.ImageOptions;
 import sh.stein.carbon.PlaywrightCarbonService;
 
-import java.awt.*;
+import java.awt.Color;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -52,11 +51,10 @@ public class SnippetCommand extends Command {
         this.aliases = new String[]{"gists","gist","gis","g","paste","past","pas","snippet","snippe","snipp","snip","sni","sn","carbon","carbo","carb","car"};
         this.cooldown = 5;
         this.help = "help.snippet";
-        this.example = "```" +
-                "public static void main(String[] args){\n" +
-                "  System.out.println(\"Hello World\");\n" +
-                "}" +
-                "```";
+        this.example = """
+                ```public static void main(String[] args){
+                  System.out.println("Hello World");
+                }```""";
         this.arguments = "arguments.snippet";
         this.category = CommandCategories.FUN.category;
     }
@@ -68,10 +66,8 @@ public class SnippetCommand extends Command {
             return;
         }
         ImageOptions.Language language = ImageOptions.Language.Auto;
-        if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format)) {
-            if(getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) {
-                language = getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
-            }
+        if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format) && getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) {
+            language = getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
         }
         List<String> list = new LinkedList<>(Arrays.asList(event.getArgs().split("\n")));
         list.remove(0);
@@ -85,7 +81,8 @@ public class SnippetCommand extends Command {
                 .setColor(Color.ORANGE)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
                 .setTimestamp(Instant.now())
-                .setTitle(UnicodeCharacters.warningSignEmoji + " " + MessageHelper.translateMessage("warning.snippet", event));
+                .setTitle(String.format("%s %s",
+                        UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("warning.snippet", event)));
         event.getMessage().reply(new MessageBuilder(warningTakeTooLongEmbed.build()).build()).queue(warningTakeTooLongMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTooLongMessage.delete().queue()));
     }
 

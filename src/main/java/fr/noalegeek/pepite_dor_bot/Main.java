@@ -54,7 +54,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -160,7 +159,7 @@ public class Main {
         List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> {
             String key = o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName();
             return MessageHelper.translateMessage(key, event);
-        })).collect(Collectors.toList());
+        })).toList();
         for (Command command : botCommands) {
             if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
                 if (!Objects.equals(category, command.getCategory())) {
@@ -248,7 +247,7 @@ public class Main {
             logFolder.mkdir();
         }
         FileHandler fh = new FileHandler("logs/log-" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                .replaceAll(":", "-") + ".log");
+                .replace(":", "-") + ".log");
         SimpleFormatter sf = new SimpleFormatter();
         fh.setEncoding("UTF-8");
         fh.setFormatter(sf);
@@ -381,9 +380,5 @@ public class Main {
 
     public static ScheduledExecutorService getExecutorService() {
         return executorService;
-    }
-
-    public static EventWaiter getWaiter() {
-        return waiter;
     }
 }
