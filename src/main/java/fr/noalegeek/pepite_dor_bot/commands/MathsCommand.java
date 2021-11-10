@@ -108,17 +108,22 @@ public class MathsCommand extends Command {
     }
 
     public static boolean notAnNumber(CommandEvent event, String string){
-        if(string.chars().allMatch(Character::isDigit)) return false;
-        EmbedBuilder notAnNumberEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTimestamp(Instant.now())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.commands.notAnNumber", event));
-        event.reply(new MessageBuilder(notAnNumberEmbed.build()).build());
-        return true;
+        try{
+            Double number = Double.parseDouble(string);
+            return false;
+        } catch (NumberFormatException exception){
+            EmbedBuilder notAnNumberEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTimestamp(Instant.now())
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.commands.notAnNumber", event));
+            event.reply(new MessageBuilder(notAnNumberEmbed.build()).build());
+            return true;
+        }
+
     }
 
-    public static boolean notAn(CommandEvent event, String string){
+    public static boolean notAnIntegerNumber(CommandEvent event, String string){
         if(string.chars().allMatch(Character::isDigit)) return false;
         EmbedBuilder notAnNumberEmbed = new EmbedBuilder()
                 .setColor(Color.RED)

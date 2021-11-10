@@ -129,28 +129,6 @@ public class GithubCommand extends Command {
         try {
             github.checkApiUrlValidity();
         } catch (IOException ignored) {
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
-@RequireConfig("botGithubToken")
-        this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().botGithubToken()).build();
-            MessageHelper.syntaxError(event, this, null);
-            EmbedBuilder errorDisabledCommandEmbed = new EmbedBuilder()
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.github.disabled", event))
-                    .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getEffectiveAvatarUrl());
-            event.reply(new MessageBuilder(errorDisabledCommandEmbed.build()).build());
-                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.github.search.success", event))
-                            .addField(MessageHelper.translateMessage("success.github.search.repositoryName", event), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
-                    MessageHelper.sendError(ex, event, this);
-                    EmbedBuilder successListEmbed = new EmbedBuilder()
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.github.list", event), name))
-                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                            .setThumbnail(github.getUser(args[1]).getAvatarUrl());
-                    for (String ghname : github.getUser(args[1]).getRepositories().keySet()) {
-                        successListEmbed.addField(ghname, github.getUser(args[1]).getRepositories().get(ghname).getHtmlUrl().toString(), false);
-                    event.reply(new MessageBuilder(successListEmbed.build()).build());
-                    MessageHelper.sendError(ex, event, this);
-        return repo.getLicense() == null ? MessageHelper.translateMessage("success.github.noLicense", event) : repo.getLicense().getName();
-        } catch (IOException ignored) {
             return true;
         }
         return false;
