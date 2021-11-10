@@ -46,6 +46,7 @@ public class IssueCommand extends Command {
     public IssueCommand() throws IOException {
         this.name = "issue";
         this.cooldown = 30;
+        this.help = "help.issue";
         this.gh = new GitHubBuilder().withOAuthToken(Main.getInfos().botGithubToken()).build();
     }
 

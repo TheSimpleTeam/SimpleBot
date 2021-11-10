@@ -12,7 +12,7 @@ public class PerfectNumberCommand extends Command {
         this.aliases = new String[]{"pn","perfectn","pnumber"};
         this.name = "perfectnumber";
         this.arguments = "<nombre entier>";
-        this.help = "Vérifie si un nombre est premier.";
+        this.help = "help.perfectnumber";
         this.cooldown = 5;
         this.example = "14";
     }

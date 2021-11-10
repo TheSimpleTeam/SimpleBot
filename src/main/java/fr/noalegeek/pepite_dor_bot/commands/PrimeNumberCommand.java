@@ -11,10 +11,10 @@ public class PrimeNumberCommand extends Command {
         this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"primen","prnumber","pnum","primenum","prn"};
         this.name = "primenumber";
-        this.arguments = "<nombre|liste> <nombre>";
-        this.help = "Vérifie si un nombre est premier ou donne la liste de tous les nombres premiers à partir d'un nombre donné.";
+        this.arguments = "arguments.primenumber";
+        this.help = "help.primenumber";
         this.cooldown = 5;
-        this.example = "nombre 87";
+        this.example = "example.primenumber";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class PrimeNumberCommand extends Command {
         try {
             long number = Long.parseLong(args[1]);
             switch (args[0]) {
-                case "nombre":
+                case "number":
                     if(isPrime(number)) {
                         event.reply("Le nombre " + number + " est un nombre premier.");
                     } else {
@@ -38,7 +38,7 @@ public class PrimeNumberCommand extends Command {
                     }
                     break;
 
-                case "liste":
+                case "list":
                     StringBuilder list = new StringBuilder();
                     for (long i = 1; i < number; i++) {
                         if(list.length() == 1024 || (list.toString() + i + "\n").length() >= 1024) {
