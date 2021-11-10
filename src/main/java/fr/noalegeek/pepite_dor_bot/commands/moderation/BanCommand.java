@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.Permission;
 public class BanCommand extends Command {
     public BanCommand() {
         this.name = "ban";
-        this.aliases = new String[]{"b", "ba"};
         this.guildOnly = true;
         this.cooldown = 5;
         this.arguments = "arguments.ban";

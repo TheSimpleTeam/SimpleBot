@@ -7,6 +7,7 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ public class MessageHelper {
         EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
                 .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage("text.commands.syntaxError", event), command.getName()))
                 .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(), false)
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event), false)
@@ -47,7 +48,7 @@ public class MessageHelper {
     public static void sendError(Exception exception, CommandEvent event, Command command) {
         EmbedBuilder sendErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now())
                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.sendError.error", event))
                 .addField(MessageHelper.translateMessage("text.commands.sendError.sendError", event), exception.getMessage(), false)
@@ -75,96 +76,12 @@ public class MessageHelper {
         if (member.canInteract(target) && bot.canInteract(target)) return false;
         EmbedBuilder errorCantInteractEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now());
         if (!member.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.member", event));
         if (!bot.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.bot", event));
         event.reply(new MessageBuilder(errorCantInteractEmbed.build()).build());
         return true;
-    }
-
-    public static String arrayToString(List<CharSequence> charSequenceList, @Nullable String delimiter, @Nullable String prefix, @Nullable String suffix){
-        StringBuilder stringBuilder = prefix != null ? new StringBuilder().append(prefix) : new StringBuilder();
-        for (CharSequence charSequence : charSequenceList) {
-            stringBuilder.append(charSequence);
-            if (delimiter != null) stringBuilder.append(delimiter);
-        }
-        return suffix != null ? stringBuilder.append(suffix).toString() : stringBuilder.toString();
-    }
-
-    public static String arrayToString(List<CharSequence> charSequenceList){
-        return arrayToString(charSequenceList, null, null, null);
-    }
-
-    public static String arrayToStringDelimiter(List<CharSequence> charSequenceList, @Nullable String delimiter){
-        return arrayToString(charSequenceList, delimiter, null, null);
-    }
-
-    public static String arrayToStringDelimiterPrefix(List<CharSequence> charSequenceList, @Nullable String delimiter, @Nullable String prefix){
-        return arrayToString(charSequenceList, delimiter, prefix, null);
-    }
-
-    public static String arrayToStringPrefixSuffix(List<CharSequence> charSequenceList, @Nullable String prefix, @Nullable String suffix){
-        return arrayToString(charSequenceList, null, prefix, suffix);
-    }
-
-    public static String arrayToStringDelimiterSuffix(List<CharSequence> charSequenceList, @Nullable String delimiter, @Nullable String suffix){
-        return arrayToString(charSequenceList, delimiter, null, suffix);
-    }
-
-    public static String arrayToStringPrefix(List<CharSequence> charSequenceList, @Nullable String prefix){
-        return arrayToString(charSequenceList, null, prefix, null);
-    }
-
-    public static String arrayToStringSuffix(List<CharSequence> charSequenceList, @Nullable String suffix){
-        return arrayToString(charSequenceList, null, null, suffix);
-    }
-
-    public static List<CharSequence> regroupTogetherTwoArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2, @Nullable String... dontAddStrings){
-        if(list1.isEmpty() || list2.isEmpty()) return new ArrayList<>();
-        List<CharSequence> charSequenceList = new ArrayList<>();
-        for(CharSequence charSequence1 : list1){
-            for(CharSequence charSequence2 : list2){
-                if(dontAddStrings == null || !List.of(dontAddStrings).contains(charSequence1.toString() + charSequence2.toString())) charSequenceList.add(charSequence1.toString() + charSequence2.toString());
-            }
-        }
-        return charSequenceList;
-    }
-
-    public static List<CharSequence> regroupTogetherThreeArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2, @Nonnull List<CharSequence> list3, @Nullable String... dontAddStrings){
-        if(list1.isEmpty() || list2.isEmpty()) return new ArrayList<>();
-        List<CharSequence> charSequenceList = new ArrayList<>();
-        for(CharSequence charSequence1 : list1){
-            for(CharSequence charSequence2 : list2){
-                for(CharSequence charSequence3 : list3) {
-                    if (dontAddStrings == null || !List.of(dontAddStrings).contains(charSequence1.toString() + charSequence2.toString() + charSequence3.toString())) charSequenceList.add(charSequence1.toString() + charSequence2.toString() + charSequence3.toString());
-                }
-            }
-        }
-        return charSequenceList;
-    }
-
-    public static List<CharSequence> regroupTogetherTwoArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2){
-        return regroupTogetherTwoArray(list1, list2, (String[]) null);
-    }
-
-    public static List<CharSequence> regroupTogetherThreeArray(@Nonnull List<CharSequence> list1, @Nonnull List<CharSequence> list2, @Nonnull List<CharSequence> list3){
-        return regroupTogetherThreeArray(list1, list2, list3, (String[]) null);
-    }
-
-    public static List<CharSequence> toTextArrayWithoutFinalsCharacters(boolean keepOriginal, String... strings){
-        List<CharSequence> stringList = new ArrayList<>();
-        for(String string : strings) {
-            if(keepOriginal) stringList.add(string);
-            for (int i = string.length() - 1; i > 0; i--) {
-                stringList.add(string.substring(0, i));
-            }
-        }
-        return stringList;
-    }
-
-    public static List<CharSequence> toTextArrayWithoutFinalsCharacters(String... strings){
-        return toTextArrayWithoutFinalsCharacters(false, strings);
     }
 
     public static String setReason(String reason, CommandEvent event) {
@@ -194,7 +111,7 @@ public class MessageHelper {
             EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
                     .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
                     .addField(MessageHelper.translateMessage("error.translateMessage.class", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)

@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.Role;
 public class MuteCommand extends Command {
     public MuteCommand() {
         this.category = CommandCategories.STAFF.category;
-        this.aliases = new String[]{"m", "mu", "mut"};
         this.name = "mute";
         this.arguments = "arguments.mute";
         this.help = "help.mute";

@@ -48,7 +48,6 @@ public class TempbanCommand extends Command {
         this.arguments = "arguments.tempban";
         this.help = "help.tempban";
         this.category = CommandCategories.STAFF.category;
-        this.aliases = new String[]{"tempb", "tempba", "temb", "temban", "temba", "teb", "teban", "teba", "tb", "tban", "tba"};
         this.cooldown = 5;
         this.example = "363811352688721930 1d flood";
         this.guildOnly = true;

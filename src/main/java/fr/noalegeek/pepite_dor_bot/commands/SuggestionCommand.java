@@ -17,7 +17,7 @@ public class SuggestionCommand extends Command {
         this.guildOnly = true;
         this.help = "help.suggestion";
         this.name = "suggestion";
-        this.aliases = new String[]{"sugg", "su","sug","sugge","suggest", "suggesti", "suggestio", "sugges"};
+        this.aliases = new String[]{"su", "suggest"};
         this.cooldown = 30;
         this.arguments = "arguments.suggestion";
         this.category = CommandCategories.MISC.category;
@@ -30,7 +30,7 @@ public class SuggestionCommand extends Command {
         if(event.getJDA().getGuildById(846048803554852904L) == null) {
             EmbedBuilder errorGuildNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.suggestion.guildNull", event));
             event.reply(new MessageBuilder(errorGuildNullEmbed.build()).build());
@@ -39,7 +39,7 @@ public class SuggestionCommand extends Command {
         if (event.getJDA().getGuildById(846048803554852904L).getTextChannelById(848599555540123648L) == null) {
             EmbedBuilder errorChannelNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.suggestion.channelNull", event));
             event.reply(new MessageBuilder(errorChannelNullEmbed.build()).build());
@@ -47,13 +47,13 @@ public class SuggestionCommand extends Command {
         }
         EmbedBuilder successEmbed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now())
                 .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.suggestion.success", event));
         EmbedBuilder successSuggestionEmbed = new EmbedBuilder()
                 .setTitle(UnicodeCharacters.electricLightBulbEmoji + " " + MessageHelper.translateMessage("success.suggestion", event))
                 .setColor(Color.YELLOW)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now())
                 .addField(MessageHelper.translateMessage("success.suggestion", event), event.getArgs(), false)
                 .addField(MessageHelper.translateMessage("success.suggestion.author", event), event.getAuthor().getName(), false)

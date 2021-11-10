@@ -18,7 +18,7 @@ public class SayCommand extends Command {
         this.name = "say";
         this.cooldown = 5;
         this.arguments = "arguments.say";
-        this.aliases = new String[]{"s","sa"};
+        this.aliases = new String[]{"s"};
         this.help = "help.say";
         this.example = "example.say";
         this.category = CommandCategories.STAFF.category;
@@ -37,7 +37,7 @@ public class SayCommand extends Command {
                 .setTimestamp(Instant.now())
                 .setColor(Color.GREEN)
                 .setDescription(event.getArgs());
-        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) successEmbed.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) successEmbed.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
         event.reply(new MessageBuilder(successEmbed.build()).build());
         event.getMessage().delete().queue();
     }

@@ -48,7 +48,7 @@ public class SnippetCommand extends Command {
 
     public SnippetCommand() {
         this.name = "snippet";
-        this.aliases = new String[]{"gists","gist","gis","g","paste","past","pas","snippet","snippe","snipp","snip","sni","sn","carbon","carbo","carb","car"};
+        this.aliases = new String[]{"gists","gist","g","paste","carbon", "ca", "pa"};
         this.cooldown = 5;
         this.help = "help.snippet";
         this.example = """
@@ -79,7 +79,7 @@ public class SnippetCommand extends Command {
                 .build();
         EmbedBuilder warningTakeTooLongEmbed = new EmbedBuilder()
                 .setColor(Color.ORANGE)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now())
                 .setTitle(String.format("%s %s",
                         UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("warning.snippet", event)));

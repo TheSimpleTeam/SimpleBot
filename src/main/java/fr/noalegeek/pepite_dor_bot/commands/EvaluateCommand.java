@@ -26,7 +26,7 @@ public class EvaluateCommand extends Command {
     public EvaluateCommand() {
         this.name = "evaluate";
         this.help = "help.eval";
-        this.aliases = new String[]{"eval", "evaluat", "evalua", "eva", "ev", "e", "evalu"};
+        this.aliases = new String[]{"eval", "e"};
         this.arguments = "arguments.eval";
         this.engine = Main.eval.getV8Runtime();
         this.pyInterpreter = Main.eval.getPyInterpreter();

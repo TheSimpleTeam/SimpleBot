@@ -33,6 +33,7 @@ import me.bluetree.spiget.Author;
 import me.bluetree.spiget.Resource;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.Color;
 import java.io.FileNotFoundException;
@@ -44,7 +45,7 @@ public class SpigotCommand extends Command {
 
     public SpigotCommand() {
         this.name = "spigot";
-        this.aliases = new String[]{"spigo", "spig", "spi", "sp", "plugin", "spige", "plu", "plug", "plugi", "spiget", "pl", "plugins"};
+        this.aliases = new String[]{"spigo", "spig", "spi", "plugin", "spige", "plu", "plug", "plugi", "spiget", "pl", "plugins"};
         this.cooldown = 5;
         this.example = "80802";
         this.help = "help.spigot";
@@ -59,8 +60,7 @@ public class SpigotCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        if(args[0].chars().allMatch(Character::isDigit)) {
-            //Search for plugin with a ID
+        if(args[0].chars().allMatch(Character::isDigit)) { //Search for plugin with a ID
             try {
                 Resource pluginId = new Resource(Integer.parseInt(args[0]));
                 EmbedBuilder successPluginIDEmbed = new EmbedBuilder()
@@ -70,14 +70,15 @@ public class SpigotCommand extends Command {
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginID", event), args[0], false)
                         .addField(MessageHelper.translateMessage("success.spigot.pluginID.description", event), getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
                         .setColor(Color.GREEN)
+                        .setTimestamp(Instant.now())
                         .setThumbnail(pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl());
-                event.reply(successPluginIDEmbed.build());
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
+                event.reply(new MessageBuilder(successPluginIDEmbed.build()).build());
             } catch (IOException e) {
                 if(e instanceof FileNotFoundException) {
                     EmbedBuilder errorPluginIDNullEmbed = new EmbedBuilder()
                             .setColor(Color.RED)
-                            .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                            .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                             .setTimestamp(Instant.now())
                             .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.pluginNull", event), args[0]));
                     event.reply(new MessageBuilder(errorPluginIDNullEmbed.build()).build());
@@ -87,7 +88,7 @@ public class SpigotCommand extends Command {
             } catch (NumberFormatException e){
                 EmbedBuilder errorNumberTooLargeEmbed = new EmbedBuilder()
                         .setColor(Color.RED)
-                        .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                        .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                         .setTimestamp(Instant.now())
                         .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.numberTooLarge", event), args[0]));
                 event.reply(new MessageBuilder(errorNumberTooLargeEmbed.build()).build());
@@ -100,18 +101,18 @@ public class SpigotCommand extends Command {
                     EmbedBuilder successUserEmbed = new EmbedBuilder()
                             .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.spigot.user.success", event), args[1]))
                             .setTimestamp(Instant.now())
-                            .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                            .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                             .setColor(Color.GREEN)
                             .setThumbnail(users.stream().findFirst().get().getIconURL());
                     for (Author author : users) {
                         successUserEmbed.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
                     }
-                    event.reply(successUserEmbed.build());
+                    event.reply(new MessageBuilder(successUserEmbed.build()).build());
                 } catch (IOException exception){
                     if(exception instanceof FileNotFoundException) {
                         EmbedBuilder errorEmptyUserListEmbed = new EmbedBuilder()
                                 .setColor(Color.RED)
-                                .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                                .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
                                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.user", event), args[1]));
                         event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
@@ -127,7 +128,7 @@ public class SpigotCommand extends Command {
                             .setTitle(resources.size() == 1 ? String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.singular", event), UnicodeCharacters.whiteHeavyCheckMarkEmoji) : String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.plural", event), UnicodeCharacters.whiteHeavyCheckMarkEmoji))
                             .setThumbnail("https://static.spigotmc.org/img/spigot.png")
                             .setTimestamp(Instant.now())
-                            .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                            .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getEffectiveAvatarUrl())
                             .setColor(Color.GREEN);
                     for (Resource resource : resources) {
                         successPluginNameEmbed.addField(resource.getResourceName(), resource.getResourceLink(), true);
@@ -137,7 +138,7 @@ public class SpigotCommand extends Command {
                     if(e instanceof FileNotFoundException) {
                         EmbedBuilder errorPluginNameNullEmbed = new EmbedBuilder()
                                 .setColor(Color.RED)
-                                .setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                                .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
                                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginName", event), event.getArgs()));
                         event.reply(new MessageBuilder(errorPluginNameNullEmbed.build()).build());

@@ -16,7 +16,7 @@ public class GetBotIpCommand extends Command {
         this.help = "help.getBotIp";
         this.cooldown = 5;
         this.name = "getbotip";
-        this.aliases = new String[]{"getboti", "getbip", "getbi", "getboip", "getboi", "gbotip", "gboti", "gbip", "gbi", "gboip", "gboi", "gebotip", "geboti", "gebip", "gebi", "geboip", "geboi"};
+        this.aliases = new String[]{"gbi"};
         this.ownerCommand = true;
     }
 

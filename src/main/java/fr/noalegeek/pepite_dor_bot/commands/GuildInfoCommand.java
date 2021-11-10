@@ -34,7 +34,7 @@ public class GuildInfoCommand extends Command {
                 .addField(MessageHelper.translateMessage("success.guildInfo.membersConnectedToTheServer", event), String.valueOf(event.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() != OnlineStatus.OFFLINE).toList().size()), false)
                 .setColor(Color.BLUE)
                 .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
         event.reply(new MessageBuilder(successEmbed.build()).build());
     }
 }

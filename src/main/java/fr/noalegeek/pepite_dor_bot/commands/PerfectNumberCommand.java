@@ -9,7 +9,7 @@ public class PerfectNumberCommand extends Command {
 
     public PerfectNumberCommand(){
         this.category = CommandCategories.FUN.category;
-        this.aliases = new String[]{"pn","perfectn","pnumber"};
+        this.aliases = new String[]{"perfectn"};
         this.name = "perfectnumber";
         this.arguments = "<nombre entier>";
         this.help = "help.perfectnumber";

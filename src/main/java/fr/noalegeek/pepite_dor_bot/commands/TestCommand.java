@@ -3,6 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 
 public class TestCommand extends Command {
 
@@ -18,6 +19,17 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply("test");
+        String[] args = event.getArgs().split("\\s+");
+        /*StringBuilder stringBuilder = new StringBuilder().append("\"");
+        for(String part1 : new String[]{"un", "u"}){
+            for(String part2 : new String[]{"short", "s"}){
+                for(String part3 : new String[]{"url", "u"}){
+                    if(!(part1 + part2 + part3).equals("unshorturl")){
+                        stringBuilder.append(part1 + part2 + part3).append("\",\"");
+                    }
+                }
+            }
+        }
+        event.reply(stringBuilder.toString());*/
     }
 }

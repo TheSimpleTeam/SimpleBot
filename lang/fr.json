@@ -7,7 +7,7 @@
   "arguments.eval": "\u003cprogramme\u003e",
   "arguments.github": "\u003csearch|list\u003e \u003cutilisateur|organisation GitHub\u003e [nom du répertoire GitHub]",
   "arguments.issue": "--body \u003cproblème\u003e [--title] [titre du problème]",
-  "arguments.joinRole": "\u003cidentifiant/mention du role|reset\u003e",
+  "arguments.joinRole": "\u003cidentifiant|mention du role|reset\u003e",
   "arguments.kick": "\u003cidentifiant|mention du membre\u003e [raison]",
   "arguments.mcServer": "\u003cadresse IP d\u0027un serveur Minecraft\u003e",
   "arguments.mute": "\u003cidentifiant|mention du membre\u003e [raison]",

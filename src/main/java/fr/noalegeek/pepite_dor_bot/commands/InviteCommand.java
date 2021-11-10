@@ -7,6 +7,7 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -39,7 +40,7 @@ public class InviteCommand extends Command {
                                 event.getGuild().getName()))
                         .setColor(Color.GREEN)
                         .setTimestamp(Instant.now())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                         .addField(MessageHelper.translateMessage("success.invite.create.invitationLink", event), event.getTextChannel().createInvite().complete().getUrl(), false);
                 event.reply(new MessageBuilder(successCreateEmbed.build()).build());
             }
@@ -47,7 +48,7 @@ public class InviteCommand extends Command {
                 EmbedBuilder successBotEmbed = new EmbedBuilder()
                         .setColor(Color.GREEN)
                         .setTimestamp(Instant.now())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl())
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                         .setTitle(String.format("%s %s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.invite.bot.success", event),
                                 event.getSelfMember().getEffectiveName()))
                         .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event),

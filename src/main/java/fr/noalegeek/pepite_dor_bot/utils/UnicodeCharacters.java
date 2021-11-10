@@ -35,23 +35,7 @@ public class UnicodeCharacters {
     public final static String informationSourceEmoji = "\u2139";
     public final static String warningSignEmoji = "\u26A0";
 
-    public final static char plusExponent = '\u207A';
-    public final static char minusExponent = '\u207B';
-    public final static char leftParenthesisExponent = '\u207D';
-    public final static char rightParenthesisExponent = '\u207E';
-
-    public static Map<Character, Character> getNumeralExponents() {
-        final Map<Character, Character> map = new HashMap<>();
-        map.put('\u2070', '0');
-        map.put('\u00B9', '1');
-        map.put('\u00B2', '2');
-        map.put('\u00B3', '3');
-        map.put('\u2074', '4');
-        map.put('\u2075', '5');
-        map.put('\u2076', '6');
-        map.put('\u2077', '7');
-        map.put('\u2078', '8');
-        map.put('\u2079', '9');
-        return map;
+    public static char[] getAllExponentsCharacters() {
+        return new char[]{'\u2070', '\u00B9', '\u00B2', '\u00B3', '\u2074', '\u2075', '\u2076', '\u2077', '\u2078', '\u2079', '\u207A', '\u207B', '\u207D', '\u207E'};
     }
 }

@@ -22,7 +22,7 @@ public class TranslateCommand extends Command {
 
     public TranslateCommand() {
         this.name = "translate";
-        this.aliases = new String[]{"tr","tra","tran","trans","transl","transla","translat"};
+        this.aliases = new String[]{"tr"};
         this.example = "example.translate";
         this.arguments = "arguments.translate";
         this.help = "help.translate";
@@ -51,7 +51,7 @@ public class TranslateCommand extends Command {
         try {
             EmbedBuilder successEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
                     .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event))
                     .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false)

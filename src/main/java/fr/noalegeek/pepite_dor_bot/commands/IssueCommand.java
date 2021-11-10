@@ -30,59 +30,63 @@ import fr.noalegeek.pepite_dor_bot.GithubInfo;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.cli.*;
 import org.kohsuke.github.GHIssueBuilder;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import java.awt.*;
 import java.io.IOException;
+import java.time.Instant;
 
 @RequireConfig("botGithubToken")
 public class IssueCommand extends Command {
 
-    private final GitHub gh;
+    private final GitHub github;
 
     public IssueCommand() throws IOException {
         this.name = "issue";
-        this.cooldown = 30;
+        this.cooldown = 600;
         this.help = "help.issue";
-        this.gh = new GitHubBuilder().withOAuthToken(Main.getInfos().botGithubToken()).build();
+        this.arguments = "arguments.issue";
+        this.example = "example.issue";
+        this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().botGithubToken()).build();
     }
 
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s");
-        Options options = new Options();
-        CommandLineParser parser = new DefaultParser();
-
         if(args.length == 0) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-
         try {
-            this.gh.checkApiUrlValidity();
+            this.github.checkApiUrlValidity();
         } catch (IOException ex) {
-            event.replyError("Sorry, the github token is not valid !");
+            EmbedBuilder errorGithubTokenNotValidEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTimestamp(Instant.now())
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.issue.githubTokenNotValid", event));
+            event.reply(new MessageBuilder(errorGithubTokenNotValidEmbed.build()).build());
             return;
         }
         try {
-            addOptions(options);
-            CommandLine cmd = parser.parse(options, args);
-            if (cmd.getOptions().length != 0 && !cmd.hasOption("body")) {
-                event.replyError("This command require parameter **--body** because you use parameters !");
+            addOptions(new Options());
+            if (new DefaultParser().parse(new Options(), args).getOptions().length != 0 && !new DefaultParser().parse(new Options(), args).hasOption("body")) {
+                EmbedBuilder errorBodyParameterNotHereEmbed = new EmbedBuilder()
+                        .setColor(Color.RED)
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                        .setTimestamp(Instant.now())
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.issue.bodyParameterNotHere", event));
+                event.reply(new MessageBuilder(errorBodyParameterNotHereEmbed.build()).build());
                 return;
             }
-            GHRepository repo = this.gh.getRepositoryById(GithubInfo.REPOSITORY_ID.id);
-            GHIssueBuilder builder = repo.createIssue(String.join(" ", getOrDefault(cmd, "title", "Automatic Issue"))).body(String.format("""
-                This issue has been made by %s on %s
-                
-                ----
-                
-                %s
-                """, event.getAuthor().getName(), event.getGuild().getName(), String.join(" ", getOrDefault(cmd, "body", event.getArgs()))));
-            builder.create();
+           this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "title", MessageHelper.translateMessage("text.issue.issue", event)))).body(String.format(MessageHelper.translateMessage("success.issue.success", event) + "\n\n" + MessageHelper.translateMessage("text.issue.issue", event) + MessageHelper.translateMessage("text.issue.twoSuperimposedPoints", event) + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "body", event.getArgs())))).create();
         } catch (IOException | ParseException exception) {
             MessageHelper.sendError(exception, event, this);
         }
@@ -91,10 +95,8 @@ public class IssueCommand extends Command {
     private void addOptions(Options options) {
         Option body = new Option("b", "body", true, "Add body to the issue");
         Option title = new Option("t", "title", true, "Add title to the issue");
-
         body.setArgs(Option.UNLIMITED_VALUES);
         title.setArgs(Option.UNLIMITED_VALUES);
-
         options.addOption(body);
         options.addOption(title);
     }

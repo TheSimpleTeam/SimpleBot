@@ -15,7 +15,7 @@ public class LocalizationCommand extends Command {
         this.cooldown = 5;
         this.help = "help.localization";
         this.example = "en";
-        this.aliases = new String[]{"l","lo","local","loc","locali","localiz","localiza","localizat","localizati", "localizatio"};
+        this.aliases = new String[]{"lo","local","loc"};
         this.arguments = "<en/fr>";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;

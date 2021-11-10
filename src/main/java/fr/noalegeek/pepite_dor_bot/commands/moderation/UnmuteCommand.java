@@ -11,7 +11,6 @@ public class UnmuteCommand extends Command {
 
     public UnmuteCommand() {
         this.name = "unmute";
-        this.aliases = new String[]{"um", "umute", "unm"};
         this.guildOnly = true;
         this.cooldown = 5;
         this.arguments = "<identifiant/mention du membre> <raison>";

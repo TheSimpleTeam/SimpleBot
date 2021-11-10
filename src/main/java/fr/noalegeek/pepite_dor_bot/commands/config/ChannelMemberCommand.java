@@ -16,7 +16,7 @@ public class ChannelMemberCommand extends Command {
         this.cooldown = 5;
         this.help = "help.channelMember";
         this.example = "join 848965362971574282\nleave reset";
-        this.aliases = new String[]{"channelmembe","channelmemb","channelmem","channelme","channelm","channemember","channemembe","channememb","channemem","channeme","channem","channmember","channmembe","channmemb","channmem","channme","channm","chanmember","chanmembe","chanmemb","chanmem","chanme","chanm","chamember","chamembe","chamemb","chamem","chame","cham","chmember","chmembe","chmemb","chmem","chme","chm","cmember","cmembe","cmemb","cmem","cme","cm"};
+        this.aliases = new String[]{"cm", "channelm", "cmember"};
         this.arguments = "arguments.channelMember";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;

@@ -21,7 +21,7 @@ public class UnshortURLCommand extends Command {
 
     public UnshortURLCommand() {
         this.name = "unshorturl";
-        this.aliases = new String[]{"usu"};
+        this.aliases = new String[]{"unshortu","unsurl","unsu","ushorturl","ushortu","usurl","usu"};
         this.arguments = "arguments.unshorturl";
         this.help = "help.unshorturl";
         this.category = CommandCategories.MISC.category;
@@ -34,19 +34,14 @@ public class UnshortURLCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        String[] args = event.getArgs().split("\\s+");
         try {
             EmbedBuilder successEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() :
-                            event.getAuthor().getAvatarUrl())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.unshortURL.success", event)))
-                    .addField(MessageHelper.translateMessage("success.unshortURL.link", event),
-                            !args[0].startsWith("https://") && !args[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : args[0],
-                            false)
-                    .addField(MessageHelper.translateMessage("success.unshortURL.redirection", event), String.format("`%s`", getURL(!args[0].startsWith("https://") &&
-                            !args[0].startsWith("http://") ? "http://" + args[0] : args[0])), false);
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.unshortURL.success", event))
+                    .addField(MessageHelper.translateMessage("success.unshortURL.link", event), !event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0], false)
+                    .addField(MessageHelper.translateMessage("success.unshortURL.redirection", event), String.format("`%s`", getURL(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])), false);
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (IOException e) {
             MessageHelper.sendError(e, event, this);

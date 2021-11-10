@@ -72,7 +72,7 @@ public class ConvertCommand extends Command {
                     .addField(MessageHelper.translateMessage("success.convert.factor", event), factor.replace("E", "x10^"), false)
                     .addField(MessageHelper.translateMessage("success.convert.unitType", event), MessageHelper.translateMessage(unit1.unitType.unitTypeName, event), true)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl());
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (NumberFormatException ignore) {
             event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notAnNumber", event));

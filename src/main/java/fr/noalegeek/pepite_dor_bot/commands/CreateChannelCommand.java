@@ -16,7 +16,7 @@ public class CreateChannelCommand extends Command {
         this.example = "text général 846048803554852905";
         this.category = CommandCategories.STAFF.category;
         this.guildOnly = true;
-        this.aliases = new String[]{"createchannel","createchanne","createchann","createchan","createcha","createch","createc","creatchannel","creatchanne","creatchann","creatchan","creatcha","creatch","creatc","creachannel","creachanne","creachann","creachan","creacha","creach","creac","crechannel","crechanne","crechann","crechan","crecha","crech","crec","crchannel","crchanne","crchann","crchan","crcha","crch","crc","cchannel","cchanne","cchann","cchan","ccha","cch","cc"};
+        this.aliases = new String[]{"cc", "createc", "cchannel"};
         this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
         this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }

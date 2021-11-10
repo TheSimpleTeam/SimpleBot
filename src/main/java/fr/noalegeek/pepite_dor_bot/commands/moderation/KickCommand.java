@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.Permission;
 public class KickCommand extends Command {
     public KickCommand() {
         this.name = "kick";
-        this.aliases = new String[]{"k", "ki", "kic"};
         this.guildOnly = true;
         this.cooldown = 5;
         this.arguments = "arguments.kick";

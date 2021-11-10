@@ -12,7 +12,7 @@ public class UnbanCommand extends Command {
     public UnbanCommand() {
         this.name = "unban";
         this.arguments = "arguments.unban";
-        this.aliases = new String[]{"ub", "unb", "uban", "pa", "pardon"};
+        this.aliases = new String[]{"pardon"};
         this.category = CommandCategories.STAFF.category;
         this.help = "help.unban";
         this.guildOnly = true;

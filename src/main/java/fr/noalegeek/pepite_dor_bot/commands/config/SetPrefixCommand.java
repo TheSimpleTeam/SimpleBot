@@ -43,6 +43,7 @@ public class SetPrefixCommand extends Command {
         this.name = "setprefix";
         this.arguments = "arguments.setPrefix";
         this.example = "@";
+        this.aliases = new String[]{"sprefix", "sp", "setp"};
         this.help = "help.setPrefix";
         this.guildOwnerCommand = true;
     }
@@ -67,7 +68,7 @@ public class SetPrefixCommand extends Command {
                 EmbedBuilder errorPrefixNullEmbed = new EmbedBuilder()
                         .setColor(Color.RED)
                         .setTimestamp(Instant.now())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                         .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.setPrefix.notConfigured", event));
                 event.reply(new MessageBuilder(errorPrefixNullEmbed.build()).build());
                 return;
@@ -80,7 +81,7 @@ public class SetPrefixCommand extends Command {
             EmbedBuilder errorSameAsConfiguredEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.setPrefix.sameAsConfigured", event));
             event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
             return;
@@ -89,7 +90,7 @@ public class SetPrefixCommand extends Command {
         EmbedBuilder successEmbed = new EmbedBuilder()
                 .setColor(Color.GREEN)
                 .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getAvatarUrl())
+                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.setPrefix.configured", event), args[0]));
         event.reply(new MessageBuilder(successEmbed.build()).build());
     }

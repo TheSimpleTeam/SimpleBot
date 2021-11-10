@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.commands.moderation;
+package fr.noalegeek.pepite_dor_bot.commands.config;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -16,13 +16,14 @@ public class ProhibitCommand extends Command {
 
     public ProhibitCommand() {
         this.name = "prohibitword";
-        this.aliases = new String[]{"prohibitw","prohitbitwrd","pw","pwrd","pword"};
+        this.aliases = new String[]{"prohibitw", "pword"};
         this.example = "add fuck";
         this.arguments = "arguments.prohibit";
         this.help = "help.prohibit";
         this.category = CommandCategories.STAFF.category;
         this.cooldown = 5;
         this.guildOnly = true;
+        this.guildOwnerCommand = true;
         this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
         this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
