@@ -8,6 +8,7 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 
 public class UnmuteCommand extends Command {
+
     public UnmuteCommand() {
         this.name = "unmute";
         this.aliases = new String[]{"um", "umute", "unm"};
@@ -16,7 +17,7 @@ public class UnmuteCommand extends Command {
         this.arguments = "<identifiant/mention du membre> <raison>";
         this.example = "363811352688721930";
         this.category = CommandCategories.STAFF.category;
-        this.help = "Démute un membre seulement si la personne est déjà mute.";
+        this.help = "help.unmute";
         this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
         this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }

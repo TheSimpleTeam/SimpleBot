@@ -150,7 +150,7 @@ public class Listener extends ListenerAdapter {
             return;
         }
         String message = event.getMessage().getContentRaw();
-        LOGGER.info(MessageHelper.getTag(event.getAuthor()) + " a dit :\n" + message);
+        LOGGER.info(String.format("%s %s:%n %s", MessageHelper.getTag(event.getAuthor()), "a dit", message));
         if (getServerConfig().prohibitWords() == null) {
             new File("config/server-config.json").delete();
             try {
