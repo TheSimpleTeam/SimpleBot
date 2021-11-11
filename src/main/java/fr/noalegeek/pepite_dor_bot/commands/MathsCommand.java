@@ -8,11 +8,14 @@ import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.apache.commons.lang3.StringUtils;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.mXparser;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MathsCommand extends Command {
@@ -73,18 +76,39 @@ public class MathsCommand extends Command {
             case 3 -> {
                 switch (args[0]){
                     case "primenumber", "primeNumber" -> { //Verify if the number is a prime number
-                        if(notAnNumber(event, args[2])) return;
+                        if(notAnNumber(event, args[2]) || notAnIntegerNumber(event, args[2])) return;
                         switch (args[1]){
                             case "number" -> {
-                                EmbedBuilder successCalculateNumberEmbed = new EmbedBuilder()
+                                EmbedBuilder successPrimeNumberNumberEmbed = new EmbedBuilder()
                                         .setTimestamp(Instant.now())
                                         .setColor(numberIsPrime(Long.parseLong(args[2])) ? Color.GREEN : Color.RED)
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTitle(String.format("%s %s", numberIsPrime(Long.parseLong(args[2])) ? UnicodeCharacters.whiteHeavyCheckMarkEmoji : UnicodeCharacters.crossMarkEmoji, numberIsPrime(Long.parseLong(args[2])) ? String.format(MessageHelper.translateMessage("success.maths.calculate.isPrime", event), args[2]) : String.format(MessageHelper.translateMessage("success.maths.calculate.isNotPrime", event), args[2])));
-                                event.reply(new MessageBuilder(successCalculateNumberEmbed.build()).build());
+                                event.reply(new MessageBuilder(successPrimeNumberNumberEmbed.build()).build());
                             }
                             case "list" -> {
-
+                                //TODO optimize that if possible
+                                EmbedBuilder successPrimeNumberListEmbed = new EmbedBuilder()
+                                        .setTimestamp(Instant.now())
+                                        .setColor(Color.GREEN)
+                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.maths.calculate.list.success", event), args[2])));
+                                StringBuilder listBuilder = new StringBuilder();
+                                List<String> stringList = new ArrayList<>();
+                                for(long i = 2; i <= Long.parseLong(args[2]); i++){
+                                    if(numberIsPrime(i)) stringList.add(String.valueOf(i));
+                                }
+                                for(String string : stringList){
+                                    listBuilder.append(string).append(", ");
+                                }
+                                while(listBuilder.toString().length() > 1021){
+                                    stringList.remove(0);
+                                    listBuilder = new StringBuilder();
+                                    for(String string : stringList){
+                                        listBuilder.append(string).append(", ");
+                                    }
+                                }
+                                event.reply(new MessageBuilder(successPrimeNumberListEmbed.setDescription(listBuilder.insert(0, "...").deleteCharAt(listBuilder.toString().length() - 2)).build()).build());
                             }
                         }
                     }
@@ -109,14 +133,14 @@ public class MathsCommand extends Command {
 
     public static boolean notAnNumber(CommandEvent event, String string){
         try{
-            Double number = Double.parseDouble(string);
+            Double.parseDouble(string);
             return false;
         } catch (NumberFormatException exception){
             EmbedBuilder notAnNumberEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.commands.notAnNumber", event));
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.commands.notAnNumber", event), string));
             event.reply(new MessageBuilder(notAnNumberEmbed.build()).build());
             return true;
         }
@@ -125,12 +149,12 @@ public class MathsCommand extends Command {
 
     public static boolean notAnIntegerNumber(CommandEvent event, String string){
         if(string.chars().allMatch(Character::isDigit)) return false;
-        EmbedBuilder notAnNumberEmbed = new EmbedBuilder()
+        EmbedBuilder notAnIntegerNumberEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.commands.notAnNumber", event));
-        event.reply(new MessageBuilder(notAnNumberEmbed.build()).build());
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.commands.notAnIntegerNumber", event), string));
+        event.reply(new MessageBuilder(notAnIntegerNumberEmbed.build()).build());
         return true;
     }
 

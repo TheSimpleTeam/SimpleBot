@@ -11,8 +11,6 @@ public class PrimeNumberCommand extends Command {
         this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"primenumbe","primenumb","primenum","primenu","primen","primnumber","primnumbe","primnumb","primnum","primnu","primn","prinumber","prinumbe","prinumb","prinum","prinu","prin","prnumber","prnumbe","prnumb","prnum","prnu","prn","pnumbe","pnumb","pnum","pnu"};
         this.name = "primenumber";
-        this.arguments = "<nombre|liste> [nombre]";
-        this.help = "help.primeNumber";
         this.arguments = "arguments.primenumber";
         this.help = "help.primenumber";
         this.cooldown = 5;
