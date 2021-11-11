@@ -41,12 +41,7 @@ public class Listener extends ListenerAdapter {
         } catch (IOException ex) {
             LOGGER.severe(Throwables.getStackTraceAsString(ex));
         }
-        //OK SO JDA DOESNT WANT TO EXIT THE JVM. I'M GONNA DO MY OWN WAY
-        Main.getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS);
-        //A GOOD OLD SYSTEM.EXIT
-        //WHY IS IT MORE DIFFICULT THAN MAKING A DOCKERFILE
-        //PLEASE SEND HELP IT SHOULD BE AN EASY TASK TO SHUTDOWN A BOT BUT JDA WANT TO KILL ME
-        //AHHHHHHHHHHHHHHHH HELPPPPPPPPPPPPP
+        Main.getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS); //JDA doesn't want to exit the JVM so we do a System.exit()
     }
 
     public static void saveConfigs() throws IOException {
