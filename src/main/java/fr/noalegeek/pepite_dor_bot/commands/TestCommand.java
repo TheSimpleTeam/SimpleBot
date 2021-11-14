@@ -34,6 +34,6 @@ public class TestCommand extends Command {
         }
         event.reply(stringBuilder.toString());*/
         stringBuilder.append("test 1234");
-        event.reply(stringBuilder.substring(1));
+        event.reply(event.getArgs().replaceAll("\\D+", ""));
     }
 }

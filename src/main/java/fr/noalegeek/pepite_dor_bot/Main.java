@@ -66,7 +66,6 @@ public class Main {
     public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
     public static final Eval eval = new Eval();
-    private static boolean tty;
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
     private static ScheduledExecutorService executorService;
@@ -75,7 +74,6 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         executorService = Executors.newScheduledThreadPool(3);
-        tty = PrePy.isInteractive();
         try {
             String arg = "";
             try {
@@ -86,7 +84,7 @@ public class Main {
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
             LOGGER.info("Servers config loaded");
-            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing(getInfos().activities()[1])).enableIntents(EnumSet.allOf(GatewayIntent.class))
+            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing("sb!help")).enableIntents(EnumSet.allOf(GatewayIntent.class))
                     .enableCache(CacheFlag.ONLINE_STATUS).build();
             setupLocalizations();
         } catch (IOException ex) {
@@ -108,13 +106,10 @@ public class Main {
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
-
         jda.awaitReady();
-
         executorService.scheduleAtFixedRate(() ->
                 jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)])),
                 0, getInfos().timeBetweenStatusChange(), TimeUnit.SECONDS);
-
         executorService.scheduleAtFixedRate(() -> {
             try {
                 Listener.saveConfigs();
@@ -136,10 +131,8 @@ public class Main {
                 }
             });
         }), 0, 1, TimeUnit.SECONDS);
-
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
-
-        if(tty) {
+        if(PrePy.isInteractive()) {
             executorService.schedule(() -> {
                 try {
                     CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
@@ -262,34 +255,27 @@ public class Main {
         if(!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            if (arg.equalsIgnoreCase("--nosetup") || !tty) {
+            if (arg.equalsIgnoreCase("--nosetup") || !PrePy.isInteractive()) {
                 map.put("token", "YOUR-TOKEN-HERE");
-                map.put("prefix", "!");
-                map.put("defaultRoleID", "YOUR-ROLE-ID");
+                map.put("prefix", "sb!");
                 map.put("timeBetweenStatusChange", 15);
                 map.put("autoSaveDelay", 15);
-                map.put("activities", new String[]{"ban everyone", "example", "check my mentions"});
+                map.put("activities", new String[]{"sb!help"});
                 map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
             } else {
                 Console console = System.console();
                 System.out.println("I see that it's the first time that you install the bot.");
-                System.out.println("The configuration will begin.");
-                System.out.println("What is your bot token?");
-                map.put("token", console.readLine());
-                System.out.println("What will be the bot's prefix?");
-                String p = console.readLine();
-                map.put("prefix", p.isEmpty() ? "!" : p);
+                System.out.println("The configuration will begin. What will be the bot's prefix?");
+                map.put("prefix", console.readLine().isEmpty() ? "!" : console.readLine());
                 System.out.println("How long will it take between each status change ?");
-                p = console.readLine();
-                map.put("timeBetweenStatusChange", p.isEmpty() ? 15 : p);
+                map.put("timeBetweenStatusChange", console.readLine().isEmpty() ? 15 : console.readLine());
                 System.out.println("What will be the delay between each automatic save ?");
-                p = console.readLine();
-                map.put("autoSaveDelay", p.isEmpty() ? 15 : p);
-                System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example: \nexample;ban everyone;check my mentions");
-                p = console.readLine();
-                map.put("activities", p.isEmpty() ? new String[]{"check my mentions", "example", "ban everyone"} : p.split(";"));
-                System.out.println("The configuration is finished. Your bot will be ready to start !");
+                map.put("autoSaveDelay", console.readLine().isEmpty() ? 15 : console.readLine());
+                System.out.println("What are gonna be the bot's activities?\n(Separate them with ;). For example:\nexample;ban everyone;check my mentions");
+                map.put("activities", console.readLine().isEmpty() ? new String[]{"sb!help"} : console.readLine().split(";"));
+                System.out.println("What is your bot token?");
                 map.put("botGithubToken", "YOUR-GITHUB-TOKEN");
+                System.out.println("The configuration is finished. Your bot will be ready to start !");
             }
             Writer writer = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE);
             gson.toJson(map, writer);
@@ -375,7 +361,7 @@ public class Main {
     }
 
     public static boolean isTTY() {
-        return tty;
+        return PrePy.isInteractive();
     }
 
     public static ScheduledExecutorService getExecutorService() {

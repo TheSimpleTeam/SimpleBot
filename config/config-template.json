@@ -1,8 +1,6 @@
 {
-  "botName": "YOUR-BOT-NAME",
   "token": "YOUR-TOKEN-HERE",
-  "prefix": "!",
-  "defaultRoleID": "YOUR-ROLE-ID",
+  "prefix": "sb!",
   "timeBetweenStatusChange": 15,
   "autoSaveDelay": 15,
   "activities": [
