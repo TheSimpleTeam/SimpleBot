@@ -30,12 +30,50 @@ public class MessageHelper {
     }
 
     public static void syntaxError(CommandEvent event, Command command, String informations) {
+        //TODO Optimize that if possible (only argument part)
+        StringBuilder argumentsBuilder = new StringBuilder();
+        List<String> oneArgumentList = new ArrayList<>();
+        List<String> twoArgumentsList = new ArrayList<>();
+        List<String> threeArgumentsList = new ArrayList<>();
+        if (command.getArguments() == null)
+            argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.argumentsNull", event));
+        else if (!command.getArguments().startsWith("arguments."))
+            argumentsBuilder.append(translateMessage(command.getArguments(), event));
+        else {
+            if (translateMessage(command.getArguments(), event).split("\n").length == 1) {
+                argumentsBuilder.append(translateMessage(command.getArguments(), event));
+            } else {
+                for (int index = 0; index < translateMessage(command.getArguments(), event).split("\n").length; index++) {
+                    if (translateMessage(command.getArguments(), event).split("\n")[index].split(">").length == 1)
+                        oneArgumentList.add(translateMessage(command.getArguments(), event).split("\n")[index]);
+                    if (translateMessage(command.getArguments(), event).split("\n")[index].split(">").length == 2)
+                        twoArgumentsList.add(translateMessage(command.getArguments(), event).split("\n")[index]);
+                    if (translateMessage(command.getArguments(), event).split("\n")[index].split(">").length == 3)
+                        threeArgumentsList.add(translateMessage(command.getArguments(), event).split("\n")[index]);
+                }
+                if (!oneArgumentList.isEmpty()) {
+                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.oneArgument", event)).append("__").append("\n\n");
+                    oneArgumentList.forEach(oneArgument -> argumentsBuilder.append(oneArgument).append("\n"));
+                    argumentsBuilder.append("\n");
+                }
+                if (!twoArgumentsList.isEmpty()) {
+                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.twoArguments", event)).append("__").append("\n\n");
+                    twoArgumentsList.forEach(twoArguments -> argumentsBuilder.append(twoArguments).append("\n"));
+                    argumentsBuilder.append("\n");
+                }
+                if (!threeArgumentsList.isEmpty()) {
+                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.threeArguments", event)).append("__").append("\n\n");
+                    threeArgumentsList.forEach(threeArguments -> argumentsBuilder.append(threeArguments).append("\n"));
+                    argumentsBuilder.append("\n");
+                }
+            }
+        }
         EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
                 .setTimestamp(Instant.now())
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage("text.commands.syntaxError", event), command.getName()))
-                .addField(translateMessage("text.commands.syntaxError.syntax", event), command.getArguments() == null ? translateMessage("text.commands.syntaxError.arguments.argumentsNull", event) : command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event) : command.getArguments(), false)
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage("text.commands.syntaxError.syntaxError", event), command.getName()))
+                .addField(translateMessage("text.commands.syntaxError.arguments.arguments", event), argumentsBuilder.toString(), false)
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event), false)
                 .addField(translateMessage("text.commands.syntaxError.example", event), command.getExample() == null ? translateMessage("text.commands.syntaxError.example.exampleNull", event) : command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event) : command.getExample(), false);
         if (informations != null) {
@@ -78,8 +116,10 @@ public class MessageHelper {
                 .setColor(Color.RED)
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now());
-        if (!member.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.member", event));
-        if (!bot.canInteract(target)) errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.bot", event));
+        if (!member.canInteract(target))
+            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.member", event));
+        if (!bot.canInteract(target))
+            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.bot", event));
         event.reply(new MessageBuilder(errorCantInteractEmbed.build()).build());
         return true;
     }

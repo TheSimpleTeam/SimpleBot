@@ -25,7 +25,7 @@ public class MathsCommand extends Command {
         this.category = CommandCategories.FUN.category;
         this.aliases = new String[]{"math", "m"};
         this.name = "maths";
-        this.arguments = "<nombre entier>";
+        this.arguments = "arguments.maths";
         this.help = "help.maths";
         this.cooldown = 5;
         this.example = "14";
@@ -34,7 +34,7 @@ public class MathsCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if (args.length != 1 && args.length != 2 && args.length != 3) {
+        if (event.getArgs().isEmpty() || args.length != 1 && args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
