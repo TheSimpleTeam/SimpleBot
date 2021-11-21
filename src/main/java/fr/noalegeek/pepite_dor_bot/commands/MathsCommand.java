@@ -39,7 +39,7 @@ public class MathsCommand extends Command {
             return;
         }
         switch (args.length) {
-            case 1 -> { //Calculate the math expression
+            case 1 -> { //Calculate the specified mathematical expression
                 mXparser.disableAlmostIntRounding();
                 mXparser.disableCanonicalRounding();
                 mXparser.disableUlpRounding();
