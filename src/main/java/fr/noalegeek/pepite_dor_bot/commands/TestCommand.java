@@ -5,6 +5,11 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 public class TestCommand extends Command {
 
     public TestCommand() {
@@ -31,9 +36,7 @@ public class TestCommand extends Command {
                     }
                 }
             }
-        }
-        event.reply(stringBuilder.toString());*/
-        stringBuilder.append("test 1234");
-        event.reply(event.getArgs().replaceAll("\\D+", ""));
+        }*/
+        event.reply(stringBuilder.toString());
     }
 }

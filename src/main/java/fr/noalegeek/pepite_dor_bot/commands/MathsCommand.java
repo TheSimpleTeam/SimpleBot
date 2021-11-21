@@ -71,7 +71,7 @@ public class MathsCommand extends Command {
             }
             case 3 -> {
                 switch (args[0]) {
-                    case "primenumber", "primeNumber" -> { //Verify if the number is a prime number
+                    case "primenumber", "primeNumber" -> { //Verify if a number is a prime number or make a list of all prime numbers up to the specified number
                         long number;
                         if (isAnNumber(event, args[2]) && isAnIntegerNumber(event, args[2]) && notNumberTooLarge(event, args[2])) number = Long.parseLong(args[2]);//Verify if the arg is a number, else if it's an expression, else is not a valid arg
                         else if (new Expression(args[2]).checkSyntax() && isAnIntegerNumber(event, String.valueOf(new Expression(args[2]).calculate())) && notNumberTooLarge(event, String.valueOf(new Expression(args[2]).calculate()))) number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
@@ -117,7 +117,7 @@ public class MathsCommand extends Command {
                             }
                         }
                     }
-                    case "perfectnumber", "perfectNumber" -> {
+                    case "perfectnumber", "perfectNumber" -> { //Verify if a number is a perfect number or make a list of all perfect numbers up to the specified number
                         long number;
                         if (isAnNumber(event, args[2]) && isAnIntegerNumber(event, args[2]) && notNumberTooLarge(event, args[2])) number = Long.parseLong(args[2]); //Verify if the arg is a number, else if it's an expression, else is not a valid arg
                         else if (new Expression(args[2]).checkSyntax() && isAnIntegerNumber(event, String.valueOf(new Expression(args[2]).calculate())) && notNumberTooLarge(event, String.valueOf(new Expression(args[2]).calculate()))) number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
