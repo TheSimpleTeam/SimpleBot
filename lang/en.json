@@ -111,7 +111,6 @@
   "help.maths": "This is a command with many uses related to mathematics.\nCalculate the specified mathematical expression.\nCheck if a number is prime or make a list of all prime numbers up to the specified number.\nCheck if a number is perfect or make a list of all perfect numbers up to the specified number.",
   "help.mcServer": "Give the version, the number of connected players and the port of the specified server.",
   "help.mute": "Permanently mute a member with or without a reason. Unmute if the person is already muted.",
-  "help.primeNumber": "Check if a number is prime or give the list of all prime numbers starting from a specified number.",
   "help.prohibit": "Add or removes a word from the list of forbidden words. Can even reset the entire list of forbidden words.",
   "help.purge": "Delete messages that are less than 2 weeks old by a given number between 0 and 101.",
   "help.say": "Send the specified message and includes your name if you do not have permissions to manage messages.",
