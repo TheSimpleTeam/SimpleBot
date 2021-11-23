@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
  * This class contains some useful precompiled regex patterns.
  * @author <a href="https://github.com/Javacord/Javacord/blob/master/javacord-api/src/main/java/org/javacord/api/util/DiscordRegexPattern.java">Javacord</a>
  */
-public class DiscordRegexPattern {
+public class RegexPattern {
 
     /**
      * A pattern which checks for mentioned users (e.g. {@code <@1234567890>}).
@@ -120,5 +120,8 @@ public class DiscordRegexPattern {
     public static final Pattern SNOWFLAKE =
             Pattern.compile("(?<id>[0-9]{15,25})");
 
-    private DiscordRegexPattern() {}
+    public static final Pattern YOUTUBE_URL =
+            Pattern.compile("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be|music.youtube.com))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$");
+
+    private RegexPattern() {}
 }

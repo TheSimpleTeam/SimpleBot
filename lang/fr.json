@@ -29,6 +29,7 @@
   "category.infos": "Informations",
   "category.misc": "Divers",
   "category.mod": "Staff",
+  "category.music": "Musique",
   "category.noCategory": "Pas de catégorie",
   "error.ban.notAnNumber": "Le temps à spécifier doit être un nombre.",
   "error.calculate": "`%s` n\u0027est pas une expression mathématique correcte !",

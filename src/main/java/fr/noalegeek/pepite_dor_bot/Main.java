@@ -15,6 +15,7 @@ import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
+import fr.noalegeek.pepite_dor_bot.commands.music.MusicCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
@@ -236,6 +237,7 @@ public class Main {
 
     private static void addCommand(Class<? extends Command> clazz, Bot b, CommandClientBuilder builder)
             throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        if(clazz == MusicCommand.class) return;
         Command instance = clazz.getDeclaredConstructor().newInstance();
         builder.addCommands(instance);
         b.commands.add(instance);

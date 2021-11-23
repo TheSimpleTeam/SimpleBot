@@ -9,6 +9,7 @@ public enum CommandCategories {
     INFO(new Command.Category("category.infos")),
     MISC(new Command.Category("category.misc")),
     CONFIG(new Command.Category("category.config")),
+    MUSIC(new Command.Category("category.music")),
     NONE(new Command.Category("category.noCategory")),
     //Add other categories
     ;

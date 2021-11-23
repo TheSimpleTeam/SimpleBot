@@ -57,6 +57,9 @@ dependencies {
     implementation('io.ktor:ktor-server-host-common:1.6.4')
     implementation('io.ktor:ktor-server-netty:1.6.4')
     implementation('io.ktor:ktor-serialization:1.6.4')
+    //Music
+    implementation 'com.sedmelluq:lavaplayer:1.3.77'
+    implementation 'com.github.jagrosh:JLyrics:0f9ac5df83'
     //Other
     implementation 'com.github.TheSimpleTeam:Spiget:main-SNAPSHOT'
     implementation 'com.google.code.gson:gson:2.8.9'

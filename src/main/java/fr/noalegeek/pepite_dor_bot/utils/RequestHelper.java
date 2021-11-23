@@ -12,6 +12,8 @@ import java.io.IOException;
 
 public class RequestHelper {
 
+    private RequestHelper() {}
+
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     public static String getResponseAsString(Response response) throws IOException {
