@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ProhibitCommand extends Command {
+public class ProhibitWordCommand extends Command {
 
-    public ProhibitCommand() {
+    public ProhibitWordCommand() {
         this.name = "prohibitword";
         this.aliases = new String[]{"prohibitw", "pword"};
         this.example = "add fuck";

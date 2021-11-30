@@ -32,7 +32,7 @@ public class TranslateCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         if(!event.getArgs().contains("--lang")) {
-            MessageHelper.syntaxError(event, this, "syntax.translate");
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         /*

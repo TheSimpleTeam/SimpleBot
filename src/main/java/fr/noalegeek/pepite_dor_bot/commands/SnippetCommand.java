@@ -82,7 +82,7 @@ public class SnippetCommand extends Command {
                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now())
                 .setTitle(String.format("%s %s",
-                        UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("warning.snippet", event)));
+                        UnicodeCharacters.warningSignEmoji, MessageHelper.translateMessage("warning.snippet", event)));
         event.getMessage().reply(new MessageBuilder(warningTakeTooLongEmbed.build()).build()).queue(warningTakeTooLongMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTooLongMessage.delete().queue()));
     }
 

@@ -9,10 +9,10 @@ public class ConfigCommand extends Command {
     public ConfigCommand(){
         this.name = "config";
         this.cooldown = 5;
-        this.help = "help.channelMember";
-        this.example = "join 848965362971574282\nleave reset";
+        this.help = "help.config";
+        this.example = "channelmember join 848965362971574282\n²channelmember leave reset\n²joinrole reset\n²localization en\n²prohibitword add idiot\n²prohibitword remove attardé\n²prohibitword reset\n²setPrefix reset\n²setPrefix prefix !";
         this.aliases = new String[]{"cf", "parameter", "par"};
-        this.arguments = "arguments.channelMember";
+        this.arguments = "arguments.config";
         this.category = CommandCategories.CONFIG.category;
         this.guildOnly = true;
         this.guildOwnerCommand = true;
@@ -20,6 +20,7 @@ public class ConfigCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        String[] args = event.getArgs().split("\\s+");
 
     }
 }
