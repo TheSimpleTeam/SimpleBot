@@ -26,6 +26,7 @@ package fr.noalegeek.pepite_dor_bot.commands.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 public class LyricsCommand extends MusicCommand {
 
@@ -50,12 +51,17 @@ public class LyricsCommand extends MusicCommand {
                         .replaceAll("\\(.*?\\)|\\[.*?\\]", "")
                         .replaceAll("[^a-zA-Z0-9’' ]", "").trim() : title;
 
+        if(title.chars().filter(charr -> charr == '-').count() == 1) title = title.split("-")[0].trim();
+
+        event.reply(title);
+
         try {
             client.getLyrics(title).thenAccept(lyrics -> {
                 if(lyrics == null) {
                     event.reply("Euh tu me poses une colle là. Fais une recherche google prsk je sais pas là.");
                 } else {
-                    event.reply(lyrics.getContent());
+                    event.reply(lyrics.getURL());
+                    event.reply(new EmbedBuilder().setDescription(lyrics.getContent()).build());
                 }
             }).get();
 

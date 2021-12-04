@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -193,6 +194,22 @@ public class Listener extends ListenerAdapter {
             if (message.toLowerCase().contains(s.toLowerCase())) {
                 event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + s + "` fait parti de la liste des mots interdits.").queue());
             }
+        }
+    }
+
+    @Override
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
+        if(!event.getChannelType().isGuild()) return;
+        if(!getServerConfig().reactionRole().containsKey(event.getGuild().getId()) ||
+                !getServerConfig().reactionRole().get(event.getGuild().getId()).containsKey(event.getMessageId())) return;
+        var map = getServerConfig().reactionRole().get(event.getGuild().getId()).get(event.getMessageId());
+        var role = event.getGuild().getRoleById(map.get("role"));
+        var emoji = event.getJDA().getEmoteById(map.get("emoji"));
+        if(emoji == null || role == null) return;
+        if(event.getMember().getRoles().contains(role)) return;
+        if(event.getReactionEmote().getId().equals(emoji.getId())) {
+            event.getGuild().addRoleToMember(event.getMember(), role).queue();
+            event.getChannel().sendMessage("Ok").mention(event.getMember()).queue();
         }
     }
 }

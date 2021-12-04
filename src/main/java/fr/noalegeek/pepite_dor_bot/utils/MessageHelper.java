@@ -28,6 +28,10 @@ public class MessageHelper {
         return String.format("**[**%s**]** ", user.getAsMention());
     }
 
+    public static void syntaxError(CommandEvent event, Command command) {
+        syntaxError(event, command, null);
+    }
+
     public static void syntaxError(CommandEvent event, Command command, String informations) {
         EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)

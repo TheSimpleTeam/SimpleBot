@@ -32,6 +32,7 @@ public class PlayCommand extends MusicCommand {
     public PlayCommand() {
         super();
         this.name = "play";
+        this.aliases = new String[]{"p"};
         this.cooldown = 5;
         this.help = "Play a song";
     }

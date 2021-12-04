@@ -12,7 +12,7 @@ public class PurgeCommand extends Command {
 
     public PurgeCommand() {
         this.name = "purge";
-        this.aliases = new String[]{"p", "cl", "clear", "pu", "pur", "purg", "cle", "clea"};
+        this.aliases = new String[]{"cl", "clear", "pu", "pur", "purg", "cle", "clea"};
         this.guildOnly = true;
         this.arguments = "<nombre de messages>";
         this.help = "help.purge";
