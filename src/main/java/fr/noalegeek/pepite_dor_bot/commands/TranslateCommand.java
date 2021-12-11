@@ -48,6 +48,7 @@ public class TranslateCommand extends Command {
             if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[0])) language1 = lingvaLanguage;
             if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[1])) language2 = lingvaLanguage;
         }
+        //TODO verify if the arg is lower than 1024 char because it's too long for embed OR do a for
         try {
             EmbedBuilder successEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)

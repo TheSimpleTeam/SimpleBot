@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.Color;
 import java.time.Instant;
+import java.util.Scanner;
 
 public class ConvertCommand extends Command {
 
@@ -84,7 +85,7 @@ public class ConvertCommand extends Command {
         PARSEC(UnitType.LENGTH, 308567758149136760000000000000000D, "pc", "text.convert.parsec"),
         YOTTAMETER(UnitType.LENGTH, 1000000000000000000000000D, "Ym", "text.convert.yottameter"),
         ZETTAMETER(UnitType.LENGTH, 1000000000000000000000D, "Zm", "text.convert.zettameter"),
-        LIGHTYEAR(UnitType.LENGTH, 946073000000000000000D, "ly", "text.convert.lightYear"),
+        LIGHTYEAR(UnitType.LENGTH, 946073047258080000000D, "ly", "text.convert.lightYear"),
         EXAMETER(UnitType.LENGTH, 1000000000000000000D, "Em", "text.convert.exameter"),
         PETAMETER(UnitType.LENGTH, 1000000000000000D, "Pm", "text.convert.petameter"),
         TELAMETER(UnitType.LENGTH, 1000000000000D, "Tm", "text.convert.telameter"),

@@ -32,7 +32,7 @@ public class EvaluateCommand extends Command {
         this.pyInterpreter = Main.eval.getPyInterpreter();
         this.writer = Main.eval.getWriter();
     }
-
+//TODO fusionner Eval class in util with this class
     @Override
     protected void execute(CommandEvent event) {
         String args = event.getArgs();
