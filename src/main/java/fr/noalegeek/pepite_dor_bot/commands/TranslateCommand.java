@@ -55,11 +55,8 @@ public class TranslateCommand extends Command {
                     .setColor(Color.GREEN)
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event))
-                    .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false)
-                    .addField(MessageHelper.translateMessage("success.translate.translatedText", event), Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString(), false)
-                    //TODO dont delete this comment, it's my system that partially work. Need to upgrade this
-            /*if (args[0].toCharArray().length > 1024) {
+                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event));
+            if (args[0].toCharArray().length > 1024) {
                 int charactersCount = 0;
                 List<String> list = new ArrayList<>();
                 StringBuilder stringBuilder = new StringBuilder();
@@ -92,7 +89,7 @@ public class TranslateCommand extends Command {
                 for(String str : list) System.out.println(str);
                 for (int i = 0; i < Math.ceil(translatedArgs.toCharArray().length / 1024D); i++) successEmbed.addField(i == 0 ? MessageHelper.translateMessage("success.translate.translatedText", event) : "", list.get(i), true);
             } else successEmbed.addField(MessageHelper.translateMessage("success.translate.translatedText", event), translatedArgs, true);
-            successEmbed*/.addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
+            successEmbed.addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
                     .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), true)
                     .addBlankField(true)
                     .addField(MessageHelper.translateMessage("success.translate.isoCodeTranslation", event), language2.name().toLowerCase(Locale.ROOT), true)
