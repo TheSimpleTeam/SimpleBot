@@ -10,7 +10,7 @@ public class ConfigCommand extends Command {
         this.name = "config";
         this.cooldown = 5;
         this.help = "help.config";
-        this.example = "channelmember join 848965362971574282\n²channelmember leave reset\n²joinrole reset\n²localization en\n²prohibitword add idiot\n²prohibitword remove attardé\n²prohibitword reset\n²setPrefix reset\n²setPrefix prefix !";
+        this.example = "example.config";
         this.aliases = new String[]{"cf", "parameter", "par"};
         this.arguments = "arguments.config";
         this.category = CommandCategories.CONFIG.category;

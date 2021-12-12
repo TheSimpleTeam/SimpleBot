@@ -104,7 +104,7 @@ public class ConvertCommand extends Command {
         ROD(UnitType.LENGTH, 5.0292D, "ro", "text.convert.rod"),
         FATHOM(UnitType.LENGTH, 1.8288D, "fhm", "text.convert.fathom"),
         ELL(UnitType.LENGTH, 1.143, "ell", "text.convert.ell"),
-        METER(UnitType.LENGTH, 1.0D, "m", "text.convert.meter"),
+        METER(UnitType.LENGTH, 1D, "m", "text.convert.meter"),
         YARD(UnitType.LENGTH, 0.9144D, "yd", "text.convert.yard"),
         FOOT(UnitType.LENGTH, 0.3048D, "ft", "text.convert.foot"),
         SPAN(UnitType.LENGTH, 0.2286D, "sp", "text.convert.span"),

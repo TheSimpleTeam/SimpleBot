@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class TranslateCommand extends Command {
@@ -31,8 +33,8 @@ public class TranslateCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getArgs().contains("--lang")) {
-            MessageHelper.syntaxError(event, this, null);
+        if (!event.getArgs().contains("--lang") || event.getArgs().toCharArray().length > 1024) {
+            MessageHelper.syntaxError(event, this, "lower than 1024 characters");
             return;
         }
         /*
@@ -44,11 +46,10 @@ public class TranslateCommand extends Command {
         String[] args = event.getArgs().split(" --lang ");
         LingvaLanguage language1 = LingvaLanguage.AUTO;
         LingvaLanguage language2 = LingvaLanguage.EN;
-        for(LingvaLanguage lingvaLanguage : LingvaLanguage.values()) {
-            if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[0])) language1 = lingvaLanguage;
-            if(lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[1])) language2 = lingvaLanguage;
+        for (LingvaLanguage lingvaLanguage : LingvaLanguage.values()) {
+            if (lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[0])) language1 = lingvaLanguage;
+            if (lingvaLanguage.name().equalsIgnoreCase(args[1].split("\\s+")[1])) language2 = lingvaLanguage;
         }
-        //TODO verify if the arg is lower than 1024 char because it's too long for embed OR do a for
         try {
             EmbedBuilder successEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)
@@ -57,7 +58,41 @@ public class TranslateCommand extends Command {
                     .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event))
                     .addField(MessageHelper.translateMessage("success.translate.text", event), args[0], false)
                     .addField(MessageHelper.translateMessage("success.translate.translatedText", event), Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString(), false)
-                    .addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
+                    //TODO dont delete this comment, it's my system that partially work. Need to upgrade this
+            /*if (args[0].toCharArray().length > 1024) {
+                int charactersCount = 0;
+                List<String> list = new ArrayList<>();
+                StringBuilder stringBuilder = new StringBuilder();
+                for(char c : args[0].toCharArray()){
+                    stringBuilder.append(c);
+                    charactersCount++;
+                    if(charactersCount == 1024 || charactersCount == ((args[0].toCharArray().length / 1024D) - Math.floor(args[0].toCharArray().length / 1024D)) * 1024){
+                        list.add(stringBuilder.toString());
+                        charactersCount = 0;
+                        stringBuilder.setLength(0);
+                    }
+                }
+                System.out.println(list);
+                for (int i = 0; i < Math.ceil(args[0].toCharArray().length / 1024D); i++) successEmbed.addField(i == 0 ? MessageHelper.translateMessage("success.translate.text", event) : "", list.get(i), true);
+            } else successEmbed.addField(MessageHelper.translateMessage("success.translate.text", event), args[0], true);
+            String translatedArgs = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString();
+            if (translatedArgs.toCharArray().length > 1024) {
+                int charactersCount = 0;
+                List<String> list = new ArrayList<>();
+                StringBuilder stringBuilder = new StringBuilder();
+                for(char c : translatedArgs.toCharArray()){
+                    stringBuilder.append(c);
+                    charactersCount++;
+                    if(charactersCount == 1024 || charactersCount == ((translatedArgs.toCharArray().length / 1024D) - Math.floor(translatedArgs.toCharArray().length / 1024D)) * 1024){
+                        list.add(stringBuilder.toString());
+                        charactersCount = 0;
+                        stringBuilder.setLength(0);
+                    }
+                }
+                for(String str : list) System.out.println(str);
+                for (int i = 0; i < Math.ceil(translatedArgs.toCharArray().length / 1024D); i++) successEmbed.addField(i == 0 ? MessageHelper.translateMessage("success.translate.translatedText", event) : "", list.get(i), true);
+            } else successEmbed.addField(MessageHelper.translateMessage("success.translate.translatedText", event), translatedArgs, true);
+            successEmbed*/.addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
                     .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), true)
                     .addBlankField(true)
                     .addField(MessageHelper.translateMessage("success.translate.isoCodeTranslation", event), language2.name().toLowerCase(Locale.ROOT), true)
@@ -69,7 +104,7 @@ public class TranslateCommand extends Command {
         }
     }
 
-    private enum LingvaLanguage{
+    private enum LingvaLanguage {
 
         AUTO("text.translate.detect"),
         AF("text.translate.afrikaans"),
@@ -184,7 +219,7 @@ public class TranslateCommand extends Command {
 
         private final String languageName;
 
-        LingvaLanguage(String languageName){
+        LingvaLanguage(String languageName) {
             this.languageName = languageName;
         }
     }
