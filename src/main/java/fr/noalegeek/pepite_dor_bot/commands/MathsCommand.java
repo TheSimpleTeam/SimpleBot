@@ -7,7 +7,6 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.mXparser;
 
@@ -64,7 +63,35 @@ public class MathsCommand extends Command {
                 event.reply(new MessageBuilder(successEmbed.build()).build());
             }
             case 2 -> {
-
+                switch (args[0]) {
+                    case "calculate" -> {
+                        mXparser.disableAlmostIntRounding();
+                        mXparser.disableCanonicalRounding();
+                        mXparser.disableUlpRounding();
+                        for (char c : args[1].toCharArray()) {
+                            if (List.of(UnicodeCharacters.getAllExponentsCharacters()).contains(c)) {
+                                EmbedBuilder errorExponentsCharactersEmbed = new EmbedBuilder()
+                                        .setColor(Color.RED)
+                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                        .setTimestamp(Instant.now())
+                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.maths.calculate.exponentsCharacters", event));
+                                event.reply(new MessageBuilder(errorExponentsCharactersEmbed.build()).build());
+                            }
+                        }
+                        if (!new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).checkSyntax()) {
+                            replyMathematicalSyntaxErrorEmbed(event, args[1]);
+                            return;
+                        }
+                        EmbedBuilder successEmbed = new EmbedBuilder()
+                                .setColor(Color.GREEN)
+                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                .setTimestamp(Instant.now())
+                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.maths.calculate.success", event))
+                                .addField(MessageHelper.translateMessage("success.maths.calculate.mathematicalExpression", event), calculateReplaceArgs(args[1].replaceAll("\\s+", "")), false)
+                                .addField(MessageHelper.translateMessage("success.maths.calculate.result", event), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false);
+                        event.reply(new MessageBuilder(successEmbed.build()).build());
+                    }
+                }
             }
             case 3 -> {
                 switch (args[0]) {
