@@ -40,7 +40,7 @@
   "error.commands.botCantInteractTarget": "I don\u0027t have the permission to do that.",
   "error.commands.botHasNotPermission": "I need **%s** permission to run this command.",
   "error.commands.memberNull": "You must specify a person present on the server.",
-  "error.commands.notAnIntegerNumber": "`%s` is not a prime number.",
+  "error.commands.notAnIntegerNumber": "`%s` is not a integer number.",
   "error.commands.notAnNumber": "%s` is not a number.",
   "error.commands.notOwner": "Error! Only the server owner can use this command.",
   "error.commands.numberTooLarge": "`%s` is too large a number.",

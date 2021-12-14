@@ -7,6 +7,7 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.mXparser;
 
@@ -70,9 +71,16 @@ public class MathsCommand extends Command {
                 switch (args[0]) {
                     case "primenumber", "primeNumber" -> { //Verify if a number is a prime number or make a list of all prime numbers up to the specified number
                         long number;
-                        if (isAnNumber(event, args[2]) && isAnIntegerNumber(event, args[2]) && notNumberTooLarge(event, args[2])) number = Long.parseLong(args[2]);//Verify if the arg is a number, else if it's an expression, else is not a valid arg
-                        else if (new Expression(args[2]).checkSyntax() && isAnIntegerNumber(event, String.valueOf(new Expression(args[2]).calculate())) && notNumberTooLarge(event, String.valueOf(new Expression(args[2]).calculate()))) number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
-                        else {
+                        if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
+                            if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
+                            else return;
+                        } else if (new Expression(args[2]).checkSyntax()){
+                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
+                                if(notIntegerNumberTooLargeWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
+                                    number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
+                                } else return;
+                            } else return;
+                        } else {
                             replyMathematicalSyntaxErrorEmbed(event, args[2]);
                             return;
                         }
@@ -116,9 +124,16 @@ public class MathsCommand extends Command {
                     }
                     case "perfectnumber", "perfectNumber" -> { //Verify if a number is a perfect number or make a list of all perfect numbers up to the specified number
                         long number;
-                        if (isAnNumber(event, args[2]) && isAnIntegerNumber(event, args[2]) && notNumberTooLarge(event, args[2])) number = Long.parseLong(args[2]); //Verify if the arg is a number, else if it's an expression, else is not a valid arg
-                        else if (new Expression(args[2]).checkSyntax() && isAnIntegerNumber(event, String.valueOf(new Expression(args[2]).calculate())) && notNumberTooLarge(event, String.valueOf(new Expression(args[2]).calculate()))) number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
-                        else {
+                        if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
+                            if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
+                            else return;
+                        } else if (new Expression(args[2]).checkSyntax()){
+                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
+                                if(notIntegerNumberTooLargeWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
+                                    number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
+                                } else return;
+                            } else return;
+                        } else {
                             replyMathematicalSyntaxErrorEmbed(event, args[2]);
                             return;
                         }
@@ -193,34 +208,32 @@ public class MathsCommand extends Command {
                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.maths.syntax", event), calculateReplaceArgs(args.replaceAll("\\s+", ""))));
         event.reply(new MessageBuilder(errorSyntaxEmbed.build()).build());
     }
-
-    public static boolean isAnNumber(CommandEvent event, String string) {
-        if (string.chars().allMatch(Character::isDigit)) return true;
-        EmbedBuilder notAnNumberEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTimestamp(Instant.now())
-                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.commands.notAnNumber", event), string)));
-        event.reply(new MessageBuilder(notAnNumberEmbed.build()).build());
-        return false;
-    }
-
-    public static boolean notNumberTooLarge(CommandEvent event, String string) {
+//TODO some functions dont right is wrong
+    public static boolean notIntegerNumberTooLargeWithEmbed(CommandEvent event, String integerNumber) {
         try {
-            Double.parseDouble(string);
+            Long.parseLong(integerNumber);
             return true;
         } catch (NumberFormatException exception) {
             EmbedBuilder numberTooLargeEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.commands.numberTooLarge", event), string)));
+                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.commands.numberTooLarge", event), integerNumber)));
             event.reply(new MessageBuilder(numberTooLargeEmbed.build()).build());
             return false;
         }
     }
 
-    public static boolean isAnIntegerNumber(CommandEvent event, String string) {
+    public static boolean notIntegerNumberTooLarge(String integerNumber) {
+        try {
+            Long.parseLong(integerNumber);
+            return true;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    public static boolean isIntegerNumberWithEmbed(CommandEvent event, String string) {
         if (string.chars().allMatch(Character::isDigit)) return true;
         EmbedBuilder notAnIntegerNumberEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
@@ -228,6 +241,11 @@ public class MathsCommand extends Command {
                 .setTimestamp(Instant.now())
                 .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.commands.notAnIntegerNumber", event), string)));
         event.reply(new MessageBuilder(notAnIntegerNumberEmbed.build()).build());
+        return false;
+    }
+
+    public static boolean isIntegerNumber(String string) {
+        if (string.chars().allMatch(Character::isDigit)) return true;
         return false;
     }
 
