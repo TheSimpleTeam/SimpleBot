@@ -60,9 +60,8 @@ public class MathsCommand extends Command {
                         .setTimestamp(Instant.now())
                         .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.maths.calculate.success", event))
                         .addField(MessageHelper.translateMessage("success.maths.calculate.mathematicalExpression", event), calculateReplaceArgs(args[0].replaceAll("\\s+", "")), false)
-                        .addField(MessageHelper.translateMessage("success.maths.calculate.result", event), String.valueOf(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).calculate()), false);
+                        .addField(MessageHelper.translateMessage("success.maths.calculate.result", event), String.valueOf(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false);
                 event.reply(new MessageBuilder(successEmbed.build()).build());
-                //TODO in the embed, change E thing (example : 1,3453E4) into x10^
             }
             case 2 -> {
 
