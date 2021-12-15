@@ -21,6 +21,5 @@ public class ConfigCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-
     }
 }
