@@ -3,6 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 
 public class ConfigCommand extends Command {
 
@@ -21,5 +22,17 @@ public class ConfigCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
+        if(args.length != 2 && args.length != 3){
+            MessageHelper.syntaxError(event, this, null);
+            return;
+        }
+        switch(args.length){
+            case 2 -> {
+
+            }
+            case 3 -> {
+
+            }
+        }
     }
 }
