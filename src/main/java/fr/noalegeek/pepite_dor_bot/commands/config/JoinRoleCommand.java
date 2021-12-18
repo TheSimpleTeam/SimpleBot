@@ -29,27 +29,27 @@ public class JoinRoleCommand extends Command {
             return;
         }
         if (event.getGuild().getRoleById(args[0].replaceAll("\\D+","")) == null) {
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.roleNull", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.config.joinrole.roleNull", event));
             return;
         }
         if (event.getGuild().getRoleById(args[0].replaceAll("\\D+","")).isManaged()) {
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.roleManaged", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.config.joinrole.roleManaged", event));
             return;
         }
         if(args[0].equalsIgnoreCase("reset")){
             if(Main.getServerConfig().guildJoinRole().get(event.getGuild().getId()) == null){
-                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.notConfigured", event));
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.config.joinrole.notConfigured", event));
                 return;
             }
             Main.getServerConfig().guildJoinRole().remove(event.getGuild().getId());
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("success.joinRole.reset", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("success.config.joinrole.reset", event));
         } else {
             if(Main.getServerConfig().guildJoinRole().get(event.getGuild().getId()) == null || !Main.getServerConfig().guildJoinRole().get(event.getGuild().getId()).equals(event.getGuild().getRoleById(args[0].replaceAll("\\D+","")).getId())){
                 Main.getServerConfig().guildJoinRole().put(event.getGuild().getId(), event.getGuild().getRoleById(args[0].replaceAll("\\D+","")).getId());
-                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("success.joinRole.configured", event));
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("success.config.joinrole.configured", event));
                 return;
             }
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.sameAsConfigured", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.config.joinrole.sameAsConfigured", event));
         }
     }
 }
