@@ -22,23 +22,24 @@
  * SOFTWARE.
  */
 
-package fr.noalegeek.pepite_dor_bot.cli.commands;
+package fr.noalegeek.pepite_dor_bot.slashcommand;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.components.Button;
 
-public interface CLICommand {
+public class TestCommand extends SlashCommand {
 
-    @NotNull
-    String name();
-
-    default String[] aliases() {
-        return new String[]{name()};
+    public TestCommand() {
+        this.name = "test";
+        this.help = "test";
+        this.guildOnly = true;
     }
 
-    @Nullable
-    String help();
-
-    void execute(CommandEvent event);
-
+    @Override
+    protected void execute(SlashCommandEvent event) {
+        event.reply("test").setEphemeral(true).addActionRow(Button.danger("Noalegeek is coming 4 u", Emoji.fromUnicode("\uD83D\uDC79"))).queue();
+    }
 }
+

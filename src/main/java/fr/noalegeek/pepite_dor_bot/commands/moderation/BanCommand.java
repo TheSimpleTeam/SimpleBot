@@ -28,7 +28,7 @@ public class BanCommand extends Command {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.ban", event));
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
+        event.getJDA().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
             if (event.getGuild().retrieveBanList().complete().stream().anyMatch(ban -> ban.getUser() == user)) {
                 event.getGuild().unban(user).queue(unused -> event.reply(String.format(MessageHelper.translateMessage("success.unban", event), user.getName())));
             } else {

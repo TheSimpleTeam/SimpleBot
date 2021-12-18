@@ -1,6 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.cli;
 
-import fr.noalegeek.pepite_dor_bot.cli.commands.CLICommand;
+import net.thesimpleteam.simplebotplugin.commands.CLICommand;
 import net.dv8tion.jda.api.JDA;
 
 public class CLIBuilder {

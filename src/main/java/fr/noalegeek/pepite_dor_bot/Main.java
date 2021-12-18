@@ -3,10 +3,7 @@ package fr.noalegeek.pepite_dor_bot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.jagrosh.jdautilities.command.Command;
-import com.jagrosh.jdautilities.command.CommandClient;
-import com.jagrosh.jdautilities.command.CommandClientBuilder;
-import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.*;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.noalegeek.pepite_dor_bot.cli.CLI;
 import fr.noalegeek.pepite_dor_bot.cli.CLIBuilder;
@@ -21,6 +18,7 @@ import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.gson.RecordTypeAdapterFactory;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
+import fr.noalegeek.pepite_dor_bot.plugin.PluginLoader;
 import fr.noalegeek.pepite_dor_bot.utils.Eval;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.simpleteam.simplebot.api.Server;
@@ -29,22 +27,26 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.python.core.PrePy;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.security.Permission;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -55,6 +57,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -68,6 +71,7 @@ public class Main {
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
     public static final Eval eval = new Eval();
     private static boolean tty;
+    private static PluginLoader loader;
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
     private static ScheduledExecutorService executorService;
@@ -107,6 +111,7 @@ public class Main {
                 .setPrefixFunction(Main::getPrefix)
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
+        setupSlashCommands(clientBuilder);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
 
@@ -138,17 +143,27 @@ public class Main {
             });
         }), 0, 1, TimeUnit.SECONDS);
 
+        File pluginFolder = new File("plugins");
+        if(!pluginFolder.exists()) pluginFolder.mkdir();
+
+        loader = new PluginLoader(pluginFolder);
+
+        executorService.schedule(() -> {
+            loader.loadPlugins();
+        }, 5, TimeUnit.SECONDS);
+
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
 
         if(tty) {
             executorService.schedule(() -> {
                 try {
                     CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
+                    loader.cli = cli;
                     cli.commandsListener();
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
-            }, 5, TimeUnit.SECONDS);
+            }, 2, TimeUnit.SECONDS);
         } else {
             LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
         }
@@ -211,8 +226,10 @@ public class Main {
      */
     private static void setupCommands(CommandClientBuilder clientBuilder, Bot b) {
         Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
-        Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
+        Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class).stream()
+                .filter(clazz -> !clazz.isInterface() || !SlashCommand.class.isAssignableFrom(clazz)).collect(Collectors.toSet());
         for (Class<? extends Command> command : commands) {
+            if(command == MusicCommand.class) return;
             if(hasConfig(command)) {
                 try {
                     addCommand(command, b, clientBuilder);
@@ -223,6 +240,21 @@ public class Main {
                 LOGGER.info(command.getName() + " need " + command.getAnnotation(RequireConfig.class).value() + " key in config.json");
             }
         }
+    }
+
+    private static void setupSlashCommands(CommandClientBuilder clientBuilder) {
+        clientBuilder.forceGuildOnly("846048803554852904");
+        Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.slashcommand");
+        var commands = reflections.getSubTypesOf(SlashCommand.class).stream().map(clazz -> {
+            try {
+                return clazz.getConstructor().newInstance();
+            } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).filter(Objects::nonNull).toArray(SlashCommand[]::new);
+        System.out.println(commands.length + " | " + Arrays.toString(Arrays.stream(commands).map(Command::getName).toArray()));
+        clientBuilder.addSlashCommands(commands);
     }
 
     private static boolean hasConfig(Class<? extends Command> clazz) {
@@ -237,7 +269,6 @@ public class Main {
 
     private static void addCommand(Class<? extends Command> clazz, Bot b, CommandClientBuilder builder)
             throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        if(clazz == MusicCommand.class) return;
         Command instance = clazz.getDeclaredConstructor().newInstance();
         builder.addCommands(instance);
         b.commands.add(instance);
@@ -245,7 +276,7 @@ public class Main {
 
     private static void setupLogs() throws IOException {
         File logFolder = new File("logs");
-        if (!Files.exists(logFolder.toPath())) {
+        if (!logFolder.exists()) {
             logFolder.mkdir();
         }
         FileHandler fh = new FileHandler("logs/log-" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
@@ -378,6 +409,10 @@ public class Main {
 
     public static boolean isTTY() {
         return tty;
+    }
+
+    public static PluginLoader getLoader() {
+        return loader;
     }
 
     public static ScheduledExecutorService getExecutorService() {

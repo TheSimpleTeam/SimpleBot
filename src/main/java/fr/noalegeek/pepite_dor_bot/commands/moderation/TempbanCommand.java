@@ -61,7 +61,7 @@ public class TempbanCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+        event.getJDA().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
             if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
             try {
                 int time  = Integer.parseInt(args[1]);

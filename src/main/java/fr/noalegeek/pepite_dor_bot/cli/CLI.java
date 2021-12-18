@@ -26,26 +26,31 @@ package fr.noalegeek.pepite_dor_bot.cli;
 
 import com.google.common.collect.ImmutableList;
 import fr.noalegeek.pepite_dor_bot.Main;
-import fr.noalegeek.pepite_dor_bot.cli.commands.CLICommand;
-import fr.noalegeek.pepite_dor_bot.cli.commands.CommandEvent;
+import net.thesimpleteam.simplebotplugin.BasePlugin;
+import net.thesimpleteam.simplebotplugin.commands.CLICommand;
+import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
 import net.dv8tion.jda.api.JDA;
+import net.thesimpleteam.simplebotplugin.commands.ICLI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class CLI {
+public class CLI implements ICLI {
 
     private final ImmutableList<CLICommand> commands;
+    private final List<CLICommand> pluginCommands;
     private final JDA jda;
 
     public CLI(JDA jda, CLICommand[] commands) {
         this.commands = ImmutableList.<CLICommand>builder().addAll(Arrays.asList(commands)).build();
         this.jda = jda;
+        this.pluginCommands = new ArrayList<>();
     }
 
+    @Override
     public void commandsListener() throws InterruptedException, IOException {
         jda.awaitReady();
         do {
@@ -55,16 +60,26 @@ public class CLI {
             String[] arg = nextLine.split("\\s+");
             Optional<CLICommand> opCommand = commands.stream().filter(cmd -> cmd.name().equalsIgnoreCase(arg[0]) || Arrays.stream(cmd.aliases())
                     .anyMatch(s -> s.equalsIgnoreCase(arg[0]))).findAny();
-            if (opCommand.isPresent()) {
-                CLICommand command = opCommand.get();
-                command.execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), jda, this));
-            } else {
-                Main.LOGGER.warning("This command does not exist !");
-            }
+            opCommand.ifPresentOrElse(cmd -> cmd.execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), this)), () -> {
+                var plCommands = pluginCommands.stream()
+                        .filter(cmd -> cmd.name().equalsIgnoreCase(arg[0]) || Arrays.stream(cmd.aliases()).anyMatch(s -> s.equalsIgnoreCase(arg[0]))).findFirst();
+                if (plCommands.isPresent()) {
+                    plCommands.get().execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), this));
+                } else {
+                    Main.LOGGER.warning("This command does not exist !");
+                    Main.LOGGER.warning("List of plugins commands :%n%s".formatted(Arrays.toString(pluginCommands.stream().map(CLICommand::name).toArray())));
+                }
+            });
         } while (true);
     }
 
+    @Override
     public ImmutableList<CLICommand> getCommands() {
         return commands;
+    }
+
+    @Override
+    public List<CLICommand> getPluginCommands() {
+        return pluginCommands;
     }
 }

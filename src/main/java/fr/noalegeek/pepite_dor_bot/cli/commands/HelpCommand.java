@@ -24,6 +24,8 @@
 
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
+import net.thesimpleteam.simplebotplugin.commands.CLICommand;
+import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

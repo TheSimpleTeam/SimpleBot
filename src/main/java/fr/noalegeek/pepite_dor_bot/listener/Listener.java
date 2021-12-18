@@ -4,6 +4,8 @@ import com.google.common.base.Throwables;
 import com.jagrosh.jdautilities.command.Command;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
+import fr.noalegeek.pepite_dor_bot.plugin.PluginLoader;
+import fr.noalegeek.pepite_dor_bot.plugin.impl.events.MessageReceiveEventImpl;
 import fr.noalegeek.pepite_dor_bot.utils.LevenshteinDistance;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -15,6 +17,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.thesimpleteam.simplebotplugin.BasePlugin;
+import net.thesimpleteam.simplebotplugin.event.MessageReceiveEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
@@ -39,11 +43,15 @@ public class Listener extends ListenerAdapter {
     public void onShutdown(@NotNull ShutdownEvent event) {
         try {
             Listener.saveConfigs();
+            getLoader().getPlugins().stream().map(PluginLoader.Plugin::getBasePlugin).forEach(BasePlugin::onDisable);
+            getLoader().getPlugins().clear();
+            //Replace System.gc with Unsafe.freeMemory
+            System.gc();
         } catch (IOException ex) {
             LOGGER.severe(Throwables.getStackTraceAsString(ex));
         }
         //OK SO JDA DOESNT WANT TO EXIT THE JVM. I'M GONNA DO MY OWN WAY
-        Main.getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS);
+        getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS);
         //A GOOD OLD SYSTEM.EXIT
         //WHY IS IT MORE DIFFICULT THAN MAKING A DOCKERFILE
         //PLEASE SEND HELP IT SHOULD BE AN EASY TASK TO SHUTDOWN A BOT BUT JDA WANT TO KILL ME
@@ -152,9 +160,10 @@ public class Listener extends ListenerAdapter {
         }
         String message = event.getMessage().getContentRaw();
         LOGGER.info(String.format("%s %s:%n %s", MessageHelper.getTag(event.getAuthor()), "a dit", message));
+        Main.getLoader().callEvent(new MessageReceiveEventImpl(event.getMessage().getContentRaw(), event.getChannel()));
         if (getServerConfig().prohibitWords() == null) {
-            new File("config/server-config.json").delete();
             try {
+                Files.deleteIfExists(Path.of("config/server-config.json"));
                 setupServerConfig();
             } catch (IOException ex) {
                 LOGGER.severe(ex.getMessage());

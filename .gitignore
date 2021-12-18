@@ -7,3 +7,4 @@ config.json
 config/server-config.json
 gradle.properties
 /Dockerfile_*
+settings.gradle

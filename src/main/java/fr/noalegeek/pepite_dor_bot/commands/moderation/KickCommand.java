@@ -27,7 +27,7 @@ public class KickCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        Main.getJda().retrieveUserById(args[1].replaceAll("\\D+","")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+        event.getJDA().retrieveUserById(args[1].replaceAll("\\D+","")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
             event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.kick", event), user.getName(), MessageHelper.setReason(args[1], event)));
             event.getGuild().kick(member).queue();
         }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),

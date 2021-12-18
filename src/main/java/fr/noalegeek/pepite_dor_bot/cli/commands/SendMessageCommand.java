@@ -25,6 +25,8 @@
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
 import fr.noalegeek.pepite_dor_bot.Main;
+import net.thesimpleteam.simplebotplugin.commands.CLICommand;
+import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class SendMessageCommand implements CLICommand {
@@ -47,6 +49,6 @@ public class SendMessageCommand implements CLICommand {
         } else {
             msg = String.join(" ", event.args());
         }
-        event.jda().getTextChannelById(754418833841717350L).sendMessage(msg).queue();
+        Main.getJda().getTextChannelById(754418833841717350L).sendMessage(msg).queue();
     }
 }

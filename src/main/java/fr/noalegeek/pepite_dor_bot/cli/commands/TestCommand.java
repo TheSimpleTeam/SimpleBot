@@ -25,6 +25,8 @@
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
 import fr.noalegeek.pepite_dor_bot.Main;
+import net.thesimpleteam.simplebotplugin.commands.CLICommand;
+import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class TestCommand implements CLICommand {

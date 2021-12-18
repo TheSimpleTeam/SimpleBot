@@ -41,7 +41,7 @@ public class UserInfoCommand extends Command {
                 successEmbed.addField(MessageHelper.translateMessage("success.userInfo.nickname", event), event.getMember().getNickname(), false);
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } else {
-            Main.getJda().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
+            event.getJDA().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
                             event.getGuild().retrieveMember(user).queue(member -> {
                                 EmbedBuilder successEmbed = new EmbedBuilder()
                                         .setTitle("\u2139 " + String.format(MessageHelper.translateMessage("success.botInfo.success", event), MessageHelper.getTag(user)))

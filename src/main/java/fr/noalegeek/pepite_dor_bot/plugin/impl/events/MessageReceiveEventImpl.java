@@ -22,9 +22,22 @@
  * SOFTWARE.
  */
 
-package fr.noalegeek.pepite_dor_bot.cli.commands;
+package fr.noalegeek.pepite_dor_bot.plugin.impl.events;
 
-import fr.noalegeek.pepite_dor_bot.cli.CLI;
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.thesimpleteam.simplebotplugin.event.MessageReceiveEvent;
 
-public record CommandEvent(String[] args, JDA jda, CLI cli) {}
+public class MessageReceiveEventImpl extends MessageReceiveEvent {
+
+    private final TextChannel channel;
+
+    public MessageReceiveEventImpl(String message, TextChannel channel) {
+        super(message);
+        this.channel = channel;
+    }
+
+    @Override
+    public void reply(String text) {
+        channel.sendMessage(text).queue();
+    }
+}

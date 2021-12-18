@@ -28,7 +28,7 @@ public class UnbanCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
+        event.getJDA().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
             if (event.getGuild().retrieveBanList().complete().stream().anyMatch(ban -> ban.getUser() == user)) {
                 event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event), user.getName(), MessageHelper.setReason(args[1], event)));
                 event.getGuild().unban(user).queue();
