@@ -78,6 +78,8 @@ public class Main {
 
     private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
 
+    private Main(){}
+
     public static void main(String[] args) throws InterruptedException {
         executorService = Executors.newScheduledThreadPool(3);
         tty = PrePy.isInteractive();
@@ -112,6 +114,7 @@ public class Main {
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         setupSlashCommands(clientBuilder);
+        clientBuilder.forceGuildOnly("846048803554852904");
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();
         jda.addEventListener(new Listener(), waiter, client);
 
@@ -148,9 +151,7 @@ public class Main {
 
         loader = new PluginLoader(pluginFolder);
 
-        executorService.schedule(() -> {
-            loader.loadPlugins();
-        }, 5, TimeUnit.SECONDS);
+        executorService.schedule(() -> loader.loadPlugins(), 5, TimeUnit.SECONDS);
 
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
 
@@ -243,7 +244,6 @@ public class Main {
     }
 
     private static void setupSlashCommands(CommandClientBuilder clientBuilder) {
-        clientBuilder.forceGuildOnly("846048803554852904");
         Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.slashcommand");
         var commands = reflections.getSubTypesOf(SlashCommand.class).stream().map(clazz -> {
             try {

@@ -26,7 +26,7 @@ package fr.noalegeek.pepite_dor_bot.cli.commands;
 
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.thesimpleteam.simplebotplugin.commands.CLICommand;
-import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
+import net.thesimpleteam.simplebotplugin.commands.CLICommandEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +48,7 @@ public class ShutdownCommand implements CLICommand {
     }
 
     @Override
-    public void execute(CommandEvent event) {
+    public void execute(CLICommandEvent event) {
         Main.getJda().shutdown();
     }
 }

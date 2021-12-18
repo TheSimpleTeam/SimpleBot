@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableList;
 import fr.noalegeek.pepite_dor_bot.cli.CLI;
 import net.thesimpleteam.simplebotplugin.annotation.EventHandler;
 import net.thesimpleteam.simplebotplugin.commands.CLICommand;
+import net.thesimpleteam.simplebotplugin.commands.Command;
 import net.thesimpleteam.simplebotplugin.listener.Listener;
 import net.thesimpleteam.simplebotplugin.BasePlugin;
 import net.thesimpleteam.simplebotplugin.IPluginLoader;
@@ -53,6 +54,7 @@ public class PluginLoader implements IPluginLoader {
         private final BasePlugin basePlugin;
         private final File file;
         private final ImmutableList<Class<?>> pluginClasses;
+        private final List<Command> commands;
         private Listener[] listeners;
 
         private Plugin() {
@@ -60,12 +62,14 @@ public class PluginLoader implements IPluginLoader {
             this.file = null;
             this.pluginClasses = null;
             this.listeners = null;
+            this.commands = new ArrayList<>();
         }
 
         private Plugin(BasePlugin basePlugin, File file, ImmutableList<Class<?>> pluginClasses) {
             this.basePlugin = basePlugin;
             this.file = file;
             this.pluginClasses = pluginClasses;
+            this.commands = new ArrayList<>();
         }
 
         public BasePlugin getBasePlugin() {
@@ -82,6 +86,10 @@ public class PluginLoader implements IPluginLoader {
 
         private Listener[] getListeners() {
             return listeners;
+        }
+
+        public List<Command> getCommands() {
+            return commands;
         }
     }
 
@@ -133,6 +141,16 @@ public class PluginLoader implements IPluginLoader {
         if (pluginOP.isEmpty()) return;
         System.out.println("Added " + commands.length + " commands from" + pluginOP.get().getBasePlugin().getName() + " to the CLI Command List.");
         cli.getPluginCommands().addAll(List.of(commands));
+    }
+
+    @Override
+    public void addCommands(BasePlugin plugin, Command... commands) {
+        System.out.println("Added " + commands.length + " commands from " + plugin.getName() + " to the Commands List.");
+        if(plugins.stream().anyMatch(pl -> pl.getCommands().stream().map(Command::name).anyMatch(s -> Arrays.stream(commands).anyMatch(command -> command.name().equals(s))))) {
+            System.out.println("A command with the same name as one of the commands you are trying to add already exists.");
+            return;
+        }
+        plugins.stream().filter(pl -> pl.getBasePlugin() == plugin).findFirst().ifPresent(pl -> pl.commands.addAll(List.of(commands)));
     }
 
     public void loadPlugins() {

@@ -18,7 +18,8 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.thesimpleteam.simplebotplugin.BasePlugin;
-import net.thesimpleteam.simplebotplugin.event.MessageReceiveEvent;
+import net.thesimpleteam.simplebotplugin.commands.CLICommandEvent;
+import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
@@ -176,22 +177,33 @@ public class Listener extends ListenerAdapter {
             String cmdName = args[0];
             if(Main.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) ||
                     Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase)) || Main.getClient().getHelpWord().equalsIgnoreCase(cmdName)) return;
-            double highestResult = 0;
-            String cmd = null;
-            for (Command command : getClient().getCommands()) {
-                double _highestResult = LevenshteinDistance.getDistance(cmdName, command.getName());
-                double b = 0;
-                String _alias = command.getName();
+            if (Main.getLoader().getPlugins().stream().map(PluginLoader.Plugin::getCommands)
+                    .anyMatch(commands -> commands.stream().anyMatch(command -> command.name().equalsIgnoreCase(cmdName)))) {
+                Main.getLoader().getPlugins().stream().map(PluginLoader.Plugin::getCommands)
+                        .filter(commands -> commands.stream().anyMatch(command -> command.name().equalsIgnoreCase(cmdName))).findFirst()
+                        .flatMap(commands -> commands.stream().filter(command -> command.name().equalsIgnoreCase(cmdName)).findFirst()).ifPresent(command -> {
+                           var plugin = Main.getLoader().getPlugins().stream().filter(plugin1 -> plugin1.getCommands().stream()
+                                   .anyMatch(command1 -> command1.name().equalsIgnoreCase(cmdName))).findFirst().orElse(null);
+                           command.execute(new CommandEvent(Arrays.copyOfRange(args, 1, args.length), event, plugin.getBasePlugin()));
+                        });
+            } else {
+                double highestResult = 0;
+                String cmd = null;
+                for (Command command : getClient().getCommands()) {
+                    double _highestResult = LevenshteinDistance.getDistance(cmdName, command.getName());
+                    double b = 0;
+                    String _alias = command.getName();
 
-                if(b > _highestResult) {
-                    _highestResult = b;
+                    if(b > _highestResult) {
+                        _highestResult = b;
+                    }
+                    if(highestResult < _highestResult) {
+                        cmd = _alias;
+                        highestResult = _highestResult;
+                    }
                 }
-                if(highestResult < _highestResult) {
-                    cmd = _alias;
-                    highestResult = _highestResult;
-                }
+                event.getChannel().sendMessage("Did you meant " + cmd).mention(event.getAuthor()).complete();
             }
-            event.getChannel().sendMessage("Did you meant " + cmd).mention(event.getAuthor()).complete();
         }
         if (!getServerConfig().prohibitWords().containsKey(event.getGuild().getId())) return;
         for (String s : getServerConfig().prohibitWords().get(event.getGuild().getId())) {
@@ -201,7 +213,8 @@ public class Listener extends ListenerAdapter {
                 }
             }
             if (message.toLowerCase().contains(s.toLowerCase())) {
-                event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + s + "` fait parti de la liste des mots interdits.").queue());
+                event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + s
+                        + "` fait parti de la liste des mots interdits.").queue());
             }
         }
     }

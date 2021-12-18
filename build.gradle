@@ -39,8 +39,8 @@ repositories {
 
 dependencies {
     //JDA & JDA-Utilities
-    implementation("net.dv8tion:JDA:4.3.0_339")
-    implementation('pw.chew:jda-chewtils:1.22.0') {
+    implementation("net.dv8tion:JDA:4.4.0_350")
+    implementation('pw.chew:jda-chewtils:1.23.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
@@ -51,12 +51,14 @@ dependencies {
     implementation('com.caoccao.javet:javet:1.0.5')
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
-    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'commons-cli:commons-cli:1.5.0'
     //API
-    implementation('io.ktor:ktor-server-core:1.6.4')
-    implementation('io.ktor:ktor-server-host-common:1.6.4')
+    implementation('io.ktor:ktor-server-core:1.6.6')
+    implementation('io.ktor:ktor-server-host-common:1.6.6')
     implementation('io.ktor:ktor-server-netty:1.6.6')
-    implementation('io.ktor:ktor-serialization:1.6.4')
+    implementation('io.ktor:ktor-serialization:1.6.6')
+    implementation "io.ktor:ktor-auth:1.6.6"
+    implementation "io.ktor:ktor-auth-jwt:1.6.6"
     //Music
     implementation 'com.sedmelluq:lavaplayer:1.3.77'
     implementation 'com.github.jagrosh:JLyrics:0f9ac5df83'
@@ -70,9 +72,13 @@ dependencies {
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
+    implementation 'commons-validator:commons-validator:1.7'
+    //TODO: Push pluginapi to my repo
+    implementation project(':pluginapi')
+    compileOnly project(':plugin')
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
 docker {

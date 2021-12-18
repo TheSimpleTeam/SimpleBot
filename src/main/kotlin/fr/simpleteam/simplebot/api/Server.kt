@@ -24,10 +24,12 @@
 
 package fr.simpleteam.simplebot.api
 
+import com.auth0.jwt.JWT
 import com.google.gson.Gson
-import fr.noalegeek.pepite_dor_bot.Main
 import fr.simpleteam.simplebot.api.jda.Guild
 import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.response.*
@@ -36,12 +38,13 @@ import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import net.dv8tion.jda.api.JDA
-import java.util.logging.Logger
+import java.security.SecureRandom
+import java.util.*
 import java.util.stream.Collectors
 
 class Server(private val jda : JDA, private val gson: Gson) {
 
-    private val LOGGER: Logger = Main.LOGGER
+    private lateinit var token : String
 
     fun server() {
         embeddedServer(Netty, port = 8080) {
@@ -51,7 +54,16 @@ class Server(private val jda : JDA, private val gson: Gson) {
                 }
                 get("/guilds") {
                     call.respondText(gson.toJson(jda.guilds.stream()
-                        .map { v -> Guild(v.id, v.name, v.iconUrl, v.owner?.user?.name + "#" + v.owner?.user?.discriminator, v.memberCount, v.timeCreated.toString()) }
+                        .map { v ->
+                            Guild(
+                                v.id,
+                                v.name,
+                                v.iconUrl,
+                                v.owner?.user?.name + "#" + v.owner?.user?.discriminator,
+                                v.memberCount,
+                                v.timeCreated.toString()
+                            )
+                        }
                         .collect(Collectors.toList())), ContentType.Application.Json)
                 }
                 get("/guilds/count") {
@@ -61,6 +73,18 @@ class Server(private val jda : JDA, private val gson: Gson) {
             install(ContentNegotiation) {
                 json()
             }
+            install(Authentication) {
+                jwt {
+                    val secureRandom = SecureRandom()
+                    val base64Encoder = Base64.getUrlEncoder()
+                    val randomBytes = ByteArray(32)
+                    secureRandom.nextBytes(randomBytes)
+                    val generatedToken = base64Encoder.encodeToString(randomBytes)
+                    log.info("You can use this token to authenticate: $generatedToken")
+                    token = generatedToken
+                    this.
+                }
+            }
             install(CORS) {
                 header(HttpHeaders.AccessControlAllowOrigin)
                 header(HttpHeaders.ContentType)
@@ -68,8 +92,7 @@ class Server(private val jda : JDA, private val gson: Gson) {
                 anyHost()
                 allowSameOrigin = true
             }
-            LOGGER.info("The server has been initialized !")
+            log.info("The server has been initialized !")
         }.start(wait = true)
     }
-
 }

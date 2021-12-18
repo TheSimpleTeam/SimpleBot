@@ -26,9 +26,8 @@ package fr.noalegeek.pepite_dor_bot.cli;
 
 import com.google.common.collect.ImmutableList;
 import fr.noalegeek.pepite_dor_bot.Main;
-import net.thesimpleteam.simplebotplugin.BasePlugin;
 import net.thesimpleteam.simplebotplugin.commands.CLICommand;
-import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
+import net.thesimpleteam.simplebotplugin.commands.CLICommandEvent;
 import net.dv8tion.jda.api.JDA;
 import net.thesimpleteam.simplebotplugin.commands.ICLI;
 
@@ -36,7 +35,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CLI implements ICLI {
 
@@ -60,11 +58,11 @@ public class CLI implements ICLI {
             String[] arg = nextLine.split("\\s+");
             Optional<CLICommand> opCommand = commands.stream().filter(cmd -> cmd.name().equalsIgnoreCase(arg[0]) || Arrays.stream(cmd.aliases())
                     .anyMatch(s -> s.equalsIgnoreCase(arg[0]))).findAny();
-            opCommand.ifPresentOrElse(cmd -> cmd.execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), this)), () -> {
+            opCommand.ifPresentOrElse(cmd -> cmd.execute(new CLICommandEvent(Arrays.copyOfRange(arg, 1, arg.length), this)), () -> {
                 var plCommands = pluginCommands.stream()
                         .filter(cmd -> cmd.name().equalsIgnoreCase(arg[0]) || Arrays.stream(cmd.aliases()).anyMatch(s -> s.equalsIgnoreCase(arg[0]))).findFirst();
                 if (plCommands.isPresent()) {
-                    plCommands.get().execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), this));
+                    plCommands.get().execute(new CLICommandEvent(Arrays.copyOfRange(arg, 1, arg.length), this));
                 } else {
                     Main.LOGGER.warning("This command does not exist !");
                     Main.LOGGER.warning("List of plugins commands :%n%s".formatted(Arrays.toString(pluginCommands.stream().map(CLICommand::name).toArray())));

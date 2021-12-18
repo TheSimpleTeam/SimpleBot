@@ -25,7 +25,7 @@
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
 import net.thesimpleteam.simplebotplugin.commands.CLICommand;
-import net.thesimpleteam.simplebotplugin.commands.CommandEvent;
+import net.thesimpleteam.simplebotplugin.commands.CLICommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class HelpCommand implements CLICommand {
     }
 
     @Override
-    public void execute(CommandEvent event) {
+    public void execute(CLICommandEvent event) {
         if(event.args().length == 0) {
             for (CLICommand command : event.cli().getCommands()) {
                 System.out.println();

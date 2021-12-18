@@ -8,6 +8,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.CommandInteraction;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,6 +18,7 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +66,23 @@ public class MessageHelper {
         }
         sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event), event.getArgs(), false);
         event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
+    }
+
+    public static void sendError(Exception exception, SlashCommandEvent event, Command command) {
+        EmbedBuilder sendErrorEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setFooter(MessageHelper.getTag(event.getUser()), event.getUser().getAvatarUrl() == null ? event.getUser().getDefaultAvatarUrl() : event.getUser().getAvatarUrl())
+                .setTimestamp(Instant.now())
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.sendError.error", event))
+                .addField(MessageHelper.translateMessage("text.commands.sendError.sendError", event), exception.getMessage(), false)
+                .addField(MessageHelper.translateMessage("text.commands.sendError.command", event), Main.getPrefix(event.getGuild()) + command.getName(), false);
+        if (command.getArguments() == null || command.getArguments().isEmpty()) {
+            event.reply(new MessageBuilder(sendErrorEmbed.build()).build()).setEphemeral(true).queue();
+            return;
+        }
+        sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event),
+                String.join(" ", ArrayUtils.removeElement(event.getCommandString().split("\\s+"), 1)), false);
+        event.reply(new MessageBuilder(sendErrorEmbed.build()).build()).setEphemeral(true).queue();
     }
 
     public static String formatShortDate(OffsetDateTime date) {
@@ -205,6 +226,35 @@ public class MessageHelper {
                     .addField(MessageHelper.translateMessage("error.translateMessage.method", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
                     .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
             event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
+            throw new NullPointerException("The key " + key + " does not exist!");
+        }
+        try {
+            return Main.getLocalizations().get("en").get(key).getAsString();
+        } catch (NullPointerException ex) {
+            return key;
+        }
+    }
+
+    public static String translateMessage(String key, SlashCommandEvent event) {
+        String lang = Main.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en");
+        Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
+        if (s.isPresent()) return s.get().getAsString();
+        if (Main.getLocalizations().get("en").get(key) == null) {
+            StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+            int skip = 2;
+            if (stackWalker.walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
+                skip++;
+            final var _skip = skip;
+            EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getUser()), event.getUser().getAvatarUrl() == null ? event.getUser().getDefaultAvatarUrl() : event.getUser().getAvatarUrl())
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
+                    .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+            event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build()).setEphemeral(true).queue();
             throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {
