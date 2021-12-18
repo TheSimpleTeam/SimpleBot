@@ -84,7 +84,7 @@
   "error.unmute.mutedRoleDontExist": "Le rôle configuré par défaut n\u0027est pas présent donc je ne peux pas démuter.",
   "error.unmute.notMuted": "Vous ne pouvez pas démuter %s car il n\u0027est pas muté.",
   "example.calculate": "Veuillez lire le fichier README grâce au lien https://github.com/mariuszgromada/MathParser.org-mXparser pour voir les possibilités de cette commande.",
-  "example.config": "channelmember join 848965362971574282\n²channelmember leave reset\n²joinrole 660083059089080321\n²joinrole reset\n²localization en\n²prohibitword add idiot\n²prohibitword remove attardé\n²prohibitword reset\n²setPrefix reset\n²setPrefix prefix !",
+  "example.config": "channelmember join 848965362971574282\n²channelmember leave reset\n²channelmember join this\n²joinrole 660083059089080321\n²joinrole reset\n²localization en\n²prohibitword add idiot\n²prohibitword remove attardé\n²prohibitword reset\n²setPrefix reset\n²setPrefix prefix !",
   "example.createChannel": "text général 846048803554852905",
   "example.issue": "--title Aide de la commande unmute inexistante --body L\u0027aide de la commande unmute n\u0027existe pas.",
   "example.say": "Hey, je suis un robot !",

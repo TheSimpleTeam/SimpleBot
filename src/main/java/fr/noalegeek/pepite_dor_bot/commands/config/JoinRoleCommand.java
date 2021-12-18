@@ -31,7 +31,8 @@ public class JoinRoleCommand extends Command {
         if (event.getGuild().getRoleById(args[0].replaceAll("\\D+","")) == null) {
             event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.roleNull", event));
             return;
-        } else if (event.getGuild().getRoleById(args[0].replaceAll("\\D+","")).isManaged()) {
+        }
+        if (event.getGuild().getRoleById(args[0].replaceAll("\\D+","")).isManaged()) {
             event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.joinRole.roleManaged", event));
             return;
         }
