@@ -62,6 +62,7 @@ public class ConfigCommand extends Command {
                                         .setTimestamp(Instant.now())
                                         .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.notValidID", event)));
                                 event.reply(new MessageBuilder(errorNotValidIDEmbed.build()).build());
+                                return;
                             }
                             if (event.getGuild().getRoleById(args[1].replaceAll("\\D+","")) == null) {
                                 EmbedBuilder errorRoleNullEmbed = new EmbedBuilder()
