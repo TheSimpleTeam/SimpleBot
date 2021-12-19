@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.Arrays;
 
 public class ConfigCommand extends Command {
 
@@ -99,6 +100,33 @@ public class ConfigCommand extends Command {
                                     .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.sameAsConfigured", event)));
                             event.reply(new MessageBuilder(errorRoleManagedEmbed.build()).build());
                         }
+                    }
+                    case "localization" -> {
+                        if(Arrays.stream(Main.getLangs()).noneMatch(lang -> lang.equalsIgnoreCase(args[1]))){
+                            EmbedBuilder errorLanguageDontExistEmbed = new EmbedBuilder()
+                                    .setColor(Color.RED)
+                                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
+                                    .setTimestamp(Instant.now())
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.localization.languageDontExist", event)));
+                            event.reply(new MessageBuilder(errorLanguageDontExistEmbed.build()).build());
+                            return;
+                        }
+                        if(args[1].equals(Main.getServerConfig().language().get(event.getGuild().getId()))){
+                            EmbedBuilder errorSameAsConfiguredEmbed = new EmbedBuilder()
+                                    .setColor(Color.RED)
+                                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
+                                    .setTimestamp(Instant.now())
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.localization.sameAsConfig", event)));
+                            event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
+                            return;
+                        }
+                        Main.getServerConfig().language().put(event.getGuild().getId(), args[1]);
+                        EmbedBuilder successEmbed = new EmbedBuilder()
+                                .setColor(Color.GREEN)
+                                .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
+                                .setTimestamp(Instant.now())
+                                .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.config.localization.configured", event))), String.format("%s%s", ":flag_" + args[0].replace("en","us: / :flag_gb"), ':'));
+                        event.reply(new MessageBuilder(successEmbed.build()).build());
                     }
                 }
             }
