@@ -3,6 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
@@ -14,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
 
 public class ConfigCommand extends Command {
 
@@ -31,6 +34,17 @@ public class ConfigCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        for(Map config : getManualConfigs()){
+            if(config == null){
+                try {
+                    new File("config/server-config.json").delete();
+                    Main.setupServerConfig();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                break;
+            }
+        }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, null);
@@ -38,16 +52,8 @@ public class ConfigCommand extends Command {
         }
         switch (args.length) {
             case 2 -> {
-                switch (args[0]) {
-                    case "joinrole", "joinRole" -> {
-                        if (Main.getServerConfig().guildJoinRole() == null) {
-                            try {
-                                new File("config/server-config.json").delete();
-                                Main.setupServerConfig();
-                            } catch (IOException exception) {
-                                exception.printStackTrace();
-                            }
-                        }
+                switch (args[0].toLowerCase(Locale.ROOT)) {
+                    case "joinrole" -> {
                         if (args[1].equalsIgnoreCase("reset")) {
                             if (Main.getServerConfig().guildJoinRole().get(event.getGuild().getId()) == null) {
                                 EmbedBuilder errorNotConfiguredEmbed = new EmbedBuilder()
@@ -112,14 +118,6 @@ public class ConfigCommand extends Command {
                         }
                     }
                     case "localization" -> {
-                        if (Main.getServerConfig().language() == null) {
-                            try {
-                                new File("config/server-config.json").delete();
-                                Main.setupServerConfig();
-                            } catch (IOException exception) {
-                                exception.printStackTrace();
-                            }
-                        }
                         if (Arrays.stream(Main.getLangs()).noneMatch(lang -> lang.equalsIgnoreCase(args[1]))) {
                             EmbedBuilder errorLanguageDontExistEmbed = new EmbedBuilder()
                                     .setColor(Color.RED)
@@ -146,15 +144,7 @@ public class ConfigCommand extends Command {
                                 .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.config.localization.configured", event))), String.format("%s%s", ":flag_" + args[0].replace("en", "us: / :flag_gb"), ':'));
                         event.reply(new MessageBuilder(successEmbed.build()).build());
                     }
-                    case "setprefix", "setPrefix" -> {
-                        if (Main.getServerConfig().prefix() == null) {
-                            try {
-                                new File("config/server-config.json").delete();
-                                Main.setupServerConfig();
-                            } catch (IOException exception) {
-                                exception.printStackTrace();
-                            }
-                        }
+                    case "setprefix" -> {
                         if (event.getArgs().split(" setprefix ")[1].isEmpty()) {
                             EmbedBuilder errorPrefixIsEmptyEmbed = new EmbedBuilder()
                                     .setColor(Color.RED)
@@ -203,8 +193,29 @@ public class ConfigCommand extends Command {
                 }
             }
             case 3 -> {
-
+                switch(args[0].toLowerCase(Locale.ROOT)){
+                    case "channelmember" -> {
+                        switch (args[1].toLowerCase(Locale.ROOT)){
+                            case "join" -> {
+                                switch (args[2].toLowerCase(Locale.ROOT)){
+                                    case "reset" -> {
+                                        if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null) {
+                                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.notConfigured", event));
+                                            return;
+                                        }
+                                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
+                                        Main.getServerConfig().channelMemberJoin().remove(event.getGuild().getId());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
+    }
+
+    private static Map[] getManualConfigs(){ // Returns an array of maps that are configurations that can only be changed by command and by the server's owner
+        return new Map[]{Main.getServerConfig().channelMemberJoin(), Main.getServerConfig().channelMemberLeave(), Main.getServerConfig().language(), Main.getServerConfig().prefix(), Main.getServerConfig().guildJoinRole(), Main.getServerConfig().prohibitWords()};
     }
 }

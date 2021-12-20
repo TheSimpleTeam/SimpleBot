@@ -14,6 +14,7 @@ import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MathsCommand extends Command {
 
@@ -63,7 +64,7 @@ public class MathsCommand extends Command {
                 event.reply(new MessageBuilder(successEmbed.build()).build());
             }
             case 2 -> {
-                switch (args[0]) {
+                switch (args[0].toLowerCase(Locale.ROOT)) {
                     case "calculate" -> {
                         mXparser.disableAlmostIntRounding();
                         mXparser.disableCanonicalRounding();
@@ -94,8 +95,8 @@ public class MathsCommand extends Command {
                 }
             }
             case 3 -> {
-                switch (args[0]) {
-                    case "primenumber", "primeNumber" -> { //Verify if a number is a prime number or make a list of all prime numbers up to the specified number
+                switch (args[0].toLowerCase(Locale.ROOT)) {
+                    case "primenumber" -> { //Verify if a number is a prime number or make a list of all prime numbers up to the specified number
                         long number;
                         if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
                             if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
@@ -148,7 +149,7 @@ public class MathsCommand extends Command {
                             }
                         }
                     }
-                    case "perfectnumber", "perfectNumber" -> { //Verify if a number is a perfect number or make a list of all perfect numbers up to the specified number
+                    case "perfectnumber" -> { //Verify if a number is a perfect number or make a list of all perfect numbers up to the specified number
                         long number;
                         if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
                             if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
@@ -209,7 +210,7 @@ public class MathsCommand extends Command {
                 }
             }
             case 4 -> {
-                switch (args[0]) {
+                switch (args[0].toLowerCase(Locale.ROOT)) {
                     case "convert" -> {
                         for(int i = 0 ; i < Unit.values().length; i++){
                             for(Unit unit : Unit.values()) {
@@ -298,7 +299,7 @@ public class MathsCommand extends Command {
                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.maths.syntax", event), calculateReplaceArgs(args.replaceAll("\\s+", ""))));
         event.reply(new MessageBuilder(errorSyntaxEmbed.build()).build());
     }
-//TODO some functions dont right is wrong
+
     public static boolean notIntegerNumberTooLargeWithEmbed(CommandEvent event, String integerNumber) {
         try {
             Long.parseLong(integerNumber);
