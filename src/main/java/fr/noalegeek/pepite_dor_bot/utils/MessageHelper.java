@@ -129,10 +129,6 @@ public class MessageHelper {
         return reason == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + reason;
     }
 
-    public static void sendTranslatedMessage(String key, CommandEvent event) {
-        event.reply(translateMessage(key, event));
-    }
-
     /**
      * @param key   the localization key
      * @param event for getting the guild's ID

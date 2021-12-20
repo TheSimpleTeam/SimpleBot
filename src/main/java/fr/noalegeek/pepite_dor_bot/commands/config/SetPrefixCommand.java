@@ -74,7 +74,6 @@ public class SetPrefixCommand extends Command {
                 return;
             }
             Main.getServerConfig().prefix().remove(event.getGuild().getId());
-            MessageHelper.sendTranslatedMessage("success.setPrefix.reset", event);
             return;
         }
         if(args[0].equals(Main.getServerConfig().prefix().get(event.getGuild().getId()))){
