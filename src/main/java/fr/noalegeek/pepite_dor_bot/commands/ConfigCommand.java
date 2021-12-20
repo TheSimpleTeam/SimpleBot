@@ -9,6 +9,7 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.GuildChannel;
 
 import java.awt.*;
 import java.io.File;
@@ -73,12 +74,12 @@ public class ConfigCommand extends Command {
                             event.reply(new MessageBuilder(successResetEmbed.build()).build());
                         } else {
                             if (args[1].replaceAll("\\D+", "").isEmpty()) {
-                                EmbedBuilder errorIDIsEmptyEmbed = new EmbedBuilder()
+                                EmbedBuilder errorIDIsInvalidEmbed = new EmbedBuilder()
                                         .setColor(Color.RED)
                                         .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTimestamp(Instant.now())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.IDIsEmpty", event)));
-                                event.reply(new MessageBuilder(errorIDIsEmptyEmbed.build()).build());
+                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.IDIsInvalid", event)));
+                                event.reply(new MessageBuilder(errorIDIsInvalidEmbed.build()).build());
                                 return;
                             }
                             if (event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")) == null) {
@@ -200,11 +201,55 @@ public class ConfigCommand extends Command {
                                 switch (args[2].toLowerCase(Locale.ROOT)){
                                     case "reset" -> {
                                         if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null) {
-                                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.notConfigured", event));
+                                            EmbedBuilder errorJoinNotConfiguredEmbed = new EmbedBuilder()
+                                                    .setColor(Color.RED)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.notConfigured", event));
+                                            event.reply(new MessageBuilder(errorJoinNotConfiguredEmbed.build()).build());
                                             return;
                                         }
-                                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
                                         Main.getServerConfig().channelMemberJoin().remove(event.getGuild().getId());
+                                        EmbedBuilder successJoinResetEmbed = new EmbedBuilder()
+                                                .setColor(Color.GREEN)
+                                                .setTimestamp(Instant.now())
+                                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.join.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
+                                        event.reply(new MessageBuilder(successJoinResetEmbed.build()).build());
+                                    }
+                                    case "this" -> {
+                                        if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !event.getChannel().getId().equals(event.getChannel().getId())) {
+                                            Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), event.getChannel().getId());
+                                            EmbedBuilder successJoinConfiguredEmbed = new EmbedBuilder()
+                                                    .setColor(Color.GREEN)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.join.configured", event), ((GuildChannel) event.getChannel()).getAsMention()));
+                                            event.reply(new MessageBuilder(successJoinConfiguredEmbed.build()).build());
+                                            return;
+                                        }
+                                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
+                                    }
+                                    default -> {
+                                        if (args[2].replaceAll("\\D+", "").isEmpty()) {
+                                            EmbedBuilder errorJoinIDIsInvalidEmbed = new EmbedBuilder()
+                                                    .setColor(Color.RED)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.IDIsInvalid", event));
+                                            event.reply(new MessageBuilder(errorJoinIDIsInvalidEmbed.build()).build());
+                                            return;
+                                        }
+                                        if (event.getGuild().getGuildChannelById(args[2].replaceAll("\\D+", "")) == null) {
+                                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.config.channelMember.join.channelNull", event));
+                                            return;
+                                        }
+                                        if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()).equals(args[2].replaceAll("\\D+", ""))) {
+                                            Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), args[2].replaceAll("\\D+", ""));
+                                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured.configuredBefore", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
+                                            return;
+                                        }
+                                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
                                     }
                                 }
                             }

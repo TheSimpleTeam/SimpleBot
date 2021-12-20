@@ -42,10 +42,9 @@ public class ChannelMemberCommand extends Command {
                         Main.getServerConfig().channelMemberJoin().remove(event.getGuild().getId());
                     }
                     case "this" -> {
-                        GuildChannel channelMember = (GuildChannel) event.getChannel();
                         if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !event.getChannel().getId().equals(event.getChannel().getId())) {
-                            Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), channelMember.getId());
-                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured", event), channelMember.getAsMention()));
+                            Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), event.getChannel().getId());
+                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured", event), ((GuildChannel) event.getChannel()).getAsMention()));
                             return;
                         }
                         event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
