@@ -35,6 +35,15 @@ public class ConfigCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        if(!event.getMember().isOwner()){
+            event.reply(new MessageBuilder(new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTimestamp(Instant.now())
+                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.notOwner", event)))
+                    .build()).build());
+            return;
+        }
         for(Map config : getManualConfigs()){
             if(config == null){
                 try {

@@ -37,7 +37,7 @@
   "error.commands.memberNull": "You must specify a person present on the server.",
   "error.commands.notAnIntegerNumber": "`%s` is not a integer number.",
   "error.commands.notAnNumber": "%s` is not a number.",
-  "error.commands.notOwner": "Error! Only the server owner can use this command.",
+  "error.config.notOwner": "Error! Only the server owner can use this command.",
   "error.commands.numberTooLarge": "`%s` is too large a number.",
   "error.commands.userCantInteractTarget": "You do not have permission to ban this member.",
   "error.commands.userHasNotPermission": "You cannot execute this command because you do not have **%s** permission.",

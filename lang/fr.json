@@ -35,7 +35,7 @@
   "error.commands.memberNull": "Vous devez spécifier une personne présente sur le serveur.",
   "error.commands.notAnIntegerNumber": "`%s` n\u0027est pas un nombre entier.",
   "error.commands.notAnNumber": "`%s` n\u0027est pas un nombre.",
-  "error.commands.notOwner": "Erreur ! Seul le propriétaire du serveur peut utiliser cette commande.",
+  "error.config.notOwner": "Erreur ! Seul le propriétaire du serveur peut utiliser cette commande.",
   "error.commands.numberTooLarge": "`%s` est un nombre trop grand.",
   "error.commands.userHasNotPermission": "Vous ne pouvez pas exécuter cette commande car vous n\u0027avez pas la permission **%s**.",
   "error.commands.userNull": "Vous devez spécifier une personne existante.",
