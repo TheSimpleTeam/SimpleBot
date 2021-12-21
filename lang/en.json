@@ -261,7 +261,7 @@
   "text.commands.syntaxError.examples.exampleNull": "No example available.",
   "text.commands.syntaxError.help": "Help",
   "text.commands.syntaxError.help.helpNull": "No help available.",
-  "text.commands.syntaxError.informations": "__Informations:__",
+  "text.commands.syntaxError.informations": "Informations:",
   "text.commands.syntaxError.syntaxError": "Syntax error for the command `%s`",
   "text.issue": "Issue",
   "text.issue.twoSuperimposedPoints": ":",

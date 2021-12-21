@@ -67,7 +67,7 @@ public class MessageHelper {
                 }
             }
         }
-        if(informations != null) argumentsBuilder.append(translateMessage("text.commands.syntaxError.informations", event)).append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
+        if(informations != null) argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
         String examples;
         if(command.getExample() == null) examples = translateMessage("text.commands.syntaxError.examples.exampleNull", event);
         else if(command.getExample().startsWith("example.")) examples = Arrays.toString(Stream.of(translateMessage(command.getExample(), event).split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
