@@ -15,9 +15,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class ConfigCommand extends Command {
 
@@ -358,6 +357,73 @@ public class ConfigCommand extends Command {
                                     }
                                 }
                             }
+                        }
+                    }
+                    case "prohibitword" -> {
+                        switch (args[1].toLowerCase(Locale.ROOT)) {
+                            case "add":
+                                List<String> prohibitWords = Main.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords().get(event.getGuild().getId());
+                                if(prohibitWords.contains(args[1])){
+                                    EmbedBuilder errorWordAlreadyHereEmbed = new EmbedBuilder()
+                                            .setColor(Color.RED)
+                                            .setTimestamp(Instant.now())
+                                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.config.prohibitWord.wordAlreadyHere", event), args[2]));
+                                    event.reply(new MessageBuilder(errorWordAlreadyHereEmbed.build()).build());
+                                    return;
+                                }
+                                prohibitWords.add(args[2]);
+                                Main.getServerConfig().prohibitWords().clear();
+                                Main.getServerConfig().prohibitWords().put(event.getGuild().getId(), prohibitWords);
+                                EmbedBuilder successWordAddedEmbed = new EmbedBuilder()
+                                        .setColor(Color.GREEN)
+                                        .setTimestamp(Instant.now())
+                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.prohibitWord.wordAdded", event), args[2]));
+                                event.reply(new MessageBuilder(successWordAddedEmbed.build()).build());
+                                break;
+                            case "remove":
+                                prohibitWords = Main.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords().get(event.getGuild().getId());
+                                if(!prohibitWords.contains(args[1])){
+                                    EmbedBuilder errorWordNotHereEmbed = new EmbedBuilder()
+                                            .setColor(Color.RED)
+                                            .setTimestamp(Instant.now())
+                                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.config.prohibitWord.wordNotHere", event), args[2]));
+                                    event.reply(new MessageBuilder(errorWordNotHereEmbed.build()).build());
+                                    return;
+                                }
+                                prohibitWords.remove(args[2]);
+                                Main.getServerConfig().prohibitWords().clear();
+                                Main.getServerConfig().prohibitWords().put(event.getGuild().getId(), prohibitWords);
+                                EmbedBuilder successWordRemovedEmbed = new EmbedBuilder()
+                                        .setColor(Color.GREEN)
+                                        .setTimestamp(Instant.now())
+                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.prohibitWord.wordRemoved", event), args[2]));
+                                event.reply(new MessageBuilder(successWordRemovedEmbed.build()).build());
+                                break;
+                            case "reset":
+                                if (Main.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null) {
+                                    EmbedBuilder errorListNullEmbed = new EmbedBuilder()
+                                            .setColor(Color.RED)
+                                            .setTimestamp(Instant.now())
+                                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.prohibitWord.listNull", event));
+                                    event.reply(new MessageBuilder(errorListNullEmbed.build()).build());
+                                    return;
+                                }
+                                Main.getServerConfig().prohibitWords().remove(event.getGuild().getId());
+                                EmbedBuilder successListResetedEmbed = new EmbedBuilder()
+                                        .setColor(Color.GREEN)
+                                        .setTimestamp(Instant.now())
+                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.config.prohibitWord.listReseted", event));
+                                event.reply(new MessageBuilder(successListResetedEmbed.build()).build());
+                                break;
+                            default:
+                                MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.prohibit", event));
+                                break;
                         }
                     }
                 }
