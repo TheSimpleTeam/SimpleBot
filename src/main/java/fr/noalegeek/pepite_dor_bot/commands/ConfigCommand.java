@@ -3,7 +3,6 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
-import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
@@ -56,7 +55,7 @@ public class ConfigCommand extends Command {
         }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2 && args.length != 3) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this, "syntax.config");
             return;
         }
         switch (args.length) {
@@ -186,7 +185,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.RED)
                                         .setTimestamp(Instant.now())
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.setPrefix.sameAsConfigured", event));
+                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.setPrefix.sameAsConfigured", event));
                                 event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
                                 return;
                             }
@@ -195,7 +194,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.GREEN)
                                     .setTimestamp(Instant.now())
                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.setPrefix.configured", event), args[1]));
+                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.setPrefix.configured", event), args[1]));
                             event.reply(new MessageBuilder(successConfiguredEmbed.build()).build());
                         }
                     }

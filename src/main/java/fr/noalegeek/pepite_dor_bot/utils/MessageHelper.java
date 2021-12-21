@@ -67,6 +67,7 @@ public class MessageHelper {
                 }
             }
         }
+        if(informations != null) argumentsBuilder.append(translateMessage("text.commands.syntaxError.informations", event)).append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
         String examples;
         if(command.getExample() == null) examples = translateMessage("text.commands.syntaxError.examples.exampleNull", event);
         else if(command.getExample().startsWith("example.")) examples = Arrays.toString(Stream.of(translateMessage(command.getExample(), event).split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
@@ -79,7 +80,6 @@ public class MessageHelper {
                 .addField(command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event).split("²").length == 1 ? translateMessage("text.commands.syntaxError.arguments.argument", event) : translateMessage("text.commands.syntaxError.arguments.arguments", event) : command.getArguments().split("²").length == 1 ? translateMessage("text.commands.syntaxError.arguments.argument", event) : translateMessage("text.commands.syntaxError.arguments.arguments", event), argumentsBuilder.toString(), false)
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event).contains("²") ? translateMessage(command.getHelp(), event).split("²")[0] : translateMessage(command.getHelp(), event), false)
                 .addField(command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event).split("²").length == 1 ? translateMessage("text.commands.syntaxError.examples.example", event) : translateMessage("text.commands.syntaxError.examples.examples", event) : command.getExample().split("²").length == 1 ? translateMessage("text.commands.syntaxError.examples.example", event) : translateMessage("text.commands.syntaxError.examples.examples", event), examples, false);
-        if (informations != null) syntaxErrorEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), informations.startsWith("syntax.") ? translateMessage(informations, event) : informations, false);
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
         event.reply(new MessageBuilder(syntaxErrorEmbed.build()).build());
     }
