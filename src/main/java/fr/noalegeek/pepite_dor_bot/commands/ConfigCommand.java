@@ -228,7 +228,12 @@ public class ConfigCommand extends Command {
                                             event.reply(new MessageBuilder(successJoinConfiguredEmbed.build()).build());
                                             return;
                                         }
-                                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
+                                        EmbedBuilder errorJoinSameAsConfiguredEmbed = new EmbedBuilder()
+                                                .setColor(Color.RED)
+                                                .setTimestamp(Instant.now())
+                                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.sameAsConfigured", event));
+                                        event.reply(new MessageBuilder(errorJoinSameAsConfiguredEmbed.build()).build());
                                     }
                                     default -> {
                                         if (args[2].replaceAll("\\D+", "").isEmpty()) {
@@ -241,15 +246,106 @@ public class ConfigCommand extends Command {
                                             return;
                                         }
                                         if (event.getGuild().getGuildChannelById(args[2].replaceAll("\\D+", "")) == null) {
-                                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.config.channelMember.join.channelNull", event));
+                                            EmbedBuilder errorJoinChannelNullEmbed = new EmbedBuilder()
+                                                    .setColor(Color.RED)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.channelNull", event));
+                                            event.reply(new MessageBuilder(errorJoinChannelNullEmbed.build()).build());
                                             return;
                                         }
                                         if (Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId()).equals(args[2].replaceAll("\\D+", ""))) {
                                             Main.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), args[2].replaceAll("\\D+", ""));
-                                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.channelMember.join.configured.configuredBefore", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
+                                            EmbedBuilder successJoinConfiguredEmbed = new EmbedBuilder()
+                                                    .setColor(Color.GREEN)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.join.configured", event), ((GuildChannel) event.getChannel()).getAsMention()));
+                                            event.reply(new MessageBuilder(successJoinConfiguredEmbed.build()).build());
                                             return;
                                         }
-                                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.channelMember.join.sameAsConfigured", event));
+                                        EmbedBuilder errorJoinSameAsConfiguredEmbed = new EmbedBuilder()
+                                                .setColor(Color.RED)
+                                                .setTimestamp(Instant.now())
+                                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.sameAsConfigured", event));
+                                        event.reply(new MessageBuilder(errorJoinSameAsConfiguredEmbed.build()).build());
+                                    }
+                                }
+                            }
+                            case "leave" -> {
+                                switch (args[2].toLowerCase(Locale.ROOT)){
+                                    case "reset" -> {
+                                        if (Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null) {
+                                            EmbedBuilder errorLeaveNotConfiguredEmbed = new EmbedBuilder()
+                                                    .setColor(Color.RED)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.notConfigured", event));
+                                            event.reply(new MessageBuilder(errorLeaveNotConfiguredEmbed.build()).build());
+                                            return;
+                                        }
+                                        Main.getServerConfig().channelMemberLeave().remove(event.getGuild().getId());
+                                        EmbedBuilder successLeaveResetEmbed = new EmbedBuilder()
+                                                .setColor(Color.GREEN)
+                                                .setTimestamp(Instant.now())
+                                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.config.channelMember.leave.reset", event));
+                                        event.reply(new MessageBuilder(successLeaveResetEmbed.build()).build());
+                                    }
+                                    case "this" -> {
+                                        if (Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()).equals(event.getChannel().getId())) {
+                                            Main.getServerConfig().channelMemberLeave().put(event.getGuild().getId(), event.getChannel().getId());
+                                            EmbedBuilder successLeaveConfiguredEmbed = new EmbedBuilder()
+                                                    .setColor(Color.GREEN)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.leave.reset", event), String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), ((GuildChannel) event.getChannel()).getAsMention())));
+                                            event.reply(new MessageBuilder(successLeaveConfiguredEmbed.build()).build());
+                                            return;
+                                        }
+                                        EmbedBuilder errorLeaveSameAsConfiguredEmbed = new EmbedBuilder()
+                                                .setColor(Color.RED)
+                                                .setTimestamp(Instant.now())
+                                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.sameAsConfigured", event));
+                                        event.reply(new MessageBuilder(errorLeaveSameAsConfiguredEmbed.build()).build());
+                                    }
+                                    default -> {
+                                        if (args[2].replaceAll("\\D+", "").isEmpty()) {
+                                            EmbedBuilder errorLeaveIDIsInvalidEmbed = new EmbedBuilder()
+                                                    .setColor(Color.RED)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.IDIsInvalid", event));
+                                            event.reply(new MessageBuilder(errorLeaveIDIsInvalidEmbed.build()).build());
+                                            return;
+                                        }
+                                        if (event.getGuild().getGuildChannelById(args[2].replaceAll("\\D+", "")) == null) {
+                                            EmbedBuilder errorLeaveChannelNullEmbed = new EmbedBuilder()
+                                                    .setColor(Color.RED)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.channelNull", event));
+                                            event.reply(new MessageBuilder(errorLeaveChannelNullEmbed.build()).build());
+                                            return;
+                                        }
+                                        if (Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null || !Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId()).equals(args[2].replaceAll("\\D+", ""))) {
+                                            Main.getServerConfig().channelMemberLeave().put(event.getGuild().getId(), args[2].replaceAll("\\D+", ""));
+                                            EmbedBuilder successLeaveConfiguredEmbed = new EmbedBuilder()
+                                                    .setColor(Color.GREEN)
+                                                    .setTimestamp(Instant.now())
+                                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.leave.configured", event), ((GuildChannel) event.getChannel()).getAsMention()));
+                                            event.reply(new MessageBuilder(successLeaveConfiguredEmbed.build()).build());
+                                            return;
+                                        }
+                                        EmbedBuilder errorLeaveSameAsConfiguredEmbed = new EmbedBuilder()
+                                                .setColor(Color.RED)
+                                                .setTimestamp(Instant.now())
+                                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.sameAsConfigured", event));
+                                        event.reply(new MessageBuilder(errorLeaveSameAsConfiguredEmbed.build()).build());
                                     }
                                 }
                             }
