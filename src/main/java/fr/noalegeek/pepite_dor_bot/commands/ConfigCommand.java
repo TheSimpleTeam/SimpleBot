@@ -198,6 +198,7 @@ public class ConfigCommand extends Command {
                             event.reply(new MessageBuilder(successConfiguredEmbed.build()).build());
                         }
                     }
+                    default -> MessageHelper.syntaxError(event, this, "syntax.config");
                 }
             }
             case 3 -> {
@@ -356,13 +357,14 @@ public class ConfigCommand extends Command {
                                     }
                                 }
                             }
+                            default -> MessageHelper.syntaxError(event, this, "syntax.config");
                         }
                     }
                     case "prohibitword" -> {
                         switch (args[1].toLowerCase(Locale.ROOT)) {
-                            case "add":
+                            case "add" -> {
                                 List<String> prohibitWords = Main.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords().get(event.getGuild().getId());
-                                if(prohibitWords.contains(args[1])){
+                                if (prohibitWords.contains(args[1])) {
                                     EmbedBuilder errorWordAlreadyHereEmbed = new EmbedBuilder()
                                             .setColor(Color.RED)
                                             .setTimestamp(Instant.now())
@@ -372,7 +374,7 @@ public class ConfigCommand extends Command {
                                     return;
                                 }
                                 prohibitWords.add(args[2]);
-                                Main.getServerConfig().prohibitWords().clear();
+                                Main.getServerConfig().prohibitWords().remove(event.getGuild().getId());
                                 Main.getServerConfig().prohibitWords().put(event.getGuild().getId(), prohibitWords);
                                 EmbedBuilder successWordAddedEmbed = new EmbedBuilder()
                                         .setColor(Color.GREEN)
@@ -380,10 +382,10 @@ public class ConfigCommand extends Command {
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.prohibitWord.wordAdded", event), args[2]));
                                 event.reply(new MessageBuilder(successWordAddedEmbed.build()).build());
-                                break;
-                            case "remove":
-                                prohibitWords = Main.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords().get(event.getGuild().getId());
-                                if(!prohibitWords.contains(args[1])){
+                            }
+                            case "remove" -> {
+                                List<String> prohibitWords = Main.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : Main.getServerConfig().prohibitWords().get(event.getGuild().getId());
+                                if (!prohibitWords.contains(args[1])) {
                                     EmbedBuilder errorWordNotHereEmbed = new EmbedBuilder()
                                             .setColor(Color.RED)
                                             .setTimestamp(Instant.now())
@@ -393,7 +395,7 @@ public class ConfigCommand extends Command {
                                     return;
                                 }
                                 prohibitWords.remove(args[2]);
-                                Main.getServerConfig().prohibitWords().clear();
+                                Main.getServerConfig().prohibitWords().remove(event.getGuild().getId());
                                 Main.getServerConfig().prohibitWords().put(event.getGuild().getId(), prohibitWords);
                                 EmbedBuilder successWordRemovedEmbed = new EmbedBuilder()
                                         .setColor(Color.GREEN)
@@ -401,8 +403,8 @@ public class ConfigCommand extends Command {
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.prohibitWord.wordRemoved", event), args[2]));
                                 event.reply(new MessageBuilder(successWordRemovedEmbed.build()).build());
-                                break;
-                            case "reset":
+                            }
+                            case "reset" -> {
                                 if (Main.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null) {
                                     EmbedBuilder errorListNullEmbed = new EmbedBuilder()
                                             .setColor(Color.RED)
@@ -419,12 +421,11 @@ public class ConfigCommand extends Command {
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.config.prohibitWord.listReseted", event));
                                 event.reply(new MessageBuilder(successListResetedEmbed.build()).build());
-                                break;
-                            default:
-                                MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.prohibit", event));
-                                break;
+                            }
+                            default -> MessageHelper.syntaxError(event, this, "syntax.config");
                         }
                     }
+                    default -> MessageHelper.syntaxError(event, this, "syntax.config");
                 }
             }
         }
