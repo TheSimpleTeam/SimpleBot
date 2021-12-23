@@ -70,7 +70,8 @@ public class Main {
     private static String[] langs;
     private static ScheduledExecutorService executorService;
 
-    private record Bot(List<Command> commands, String ownerID, String serverInvite) {}
+    private record Bot(List<Command> commands, String ownerID, String serverInvite) {
+    }
 
     public static void main(String[] args) throws InterruptedException {
         executorService = Executors.newScheduledThreadPool(3);
@@ -78,7 +79,8 @@ public class Main {
             String arg = "";
             try {
                 arg = args[0];
-            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) { }
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {
+            }
             setupLogs();
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
@@ -108,7 +110,7 @@ public class Main {
         jda.addEventListener(new Listener(), waiter, client);
         jda.awaitReady();
         executorService.scheduleAtFixedRate(() ->
-                jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)])),
+                        jda.getPresence().setActivity(Activity.playing(getInfos().activities()[new Random().nextInt(getInfos().activities().length)])),
                 0, getInfos().timeBetweenStatusChange(), TimeUnit.SECONDS);
         executorService.scheduleAtFixedRate(() -> {
             try {
@@ -117,22 +119,21 @@ public class Main {
                 LOGGER.log(Level.SEVERE, ex.getMessage());
             }
         }, getInfos().autoSaveDelay(), getInfos().autoSaveDelay(), TimeUnit.MINUTES);
-
         executorService.scheduleAtFixedRate(() -> serverConfig.tempBan().entrySet().stream()
                 .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
                 .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
-            serverConfig.tempBan().remove(e.getKey());
-            jda.getGuildById(e.getKey().split("-")[1]).retrieveBanList().queue(a -> {
-                if(a.stream().anyMatch(ban -> ban.getUser().getId().equals(e.getKey().split("-")[0]))) {
-                    jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
-                                    jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
-                                            .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
-                            throwable -> LOGGER.severe(throwable.getMessage()));
-                }
-            });
-        }), 0, 1, TimeUnit.SECONDS);
+                    serverConfig.tempBan().remove(e.getKey());
+                    jda.getGuildById(e.getKey().split("-")[1]).retrieveBanList().queue(a -> {
+                        if (a.stream().anyMatch(ban -> ban.getUser().getId().equals(e.getKey().split("-")[0]))) {
+                            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
+                                            jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
+                                                    .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
+                                    throwable -> LOGGER.severe(throwable.getMessage()));
+                        }
+                    });
+                }), 0, 1, TimeUnit.SECONDS);
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
-        if(PrePy.isInteractive()) {
+        if (PrePy.isInteractive()) {
             executorService.schedule(() -> {
                 try {
                     CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
@@ -177,19 +178,20 @@ public class Main {
             if (event.getClient().getServerInvite() != null)
                 help.append(' ').append(MessageHelper.translateMessage("help.discord", event)).append(' ').append(b.serverInvite);
         }
-        event.replyInDm(help.toString(), unused -> {} , t -> event.reply(MessageHelper.translateMessage("help.DMBlocked", event)));
+        event.replyInDm(help.toString(), unused -> {
+        }, t -> event.reply(MessageHelper.translateMessage("help.DMBlocked", event)));
     }
 
     private static void setupLocalizations() throws IOException {
         Map<String, JsonObject> objects = new HashMap<>();
         List<String> langS = new ArrayList<>();
         File f = new File("lang");
-        if(!f.exists()) {
+        if (!f.exists()) {
             LOGGER.severe("PLEASE DOWNLOAD THE LANG FOLDER FROM OUR REPOSITORY!");
             System.exit(-1);
         }
         File[] _langs = f.listFiles();
-        if(_langs == null) return;
+        if (_langs == null) return;
         for (File lang : _langs) {
             langS.add(lang.getName().replaceAll(".json", ""));
             objects.put(lang.getName().replaceAll(".json", ""), gson.fromJson(Files.newBufferedReader(lang.toPath(), StandardCharsets.UTF_8), JsonObject.class));
@@ -205,7 +207,7 @@ public class Main {
         Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
-            if(hasConfig(command)) {
+            if (hasConfig(command)) {
                 try {
                     addCommand(command, b, clientBuilder);
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -218,7 +220,7 @@ public class Main {
     }
 
     private static boolean hasConfig(Class<? extends Command> clazz) {
-        if(clazz.getAnnotation(RequireConfig.class) == null) return true;
+        if (clazz.getAnnotation(RequireConfig.class) == null) return true;
         RequireConfig c = clazz.getAnnotation(RequireConfig.class);
         try {
             return Infos.class.getMethod(c.value()).invoke(infos) != null;
@@ -251,8 +253,8 @@ public class Main {
         File configDir = new File(Paths.get("config").toUri());
         File config = new File(configDir, "config.json");
         File configTemplate = new File(configDir, "config-template.json");
-        if(!configDir.exists()) configDir.mkdir();
-        if(!config.exists()) {
+        if (!configDir.exists()) configDir.mkdir();
+        if (!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
             if (arg.equalsIgnoreCase("--nosetup") || !PrePy.isInteractive()) {
