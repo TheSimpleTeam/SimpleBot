@@ -51,7 +51,7 @@ public class Listener extends ListenerAdapter {
         writer.close();
         LOGGER.info("Server config updated");
     }
-    //TODO todo destiné à minemobs : on peut pas faire un messageHelper.translateMessage car il faut "event" (CommandEvent) et pas un GuildMemberJoinEvent
+
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         if (!getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())) {
@@ -59,9 +59,9 @@ public class Listener extends ListenerAdapter {
             try {
                 event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed
                         .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                        .setTitle(String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.memberJoin", event), event.getMember().getEffectiveName(), event.getGuild().getName()))
-                        .addField(MessageHelper.translateMessage("listener.onGuildMemberJoin.member", event), event.getMember().getAsMention(), false)
-                        .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("listener.onGuildMemberJoin.newMember", event)), String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.countMember", event), event.getGuild().getMemberCount()), false)
+                        .setTitle(String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
+                        .addField(MessageHelper.translateMessage("listener.onGuildMemberJoin.member", event.getUser(), event.getGuild()), event.getMember().getAsMention(), false)
+                        .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("listener.onGuildMemberJoin.newMember", event.getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.countMember", event.getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
                         .setTimestamp(Instant.now())
                         .setColor(Color.GREEN)
                         .build()).build()).queue();
@@ -75,13 +75,14 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
+
         //TODO verif si le salon existe
         try {
             event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed
                     .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                    .setTitle(String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.memberJoin", event), event.getMember().getEffectiveName(), event.getGuild().getName()))
-                    .addField(MessageHelper.translateMessage("listener.onGuildMemberJoin.member", event), event.getMember().getAsMention(), false)
-                    .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("listener.onGuildMemberJoin.newMember", event)), String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.countMember", event), event.getGuild().getMemberCount()), false)
+                    .setTitle(String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
+                    .addField(MessageHelper.translateMessage("listener.onGuildMemberJoin.member", event.getUser(), event.getGuild()), event.getMember().getAsMention(), false)
+                    .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("listener.onGuildMemberJoin.newMember", event.getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.countMember", event.getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
                     .setTimestamp(Instant.now())
                     .setColor(Color.GREEN)
                     .build()).build()).queue();

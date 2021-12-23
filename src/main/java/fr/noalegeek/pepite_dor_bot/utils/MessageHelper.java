@@ -6,22 +6,22 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MessageHelper {
+
+    private MessageHelper() {}
 
     public static String getTag(final User user) {
         return user.getName() + "#" + user.getDiscriminator();
@@ -136,7 +136,15 @@ public class MessageHelper {
      * @throws NullPointerException if the key does not exist in any localization files.
      */
     public static String translateMessage(String key, CommandEvent event) {
-        String lang = Main.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en");
+        return translateMessage(key, event.getAuthor(), event.getTextChannel(), event.getGuild());
+    }
+
+    public static String translateMessage(String key, User author, Guild guild) {
+        return translateMessage(key, author, null, guild);
+    }
+
+    private static String translateMessage(String key, User author, @Nullable TextChannel channel, Guild guild) {
+        String lang = Main.getServerConfig().language().getOrDefault(guild.getId(), "en");
         Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
         if (s.isPresent()) return s.get().getAsString();
         if (Main.getLocalizations().get("en").get(key) == null) {
@@ -148,13 +156,19 @@ public class MessageHelper {
             EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", event), key))
-                    .addField(MessageHelper.translateMessage("error.translateMessage.key", event), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.method", event), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", event), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
-            event.reply(new MessageBuilder(errorKeyNullEmbed.build()).build());
+                    .setFooter(MessageHelper.getTag(author), author.getEffectiveAvatarUrl())
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", author, channel, guild), key))
+                    .addField(MessageHelper.translateMessage("error.translateMessage.key", author, channel, guild), key, false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", author, channel, guild), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.method", author, channel, guild), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", author, channel, guild), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+            if(channel == null) {
+                if (author.hasPrivateChannel()) {
+                    author.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue());
+                }
+            } else {
+                channel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue();
+            }
             throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {
