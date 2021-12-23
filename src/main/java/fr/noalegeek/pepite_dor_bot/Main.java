@@ -27,26 +27,22 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.python.core.PrePy;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
-import java.security.Permission;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -87,7 +83,7 @@ public class Main {
             String arg = "";
             try {
                 arg = args[0];
-            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) { }
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {}
             setupLogs();
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
@@ -253,7 +249,6 @@ public class Main {
             }
             return null;
         }).filter(Objects::nonNull).toArray(SlashCommand[]::new);
-        System.out.println(commands.length + " | " + Arrays.toString(Arrays.stream(commands).map(Command::getName).toArray()));
         clientBuilder.addSlashCommands(commands);
     }
 

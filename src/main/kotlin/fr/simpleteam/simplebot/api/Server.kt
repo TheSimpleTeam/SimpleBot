@@ -24,7 +24,6 @@
 
 package fr.simpleteam.simplebot.api
 
-import com.auth0.jwt.JWT
 import com.google.gson.Gson
 import fr.simpleteam.simplebot.api.jda.Guild
 import io.ktor.application.*
@@ -82,7 +81,6 @@ class Server(private val jda : JDA, private val gson: Gson) {
                     val generatedToken = base64Encoder.encodeToString(randomBytes)
                     log.info("You can use this token to authenticate: $generatedToken")
                     token = generatedToken
-                    this.
                 }
             }
             install(CORS) {

@@ -48,17 +48,17 @@ dependencies {
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
-    implementation('com.caoccao.javet:javet:1.0.5')
+    implementation('com.caoccao.javet:javet:1.0.6')
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.5.0'
     //API
-    implementation('io.ktor:ktor-server-core:1.6.6')
-    implementation('io.ktor:ktor-server-host-common:1.6.6')
-    implementation('io.ktor:ktor-server-netty:1.6.6')
-    implementation('io.ktor:ktor-serialization:1.6.6')
-    implementation "io.ktor:ktor-auth:1.6.6"
-    implementation "io.ktor:ktor-auth-jwt:1.6.6"
+    implementation('io.ktor:ktor-server-core:1.6.7')
+    implementation('io.ktor:ktor-server-host-common:1.6.7')
+    implementation('io.ktor:ktor-server-netty:1.6.7')
+    implementation('io.ktor:ktor-serialization:1.6.7')
+    implementation "io.ktor:ktor-auth:1.6.7"
+    implementation "io.ktor:ktor-auth-jwt:1.6.7"
     //Music
     implementation 'com.sedmelluq:lavaplayer:1.3.77'
     implementation 'com.github.jagrosh:JLyrics:0f9ac5df83'

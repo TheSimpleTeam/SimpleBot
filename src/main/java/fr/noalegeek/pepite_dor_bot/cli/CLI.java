@@ -26,15 +26,18 @@ package fr.noalegeek.pepite_dor_bot.cli;
 
 import com.google.common.collect.ImmutableList;
 import fr.noalegeek.pepite_dor_bot.Main;
+import net.dv8tion.jda.api.JDA;
 import net.thesimpleteam.simplebotplugin.commands.CLICommand;
 import net.thesimpleteam.simplebotplugin.commands.CLICommandEvent;
-import net.dv8tion.jda.api.JDA;
 import net.thesimpleteam.simplebotplugin.commands.ICLI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class CLI implements ICLI {
 
@@ -51,7 +54,7 @@ public class CLI implements ICLI {
     @Override
     public void commandsListener() throws InterruptedException, IOException {
         jda.awaitReady();
-        do {
+        while (true) {
             InputStreamReader r = new InputStreamReader(System.in);
             BufferedReader reader = new BufferedReader(r);
             String nextLine = reader.readLine();
@@ -68,7 +71,7 @@ public class CLI implements ICLI {
                     Main.LOGGER.warning("List of plugins commands :%n%s".formatted(Arrays.toString(pluginCommands.stream().map(CLICommand::name).toArray())));
                 }
             });
-        } while (true);
+        }
     }
 
     @Override

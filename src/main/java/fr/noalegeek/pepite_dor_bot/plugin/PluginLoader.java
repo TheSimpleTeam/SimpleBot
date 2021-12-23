@@ -25,14 +25,17 @@
 package fr.noalegeek.pepite_dor_bot.plugin;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import fr.noalegeek.pepite_dor_bot.cli.CLI;
+import net.thesimpleteam.simplebotplugin.BasePlugin;
+import net.thesimpleteam.simplebotplugin.IPluginLoader;
 import net.thesimpleteam.simplebotplugin.annotation.EventHandler;
 import net.thesimpleteam.simplebotplugin.commands.CLICommand;
 import net.thesimpleteam.simplebotplugin.commands.Command;
-import net.thesimpleteam.simplebotplugin.listener.Listener;
-import net.thesimpleteam.simplebotplugin.BasePlugin;
-import net.thesimpleteam.simplebotplugin.IPluginLoader;
 import net.thesimpleteam.simplebotplugin.event.Event;
+import net.thesimpleteam.simplebotplugin.listener.Listener;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -40,11 +43,17 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -154,7 +163,11 @@ public class PluginLoader implements IPluginLoader {
     }
 
     public void loadPlugins() {
-        for (File jarFile : FileUtils.listFiles(pluginFolder, new String[]{"jar"}, false)) {
+        for (File jarFile : FileUtils.listFiles(pluginFolder, new String[]{"jar"}, true)) {
+            if(hashEquals(jarFile, getBlacklistedPlugins())) {
+                System.out.println("Skipping " + jarFile.getName() + " because it is blacklisted.");
+                return;
+            }
             try {
                 var classes = loadClasses(jarFile);
                 @SuppressWarnings("unchecked")
@@ -178,11 +191,39 @@ public class PluginLoader implements IPluginLoader {
         }
     }
 
+    private boolean hashEquals(File file, JsonObject hash) {
+        return hash.has(getSha256(file));
+    }
+
+    private String getSha256(File file) {
+        try {
+            return DigestUtils.sha256Hex(FileUtils.readFileToByteArray(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    private JsonObject getBlacklistedPlugins() {
+        File file = new File("blacklist.json");
+        if(file.exists()) {
+            try {
+                return new Gson().fromJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), JsonObject.class);
+            } catch (IOException ignored) {}
+        }
+        String blackListURL = "https://raw.githubusercontent.com/TheSimpleTeam/SimpleBot/main/blacklist.json";
+        try {
+            return new Gson().fromJson(new InputStreamReader(new URL(blackListURL).openStream()), JsonObject.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new JsonObject();
+    }
+
     private List<String> getClasseNames(String jarName) {
         ArrayList<String> classes = new ArrayList<>();
 
-        try {
-            JarInputStream jarFile = new JarInputStream(new FileInputStream(jarName));
+        try(JarInputStream jarFile = new JarInputStream(new FileInputStream(jarName))) {
             JarEntry jarEntry;
 
             while (true) {
@@ -195,7 +236,6 @@ public class PluginLoader implements IPluginLoader {
                 }
             }
             jarFile.closeEntry();
-            jarFile.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
