@@ -268,7 +268,12 @@ public class MathsCommand extends Command {
                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
                             event.reply(new MessageBuilder(successEmbed.build()).build());
                         } catch (NumberFormatException ignore) {
-                            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.notAnNumber", event));
+                            event.reply(new MessageBuilder(new EmbedBuilder() // Sends a notAnNumber embed
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.commands.notAnNumber", event), args[1])))
+                                    .setColor(Color.RED)
+                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                    .setTimestamp(Instant.now())
+                                    .build()).build());
                         }
                     }
                 }

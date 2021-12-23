@@ -6,6 +6,7 @@ import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.utils.LevenshteinDistance;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.events.ShutdownEvent;
@@ -19,11 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.Arrays;
@@ -45,52 +44,54 @@ public class Listener extends ListenerAdapter {
     }
 
     public static void saveConfigs() throws IOException {
-        Path configPath = new File("config/server-config.json").toPath();
-        if (!new File(configPath.toUri()).exists()) {
-            new File(configPath.toUri()).createNewFile();
-        }
-        Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
-        if (gson.fromJson(reader, ServerConfig.class) == getServerConfig()) {
-            return;
-        }
-        Writer writer = Files.newBufferedWriter(configPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        if (!new File(new File("config/server-config.json").toPath().toUri()).exists()) new File(new File("config/server-config.json").toPath().toUri()).createNewFile();
+        if (gson.fromJson(Files.newBufferedReader(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8), ServerConfig.class) == getServerConfig()) return;
+        Writer writer = Files.newBufferedWriter(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         gson.toJson(getServerConfig(), writer);
         writer.close();
         LOGGER.info("Server config updated");
     }
-
+    //TODO todo destiné à minemobs : on peut pas faire un messageHelper.translateMessage car il faut "event" (CommandEvent) et pas un GuildMemberJoinEvent
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        EmbedBuilder embedMemberJoin = new EmbedBuilder()
-                .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                .setTitle("**" + event.getMember().getEffectiveName() + " a rejoint le serveur __" + event.getGuild().getName() + "__ !**")
-                .addField("Membre", event.getMember().getAsMention(), false)
-                .addField("➕ Nouveau membre", "Nous sommes maintenant " + event.getGuild().getMemberCount() + " membres sur le serveur !", false)
-                .setTimestamp(Instant.now())
-                .setColor(Color.GREEN);
         if (!getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())) {
+            if(event.getGuild().getSystemChannel() == null)
             try {
-                event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(embedMemberJoin).build()).queue();
+                event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed
+                        .setThumbnail(event.getMember().getUser().getAvatarUrl())
+                        .setTitle(String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.memberJoin", event), event.getMember().getEffectiveName(), event.getGuild().getName()))
+                        .addField(MessageHelper.translateMessage("listener.onGuildMemberJoin.member", event), event.getMember().getAsMention(), false)
+                        .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("listener.onGuildMemberJoin.newMember", event)), String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.countMember", event), event.getGuild().getMemberCount()), false)
+                        .setTimestamp(Instant.now())
+                        .setColor(Color.GREEN)
+                        .build()).build()).queue();
             } catch (InsufficientPermissionException ex) {
                 event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) +
                                 " a rejoint votre serveur **" + event.getGuild().getName() +
                                 "** mais je n'ai pas pu envoyer le message de bienvenue car je n'ai pas accès au salon mis par défaut.\n" +
                         "(Vous n'avez pas configurer le salon des messages de bienvenue, c'est pour cela que j'ai choisi le salon par défaut. " +
-                        "Vous pouvez changer tout cela en faisant `" + getInfos().prefix() + "channelmember remove <identifiant du salon>`)"));
+                        "Vous pouvez changer tout cela en faisant `" + getInfos().prefix() + "config channelmember remove <identifiant du salon>`)"));
             }
             return;
         }
         //TODO verif si le salon existe
         try {
-            event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(embedMemberJoin).build()).queue();
+            event.getGuild().getTextChannelById(getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed
+                    .setThumbnail(event.getMember().getUser().getAvatarUrl())
+                    .setTitle(String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.memberJoin", event), event.getMember().getEffectiveName(), event.getGuild().getName()))
+                    .addField(MessageHelper.translateMessage("listener.onGuildMemberJoin.member", event), event.getMember().getAsMention(), false)
+                    .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("listener.onGuildMemberJoin.newMember", event)), String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.countMember", event), event.getGuild().getMemberCount()), false)
+                    .setTimestamp(Instant.now())
+                    .setColor(Color.GREEN)
+                    .build()).build()).queue();
         } catch (InsufficientPermissionException ex) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                     privateChannel.sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) +
                             " a rejoint votre serveur **" + event.getGuild().getName() +
                             "** mais je n'ai pas pu envoyer le message de bienvenue car je n'ai pas accès au salon configuré.\n" +
                     "(Vous avez configurer le salon des messages de bienvenue, c'est pour cela que j'ai choisi le salon configuré. Vous pouvez changer tout cela en faisant `" +
-                    getInfos().prefix() + "channelmember join reset`)"));
+                    getInfos().prefix() + "config channelmember join reset`)"));
         }
         if (getServerConfig().guildJoinRole().containsKey(event.getGuild().getId())) {
             event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole()
@@ -117,7 +118,7 @@ public class Listener extends ListenerAdapter {
                                 " a quitté votre serveur **" + event.getGuild().getName() +
                                 "** mais je n'ai pas pu envoyer le message de départ car je n'ai pas accès au salon mis par défaut.\n" +
                         "(Vous n'avez pas configurer le salon des messages de départs, c'est pour cela que j'ai choisi le salon par défaut. Vous pouvez changer tout cela en faisant `"
-                                + getInfos().prefix() + "channelmember remove <identifiant du salon>`)"));
+                                + getInfos().prefix() + "config channelmember remove <identifiant du salon>`)"));
             }
             return;
         }
@@ -128,7 +129,7 @@ public class Listener extends ListenerAdapter {
                     sendMessage(MessageHelper.formattedMention(event.getGuild().getOwner().getUser()) + MessageHelper.getTag(event.getUser()) +
                             " a quitté votre serveur **" + event.getGuild().getName() + "** mais je n'ai pas pu envoyer le message de départ car je n'ai pas accès au salon configuré.\n" +
                     "(Vous avez configurer le salon des messages de départ, c'est pour cela que j'ai choisi le salon configuré. Vous pouvez changer tout cela en faisant `" +
-                    getInfos().prefix() + "channelmember remove reset`)"));
+                    getInfos().prefix() + "config channelmember remove reset`)"));
         }
         LOGGER.info(event.getUser().getName() + "#" + event.getUser().getDiscriminator() + " a quitté le serveur " + event.getGuild().getName() + ".");
     }
