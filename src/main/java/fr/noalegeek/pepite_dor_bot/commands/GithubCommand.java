@@ -48,12 +48,12 @@ public class GithubCommand extends Command {
             return;
         }
         if(isCommandDisabled()) {
-            EmbedBuilder errorDisabledCommandEmbed = new EmbedBuilder()
+            EmbedBuilder errorDisabledEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.github.disabled", event))
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getEffectiveAvatarUrl());
-            event.reply(new MessageBuilder(errorDisabledCommandEmbed.build()).build());
+            event.reply(new MessageBuilder(errorDisabledEmbed.build()).build());
             return;
         }
         switch (args[0]) {
@@ -66,7 +66,12 @@ public class GithubCommand extends Command {
                 try {
                     repository = github.getRepository(args[1] + "/" + args[2]);
                 } catch (IOException ignored) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.github.search.repositoryDontExist", event));
+                    EmbedBuilder errorRepositoryDontExistEmbed = new EmbedBuilder()
+                            .setColor(Color.RED)
+                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.github.search.repositoryDontExist", event))
+                            .setTimestamp(Instant.now())
+                            .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getEffectiveAvatarUrl());
+                    event.reply(new MessageBuilder(errorRepositoryDontExistEmbed.build()).build());
                     return;
                 }
                 try {
