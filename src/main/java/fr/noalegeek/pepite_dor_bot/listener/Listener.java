@@ -54,10 +54,13 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        if (!getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())) {
-            if(event.getGuild().getSystemChannel() == null)
+        if (Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())) {
+            if(event.getGuild().getSystemChannel() == null){
+
+                return;
+            }
             try {
-                event.getGuild().getDefaultChannel().sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed
+                event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed
                         .setThumbnail(event.getMember().getUser().getAvatarUrl())
                         .setTitle(String.format(MessageHelper.translateMessage("listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
                         .addField(MessageHelper.translateMessage("listener.onGuildMemberJoin.member", event.getUser(), event.getGuild()), event.getMember().getAsMention(), false)
