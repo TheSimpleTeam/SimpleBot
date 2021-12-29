@@ -346,9 +346,7 @@ public class Main {
         return infos;
     }
 
-    public static ServerConfig getServerConfig() {
-        return serverConfig;
-    }
+    public static ServerConfig getServerConfig() { return serverConfig; }
 
     public static EventWaiter getEventWaiter() {
         return waiter;
