@@ -22,14 +22,6 @@ public class BanCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        System.out.println("""
-                Les arguments sont :
-                
-                - **identifiant/mention du membre** définit le membre qui sera banni du serveur;
-                - **jours** supprime les messages du membre défini en fonction du nombre de jours spécifié qui doit être égal ou inférieur à 7 sinon il sera redéfini à 7 et du temps d'existance des messages du membre défini;
-                - **raison** définit la raison du bannissement (Cet argument n'est pas obligatoire). 
-                
-                """);
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("informations.ban", event));
