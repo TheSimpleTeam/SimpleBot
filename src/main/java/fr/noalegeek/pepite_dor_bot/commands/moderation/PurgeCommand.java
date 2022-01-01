@@ -18,7 +18,7 @@ public class PurgeCommand extends Command {
         this.help = "help.purge";
         this.category = CommandCategories.STAFF.category;
         this.cooldown = 5;
-        this.example = "6";
+        this.example = "42";
         this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
         this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
