@@ -153,7 +153,7 @@ public class Listener extends ListenerAdapter {
                         .setThumbnail(event.getMember().getUser().getEffectiveAvatarUrl())
                         .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberLeave.memberLeave", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
                         .addField(MessageHelper.translateMessage("text.listener.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
-                        .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("success.listener.onGuildMemberLeave.lostMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("success.listener.onGuildMemberLeave.countMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
+                        .addField(String.format("%s %s", UnicodeCharacters.heavyMinusSign, MessageHelper.translateMessage("success.listener.onGuildMemberLeave.lostMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("success.listener.onGuildMemberLeave.countMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
                         .setTimestamp(Instant.now())
                         .setColor(Color.GREEN)
                         .build()).build()).queue();
@@ -199,16 +199,14 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
-        if (event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
-            if (Main.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
-                event.getMessage().reply("My prefix is **" + Main.getServerConfig().prefix().get(event.getGuild().getId()) + "**").queue();
-                return;
-            }
-            event.getMessage().reply("My prefix is **" + Main.getClient().getPrefix() + "**").queue();
-            return;
+        if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember())) {
+            event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
+                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.listener.onGuildMessageReceived.prefix", event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), Main.getPrefix(event.getGuild()))))
+                    .setTimestamp(Instant.now())
+                    .setColor(Color.GREEN)
+                    .build()).build()).queue();
         }
-        String message = event.getMessage().getContentRaw();
-        Main.LOGGER.info(String.format("%s %s:%n %s", MessageHelper.getTag(event.getAuthor()), "a dit", message));
         if (Main.getServerConfig().prohibitWords() == null) {
             new File("config/server-config.json").delete();
             try {
@@ -216,14 +214,12 @@ public class Listener extends ListenerAdapter {
             } catch (IOException ex) {
                 Main.LOGGER.severe(ex.getMessage());
             }
-            return;
         }
-        if (message.startsWith(Main.getPrefix(event.getGuild()))) {
-            String[] args = message.substring(Main.getPrefix(event.getGuild()).length()).split("\\s+");
+        if (event.getMessage().getContentRaw().startsWith(Main.getPrefix(event.getGuild()))) {
+            String[] args = event.getMessage().getContentRaw().substring(Main.getPrefix(event.getGuild()).length()).split("\\s+");
             if (args.length == 0) return;
             String cmdName = args[0];
-            if (Main.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) ||
-                    Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase)) || Main.getClient().getHelpWord().equalsIgnoreCase(cmdName))
+            if (Main.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) || Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase)) || Main.getClient().getHelpWord().equalsIgnoreCase(cmdName))
                 return;
             double highestResult = 0;
             String cmd = null;
@@ -231,7 +227,6 @@ public class Listener extends ListenerAdapter {
                 double _highestResult = LevenshteinDistance.getDistance(cmdName, command.getName());
                 double b = 0;
                 String _alias = command.getName();
-
                 if (b > _highestResult) {
                     _highestResult = b;
                 }
@@ -240,18 +235,22 @@ public class Listener extends ListenerAdapter {
                     highestResult = _highestResult;
                 }
             }
-            event.getChannel().sendMessage("Did you meant " + cmd).mention(event.getAuthor()).complete();
+            event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
+                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.listener.onGuildMessageReceived.didYouMean", event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), Main.getPrefix(event.getGuild()), cmd)))
+                    .setTimestamp(Instant.now())
+                    .setColor(Color.GREEN)
+                    .build()).build()).queue();
         }
         if (!Main.getServerConfig().prohibitWords().containsKey(event.getGuild().getId())) return;
-        for (String s : Main.getServerConfig().prohibitWords().get(event.getGuild().getId())) {
-            for (String alias : new String[]{"prohibitw", "prohitbitwrd", "pw", "pwrd", "pword"}) {
-                if (message.toLowerCase().startsWith(alias)) {
-                    return;
-                }
-            }
-            if (message.toLowerCase().contains(s.toLowerCase())) {
-                event.getMessage().delete().queue(unused -> event.getMessage().reply(MessageHelper.formattedMention(event.getAuthor()) + "Le mot `" + s + "` fait parti de la liste des mots interdits.").queue());
-            }
+        for (String prohibitedWord : Main.getServerConfig().prohibitWords().get(event.getGuild().getId())) {
+            if (event.getMessage().getContentRaw().toLowerCase().startsWith(String.format("%sprohibitword", Main.getPrefix(event.getGuild()))) && event.getMember() != null && event.getMember().isOwner()) return;
+            if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
+                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
+                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("success.listener.onGuildMessageReceived.prohibitedWord", event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), prohibitedWord)))
+                    .setTimestamp(Instant.now())
+                    .setColor(Color.RED)
+                    .build()).build()).queue());
         }
     }
 }
