@@ -13,7 +13,7 @@ public class KickCommand extends Command {
         this.guildOnly = true;
         this.cooldown = 5;
         this.arguments = "arguments.kick";
-        this.example = "363811352688721930";
+        this.example = "363811352688721930 spam";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.kick";
         this.userPermissions = new Permission[]{Permission.KICK_MEMBERS};
@@ -23,7 +23,7 @@ public class KickCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 1 && args.length != 2) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this, "informations.kick");
             return;
         }
         Main.getJda().retrieveUserById(args[1].replaceAll("\\D+","")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
