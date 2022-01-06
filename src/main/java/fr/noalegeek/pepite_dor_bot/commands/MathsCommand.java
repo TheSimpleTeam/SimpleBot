@@ -32,7 +32,7 @@ public class MathsCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (event.getArgs().isEmpty() || args.length != 1 && args.length != 2 && args.length != 3 && args.length != 4) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this, "informations.maths");
             return;
         }
         switch (args.length) {
@@ -48,10 +48,20 @@ public class MathsCommand extends Command {
                                 .setTimestamp(Instant.now())
                                 .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.maths.calculate.exponentsCharacters", event));
                         event.reply(new MessageBuilder(errorExponentsCharactersEmbed.build()).build());
+                        return;
                     }
                 }
                 if (!new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).checkSyntax()) {
-                    replyMathematicalSyntaxErrorEmbed(event, args[0]);
+                    if(args[0].replaceAll("\\D+", "").isEmpty()) {
+                        MessageHelper.syntaxError(event, this, "informations.maths");
+                        return;
+                    }
+                    event.reply(new MessageBuilder(new EmbedBuilder()
+                            .setColor(Color.RED)
+                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                            .setTimestamp(Instant.now())
+                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.maths.syntax", event), calculateReplaceArgs(args[0].replaceAll("\\s+", ""))))
+                            .build()).build());
                     return;
                 }
                 EmbedBuilder successEmbed = new EmbedBuilder()
@@ -80,7 +90,12 @@ public class MathsCommand extends Command {
                             }
                         }
                         if (!new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).checkSyntax()) {
-                            replyMathematicalSyntaxErrorEmbed(event, args[1]);
+                            event.reply(new MessageBuilder(new EmbedBuilder()
+                                    .setColor(Color.RED)
+                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                    .setTimestamp(Instant.now())
+                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.maths.syntax", event), calculateReplaceArgs(args[1].replaceAll("\\s+", ""))))
+                                    .build()).build());
                             return;
                         }
                         EmbedBuilder successEmbed = new EmbedBuilder()
@@ -92,6 +107,7 @@ public class MathsCommand extends Command {
                                 .addField(MessageHelper.translateMessage("success.maths.calculate.result", event), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false);
                         event.reply(new MessageBuilder(successEmbed.build()).build());
                     }
+                    default -> MessageHelper.syntaxError(event, this, "informations.maths");
                 }
             }
             case 3 -> {
@@ -108,7 +124,12 @@ public class MathsCommand extends Command {
                                 } else return;
                             } else return;
                         } else {
-                            replyMathematicalSyntaxErrorEmbed(event, args[2]);
+                            event.reply(new MessageBuilder(new EmbedBuilder()
+                                    .setColor(Color.RED)
+                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                    .setTimestamp(Instant.now())
+                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.maths.syntax", event), calculateReplaceArgs(args[2].replaceAll("\\s+", ""))))
+                                    .build()).build());
                             return;
                         }
                         switch (args[1]) {
@@ -161,7 +182,12 @@ public class MathsCommand extends Command {
                                 } else return;
                             } else return;
                         } else {
-                            replyMathematicalSyntaxErrorEmbed(event, args[2]);
+                            event.reply(new MessageBuilder(new EmbedBuilder()
+                                    .setColor(Color.RED)
+                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                                    .setTimestamp(Instant.now())
+                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.maths.syntax", event), calculateReplaceArgs(args[2].replaceAll("\\s+", ""))))
+                                    .build()).build());
                             return;
                         }
                         switch (args[1]) {
@@ -207,6 +233,7 @@ public class MathsCommand extends Command {
                             }
                         }
                     }
+                    default -> MessageHelper.syntaxError(event, this, "informations.maths");
                 }
             }
             case 4 -> {
@@ -259,7 +286,7 @@ public class MathsCommand extends Command {
                             String factor = String.valueOf(unit1.factor / unit2.factor);
                             EmbedBuilder successEmbed = new EmbedBuilder()
                                     .setColor(Color.GREEN)
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.maths.maths.convert.success", event)))
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.maths.convert.success", event)))
                                     .addField(MessageHelper.translateMessage("success.maths.convert.from", event), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(unit1.unitName, event) + ")", false)
                                     .addField(MessageHelper.translateMessage("success.maths.convert.to", event), String.valueOf(number * Double.parseDouble(factor)).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(unit2.unitName, event) + ")", false)
                                     .addField(MessageHelper.translateMessage("success.maths.convert.factor", event), factor.replace("E", "x10^"), false)
@@ -276,8 +303,10 @@ public class MathsCommand extends Command {
                                     .build()).build());
                         }
                     }
+                    default -> MessageHelper.syntaxError(event, this, "informations.maths");
                 }
             }
+            default -> MessageHelper.syntaxError(event, this, "informations.maths");
         }
     }
 
@@ -294,15 +323,6 @@ public class MathsCommand extends Command {
             }
         }
         return builder.toString();
-    }
-
-    private static void replyMathematicalSyntaxErrorEmbed(CommandEvent event, String args){
-        EmbedBuilder errorSyntaxEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTimestamp(Instant.now())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.maths.syntax", event), calculateReplaceArgs(args.replaceAll("\\s+", ""))));
-        event.reply(new MessageBuilder(errorSyntaxEmbed.build()).build());
     }
 
     public static boolean notIntegerNumberTooLargeWithEmbed(CommandEvent event, String integerNumber) {
@@ -374,7 +394,7 @@ public class MathsCommand extends Command {
         return longListSum;
     }
 
-    private enum Unit {
+    public enum Unit {
         //Units of length
         PARSEC(UnitType.LENGTH, 308567758149136760000000000000000D, "pc", "text.maths.convert.parsec"),
         YOTTAMETER(UnitType.LENGTH, 1000000000000000000000000D, "Ym", "text.maths.convert.yottameter"),
@@ -466,10 +486,10 @@ public class MathsCommand extends Command {
         ZEPTOSECOND(UnitType.TIME, 0.000000000000000000001D, "zs", "text.maths.convert.zeptosecond"),
         YOCTOSECOND(UnitType.TIME, 0.000000000000000000000001D, "ys", "text.maths.convert.yoctosecond");
 
-        private final UnitType unitType;
-        private final double factor;
-        private final String symbol;
-        private final String unitName;
+        public final UnitType unitType;
+        public final double factor;
+        public final String symbol;
+        public final String unitName;
 
         Unit(UnitType unitType, double factor, String symbol, String unitName) {
             this.unitType = unitType;
@@ -479,7 +499,7 @@ public class MathsCommand extends Command {
         }
     }
 
-    private enum UnitType {
+    public enum UnitType {
         LENGTH("text.maths.convert.length"),
         TIME("text.maths.convert.time");
 

@@ -35,12 +35,12 @@ public class BanCommand extends Command {
                     if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                     if (args[1] == null || args[1].isEmpty()) args[1] = "7";
                     try {
-                        int banTime = Integer.parseInt(args[1]);
-                        if (banTime > 7) {
-                            banTime = 7;
+                        int days = Integer.parseInt(args[1]);
+                        if (days > 7) {
+                            days = 7;
                             event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
                         }
-                        event.getGuild().ban(user, banTime).queue();
+                        event.getGuild().ban(user, days).queue();
                         event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), MessageHelper.setReason(args[2], event)));
                     } catch (NumberFormatException ex) {
                         event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));

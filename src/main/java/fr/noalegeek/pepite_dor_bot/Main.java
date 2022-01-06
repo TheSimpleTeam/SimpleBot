@@ -120,7 +120,7 @@ public class Main {
             }
         }, getInfos().autoSaveDelay(), getInfos().autoSaveDelay(), TimeUnit.MINUTES);
         executorService.scheduleAtFixedRate(() -> serverConfig.tempBan().entrySet().stream()
-                .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), TempbanCommand.formatter)))
+                .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss"))))
                 .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
                     serverConfig.tempBan().remove(e.getKey());
                     jda.getGuildById(e.getKey().split("-")[1]).retrieveBanList().queue(a -> {

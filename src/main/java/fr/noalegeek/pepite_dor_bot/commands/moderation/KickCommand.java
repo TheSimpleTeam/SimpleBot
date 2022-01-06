@@ -16,6 +16,7 @@ public class KickCommand extends Command {
         this.example = "363811352688721930 spam";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.kick";
+        this.aliases = new String[]{"exclude"};
         this.userPermissions = new Permission[]{Permission.KICK_MEMBERS};
         this.botPermissions = new Permission[]{Permission.KICK_MEMBERS};
     }
