@@ -16,7 +16,7 @@ public class UnbanCommand extends Command {
         this.category = CommandCategories.STAFF.category;
         this.help = "help.unban";
         this.guildOnly = true;
-        this.example = "285829396009451522";
+        this.example = "285829396009451522 wrong person";
         this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
         this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
     }
