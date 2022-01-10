@@ -52,16 +52,6 @@ public class TempbanCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        System.out.println("""
-                
-                Les arguments sont :
-                
-                - **identifiant/mention du membre** définit le membre qui sera banni du serveur temporairement;
-                - **jours** supprime les messages du membre défini en fonction du nombre de jours spécifié qui doit être égal ou inférieur à 7 sinon il sera redéfini à 7 et du temps d'existance des messages du membre défini;
-                - **temps de ban** définit le temps du bannissement du membre défini exprimé avec un nombre et un des symboles parmis s, min, h, d, w, M et y signifiant respectivement secondes, minutes, heures, jours, semaines, mois et années;
-                - **raison** définit la raison du bannissement temporaire (Cet argument n'est pas obligatoire).
-                
-                """);
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 3 && args.length != 4) {
             MessageHelper.syntaxError(event, this, "syntax.tempban");
@@ -80,14 +70,14 @@ public class TempbanCommand extends Command {
                     return;
                 }
                 try {
-                    member.ban(days, MessageHelper.setReason(args[3], event)).queue(unused -> {
+                    member.ban(days, event.getArgs() == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3)).queue(unused -> {
                         try {
                             Main.getServerConfig().tempBan().put(member.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(Arrays.stream(Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[1].replaceAll("\\d+", "")) || dates.getSymbol().equalsIgnoreCase(args[1].replaceAll("\\d+", ""))).findFirst().get().name().toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), Integer.parseInt(args[2].replaceAll("\\D+", "")))).format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss")));
                         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
                             MessageHelper.sendError(exception, event, this);
                         }
                     });
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), MessageHelper.setReason(args[2], event)));
+                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), event.getArgs() == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + event.getArgs().substring(args[0].length() + args[1].length() + 2)));
                 } catch (NumberFormatException exception) {
                     MessageHelper.syntaxError(event, this, "syntax.tempban");
                 }

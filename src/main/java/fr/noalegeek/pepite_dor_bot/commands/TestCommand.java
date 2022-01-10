@@ -38,6 +38,6 @@ public class TestCommand extends Command {
                 }
             }
         }*/
-        event.reply(stringBuilder.toString());
+        event.reply(event.getArgs() + " | " + event.getArgs().substring(args[0].length()));
     }
 }

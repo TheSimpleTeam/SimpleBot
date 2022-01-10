@@ -41,7 +41,7 @@ public class BanCommand extends Command {
                             event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.ban", event));
                         }
                         event.getGuild().ban(user, days).queue();
-                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), MessageHelper.setReason(args[2], event)));
+                        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.ban", event), user.getName(), event.getArgs() == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + event.getArgs().substring(args[0].length() + args[1].length() + 2)));
                     } catch (NumberFormatException ex) {
                         event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.ban.notAnNumber", event));
                     }
