@@ -53,7 +53,7 @@ public class TempbanCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if (args.length != 3 && args.length != 4) {
+        if (args.length < 3) {
             MessageHelper.syntaxError(event, this, "syntax.tempban");
             return;
         }

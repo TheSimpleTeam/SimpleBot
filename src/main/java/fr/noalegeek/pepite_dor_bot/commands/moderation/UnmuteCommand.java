@@ -7,14 +7,16 @@ import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.Permission;
 
+import java.util.Arrays;
+
 public class UnmuteCommand extends Command {
 
     public UnmuteCommand() {
         this.name = "unmute";
         this.guildOnly = true;
         this.cooldown = 5;
-        this.arguments = "<identifiant/mention du membre> <raison>";
-        this.example = "363811352688721930";
+        this.arguments = "arguments.unmute";
+        this.example = "363811352688721930 wrong person";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.unmute";
         this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
@@ -24,7 +26,7 @@ public class UnmuteCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if (args.length != 1 && args.length != 2) {
+        if (args.length < 2) {
             MessageHelper.syntaxError(event, this, null);
             return;
         }

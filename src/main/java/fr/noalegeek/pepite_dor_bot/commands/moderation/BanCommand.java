@@ -23,7 +23,7 @@ public class BanCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if (args.length != 1 && args.length != 2 && args.length != 3) {
+        if (args.length < 2) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("informations.ban", event));
             return;
         }
