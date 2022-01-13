@@ -67,6 +67,13 @@ public class MessageHelper {
                         index++;
                     }
                 }
+                if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 4).toList().isEmpty()) {
+                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.fourArguments", event)).append("__").append("\n\n");
+                    for (int index4 = 0; index4 < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 4).toList().size(); index4++) {
+                        argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 4).toList().get(index4)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[index]).append("*\n");
+                        index++;
+                    }
+                }
             }
         }
         if (informations != null)

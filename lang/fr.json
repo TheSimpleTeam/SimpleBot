@@ -76,6 +76,7 @@
   "error.maths.convert.unitsDontExist": "Erreur ! Les unités de mesure spécifiées n\u0027existent pas.",
   "error.maths.syntax": "Erreur ! `%s` n\u0027est pas une expression mathématique correcte.",
   "error.mcServer.offlineServer": "Erreur ! Le serveur est hors-ligne !",
+  "text.commands.syntaxError.arguments.fourArguments": "Syntaxe à quatre arguments",
   "error.purge": "Il y a des messages datant de plus de 2 semaines donc je ne peux pas les supprimer !",
   "error.spigot.pluginID.numberTooLarge": "Erreur ! Vous avez spécifié un nombre trop grand.",
   "error.spigot.pluginID.pluginNull": "Erreur ! Il n\u0027existe aucun plugin Spigot avec l\u0027ID `%s`. ",

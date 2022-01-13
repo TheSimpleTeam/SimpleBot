@@ -274,6 +274,7 @@
   "text.commands.syntaxError.arguments.arguments": "Syntaxes",
   "text.commands.syntaxError.arguments.oneArgument": "One argument syntax",
   "text.commands.syntaxError.arguments.threeArguments": "Three arguments syntax",
+  "text.commands.syntaxError.arguments.fourArguments": "Four arguments syntax",
   "text.commands.syntaxError.arguments.twoArguments": "Two arguments syntax",
   "text.commands.syntaxError.examples.example": "Example",
   "text.commands.syntaxError.examples.exampleNull": "No example available.",
