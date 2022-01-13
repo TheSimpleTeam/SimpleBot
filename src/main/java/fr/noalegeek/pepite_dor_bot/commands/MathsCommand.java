@@ -30,8 +30,39 @@ public class MathsCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        System.out.println("""
+                
+                Les arguments sont :
+                
+                - **expression mathématique** OU **calculate expression mathématique** calcule l'expression mathématique spécifiée.
+                
+                - **primenumber** :
+                Cet argument a des sous-arguments :
+                - **number** vérfie si le nombre entier spécifié est premier ou non;
+                - **list** donne une liste de tous les nombres premiers à partir du nombre entier spécifié.
+                Ces sous-arguments ont des sous-arguments :
+                - **number** définit le nombre entier qui va être utilisé.
+                
+                - **perfectnumber** :
+                Cet argument a des sous-arguments :
+                - **number** vérfie si le nombre entier spécifié est parfait ou non;
+                - **list** donne une liste de tous les nombres parfaits à partir du nombre entier spécifié.
+                Ces sous-arguments ont des sous-arguments :
+                - **number** définit le nombre entier qui va être utilisé.
+                
+                - **convert** :
+                Cet argument a un sous-argument :
+                - **number** définit le nombre de la première unité de mesure spécifiée pour après être convertit en la seconde unité de mesure spécifiée.
+                Ce sous-argument a un sous-argument :
+                - **unité de mesure** définit la première unité de mesure spécifiée.
+                Ce sous-argument a un sous-argument :
+                - **unité de mesure** définit la seconde unité de mesure spécifiée.
+                Les deux unités de mesure peuvent être choisi parmi ces unités de mesure disponibles, vous ne pouvez pas convertir une unité de mesure en une autre si elles n'ont pas le même type de mesure :
+                %s
+                
+                """);
         String[] args = event.getArgs().split("\\s+");
-        if (event.getArgs().isEmpty() || args.length != 1 && args.length != 2 && args.length != 3 && args.length != 4) {
+        if (args.length < 1) {
             MessageHelper.syntaxError(event, this, "informations.maths");
             return;
         }
