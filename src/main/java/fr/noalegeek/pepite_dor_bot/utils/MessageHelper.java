@@ -43,41 +43,44 @@ public class MessageHelper {
             if (translateMessage(command.getArguments(), event).split("²").length == 1) {
                 argumentsBuilder.append(translateMessage(command.getArguments(), event));
             } else {
-                int index = 1;
-                if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arg -> arg != null && arg.split(">").length == 1).toList().isEmpty()) {
-                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.oneArgument", event)).append("__").append("\n\n");
-                    for (int index1 = 0; index1 < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 1).toList().size(); index1++) {
-                        argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 1).toList().get(index1)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[index]).append("*\n");
-                        index++;
-                    }
-                    argumentsBuilder.append("\n");
+                int loop = 1;
+                for(String str : Arrays.stream(translateMessage(command.getArguments(), event).split("²")).toList()){
+                    loop = Math.max(loop, str.length());
                 }
-                if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 2).toList().isEmpty()) {
-                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.twoArguments", event)).append("__").append("\n\n");
-                    for (int index2 = 0; index2 < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 2).toList().size(); index2++) {
-                        argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 2).toList().get(index2)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[index]).append("*\n");
-                        index++;
-                    }
-                    argumentsBuilder.append("\n");
-                }
-                if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 3).toList().isEmpty()) {
-                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.threeArguments", event)).append("__").append("\n\n");
-                    for (int index3 = 0; index3 < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 3).toList().size(); index3++) {
-                        argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 3).toList().get(index3)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[index]).append("*\n");
-                        index++;
-                    }
-                }
-                if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 4).toList().isEmpty()) {
-                    argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.arguments.fourArguments", event)).append("__").append("\n\n");
-                    for (int index4 = 0; index4 < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 4).toList().size(); index4++) {
-                        argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == 4).toList().get(index4)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[index]).append("*\n");
-                        index++;
+                int indexList = 1;
+                for(int length = 1; length <= loop; length++){
+                    int finalLenght = length;
+                    if(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).anyMatch(argument -> argument.length() == finalLenght)){
+                        if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arg -> arg != null && arg.split(">").length == finalLenght).toList().isEmpty()) {
+                            argumentsBuilder.append("__");
+                            switch (finalLenght){
+                                case 1 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.oneArgument", event));
+                                case 2 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.twoArgument", event));
+                                case 3 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.threeArgument", event));
+                                case 4 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.fourArgument", event));
+                                default -> argumentsBuilder.append("The devs forgotten to add the syntax with the length of ").append(finalLenght);
+                            }
+                            argumentsBuilder.append("__").append("\n\n");
+                            for (int index = 0; index < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == finalLenght).toList().size(); index++) {
+                                argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == finalLenght).toList().get(index)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[indexList]).append("*\n");
+                                indexList++;
+                            }
+                            argumentsBuilder.append("\n");
+                        }
                     }
                 }
             }
         }
-        if (informations != null)
-            argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
+        if (informations != null){
+            if(informations.length() > 1024){
+                for(int i = 1; i < Math.ceil(informations.length() / 1024D); i++){
+                    if(i == 1)
+                        argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
+                }
+            }
+            else
+                argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
+        }
         String examples;
         if (command.getExample() == null)
             examples = translateMessage("text.commands.syntaxError.examples.exampleNull", event);
