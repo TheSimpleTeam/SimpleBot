@@ -3,13 +3,13 @@ package fr.noalegeek.pepite_dor_bot.enums;
 import fr.noalegeek.pepite_dor_bot.commands.MathsCommand;
 
 public enum Date {
-    SECONDS(MathsCommand.Unit.SECOND.symbol),
-    MINUTES(MathsCommand.Unit.MINUTE.symbol),
-    HOURS(MathsCommand.Unit.HOUR.symbol),
-    DAYS(MathsCommand.Unit.DAY.symbol),
-    WEEKS(MathsCommand.Unit.WEEK.symbol),
-    MONTHS(MathsCommand.Unit.MONTH.symbol),
-    YEARS(MathsCommand.Unit.YEAR.symbol);
+    SECONDS(MathsCommand.Unit.s.name()),
+    MINUTES(MathsCommand.Unit.min.name()),
+    HOURS(MathsCommand.Unit.h.name()),
+    DAYS(MathsCommand.Unit.d.name()),
+    WEEKS(MathsCommand.Unit.w.name()),
+    MONTHS(MathsCommand.Unit.M.name()),
+    YEARS(MathsCommand.Unit.y.name());
 
     private final String symbol;
 
