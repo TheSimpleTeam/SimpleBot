@@ -216,7 +216,7 @@ public class Listener extends ListenerAdapter {
             }
         }
         if (event.getMessage().getContentRaw().startsWith(Main.getPrefix(event.getGuild()))) {
-            String[] args = event.getMessage().getContentRaw().substring(Main.getPrefix(event.getGuild()).length()).split("\\s+");
+            String[] args = event.getMessage().getContentRaw().substring(Main.getPrefix(event.getGuild()).length()).strip().split("\\s+");
             if (args.length == 0) return;
             String cmdName = args[0];
             if (Main.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) || Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase)) || Main.getClient().getHelpWord().equalsIgnoreCase(cmdName))
