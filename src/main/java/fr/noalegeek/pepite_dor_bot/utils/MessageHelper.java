@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -44,25 +45,27 @@ public class MessageHelper {
                 argumentsBuilder.append(translateMessage(command.getArguments(), event));
             } else {
                 int loop = 1;
-                for(String str : Arrays.stream(translateMessage(command.getArguments(), event).split("²")).toList()){
-                    loop = Math.max(loop, str.length());
+                for (String arg : Arrays.stream(translateMessage(command.getArguments(), event).split("²")).toList()) {
+                    loop = Math.max(loop, arg.split(">").length);
                 }
                 int indexList = 1;
-                for(int length = 1; length <= loop; length++){
+                for (int length = 1; length <= loop; length++) {
                     int finalLenght = length;
-                    if(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).anyMatch(argument -> argument.length() == finalLenght)){
-                        if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arg -> arg != null && arg.split(">").length == finalLenght).toList().isEmpty()) {
+                    System.out.println(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).anyMatch(arguments -> arguments.length() == finalLenght));
+                    System.out.println(!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty());
+                    if (Arrays.stream(translateMessage(command.getArguments(), event).split("²")).anyMatch(arguments -> arguments.split(">").length == finalLenght)) {
+                        if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty()) {
                             argumentsBuilder.append("__");
-                            switch (finalLenght){
+                            switch (finalLenght) {
                                 case 1 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.oneArgument", event));
-                                case 2 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.twoArgument", event));
-                                case 3 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.threeArgument", event));
-                                case 4 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.fourArgument", event));
+                                case 2 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.twoArguments", event));
+                                case 3 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.threeArguments", event));
+                                case 4 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.fourArguments", event));
                                 default -> argumentsBuilder.append("The devs forgotten to add the syntax with the length of ").append(finalLenght);
                             }
                             argumentsBuilder.append("__").append("\n\n");
-                            for (int index = 0; index < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == finalLenght).toList().size(); index++) {
-                                argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(args -> args != null && args.split(">").length == finalLenght).toList().get(index)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[indexList]).append("*\n");
+                            for (int index = 0; index < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().size(); index++) {
+                                argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().get(index)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[indexList]).append("*\n");
                                 indexList++;
                             }
                             argumentsBuilder.append("\n");
@@ -71,15 +74,16 @@ public class MessageHelper {
                 }
             }
         }
-        if (informations != null){
-            if(informations.length() > 1024){
-                for(int i = 1; i < Math.ceil(informations.length() / 1024D); i++){
-                    if(i == 1)
-                        argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
+        StringBuilder informationsBuilder = new StringBuilder();
+        if (informations != null) {
+            if (informations.length() > 1024) {
+                int fields = 1;
+                for (int i = 1; i < Math.ceil(informations.length() / 1024D); i++) {
+                    if (i == 1)
+                        informationsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
                 }
-            }
-            else
-                argumentsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
+            } else
+                informationsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
         }
         String examples;
         if (command.getExample() == null)
@@ -156,32 +160,25 @@ public class MessageHelper {
     }
 
     private static String translateMessage(@NotNull String key, @NotNull User author, @Nullable User owner, @Nullable TextChannel channel, @NotNull Guild guild) {
-        String lang = Main.getServerConfig().language().getOrDefault(guild.getId(), "en");
-        Optional<JsonElement> s = Optional.ofNullable(Main.getLocalizations().get(lang).get(key));
-        if (s.isPresent()) return s.get().getAsString();
+        if (Optional.ofNullable(Main.getLocalizations().get(Main.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).isPresent()) return Optional.ofNullable(Main.getLocalizations().get(Main.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).get().getAsString();
         if (Main.getLocalizations().get("en").get(key) == null) {
-            StackWalker stackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
             long skip = 2;
-            if (stackWalker.walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer")) skip++;
+            if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
+                skip++;
             final long _skip = skip;
-            if (channel != null) channel.sendMessage(new MessageBuilder(new EmbedBuilder()
+            EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(author), author.getEffectiveAvatarUrl())
                     .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", author, owner, channel, guild), key))
                     .addField(MessageHelper.translateMessage("error.translateMessage.key", author, owner, channel, guild), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", author, owner, channel, guild), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.method", author, owner, channel, guild), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", author, owner, channel, guild), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false).build()).build()).queue();
-            if(owner != null) owner.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
-                    .setColor(Color.RED)
-                    .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(owner), owner.getEffectiveAvatarUrl())
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", author, owner, channel, guild), key))
-                    .addField(MessageHelper.translateMessage("error.translateMessage.key", author, owner, channel, guild), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", author, owner, channel, guild), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.method", author, owner, channel, guild), stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", author, owner, channel, guild), String.valueOf(stackWalker.walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false).build()).build()).queue());
+                    .addField(MessageHelper.translateMessage("error.translateMessage.class", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.method", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", author, owner, channel, guild), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+            if (channel != null)
+                channel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue();
+            if (owner != null)
+                owner.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue());
             throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {

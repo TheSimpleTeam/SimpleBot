@@ -33,6 +33,7 @@ public class MathsCommand extends Command {
         String[] args = event.getArgs().split("\\s+");
         StringBuilder unitsList = new StringBuilder();
         if (args.length < 1) {
+
             MessageHelper.syntaxError(event, this, String.format("informations.maths", unitsList));
             return;
         }

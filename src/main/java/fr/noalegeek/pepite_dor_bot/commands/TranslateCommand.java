@@ -74,6 +74,7 @@ public class TranslateCommand extends Command {
                     successEmbed.addField(i == 0 ? MessageHelper.translateMessage("success.translate.text", event) : "", list.get(i), true);
             } else
                 successEmbed.addField(MessageHelper.translateMessage("success.translate.text", event), args[0], true);
+            //System.out.println(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)));
             String translatedArgs = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString();
             if (translatedArgs.length() > 1024) {
                 int charactersCount = 0;
