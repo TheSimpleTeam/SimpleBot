@@ -51,8 +51,6 @@ public class MessageHelper {
                 int indexList = 1;
                 for (int length = 1; length <= loop; length++) {
                     int finalLenght = length;
-                    System.out.println(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).anyMatch(arguments -> arguments.length() == finalLenght));
-                    System.out.println(!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty());
                     if (Arrays.stream(translateMessage(command.getArguments(), event).split("²")).anyMatch(arguments -> arguments.split(">").length == finalLenght)) {
                         if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty()) {
                             argumentsBuilder.append("__");
