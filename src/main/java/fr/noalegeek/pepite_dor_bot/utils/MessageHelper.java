@@ -72,17 +72,6 @@ public class MessageHelper {
                 }
             }
         }
-        StringBuilder informationsBuilder = new StringBuilder();
-        if (informations != null) {
-            if (informations.length() > 1024) {
-                int fields = 1;
-                for (int i = 1; i < Math.ceil(informations.length() / 1024D); i++) {
-                    if (i == 1)
-                        informationsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
-                }
-            } else
-                informationsBuilder.append("__").append(translateMessage("text.commands.syntaxError.informations", event)).append("__").append("\n").append(informations.startsWith("informations.") ? translateMessage(informations, event) : informations);
-        }
         String examples;
         if (command.getExample() == null)
             examples = translateMessage("text.commands.syntaxError.examples.exampleNull", event);
@@ -98,6 +87,20 @@ public class MessageHelper {
                 .addField(command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event).split("²").length == 1 ? translateMessage("text.commands.syntaxError.arguments.argument", event) : translateMessage("text.commands.syntaxError.arguments.arguments", event) : command.getArguments().split("²").length == 1 ? translateMessage("text.commands.syntaxError.arguments.argument", event) : translateMessage("text.commands.syntaxError.arguments.arguments", event), argumentsBuilder.toString(), false)
                 .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event).contains("²") ? translateMessage(command.getHelp(), event).split("²")[0] : translateMessage(command.getHelp(), event), false)
                 .addField(command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event).split("²").length == 1 ? translateMessage("text.commands.syntaxError.examples.example", event) : translateMessage("text.commands.syntaxError.examples.examples", event) : command.getExample().split("²").length == 1 ? translateMessage("text.commands.syntaxError.examples.example", event) : translateMessage("text.commands.syntaxError.examples.examples", event), examples, false);
+        if (informations != null) {
+            if (translateMessage(informations, event).length() > 1024) {
+                int field = 0;
+                StringBuilder informationsBuilder = new StringBuilder();
+                for (char character : informations.toCharArray()) {
+                    informationsBuilder.append(character);
+                    if(character == '²') {
+                        field++;
+                        syntaxErrorEmbed.addField(field == 1 ? translateMessage("text.commands.syntaxError.informations", event) : "", informationsBuilder.toString(), false);
+                    }
+                }
+            } else
+                syntaxErrorEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), translateMessage(informations, event), false);
+        }
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
         event.reply(new MessageBuilder(syntaxErrorEmbed.build()).build());
     }
@@ -144,7 +147,7 @@ public class MessageHelper {
     }
 
     /**
-     * @param key   the localization key
+     * @param key the localization key
      * @param event for getting the guild's ID
      * @return the translated value
      * @throws NullPointerException if the key does not exist in any localization files.
@@ -185,4 +188,36 @@ public class MessageHelper {
             return key;
         }
     }
+
+    /**
+     * @param key   the localization key
+     * @param event for getting the guild's ID
+     * @return the translated value
+     * @throws NullPointerException if the key does not exist in any localization files.
+     */
+    /*public static String translateMessageAllLanguages(@NotNull String key, @NotNull CommandEvent event){
+
+    }
+
+    public static String translateMessageAllLanguages(@NotNull String key, @NotNull User author, @Nullable User owner, @Nullable TextChannel channel, @NotNull Guild guild){
+        long skip = 2;
+        if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
+            skip++;
+        final long _skip = skip;
+        EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setTimestamp(Instant.now())
+                .setFooter(MessageHelper.getTag(author), author.getEffectiveAvatarUrl())
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", author, owner, channel, guild), key))
+                //.addField(MessageHelper.translateMessage("error.function"))
+                .addField(MessageHelper.translateMessage("error.translateMessage.key", author, owner, channel, guild), key, false)
+                .addField(MessageHelper.translateMessage("error.translateMessage.class", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                .addField(MessageHelper.translateMessage("error.translateMessage.method", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", author, owner, channel, guild), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+        for(String lang : new String[]{"en", "fr"}){
+            if(Main.getLocalizations().get(lang).get(key) == null){
+
+            }
+        }
+    }*/
 }

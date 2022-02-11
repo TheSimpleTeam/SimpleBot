@@ -13,6 +13,7 @@ import org.mariuszgromada.math.mxparser.mXparser;
 import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -404,7 +405,7 @@ public class MathsCommand extends Command {
         ly(UnitType.LENGTH, 9.4607304725808E20D, "text.maths.convert.lightYear"),
         Em(UnitType.LENGTH, 1.0E18D, "text.maths.convert.exameter"),
         Pm(UnitType.LENGTH, 1.0E15D, "text.maths.convert.petameter"),
-        Tm(UnitType.LENGTH, 1.0E12D, "text.maths.convert.telameter"),
+        Tm(UnitType.LENGTH, 1.0E12D, "text.maths.convert.terameter"),
         au(UnitType.LENGTH, 1.495978707E11D, "text.maths.convert.astronomicalUnit"),
         Gm(UnitType.LENGTH, 1.0E9D, "text.maths.convert.gigameter"),
         Mm(UnitType.LENGTH, 1000000.0D, "text.maths.convert.megameter"),
@@ -497,16 +498,38 @@ public class MathsCommand extends Command {
             this.factor = factor;
             this.unitName = unitName;
         }
+
+        public static List<String> getAllSymbolsByType(UnitType unitType){
+            List<String> symbolsList = new ArrayList<>();
+            Arrays.stream(Unit.values()).filter(unit -> unit.unitType == unitType).forEach(unit -> symbolsList.add(unit.name()));
+            return symbolsList;
+        }
     }
 
     public enum UnitType {
         LENGTH("text.maths.convert.length"),
         TIME("text.maths.convert.time");
 
-        private final String unitTypeName;
+        public final String unitTypeName;
 
         UnitType(String unitTypeName){
             this.unitTypeName = unitTypeName;
+        }
+    }
+
+    public enum Date {
+        y(Unit.y.name()),
+        M(Unit.M.name()),
+        w(Unit.w.name()),
+        d(Unit.d.name()),
+        h(Unit.h.name()),
+        min(Unit.min.name()),
+        s(Unit.s.name());
+
+        public final String symbol;
+
+        Date(String symbol) {
+            this.symbol = symbol;
         }
     }
 }
