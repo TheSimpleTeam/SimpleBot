@@ -1,5 +1,5 @@
 # Simple Bot
-"Simple Bot" is a Java bot created by NoaLeGeek, this bot is public soon.
+"Simple Bot" is a Java bot created by NoaLeGeek and Minemobs.
 
 [Discord](https://discord.gg/jw3kn4gNZW)
 
