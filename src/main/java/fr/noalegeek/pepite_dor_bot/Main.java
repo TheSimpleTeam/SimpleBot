@@ -120,15 +120,19 @@ public class Main {
             }
         }, getInfos().autoSaveDelay(), getInfos().autoSaveDelay(), TimeUnit.MINUTES);
         executorService.scheduleAtFixedRate(() -> serverConfig.tempBan().entrySet().stream()
-                .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), LocalDateTime.parse(e.getValue(), DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss"))))
-                .filter(e -> e.getValue().isEqual(LocalDateTime.now()) || e.getValue().isBefore(LocalDateTime.now())).forEach(e -> {
-                    serverConfig.tempBan().remove(e.getKey());
-                    jda.getGuildById(e.getKey().split("-")[1]).retrieveBanList().queue(a -> {
-                        if (a.stream().anyMatch(ban -> ban.getUser().getId().equals(e.getKey().split("-")[0]))) {
-                            jda.getGuildById(e.getKey().split("-")[1]).unban(e.getKey().split("-")[0]).queue(unused ->
-                                            jda.getTextChannelById(serverConfig.channelMemberJoin().get(e.getKey().split("-")[1]))
-                                                    .sendMessage(jda.getUserById(e.getKey().split("-")[0]).getName()).queue(),
-                                    throwable -> LOGGER.severe(throwable.getMessage()));
+                .map(tempBanMap -> new AbstractMap.SimpleImmutableEntry<>(tempBanMap.getKey(), LocalDateTime.parse(tempBanMap.getValue(), DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss"))))
+                .filter(tempBanMap -> tempBanMap.getValue().isEqual(LocalDateTime.now()) || tempBanMap.getValue().isBefore(LocalDateTime.now())).forEach(tempBanMapNeedsUnban -> {
+                    serverConfig.tempBan().remove(tempBanMapNeedsUnban.getKey());
+                    try {
+                        Listener.saveConfigs();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    jda.getGuildById(tempBanMapNeedsUnban.getKey().split("-")[1]).retrieveBanList().queue(banList -> {
+                        if (banList.stream().anyMatch(ban -> ban.getUser().getId().equals(tempBanMapNeedsUnban.getKey().split("-")[0]))) {
+                            jda.getGuildById(tempBanMapNeedsUnban.getKey().split("-")[1]).unban(tempBanMapNeedsUnban.getKey().split("-")[0]).queue(unused ->
+                                            jda.getTextChannelById(serverConfig.channelMemberJoin().get(tempBanMapNeedsUnban.getKey().split("-")[1]))
+                                                    .sendMessage(jda.getUserById(tempBanMapNeedsUnban.getKey().split("-")[0]).getName()).queue());
                         }
                     });
                 }), 0, 1, TimeUnit.SECONDS);

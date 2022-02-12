@@ -57,9 +57,9 @@ public class Listener extends ListenerAdapter {
     //TODO New config for onGuildMemberJoin/Leave : a boolean that active the member join/leave embed into the system channel (Called = systemConfigJoin)
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        if (Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId()) && event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())) != null) { // Verifies if the server's owner configured the channelMemberJoin config and if the configured channel exists, if all is true it try catch the InsufficientPermissionException to verifies if the bot hasn't the permission to write in the configured channel, if false it verifies if the configured (on Discord) system channel exists.
-            try { // Try catch the InsufficientPermissionException to verifies if the bot hasn't the permission to write in the configured channel, if it catches it verifies if the owner is null.
-                event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed in the configured channel
+        if (Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId()) && event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())) != null) {
+            try {
+                event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder()
                         .setThumbnail(event.getMember().getUser().getEffectiveAvatarUrl())
                         .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
                         .addField(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
@@ -68,9 +68,9 @@ public class Listener extends ListenerAdapter {
                         .setColor(Color.GREEN)
                         .build()).build()).queue();
             } catch (InsufficientPermissionException exception) {
-                if (event.getGuild().getOwner() == null) // Verifies if the server's owner is null, if true it does nothing, if false it sends the channelMemberJoinHasntPermission embed in the server's owner's private channel.
+                if (event.getGuild().getOwner() == null)
                     return;
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> // Sends the channelMemberJoinHasntPermission embed in the server's owner's private channel.
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
@@ -80,11 +80,11 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
-        if (event.getGuild().getSystemChannel() == null) // Verify if the configured (on Discord) system channel exists, if true it sends a memberJoin embed in the configured (on Discord) system channel, if false it does nothing.
+        if (event.getGuild().getSystemChannel() == null)
             return;
         /*if(Main.getServerConfig().systemChannelMemberJoin().get(event.getGuild().getId())){*/
         try {
-            event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed in the configured (on Discord) system channel
+            event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder()
                     .setThumbnail(event.getMember().getUser().getAvatarUrl())
                     .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
                     .addField(MessageHelper.translateMessage("text.listener.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
@@ -93,9 +93,9 @@ public class Listener extends ListenerAdapter {
                     .setColor(Color.GREEN)
                     .build()).build()).queue();
         } catch (InsufficientPermissionException exception) {
-            if (event.getGuild().getOwner() == null) // Verifies if the server's owner is null, if true it does nothing, if false it sends the systemChannelHasntPermission embed in the server's owner's private channel.
+            if (event.getGuild().getOwner() == null)
                 return;
-            event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> // Sends the systemChannelHasntPermission embed in the server's owner's private channel.
+            event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                     privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
                             .setColor(Color.RED)
                             .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
@@ -106,9 +106,9 @@ public class Listener extends ListenerAdapter {
         /*}*/
         if (Main.getServerConfig().guildJoinRole().containsKey(event.getGuild().getId())) {
             if (event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole().get(event.getGuild().getId())) == null) {
-                if (event.getGuild().getOwner() == null) // Verifies if the server's owner is null, if true it does nothing, if false it sends the joinRoleNull embed in the server's owner's private channel.
+                if (event.getGuild().getOwner() == null)
                     return;
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> // Sends the joinRoleNull embed in the server's owner's private channel.
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
@@ -118,9 +118,9 @@ public class Listener extends ListenerAdapter {
                 return;
             }
             if(!event.getGuild().getSelfMember().hasPermission(Permission.MANAGE_ROLES)) {
-                if (event.getGuild().getOwner() == null) // Verifies if the server's owner is null, if true it does nothing, if false it sends the botCantManageRole embed in the server's owner's private channel.
+                if (event.getGuild().getOwner() == null)
                     return;
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> // Sends the botCantManageRole embed in the server's owner's private channel.
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
@@ -132,9 +132,9 @@ public class Listener extends ListenerAdapter {
             try {
                 event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(Main.getServerConfig().guildJoinRole().get(event.getGuild().getId()))).queue();
             } catch (HierarchyException exception){
-                if (event.getGuild().getOwner() == null) // Verifies if the server's owner is null, if true it does nothing, if false it sends the hierarchyRoles embed in the server's owner's private channel.
+                if (event.getGuild().getOwner() == null)
                     return;
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> // Sends the joinRoleNull hierarchyRoles embed in the server's owner's private channel.
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
@@ -147,10 +147,10 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        if (Main.getServerConfig().channelMemberLeave().containsKey(event.getGuild().getId()) && event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())) != null) { // Verifies if the server's owner configured the channelMemberLeave config and if the configured channel exists, if all is true it try catch the InsufficientPermissionException to verifies if the bot hasn't the permission to write in the configured channel, if false it verifies if the configured (on Discord) system channel exists.
-            try { // Try catch the InsufficientPermissionException to verifies if the bot hasn't the permission to write in the configured channel, if it catches it verifies if the owner is null.
-                event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed in the configured channel
-                        .setThumbnail(event.getMember().getUser().getEffectiveAvatarUrl())
+        if (Main.getServerConfig().channelMemberLeave().containsKey(event.getGuild().getId()) && event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())) != null) {
+            try {
+                event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder()
+                        .setThumbnail(event.getUser().getEffectiveAvatarUrl())
                         .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberLeave.memberLeave", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
                         .addField(MessageHelper.translateMessage("text.listener.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
                         .addField(String.format("%s %s", UnicodeCharacters.heavyMinusSign, MessageHelper.translateMessage("success.listener.onGuildMemberLeave.lostMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("success.listener.onGuildMemberLeave.countMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
@@ -158,9 +158,9 @@ public class Listener extends ListenerAdapter {
                         .setColor(Color.GREEN)
                         .build()).build()).queue();
             } catch (InsufficientPermissionException exception) {
-                if (event.getGuild().getOwner() == null) // Verifies if the server's owner is null, if true it does nothing, if false it sends the channelMemberJoinHasntPermission embed in the server's owner's private channel.
+                if (event.getGuild().getOwner() == null)
                     return;
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> // Sends the channelMemberJoinHasntPermission embed in the server's owner's private channel.
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
@@ -170,11 +170,11 @@ public class Listener extends ListenerAdapter {
             }
             return;
         }
-        if (event.getGuild().getSystemChannel() == null) // Verify if the configured (on Discord) system channel exists, if true it sends a memberJoin embed in the configured (on Discord) system channel, if false it does nothing.
+        if (event.getGuild().getSystemChannel() == null)
             return;
         /*if(Main.getServerConfig().systemChannelMemberJoin().get(event.getGuild().getId())){*/
         try {
-            event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder() // Sends a memberJoin embed in the configured (on Discord) system channel
+            event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder()
                     .setThumbnail(event.getMember().getUser().getAvatarUrl())
                     .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
                     .addField(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
@@ -183,9 +183,9 @@ public class Listener extends ListenerAdapter {
                     .setColor(Color.GREEN)
                     .build()).build()).queue();
         } catch (InsufficientPermissionException exception) {
-            if (event.getGuild().getOwner() == null) // Verifies if the server's owner is null, if true it does nothing, if false it sends the systemChannelHasntPermission embed in the server's owner's private channel.
+            if (event.getGuild().getOwner() == null)
                 return;
-            event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> // Sends the systemChannelHasntPermission embed in the server's owner's private channel.
+            event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
                     privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
                             .setColor(Color.RED)
                             .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
