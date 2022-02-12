@@ -121,7 +121,7 @@
   "help.snippet": "Transforme le code spécifié en une image.",
   "help.spigot": "Donne le nom, le lien, l\u0027ID et la description d\u0027un plugin Spigot en le cherchant par son ID ou par son nom ou cherche un utilisateur Spigot.",
   "help.suggestion": "Envoie une suggestion aux développeurs.",
-  "help.tempban": "Banni temporairement selon le temps spécifié un membre avec son identifiant|sa mention.",
+  "help.tempban": "Banni temporairement selon le temps spécifié un membre avec son identifiant/sa mention.",
   "help.test": "Une commande de test selon les tests à faire.",
   "help.translate": "Traduit la phrase spécifiée en fonction de langue du texte et la langue dont vous voulez que le texte soit traduit. ",
   "help.unban": "Débanni un membre banni du serveur.",
