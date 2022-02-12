@@ -34,7 +34,7 @@ public class MuteCommand extends Command {
             event.getGuild().retrieveMember(user).queue(member -> {
                 if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                 isMutedRoleHere(event);
-                mute(event, member, event.getArgs() == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + " " + event.getArgs().substring(args[0].length() + 1), event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
+                mute(event, member, args[1] == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + " " + event.getArgs().substring(args[0].length() + 1), event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
             }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
                 userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }

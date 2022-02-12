@@ -24,12 +24,12 @@ public class UnbanCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if (args.length < 2) {
+        if (args.length < 1) {
             MessageHelper.syntaxError(event, this, "informations.unban");
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
-            event.getGuild().retrieveBan(user).queue(success -> event.getGuild().unban(user).queue(successMessage -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event), user.getName(), event.getArgs() == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + " " + event.getArgs().substring(args[0].length() + 1)))), failure -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unban", event), user.getName())));
+            event.getGuild().retrieveBan(user).queue(success -> event.getGuild().unban(user).queue(successMessage -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event), user.getName(), args.length == 1 ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + " " + event.getArgs().substring(args[0].length() + 1)))), failure -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unban", event), user.getName())));
         }, userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
     }
 }
