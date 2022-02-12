@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -150,7 +151,7 @@ public class MessageHelper {
      * @param key the localization key
      * @param event for getting the guild's ID
      * @return the translated value
-     * @throws NullPointerException if the key does not exist in any localization files.
+     * @throws NullPointerException if the key does not exist in any localization files
      */
     public static String translateMessage(@NotNull String key, @NotNull CommandEvent event) {
         return translateMessage(key, event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getTextChannel(), event.getGuild());
@@ -190,34 +191,18 @@ public class MessageHelper {
     }
 
     /**
-     * @param key   the localization key
-     * @param event for getting the guild's ID
-     * @return the translated value
-     * @throws NullPointerException if the key does not exist in any localization files.
+     * @param key the localization key
+     * @return a String list with all the translations of the key
+     * @throws NullPointerException if the key does not exist in a language
      */
-    /*public static String translateMessageAllLanguages(@NotNull String key, @NotNull CommandEvent event){
-
-    }
-
-    public static String translateMessageAllLanguages(@NotNull String key, @NotNull User author, @Nullable User owner, @Nullable TextChannel channel, @NotNull Guild guild){
-        long skip = 2;
-        if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
-            skip++;
-        final long _skip = skip;
-        EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(author), author.getEffectiveAvatarUrl())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", author, owner, channel, guild), key))
-                //.addField(MessageHelper.translateMessage("error.function"))
-                .addField(MessageHelper.translateMessage("error.translateMessage.key", author, owner, channel, guild), key, false)
-                .addField(MessageHelper.translateMessage("error.translateMessage.class", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                .addField(MessageHelper.translateMessage("error.translateMessage.method", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
-                .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", author, owner, channel, guild), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+    public static List<String> translateMessageAllLanguages(@NotNull String key){
+        List<String> listMessageTranslated = new ArrayList<>();
         for(String lang : new String[]{"en", "fr"}){
             if(Main.getLocalizations().get(lang).get(key) == null){
-
+                throw new NullPointerException("The key " + key + " doesn't exist in the language " + lang);
             }
+            listMessageTranslated.add(Main.getLocalizations().get(lang).get(key).getAsString());
         }
-    }*/
+        return listMessageTranslated;
+    }
 }
