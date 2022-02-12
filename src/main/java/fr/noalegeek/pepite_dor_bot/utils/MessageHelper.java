@@ -16,10 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class MessageHelper {
@@ -197,7 +194,7 @@ public class MessageHelper {
      */
     public static List<String> translateMessageAllLanguages(@NotNull String key){
         List<String> listMessageTranslated = new ArrayList<>();
-        for(String lang : new String[]{"en", "fr"}){
+        for(String lang : Main.getLangs()){
             if(Main.getLocalizations().get(lang).get(key) == null){
                 throw new NullPointerException("The key " + key + " doesn't exist in the language " + lang);
             }

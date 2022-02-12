@@ -522,18 +522,18 @@ public class MathsCommand extends Command {
     }
 
     public enum Date {
-        y(Unit.y.name()),
-        M(Unit.M.name()),
-        w(Unit.w.name()),
-        d(Unit.d.name()),
-        h(Unit.h.name()),
-        min(Unit.min.name()),
-        s(Unit.s.name());
+        y("Years"),
+        M("Months"),
+        w("Weeks"),
+        d("Days"),
+        h("Hours"),
+        min("Minutes"),
+        s("Seconds");
 
-        public final String symbol;
+        public final String functionName;
 
-        Date(String symbol) {
-            this.symbol = symbol;
+        Date(String functionName) {
+            this.functionName = functionName;
         }
     }
 }
