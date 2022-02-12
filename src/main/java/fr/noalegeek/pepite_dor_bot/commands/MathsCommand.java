@@ -397,6 +397,10 @@ public class MathsCommand extends Command {
         return longListSum;
     }
 
+    public static String formatDate(String time) {
+        return "TEST";
+    }
+
     public enum Unit {
         //Units of length
         pc(UnitType.LENGTH, 3.0856775814913675E32D, "text.maths.convert.parsec"),
