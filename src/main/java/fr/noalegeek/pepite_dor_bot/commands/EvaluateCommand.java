@@ -95,7 +95,7 @@ public class EvaluateCommand extends Command {
         pyInterpreter.set("member", event.getMember());
         pyInterpreter.exec(args);
         String eval = writer.toString();
-        event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : String.format("%s %n %s %n %s %n %s",MessageHelper.translateMessage("success.eval", event), DiscordFormatUtils.MULTILINE_CODE_BLOCK, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK));
+        event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : String.format("%s %n %s %n %s %n %s",MessageHelper.translateMessage("success.eval", event), DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK.format));
         pyInterpreter.cleanup();
         writer.getBuffer().setLength(0);
     }
