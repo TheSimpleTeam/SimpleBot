@@ -397,8 +397,33 @@ public class MathsCommand extends Command {
         return longListSum;
     }
 
-    public static String formatDate(String time) {
-        return "TEST";
+    /**
+     * @param specifiedTime the time specified in for example TempbanCommand like 37d or 2086min
+     * @return a String explaining in how much years, month, weeks, days, hours, minutes or seconds
+     */
+    public static String dateTime(String specifiedTime, CommandEvent event) {
+        StringBuilder stringBuilder = new StringBuilder();
+        double time = Arrays.stream(Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
+        int differentUnitsUsed = 0;
+        for(Date date : Date.values()){
+            if(time / date.factor >= 1){
+                differentUnitsUsed++;
+                time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
+            }
+        }
+        time = Arrays.stream(Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
+        int unitsUsedCount = 0;
+        for(Date date : Date.values()) {
+            if (time / date.factor >= 1){
+                stringBuilder.append((int) Math.floor(time / date.factor)).append(" ").append(time / date.factor >= 2 ? MessageHelper.translateMessage(date.dateTimeStringPlural, event) : MessageHelper.translateMessage(date.dateTimeStringSingular, event));
+                if(differentUnitsUsed > 1) {
+                    unitsUsedCount++;
+                    stringBuilder.append((unitsUsedCount + 1) == differentUnitsUsed ? new StringBuilder().append(MessageHelper.translateMessage("text.maths.date.and", event)) : (unitsUsedCount + 1) > differentUnitsUsed ? "" : ", ");
+                    time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
+                }
+            }
+        }
+        return stringBuilder.toString();
     }
 
     public enum Unit {
@@ -522,18 +547,24 @@ public class MathsCommand extends Command {
     }
 
     public enum Date {
-        y("Years"),
-        M("Months"),
-        w("Weeks"),
-        d("Days"),
-        h("Hours"),
-        min("Minutes"),
-        s("Seconds");
+        y("Years", 31557600, "text.maths.date.year.singular", "text.maths.date.year.plural"),
+        M("Months", 2629800, "text.maths.date.month.singular", "text.maths.date.month.plural"),
+        w("Weeks", 604800, "text.maths.date.week.singular", "text.maths.date.week.plural"),
+        d("Days", 86400, "text.maths.date.day.singular", "text.maths.date.day.plural"),
+        h("Hours", 3600, "text.maths.date.hour.singular", "text.maths.date.hour.plural"),
+        min("Minutes", 60, "text.maths.date.minute.singular", "text.maths.date.minute.plural"),
+        s("Seconds", 1, "text.maths.date.second.singular", "text.maths.date.second.plural");
 
         public final String functionName;
+        public final int factor;
+        public final String dateTimeStringSingular;
+        public final String dateTimeStringPlural;
 
-        Date(String functionName) {
+        Date(String functionName, int factor, String dateTimeStringSingular, String dateTimeStringPlural) {
             this.functionName = functionName;
+            this.factor = factor;
+            this.dateTimeStringSingular = dateTimeStringSingular;
+            this.dateTimeStringPlural = dateTimeStringPlural;
         }
     }
 }

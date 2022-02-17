@@ -7,8 +7,11 @@ import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +32,7 @@ public class TestCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split("\\s+");
+        /*String[] args = event.getArgs().split("\\s+");
         List<String> list = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -52,7 +55,8 @@ public class TestCommand extends Command {
         }
         for(String str : list){
             System.out.println(str + "\nHere\n");
-        }
+        }*/
+
         /*for(MathsCommand.UnitType unitType : MathsCommand.UnitType.values()) {
             for (int length = -1; length <= Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().size(); length++) {
                 list.add(length == -1 ? unitType == MathsCommand.UnitType.LENGTH ? MessageHelper.translateMessage("text.maths.convert.lengthList", event) + "\n" : MessageHelper.translateMessage("text.maths.convert.timeList", event) + "\n" : length == Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().size() ? "- **" + Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(length - 1).name() + "** (" + MessageHelper.translateMessage(Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(length - 1).unitName, event) + ")." : "- **" + Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(length - 1).name() + "** (" + MessageHelper.translateMessage(Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(length - 1).unitName, event) + ");");
