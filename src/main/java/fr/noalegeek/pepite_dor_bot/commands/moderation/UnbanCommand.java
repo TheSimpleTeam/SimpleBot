@@ -34,7 +34,7 @@ public class UnbanCommand extends Command {
             MessageHelper.syntaxError(event, this, "informations.unban");
             return;
         }
-        if(args[0].isEmpty()){
+        if(args[0].replaceAll("\\D+", "").isEmpty()){
             event.reply(new MessageBuilder(new EmbedBuilder()
                     .setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(MessageHelper.translateMessage("error.commands.IDNull", event)).toString())
                     .setColor(Color.RED)
