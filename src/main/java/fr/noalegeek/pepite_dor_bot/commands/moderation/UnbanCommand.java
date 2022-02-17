@@ -43,7 +43,7 @@ public class UnbanCommand extends Command {
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveBanList().queue(banList -> {
-            if(banList.stream().anyMatch(ban -> user == ban.getUser())) {
+            if(banList.stream().anyMatch(banUser -> user.getId().equals(banUser.getUser().getId()))) {
                 event.getGuild().unban(user).queue(unused -> event.reply(new MessageBuilder(new EmbedBuilder()
                         .setTitle(new StringBuilder().append(UnicodeCharacters.whiteHeavyCheckMarkEmoji).append(" ").append(String.format(MessageHelper.translateMessage("success.unban", event), user.getName(), args.length == 1 ? MessageHelper.translateMessage("text.commands.reasonNull", event) : new StringBuilder().append(MessageHelper.translateMessage("text.commands.reason", event)).append(" ").append(event.getArgs().substring(args[0].length() + 1)).toString())).toString())
                         .setColor(Color.GREEN)
