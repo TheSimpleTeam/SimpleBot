@@ -34,6 +34,14 @@ public class UnbanCommand extends Command {
             MessageHelper.syntaxError(event, this, "informations.unban");
             return;
         }
+        if(args[0].isEmpty()){
+            event.reply(new MessageBuilder(new EmbedBuilder()
+                    .setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(MessageHelper.translateMessage("error.commands.IDNull", event)).toString())
+                    .setColor(Color.RED)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
+            return;
+        }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveBanList().queue(banList -> {
             if(banList.stream().anyMatch(ban -> user == ban.getUser())) {
                 event.getGuild().unban(user).queue(unused -> event.reply(new MessageBuilder(new EmbedBuilder()

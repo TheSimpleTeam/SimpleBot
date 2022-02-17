@@ -28,6 +28,7 @@
   "category.mod": "Staff",
   "category.noCategory": "No category",
   "error.ban.notAnNumber": "The time to be specified must be a number.",
+  "error.commands.IDNull": "Error! You have specified an empty ID.",
   "error.commands.botCantInteractTarget": "I don\u0027t have the permission to do that.",
   "error.commands.botHasNotPermission": "The bot needs **%s** permission to run this command.",
   "error.commands.memberNull": "You must specify a person present on the server.",

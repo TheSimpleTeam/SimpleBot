@@ -28,6 +28,7 @@
   "category.mod": "Staff",
   "category.noCategory": "Pas de catégorie",
   "error.ban.notAnNumber": "Le temps à spécifier doit être un nombre.",
+  "error.commands.IDNull": "Erreur ! Vous avez spécifié un identifiant vide.",
   "error.commands.botHasNotPermission": "Le bot a besoin de la permission **%s** pour exécuter cette commande.",
   "error.commands.memberNull": "Vous devez spécifier une personne présente sur le serveur.",
   "error.commands.notAnIntegerNumber": "`%s` n\u0027est pas un nombre entier.",

@@ -63,6 +63,14 @@ public class TempbanCommand extends Command {
             MessageHelper.syntaxError(event, this, "informations.tempban");
             return;
         }
+        if(args[0].isEmpty()){
+            event.reply(new MessageBuilder(new EmbedBuilder()
+                    .setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(MessageHelper.translateMessage("error.commands.IDNull", event)).toString())
+                    .setColor(Color.RED)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
+            return;
+        }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
             if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
             try {

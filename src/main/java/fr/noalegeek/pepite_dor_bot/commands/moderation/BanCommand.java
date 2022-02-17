@@ -5,7 +5,13 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
+
+import java.awt.*;
+import java.time.Instant;
 
 public class BanCommand extends Command {
     public BanCommand() {
@@ -25,6 +31,14 @@ public class BanCommand extends Command {
         String[] args = event.getArgs().split("\\s+");
         if (args.length < 2) {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("informations.ban", event));
+            return;
+        }
+        if(args[0].isEmpty()){
+            event.reply(new MessageBuilder(new EmbedBuilder()
+                    .setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(MessageHelper.translateMessage("error.commands.IDNull", event)).toString())
+                    .setColor(Color.RED)
+                    .setTimestamp(Instant.now())
+                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
