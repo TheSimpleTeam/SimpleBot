@@ -120,14 +120,7 @@ public class MessageHelper {
     }
 
     public static String formatShortDate(OffsetDateTime date) {
-        int day = date.getDayOfMonth();
-        int month = date.getMonthValue();
-        int year = date.getYear();
-        if (month < 10) {
-            String strMonth = "0" + month;
-            return day + "/" + strMonth + "/" + year;
-        }
-        return day + "/" + month + "/" + year;
+        return date.getDayOfMonth() + "/" + (date.getMonthValue() < 10 ? "0" + date.getMonthValue(): date.getMonthValue()) + "/" + date.getYear();
     }
 
     public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event) {

@@ -103,8 +103,12 @@ public class TempbanCommand extends Command {
                         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
                             MessageHelper.sendError(exception, event, this);
                         }
+                        event.reply(new MessageBuilder(new EmbedBuilder()
+                                .setTitle(new StringBuilder().append(UnicodeCharacters.whiteHeavyCheckMarkEmoji).append(" ").append(String.format(MessageHelper.translateMessage("success.tempban", event), user.getName(), args.length == 3 ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + " " + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3), MathsCommand.dateTime(args[2], event))).toString())
+                                .setColor(Color.GREEN)
+                                .setTimestamp(Instant.now())
+                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
                     });
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.tempban", event), user.getName(), args.length == 3 ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + " " + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3), MathsCommand.dateTime(args[2], event)));
                 } catch (NumberFormatException exception) {
                     MessageHelper.syntaxError(event, this, "informations.tempban");
                 }

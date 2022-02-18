@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class UnbanCommand extends Command {
 
@@ -44,11 +46,14 @@ public class UnbanCommand extends Command {
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveBanList().queue(banList -> {
             if(banList.stream().anyMatch(banUser -> user.getId().equals(banUser.getUser().getId()))) {
-                event.getGuild().unban(user).queue(unused -> event.reply(new MessageBuilder(new EmbedBuilder()
+                event.getGuild().unban(user).queue(unused -> {
+                    Main.getServerConfig().tempBan().remove(new StringBuilder().append(user.getId()).append("-").append(event.getGuild().getId()).toString());
+                    event.reply(new MessageBuilder(new EmbedBuilder()
                         .setTitle(new StringBuilder().append(UnicodeCharacters.whiteHeavyCheckMarkEmoji).append(" ").append(String.format(MessageHelper.translateMessage("success.unban", event), user.getName(), args.length == 1 ? MessageHelper.translateMessage("text.commands.reasonNull", event) : new StringBuilder().append(MessageHelper.translateMessage("text.commands.reason", event)).append(" ").append(event.getArgs().substring(args[0].length() + 1)).toString())).toString())
                         .setColor(Color.GREEN)
                         .setTimestamp(Instant.now())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build()));
+                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
+                });
                 return;
             }
             event.reply(new MessageBuilder(new EmbedBuilder()
