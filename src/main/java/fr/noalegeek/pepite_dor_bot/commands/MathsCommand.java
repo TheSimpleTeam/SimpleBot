@@ -34,7 +34,6 @@ public class MathsCommand extends Command {
         String[] args = event.getArgs().split("\\s+");
         StringBuilder unitsList = new StringBuilder();
         if (args.length < 1) {
-
             MessageHelper.syntaxError(event, this, String.format("informations.maths", unitsList));
             return;
         }
@@ -244,7 +243,7 @@ public class MathsCommand extends Command {
                     case "convert" -> {
                         for(int i = 0 ; i < Unit.values().length; i++){
                             for(Unit unit : Unit.values()) {
-                                if (Unit.values()[i].name().equals(unit.name()) && Unit.values()[i] != unit) {
+                                if (Unit.values()[i] != unit && Unit.values()[i].name().equals(unit.name())) {
                                     EmbedBuilder errorSameSymbolsEmbed = new EmbedBuilder()
                                             .setColor(Color.RED)
                                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
