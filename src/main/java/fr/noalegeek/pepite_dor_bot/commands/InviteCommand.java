@@ -34,10 +34,10 @@ public class InviteCommand extends Command {
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "create" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(String.format(MessageHelper.translateMessage("success.invite.create.success", event), event.getGuild().getName()), event)
+            case "create" -> event.reply(new MessageBuilder(MessageHelper.getEmbed("success.invite.create.success", event, event.getGuild().getName())
                     .addField(MessageHelper.translateMessage("success.invite.create.invitationLink", event), event.getTextChannel().createInvite().complete().getUrl(), false)
                     .build()).build());
-            case "bot" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(String.format(MessageHelper.translateMessage("success.invite.bot.success", event), event.getSelfMember().getEffectiveName()), event)
+            case "bot" -> event.reply(new MessageBuilder(MessageHelper.getEmbed("success.invite.bot.success", event, event.getSelfMember().getEffectiveName())
                     .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
                     .build()).build());
             default -> MessageHelper.syntaxError(event, this, "syntax.invite");

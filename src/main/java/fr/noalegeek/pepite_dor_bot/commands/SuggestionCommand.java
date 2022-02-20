@@ -28,15 +28,15 @@ public class SuggestionCommand extends Command {
         if(event.getAuthor().isBot()) return;
         if(event.getArgs().isEmpty()) MessageHelper.syntaxError(event,this, null);
         if(event.getJDA().getGuildById("846048803554852904") == null) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("error.suggestion.guildNull", event), event).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.guildNull", event).build()).build());
             return;
         }
         if (event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648") == null) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("error.suggestion.channelNull", event), event).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.channelNull", event).build()).build());
             return;
         }
-        event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("success.suggestion.suggestion", event), event)
-                .setTitle(new StringBuilder().append(UnicodeCharacters.electricLightBulbEmoji).append(" ").append(MessageHelper.translateMessage("success.suggestion.suggestion", event)).toString())
+        event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.suggestion", event)
+                .setTitle(new StringBuilder().append(UnicodeCharacters.electricLightBulbEmoji).append(" ").append("success.suggestion.suggestion").toString())
                 .setColor(Color.YELLOW)
                 .addField(MessageHelper.translateMessage("success.suggestion", event), event.getArgs(), false)
                 .addField(MessageHelper.translateMessage("success.suggestion.author", event), event.getAuthor().getName(), false)

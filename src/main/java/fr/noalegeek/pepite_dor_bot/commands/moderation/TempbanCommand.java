@@ -65,7 +65,7 @@ public class TempbanCommand extends Command {
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("error.commands.IDNull", event), event).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.commands.IDNull", event).build()).build());
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {

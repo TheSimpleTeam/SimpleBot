@@ -38,7 +38,7 @@ public class SayCommand extends Command {
                 .setColor(Color.GREEN)
                 .setDescription(event.getArgs());
         if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) successEmbed.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
-        event.reply(new MessageBuilder(successEmbed.build()).build());
+        event.reply(new MessageBuilder(MessageHelper.getEmbed().build()).build());
         event.getMessage().delete().queue();
     }
 }
