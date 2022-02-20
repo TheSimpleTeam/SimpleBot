@@ -29,32 +29,17 @@ public class InviteCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(event.getArgs().length() == 0) {
+        if(event.getArgs().length() != 1) {
             MessageHelper.syntaxError(event, this, "syntax.invite");
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "create" -> {
-                EmbedBuilder successCreateEmbed = new EmbedBuilder()
-                        .setTitle(String.format("%s %s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.invite.create.success", event),
-                                event.getGuild().getName()))
-                        .setColor(Color.GREEN)
-                        .setTimestamp(Instant.now())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                        .addField(MessageHelper.translateMessage("success.invite.create.invitationLink", event), event.getTextChannel().createInvite().complete().getUrl(), false);
-                event.reply(new MessageBuilder(successCreateEmbed.build()).build());
-            }
-            case "bot" -> {
-                EmbedBuilder successBotEmbed = new EmbedBuilder()
-                        .setColor(Color.GREEN)
-                        .setTimestamp(Instant.now())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                        .setTitle(String.format("%s %s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.invite.bot.success", event),
-                                event.getSelfMember().getEffectiveName()))
-                        .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event),
-                                String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false);
-                event.reply(new MessageBuilder(successBotEmbed.build()).build());
-            }
+            case "create" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(String.format(MessageHelper.translateMessage("success.invite.create.success", event), event.getGuild().getName()), event)
+                    .addField(MessageHelper.translateMessage("success.invite.create.invitationLink", event), event.getTextChannel().createInvite().complete().getUrl(), false)
+                    .build()).build());
+            case "bot" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(String.format(MessageHelper.translateMessage("success.invite.bot.success", event), event.getSelfMember().getEffectiveName()), event)
+                    .addField(MessageHelper.translateMessage("success.invite.bot.invitationLink", event), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
+                    .build()).build());
             default -> MessageHelper.syntaxError(event, this, "syntax.invite");
         }
     }
