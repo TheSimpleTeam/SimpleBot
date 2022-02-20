@@ -228,7 +228,7 @@
   "success.spigot.pluginName.success.plural": "Plugins trouvés",
   "success.spigot.pluginName.success.singular": "%s Plugin trouvé",
   "success.spigot.user.success": "Liste des utilisateurs Spigot s\u0027appelant `%s`.",
-  "success.suggestion": "Suggestion",
+  "success.suggestion.suggestion": "Suggestion",
   "success.suggestion.author": "Auteur de la suggestion",
   "success.suggestion.guildID": "Identifiant du serveur où a été envoyé la suggestion",
   "success.suggestion.guildName": "Nom du serveur où a été envoyé la suggestion",

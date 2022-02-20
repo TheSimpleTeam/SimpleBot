@@ -42,6 +42,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -64,11 +65,7 @@ public class TempbanCommand extends Command {
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(new EmbedBuilder()
-                    .setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(MessageHelper.translateMessage("error.commands.IDNull", event)).toString())
-                    .setColor(Color.RED)
-                    .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("error.commands.IDNull", event), event).build()).build());
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
@@ -84,11 +81,7 @@ public class TempbanCommand extends Command {
                     return;
                 }
                 if(Arrays.stream(MathsCommand.Date.values()).filter(date -> date.name().equals(args[2].replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(args[2].replaceAll("\\D+", "")) > 3155760000D){
-                    event.reply(new MessageBuilder(new EmbedBuilder()
-                            .setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(MessageHelper.translateMessage("error.tempban.timeTooLarge", event)).toString())
-                            .setColor(Color.RED)
-                            .setTimestamp(Instant.now())
-                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("error.tempban.timeTooLarge", event), event).build()).build());
                     return;
                 }
                 try {
@@ -108,6 +101,7 @@ public class TempbanCommand extends Command {
                                 .setColor(Color.GREEN)
                                 .setTimestamp(Instant.now())
                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("success.tempban", event), event).build()).build());
                     });
                 } catch (NumberFormatException exception) {
                     MessageHelper.syntaxError(event, this, "informations.tempban");

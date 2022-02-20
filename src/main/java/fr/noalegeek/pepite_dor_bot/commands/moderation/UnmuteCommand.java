@@ -36,11 +36,7 @@ public class UnmuteCommand extends Command {
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(new EmbedBuilder()
-                    .setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(MessageHelper.translateMessage("error.commands.IDNull", event)).toString())
-                    .setColor(Color.RED)
-                    .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("error.commands.IDNull", event), event).build()).build());
             return;
         }
         if (MuteCommand.isMutedRoleHere(event)) {

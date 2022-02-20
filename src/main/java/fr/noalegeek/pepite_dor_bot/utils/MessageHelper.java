@@ -115,6 +115,18 @@ public class MessageHelper {
         event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
     }
 
+    public static EmbedBuilder getEmbed(String title, CommandEvent event){
+        EmbedBuilder embedBuilder = new EmbedBuilder().setTimestamp(Instant.now()).setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
+        if(title.startsWith("success.")){
+            embedBuilder.setColor(Color.GREEN).setTitle(new StringBuilder().append(UnicodeCharacters.whiteHeavyCheckMarkEmoji).append(" ").append(title).toString());
+        } else if(title.startsWith("error.")){
+            embedBuilder.setColor(Color.RED).setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(title).toString());
+        } else if(title.startsWith("warning.")){
+            embedBuilder.setColor(0xff7f00).setTitle(new StringBuilder().append(UnicodeCharacters.warningSignEmoji).append(" ").append(title).toString());
+        }
+        return embedBuilder;
+    }
+
     public static String formatShortDate(OffsetDateTime date) {
         return date.getDayOfMonth() + "/" + (date.getMonthValue() < 10 ? "0" + date.getMonthValue(): date.getMonthValue()) + "/" + date.getYear();
     }

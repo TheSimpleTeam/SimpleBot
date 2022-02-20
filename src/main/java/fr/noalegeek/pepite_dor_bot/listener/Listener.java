@@ -57,6 +57,11 @@ public class Listener extends ListenerAdapter {
     //TODO New config for onGuildMemberJoin/Leave : a boolean that active the member join/leave embed into the system channel (Called = systemConfigJoin)
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+        /*if(Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())){
+            if(event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())) == null){
+
+            }
+        }*/
         if (Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId()) && event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())) != null) {
             try {
                 event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder()
