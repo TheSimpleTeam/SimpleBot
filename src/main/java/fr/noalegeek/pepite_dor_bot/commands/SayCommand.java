@@ -31,14 +31,10 @@ public class SayCommand extends Command {
             MessageHelper.syntaxError(event,this, "syntax.say");
             return;
         }
-        EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji,
-                        MessageHelper.translateMessage("success.say.success", event)))
-                .setTimestamp(Instant.now())
-                .setColor(Color.GREEN)
+        EmbedBuilder embedBuilder = MessageHelper.getEmbed("success.say.success", event)
                 .setDescription(event.getArgs());
-        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) successEmbed.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
-        event.reply(new MessageBuilder(MessageHelper.getEmbed().build()).build());
+        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) embedBuilder.setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
+        event.reply(new MessageBuilder(embedBuilder.build()).build());
         event.getMessage().delete().queue();
     }
 }

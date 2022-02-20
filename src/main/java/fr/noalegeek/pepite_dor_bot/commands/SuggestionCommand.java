@@ -45,6 +45,6 @@ public class SuggestionCommand extends Command {
                 .addField(MessageHelper.translateMessage("success.suggestion.guildName", event), event.getGuild().getName(), false)
                 .addField(MessageHelper.translateMessage("success.suggestion.guildID", event), event.getGuild().getId(), false)
                 .build()).build()).queue();
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("success.suggestion.success", event), event).build()).build());
+        event.reply(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.success", event).build()).build());
     }
 }
