@@ -65,7 +65,7 @@ public class TempbanCommand extends Command {
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.commands.IDNull", event).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.commands.IDNull", event, null, null, null, (Object[]) null).build()).build());
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
@@ -81,7 +81,7 @@ public class TempbanCommand extends Command {
                     return;
                 }
                 if(Arrays.stream(MathsCommand.Date.values()).filter(date -> date.name().equals(args[2].replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(args[2].replaceAll("\\D+", "")) > 3155760000D){
-                    event.reply(new MessageBuilder(MessageHelper.getEmbed("error.tempban.timeTooLarge", event).build()).build());
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed("error.tempban.timeTooLarge", event, null, null, null, (Object[]) null).build()).build());
                     return;
                 }
                 try {
@@ -101,7 +101,7 @@ public class TempbanCommand extends Command {
                                 .setColor(Color.GREEN)
                                 .setTimestamp(Instant.now())
                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl()).build()).build());
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed("success.tempban", event).build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed("success.tempban", event, null, null, null, (Object[]) null).build()).build());
                     });
                 } catch (NumberFormatException exception) {
                     MessageHelper.syntaxError(event, this, "informations.tempban");

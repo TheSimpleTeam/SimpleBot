@@ -5,11 +5,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.Color;
-import java.time.Instant;
 
 public class SuggestionCommand extends Command {
 
@@ -28,14 +26,14 @@ public class SuggestionCommand extends Command {
         if(event.getAuthor().isBot()) return;
         if(event.getArgs().isEmpty()) MessageHelper.syntaxError(event,this, null);
         if(event.getJDA().getGuildById("846048803554852904") == null) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.guildNull", event).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.guildNull", event, null, null, null, (Object[]) null).build()).build());
             return;
         }
         if (event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648") == null) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.channelNull", event).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.channelNull", event, null, null, null, (Object[]) null).build()).build());
             return;
         }
-        event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.suggestion", event)
+        event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.suggestion", event, null, null, null, (Object[]) null)
                 .setTitle(new StringBuilder().append(UnicodeCharacters.electricLightBulbEmoji).append(" ").append("success.suggestion.suggestion").toString())
                 .setColor(Color.YELLOW)
                 .addField(MessageHelper.translateMessage("success.suggestion", event), event.getArgs(), false)
@@ -45,6 +43,6 @@ public class SuggestionCommand extends Command {
                 .addField(MessageHelper.translateMessage("success.suggestion.guildName", event), event.getGuild().getName(), false)
                 .addField(MessageHelper.translateMessage("success.suggestion.guildID", event), event.getGuild().getId(), false)
                 .build()).build()).queue();
-        event.reply(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.success", event).build()).build());
+        event.reply(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.success", event, null, null, null, (Object[]) null).build()).build());
     }
 }

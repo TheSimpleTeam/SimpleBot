@@ -34,7 +34,7 @@ public class KickCommand extends Command {
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.commands.IDNull", event).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.commands.IDNull", event, null, null, null, (Object[]) null).build()).build());
             return;
         }
         Main.getJda().retrieveUserById(args[1].replaceAll("\\D+","")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
