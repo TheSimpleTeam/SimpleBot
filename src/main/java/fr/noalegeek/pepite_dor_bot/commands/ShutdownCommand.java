@@ -24,12 +24,6 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji,
-                        MessageHelper.translateMessage("success.shutdown", event)))
-                .setColor(Color.GREEN);
-        event.getChannel().sendMessage(new MessageBuilder(successEmbed.build()).build()).queue(e -> event.getJDA().shutdown());
+        event.getChannel().sendMessage(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("success.shutdown", event), event, Color.GREEN, null, null, (Object[]) null).build()).build()).queue(e -> event.getJDA().shutdown());
     }
 }
