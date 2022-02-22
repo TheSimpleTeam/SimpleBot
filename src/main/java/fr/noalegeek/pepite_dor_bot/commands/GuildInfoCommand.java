@@ -25,16 +25,12 @@ public class GuildInfoCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder successEmbed = new EmbedBuilder()
-                .setTitle(UnicodeCharacters.informationSourceEmoji + " " + String.format(MessageHelper.translateMessage("success.guildInfo.serverName", event), event.getGuild().getName()))
-                .setThumbnail(event.getGuild().getIconUrl())
+        event.reply(new MessageBuilder(MessageHelper.getEmbed("success.guildInfo.serverName", event, Color.BLUE, null, event.getGuild().getIconUrl(), null)
+                .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage("success.guildInfo.serverName", event), event.getGuild().getName())).toString())
                 .addField(MessageHelper.translateMessage("success.guildInfo.nitroLevel", event), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
                 .addField(MessageHelper.translateMessage("success.guildInfo.serverOwner", event), event.getGuild().getOwner().getEffectiveName(), false)
                 .addField(MessageHelper.translateMessage("success.guildInfo.membersOnTheServer", event), String.valueOf(event.getGuild().getMemberCount()), false)
                 .addField(MessageHelper.translateMessage("success.guildInfo.membersConnectedToTheServer", event), String.valueOf(event.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() != OnlineStatus.OFFLINE).toList().size()), false)
-                .setColor(Color.BLUE)
-                .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
-        event.reply(new MessageBuilder(successEmbed.build()).build());
+                .build()).build());
     }
 }
