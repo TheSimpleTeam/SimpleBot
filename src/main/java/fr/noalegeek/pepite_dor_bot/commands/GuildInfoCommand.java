@@ -26,7 +26,7 @@ public class GuildInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         event.reply(new MessageBuilder(MessageHelper.getEmbed("success.guildInfo.serverName", event, Color.BLUE, null, event.getGuild().getIconUrl(), (Object[]) null)
-                .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage("success.guildInfo.serverName", event), event.getGuild().getName())).toString())
+                .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage("success.guildInfo.success", event), event.getGuild().getName())).toString())
                 .addField(MessageHelper.translateMessage("success.guildInfo.nitroLevel", event), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
                 .addField(MessageHelper.translateMessage("success.guildInfo.serverOwner", event), event.getGuild().getOwner().getEffectiveName(), false)
                 .addField(MessageHelper.translateMessage("success.guildInfo.membersOnTheServer", event), String.valueOf(event.getGuild().getMemberCount()), false)

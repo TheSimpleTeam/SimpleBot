@@ -31,7 +31,7 @@ public class UnshortURLCommand extends Command {
             return;
         }
         try {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("success.unshortURL.success", event), event, Color.GREEN, null, null, (Object[]) null)
+            event.reply(new MessageBuilder(MessageHelper.getEmbed("success.unshortURL.success", event, Color.GREEN, null, null, (Object[]) null)
                     .addField(MessageHelper.translateMessage("success.unshortURL.link", event), !event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0], false)
                     .addField(MessageHelper.translateMessage("success.unshortURL.redirection", event), new StringBuilder().append('`').append(getURL(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])).append('`').toString(), false)
                     .build()).build());

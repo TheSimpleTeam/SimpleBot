@@ -34,8 +34,6 @@ import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.cli.*;
-import org.kohsuke.github.GHIssueBuilder;
-import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 

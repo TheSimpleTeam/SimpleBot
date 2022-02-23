@@ -4,12 +4,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.Color;
-import java.time.Instant;
 
 public class ShutdownCommand extends Command {
 
@@ -24,6 +21,6 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.getChannel().sendMessage(new MessageBuilder(MessageHelper.getEmbed(MessageHelper.translateMessage("success.shutdown", event), event, Color.GREEN, null, null, (Object[]) null).build()).build()).queue(e -> event.getJDA().shutdown());
+        event.getChannel().sendMessage(new MessageBuilder(MessageHelper.getEmbed("success.shutdown", event, Color.GREEN, null, null, (Object[]) null).build()).build()).queue(e -> event.getJDA().shutdown());
     }
 }
