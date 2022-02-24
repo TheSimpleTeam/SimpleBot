@@ -59,7 +59,7 @@ dependencies {
     implementation('io.ktor:ktor-server-netty:1.6.4')
     implementation('io.ktor:ktor-serialization:1.6.4')
     //Other
-    implementation 'com.github.TheSimpleTeam:Spiget:main-SNAPSHOT'
+    implementation 'com.github.TheSimpleTeam:Spiget:master-SNAPSHOT'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation("com.google.guava:guava:31.0.1-jre")
     implementation group: 'org.kohsuke', name: 'github-api', version: '1.135'
