@@ -26,23 +26,23 @@ public class SuggestionCommand extends Command {
         if(event.getAuthor().isBot()) return;
         if(event.getArgs().isEmpty()) MessageHelper.syntaxError(event,this, null);
         if(event.getJDA().getGuildById("846048803554852904") == null) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.guildNull", event, null, null, null, (Object[]) null).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.suggestion.guildNull", null, null, null, (Object[]) null).build()).build());
             return;
         }
         if (event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648") == null) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.suggestion.channelNull", event, null, null, null, (Object[]) null).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.suggestion.channelNull", null, null, null, (Object[]) null).build()).build());
             return;
         }
-        event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.suggestion", event, null, null, null, (Object[]) null)
+        event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed(event, "success.suggestion.suggestion", null, null, null, (Object[]) null)
                 .setTitle(new StringBuilder().append(UnicodeCharacters.electricLightBulbEmoji).append(" ").append("success.suggestion.suggestion").toString())
                 .setColor(Color.YELLOW)
-                .addField(MessageHelper.translateMessage("success.suggestion", event), event.getArgs(), false)
-                .addField(MessageHelper.translateMessage("success.suggestion.author", event), event.getAuthor().getName(), false)
-                .addField(MessageHelper.translateMessage("success.suggestion.id", event), event.getAuthor().getName(), false)
-                .addField(MessageHelper.translateMessage("success.suggestion.tag", event), "#" + event.getAuthor().getDiscriminator(), false)
-                .addField(MessageHelper.translateMessage("success.suggestion.guildName", event), event.getGuild().getName(), false)
-                .addField(MessageHelper.translateMessage("success.suggestion.guildID", event), event.getGuild().getId(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion"), event.getArgs(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.author"), event.getAuthor().getName(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.id"), event.getAuthor().getName(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.tag"), "#" + event.getAuthor().getDiscriminator(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.guildName"), event.getGuild().getName(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.guildID"), event.getGuild().getId(), false)
                 .build()).build()).queue();
-        event.reply(new MessageBuilder(MessageHelper.getEmbed("success.suggestion.success", event, null, null, null, (Object[]) null).build()).build());
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.suggestion.success", null, null, null, (Object[]) null).build()).build());
     }
 }

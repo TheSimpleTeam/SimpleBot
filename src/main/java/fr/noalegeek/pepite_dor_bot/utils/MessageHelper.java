@@ -31,33 +31,33 @@ public class MessageHelper {
     public static void syntaxError(CommandEvent event, Command command, String informations) {
         StringBuilder argumentsBuilder = new StringBuilder();
         if (command.getArguments() == null)
-            argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.argumentsNull", event));
+            argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.argumentsNull"));
         else if (!command.getArguments().startsWith("arguments."))
             argumentsBuilder.append(command.getArguments());
         else {
-            if (translateMessage(command.getArguments(), event).split("²").length == 1) {
-                argumentsBuilder.append(translateMessage(command.getArguments(), event));
+            if (translateMessage(event, command.getArguments()).split("²").length == 1) {
+                argumentsBuilder.append(translateMessage(event, command.getArguments()));
             } else {
                 int loop = 1;
-                for (String arg : Arrays.stream(translateMessage(command.getArguments(), event).split("²")).toList()) {
+                for (String arg : Arrays.stream(translateMessage(event, command.getArguments()).split("²")).toList()) {
                     loop = Math.max(loop, arg.split(">").length);
                 }
                 int indexList = 1;
                 for (int length = 1; length <= loop; length++) {
                     int finalLenght = length;
-                    if (Arrays.stream(translateMessage(command.getArguments(), event).split("²")).anyMatch(arguments -> arguments.split(">").length == finalLenght)) {
-                        if (!Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty()) {
+                    if (Arrays.stream(translateMessage(event, command.getArguments()).split("²")).anyMatch(arguments -> arguments.split(">").length == finalLenght)) {
+                        if (!Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty()) {
                             argumentsBuilder.append("__");
                             switch (finalLenght) {
-                                case 1 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.oneArgument", event));
-                                case 2 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.twoArguments", event));
-                                case 3 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.threeArguments", event));
-                                case 4 -> argumentsBuilder.append(translateMessage("text.commands.syntaxError.arguments.fourArguments", event));
+                                case 1 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.oneArgument"));
+                                case 2 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.twoArguments"));
+                                case 3 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.threeArguments"));
+                                case 4 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.fourArguments"));
                                 default -> argumentsBuilder.append("The devs forgotten to add the syntax with the length of ").append(finalLenght);
                             }
                             argumentsBuilder.append("__").append("\n\n");
-                            for (int index = 0; index < Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().size(); index++) {
-                                argumentsBuilder.append(Arrays.stream(translateMessage(command.getArguments(), event).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().get(index)).append(" **->** *").append(translateMessage(command.getHelp(), event).split("²")[indexList]).append("*\n");
+                            for (int index = 0; index < Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().size(); index++) {
+                                argumentsBuilder.append(Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().get(index)).append(" **->** *").append(translateMessage(event, command.getHelp()).split("²")[indexList]).append("*\n");
                                 indexList++;
                             }
                             argumentsBuilder.append("\n");
@@ -68,32 +68,32 @@ public class MessageHelper {
         }
         String examples;
         if (command.getExample() == null)
-            examples = translateMessage("text.commands.syntaxError.examples.exampleNull", event);
+            examples = translateMessage(event, "text.commands.syntaxError.examples.exampleNull");
         else if (command.getExample().startsWith("example."))
-            examples = Arrays.toString(Stream.of(translateMessage(command.getExample(), event).split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
+            examples = Arrays.toString(Stream.of(translateMessage(event, command.getExample()).split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
         else
             examples = Arrays.toString(Stream.of(command.getExample().split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
         EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
                 .setTimestamp(Instant.now())
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage("text.commands.syntaxError.syntaxError", event), command.getName()))
-                .addField(command.getArguments().startsWith("arguments.") ? translateMessage(command.getArguments(), event).split("²").length == 1 ? translateMessage("text.commands.syntaxError.arguments.argument", event) : translateMessage("text.commands.syntaxError.arguments.arguments", event) : command.getArguments().split("²").length == 1 ? translateMessage("text.commands.syntaxError.arguments.argument", event) : translateMessage("text.commands.syntaxError.arguments.arguments", event), argumentsBuilder.toString(), false)
-                .addField(translateMessage("text.commands.syntaxError.help", event), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage("text.commands.syntaxError.help.helpNull", event) : translateMessage(command.getHelp(), event).contains("²") ? translateMessage(command.getHelp(), event).split("²")[0] : translateMessage(command.getHelp(), event), false)
-                .addField(command.getExample().startsWith("example.") ? translateMessage(command.getExample(), event).split("²").length == 1 ? translateMessage("text.commands.syntaxError.examples.example", event) : translateMessage("text.commands.syntaxError.examples.examples", event) : command.getExample().split("²").length == 1 ? translateMessage("text.commands.syntaxError.examples.example", event) : translateMessage("text.commands.syntaxError.examples.examples", event), examples, false);
+                .setFooter(getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage(event, "text.commands.syntaxError.syntaxError"), command.getName()))
+                .addField(command.getArguments().startsWith("arguments.") ? translateMessage(event, command.getArguments()).split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.arguments.argument") : translateMessage(event, "text.commands.syntaxError.arguments.arguments") : command.getArguments().split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.arguments.argument") : translateMessage(event, "text.commands.syntaxError.arguments.arguments"), argumentsBuilder.toString(), false)
+                .addField(translateMessage(event, "text.commands.syntaxError.help"), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage(event, "text.commands.syntaxError.help.helpNull") : translateMessage(event, command.getHelp()).contains("²") ? translateMessage(event, command.getHelp()).split("²")[0] : translateMessage(event, command.getHelp()), false)
+                .addField(command.getExample().startsWith("example.") ? translateMessage(event, command.getExample()).split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.examples.example") : translateMessage(event, "text.commands.syntaxError.examples.examples") : command.getExample().split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.examples.example") : translateMessage(event, "text.commands.syntaxError.examples.examples"), examples, false);
         if (informations != null) {
-            if (translateMessage(informations, event).length() > 1024) {
+            if (translateMessage(event, informations).length() > 1024) {
                 int field = 0;
                 StringBuilder informationsBuilder = new StringBuilder();
                 for (char character : informations.toCharArray()) {
                     informationsBuilder.append(character);
                     if(character == '²') {
                         field++;
-                        syntaxErrorEmbed.addField(field == 1 ? translateMessage("text.commands.syntaxError.informations", event) : "", informationsBuilder.toString(), false);
+                        syntaxErrorEmbed.addField(field == 1 ? translateMessage(event, "text.commands.syntaxError.informations") : "", informationsBuilder.toString(), false);
                     }
                 }
             } else
-                syntaxErrorEmbed.addField(translateMessage("text.commands.syntaxError.informations", event), translateMessage(informations, event), false);
+                syntaxErrorEmbed.addField(translateMessage(event, "text.commands.syntaxError.informations"), translateMessage(event, informations), false);
         }
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
         event.reply(new MessageBuilder(syntaxErrorEmbed.build()).build());
@@ -102,27 +102,31 @@ public class MessageHelper {
     public static void sendError(Exception exception, CommandEvent event, Command command) {
         EmbedBuilder sendErrorEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                .setFooter(getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.sendError.error", event))
-                .addField(MessageHelper.translateMessage("text.commands.sendError.sendError", event), exception.getMessage(), false)
-                .addField(MessageHelper.translateMessage("text.commands.sendError.command", event), Main.getPrefix(event.getGuild()) + command.getName(), false);
+                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + translateMessage(event, "text.commands.sendError.error"))
+                .addField(translateMessage(event, "text.commands.sendError.sendError"), exception.getMessage(), false)
+                .addField(translateMessage(event, "text.commands.sendError.command"), Main.getPrefix(event.getGuild()) + command.getName(), false);
         if (command.getArguments() == null || command.getArguments().isEmpty()) {
             event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
             return;
         }
-        sendErrorEmbed.addField(MessageHelper.translateMessage("text.commands.sendError.arguments", event), event.getArgs(), false);
+        sendErrorEmbed.addField(translateMessage(event, "text.commands.sendError.arguments"), event.getArgs(), false);
         event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
     }
 
-    public static EmbedBuilder getEmbed(String title, CommandEvent event, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
-        EmbedBuilder embedBuilder = new EmbedBuilder().setTimestamp(Instant.now()).setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
+    public static EmbedBuilder getEmbed(CommandEvent event, String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
+        return getEmbed(event.getAuthor(), event.getTextChannel(), event.getGuild(), title, color, description, thumbnail, formatArgs);
+    }
+
+    public static EmbedBuilder getEmbed(@NotNull User author, @Nullable TextChannel channel, @NotNull Guild guild, @NotNull String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
+        EmbedBuilder embedBuilder = new EmbedBuilder().setTimestamp(Instant.now()).setFooter(getTag(author), author.getEffectiveAvatarUrl());
         if(title.startsWith("success.")){
-            embedBuilder.setColor(Color.GREEN).setTitle(new StringBuilder().append(UnicodeCharacters.whiteHeavyCheckMarkEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(title, event), formatArgs) : translateMessage(title, event)).toString());
+            embedBuilder.setColor(Color.GREEN).setTitle(new StringBuilder().append(UnicodeCharacters.whiteHeavyCheckMarkEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) : translateMessage(author, channel, guild, title)).toString());
         } else if(title.startsWith("error.")){
-            embedBuilder.setColor(Color.RED).setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(title, event), formatArgs) : translateMessage(title, event)).toString());
+            embedBuilder.setColor(Color.RED).setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) : translateMessage(author, channel, guild, title)).toString());
         } else if(title.startsWith("warning.")){
-            embedBuilder.setColor(0xff7f00).setTitle(new StringBuilder().append(UnicodeCharacters.warningSignEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(title, event), formatArgs) : translateMessage(title, event)).toString());
+            embedBuilder.setColor(0xff7f00).setTitle(new StringBuilder().append(UnicodeCharacters.warningSignEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) : translateMessage(author, channel, guild, title)).toString());
         }
         if(color != null) embedBuilder.setColor(color);
         if(description != null && description.length() <= 4096) embedBuilder.setDescription(description);
@@ -138,12 +142,12 @@ public class MessageHelper {
         if (member.canInteract(target) && bot.canInteract(target)) return false;
         EmbedBuilder errorCantInteractEmbed = new EmbedBuilder()
                 .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
+                .setFooter(getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now());
         if (!member.canInteract(target))
-            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.member", event));
+            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + translateMessage(event, "text.commands.cantInteract.member"));
         if (!bot.canInteract(target))
-            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("text.commands.cantInteract.bot", event));
+            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + translateMessage(event, "text.commands.cantInteract.bot"));
         event.reply(new MessageBuilder(errorCantInteractEmbed.build()).build());
         return true;
     }
@@ -154,15 +158,11 @@ public class MessageHelper {
      * @return the translated value
      * @throws NullPointerException if the key does not exist in any localization files
      */
-    public static String translateMessage(@NotNull String key, @NotNull CommandEvent event) {
-        return translateMessage(key, event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getTextChannel(), event.getGuild());
+    public static String translateMessage(@NotNull CommandEvent event, @NotNull String key) {
+        return translateMessage(event.getAuthor(), event.getTextChannel(), event.getGuild(), key);
     }
 
-    public static String translateMessage(@NotNull String key, @NotNull User author, @Nullable User owner, @NotNull Guild guild) {
-        return translateMessage(key, author, owner, null, guild);
-    }
-
-    private static String translateMessage(@NotNull String key, @NotNull User author, @Nullable User owner, @Nullable TextChannel channel, @NotNull Guild guild) {
+    public static String translateMessage(@NotNull User author, @Nullable TextChannel channel, @NotNull Guild guild, @NotNull String key) {
         if (Optional.ofNullable(Main.getLocalizations().get(Main.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).isPresent()) return Optional.ofNullable(Main.getLocalizations().get(Main.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).get().getAsString();
         if (Main.getLocalizations().get("en").get(key) == null) {
             long skip = 2;
@@ -172,16 +172,16 @@ public class MessageHelper {
             EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(author), author.getEffectiveAvatarUrl())
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.translateMessage.error", author, owner, channel, guild), key))
-                    .addField(MessageHelper.translateMessage("error.translateMessage.key", author, owner, channel, guild), key, false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.class", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.method", author, owner, channel, guild), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(MessageHelper.translateMessage("error.translateMessage.lineNumber", author, owner, channel, guild), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+                    .setFooter(getTag(author), author.getEffectiveAvatarUrl())
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage(author, channel, guild, "error.translateMessage.error"), key))
+                    .addField(translateMessage(author, channel, guild, "error.translateMessage.key"), key, false)
+                    .addField(translateMessage(author, channel, guild, "error.translateMessage.class"), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(translateMessage(author, channel, guild, "error.translateMessage.method"), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(translateMessage(author, channel, guild, "error.translateMessage.lineNumber"), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
             if (channel != null)
                 channel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue();
-            if (owner != null)
-                owner.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue());
+            if (guild.getOwner() != null)
+                guild.getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue());
             throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {

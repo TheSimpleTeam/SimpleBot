@@ -25,12 +25,12 @@ public class GuildInfoCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder embedBuilder = MessageHelper.getEmbed("success.guildInfo.serverName", event, Color.BLUE, null, event.getGuild().getIconUrl(), (Object[]) null)
-                .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage("success.guildInfo.success", event), event.getGuild().getName())).toString())
-                .addField(MessageHelper.translateMessage("success.guildInfo.nitroLevel", event), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
-                .addField(MessageHelper.translateMessage("success.guildInfo.membersOnTheServer", event), String.valueOf(event.getGuild().getMemberCount()), false)
-                .addField(MessageHelper.translateMessage("success.guildInfo.membersConnectedToTheServer", event), String.valueOf(event.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() != OnlineStatus.OFFLINE).toList().size()), false);
-        if(event.getGuild().getOwner() != null) embedBuilder.addField(MessageHelper.translateMessage("success.guildInfo.serverOwner", event), event.getGuild().getOwner().getEffectiveName(), false);
+        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.guildInfo.serverName", Color.BLUE, null, event.getGuild().getIconUrl(), (Object[]) null)
+                .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.guildInfo.success"), event.getGuild().getName())).toString())
+                .addField(MessageHelper.translateMessage(event, "success.guildInfo.nitroLevel"), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
+                .addField(MessageHelper.translateMessage(event, "success.guildInfo.membersOnTheServer"), String.valueOf(event.getGuild().getMemberCount()), false)
+                .addField(MessageHelper.translateMessage(event, "success.guildInfo.membersConnectedToTheServer"), String.valueOf(event.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() != OnlineStatus.OFFLINE).toList().size()), false);
+        if(event.getGuild().getOwner() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.guildInfo.serverOwner"), event.getGuild().getOwner().getEffectiveName(), false);
         event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 }

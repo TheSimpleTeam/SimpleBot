@@ -38,7 +38,7 @@ public class ConfigCommand extends Command {
                     .setColor(Color.RED)
                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.notOwner", event)))
+                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.notOwner")))
                     .build()).build());
             return;
         }
@@ -68,7 +68,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.RED)
                                         .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTimestamp(Instant.now())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.notConfigured", event)));
+                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.joinRole.notConfigured")));
                                 event.reply(new MessageBuilder(errorNotConfiguredEmbed.build()).build());
                                 return;
                             }
@@ -77,7 +77,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.GREEN)
                                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                     .setTimestamp(Instant.now())
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.config.joinRole.reset", event)));
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage(event, "success.config.joinRole.reset")));
                             event.reply(new MessageBuilder(successResetEmbed.build()).build());
                         } else {
                             if (args[1].replaceAll("\\D+", "").isEmpty()) {
@@ -85,7 +85,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.RED)
                                         .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTimestamp(Instant.now())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.IDIsInvalid", event)));
+                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.joinRole.IDIsInvalid")));
                                 event.reply(new MessageBuilder(errorIDIsInvalidEmbed.build()).build());
                                 return;
                             }
@@ -94,7 +94,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.RED)
                                         .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTimestamp(Instant.now())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.roleNull", event)));
+                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.joinRole.roleNull")));
                                 event.reply(new MessageBuilder(errorRoleNullEmbed.build()).build());
                                 return;
                             }
@@ -103,7 +103,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.RED)
                                         .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTimestamp(Instant.now())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.roleManaged", event)));
+                                        .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.joinRole.roleManaged")));
                                 event.reply(new MessageBuilder(errorRoleManagedEmbed.build()).build());
                                 return;
                             }
@@ -113,7 +113,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.GREEN)
                                         .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                         .setTimestamp(Instant.now())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.config.joinRole.configured", event)));
+                                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage(event, "success.config.joinRole.configured")));
                                 event.reply(new MessageBuilder(successConfiguredEmbed.build()).build());
                                 return;
                             }
@@ -121,7 +121,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.RED)
                                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                     .setTimestamp(Instant.now())
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.joinRole.sameAsConfigured", event)));
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.joinRole.sameAsConfigured")));
                             event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
                         }
                     }
@@ -131,7 +131,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.RED)
                                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                     .setTimestamp(Instant.now())
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.localization.languageDontExist", event)));
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.localization.languageDontExist")));
                             event.reply(new MessageBuilder(errorLanguageDontExistEmbed.build()).build());
                             return;
                         }
@@ -140,7 +140,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.RED)
                                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                     .setTimestamp(Instant.now())
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.localization.sameAsConfig", event)));
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.localization.sameAsConfig")));
                             event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
                             return;
                         }
@@ -149,7 +149,7 @@ public class ConfigCommand extends Command {
                                 .setColor(Color.GREEN)
                                 .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.config.localization.configured", event))), String.format("%s%s", ":flag_" + args[0].replace("en", "us: / :flag_gb"), ':'));
+                                .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage(event, "success.config.localization.configured"))), String.format("%s%s", ":flag_" + args[0].replace("en", "us: / :flag_gb"), ':'));
                         event.reply(new MessageBuilder(successEmbed.build()).build());
                     }
                     case "setprefix" -> {
@@ -158,7 +158,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.RED)
                                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                     .setTimestamp(Instant.now())
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage("error.config.setPrefix.prefixIsEmpty", event)));
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.setPrefix.prefixIsEmpty")));
                             event.reply(new MessageBuilder(errorPrefixIsEmptyEmbed.build()).build());
                             return;
                         }
@@ -168,7 +168,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.RED)
                                         .setTimestamp(Instant.now())
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.setPrefix.notConfigured", event));
+                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.setPrefix.notConfigured"));
                                 event.reply(new MessageBuilder(errorPrefixNullEmbed.build()).build());
                                 return;
                             }
@@ -177,7 +177,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.GREEN)
                                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                     .setTimestamp(Instant.now())
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.config.setPrefix.reset", event)));
+                                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage(event, "success.config.setPrefix.reset")));
                             event.reply(new MessageBuilder(successResetEmbed.build()).build());
                         } else {
                             if (args[1].equals(Main.getServerConfig().prefix().get(event.getGuild().getId()))) {
@@ -185,7 +185,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.RED)
                                         .setTimestamp(Instant.now())
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.setPrefix.sameAsConfigured", event));
+                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.setPrefix.sameAsConfigured"));
                                 event.reply(new MessageBuilder(errorSameAsConfiguredEmbed.build()).build());
                                 return;
                             }
@@ -194,7 +194,7 @@ public class ConfigCommand extends Command {
                                     .setColor(Color.GREEN)
                                     .setTimestamp(Instant.now())
                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.setPrefix.configured", event), args[1]));
+                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.setPrefix.configured"), args[1]));
                             event.reply(new MessageBuilder(successConfiguredEmbed.build()).build());
                         }
                     }
@@ -213,7 +213,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.RED)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.notConfigured", event));
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.join.notConfigured"));
                                             event.reply(new MessageBuilder(errorJoinNotConfiguredEmbed.build()).build());
                                             return;
                                         }
@@ -222,7 +222,7 @@ public class ConfigCommand extends Command {
                                                 .setColor(Color.GREEN)
                                                 .setTimestamp(Instant.now())
                                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.join.reset", event), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
+                                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.channelMember.join.reset"), event.getGuild().getGuildChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()));
                                         event.reply(new MessageBuilder(successJoinResetEmbed.build()).build());
                                     }
                                     case "this" -> {
@@ -232,7 +232,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.GREEN)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.join.configured", event), ((GuildChannel) event.getChannel()).getAsMention()));
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.channelMember.join.configured"), ((GuildChannel) event.getChannel()).getAsMention()));
                                             event.reply(new MessageBuilder(successJoinConfiguredEmbed.build()).build());
                                             return;
                                         }
@@ -240,7 +240,7 @@ public class ConfigCommand extends Command {
                                                 .setColor(Color.RED)
                                                 .setTimestamp(Instant.now())
                                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.sameAsConfigured", event));
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.join.sameAsConfigured"));
                                         event.reply(new MessageBuilder(errorJoinSameAsConfiguredEmbed.build()).build());
                                     }
                                     default -> {
@@ -249,7 +249,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.RED)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.IDIsInvalid", event));
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.join.IDIsInvalid"));
                                             event.reply(new MessageBuilder(errorJoinIDIsInvalidEmbed.build()).build());
                                             return;
                                         }
@@ -258,7 +258,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.RED)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.channelNull", event));
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.join.channelNull"));
                                             event.reply(new MessageBuilder(errorJoinChannelNullEmbed.build()).build());
                                             return;
                                         }
@@ -268,7 +268,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.GREEN)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.join.configured", event), ((GuildChannel) event.getChannel()).getAsMention()));
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.channelMember.join.configured"), ((GuildChannel) event.getChannel()).getAsMention()));
                                             event.reply(new MessageBuilder(successJoinConfiguredEmbed.build()).build());
                                             return;
                                         }
@@ -276,7 +276,7 @@ public class ConfigCommand extends Command {
                                                 .setColor(Color.RED)
                                                 .setTimestamp(Instant.now())
                                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.join.sameAsConfigured", event));
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.join.sameAsConfigured"));
                                         event.reply(new MessageBuilder(errorJoinSameAsConfiguredEmbed.build()).build());
                                     }
                                 }
@@ -289,7 +289,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.RED)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.notConfigured", event));
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.leave.notConfigured"));
                                             event.reply(new MessageBuilder(errorLeaveNotConfiguredEmbed.build()).build());
                                             return;
                                         }
@@ -298,7 +298,7 @@ public class ConfigCommand extends Command {
                                                 .setColor(Color.GREEN)
                                                 .setTimestamp(Instant.now())
                                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.config.channelMember.leave.reset", event));
+                                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.config.channelMember.leave.reset"));
                                         event.reply(new MessageBuilder(successLeaveResetEmbed.build()).build());
                                     }
                                     case "this" -> {
@@ -308,7 +308,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.GREEN)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.leave.reset", event), String.format(MessageHelper.translateMessage("success.channelMember.leave.configured", event), ((GuildChannel) event.getChannel()).getAsMention())));
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.channelMember.leave.reset"), String.format(MessageHelper.translateMessage(event, "success.channelMember.leave.configured"), ((GuildChannel) event.getChannel()).getAsMention())));
                                             event.reply(new MessageBuilder(successLeaveConfiguredEmbed.build()).build());
                                             return;
                                         }
@@ -316,7 +316,7 @@ public class ConfigCommand extends Command {
                                                 .setColor(Color.RED)
                                                 .setTimestamp(Instant.now())
                                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.sameAsConfigured", event));
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.leave.sameAsConfigured"));
                                         event.reply(new MessageBuilder(errorLeaveSameAsConfiguredEmbed.build()).build());
                                     }
                                     default -> {
@@ -325,7 +325,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.RED)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.IDIsInvalid", event));
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.leave.IDIsInvalid"));
                                             event.reply(new MessageBuilder(errorLeaveIDIsInvalidEmbed.build()).build());
                                             return;
                                         }
@@ -334,7 +334,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.RED)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.channelNull", event));
+                                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.leave.channelNull"));
                                             event.reply(new MessageBuilder(errorLeaveChannelNullEmbed.build()).build());
                                             return;
                                         }
@@ -344,7 +344,7 @@ public class ConfigCommand extends Command {
                                                     .setColor(Color.GREEN)
                                                     .setTimestamp(Instant.now())
                                                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.channelMember.leave.configured", event), ((GuildChannel) event.getChannel()).getAsMention()));
+                                                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.channelMember.leave.configured"), ((GuildChannel) event.getChannel()).getAsMention()));
                                             event.reply(new MessageBuilder(successLeaveConfiguredEmbed.build()).build());
                                             return;
                                         }
@@ -352,7 +352,7 @@ public class ConfigCommand extends Command {
                                                 .setColor(Color.RED)
                                                 .setTimestamp(Instant.now())
                                                 .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.channelMember.leave.sameAsConfigured", event));
+                                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.channelMember.leave.sameAsConfigured"));
                                         event.reply(new MessageBuilder(errorLeaveSameAsConfiguredEmbed.build()).build());
                                     }
                                 }
@@ -369,7 +369,7 @@ public class ConfigCommand extends Command {
                                             .setColor(Color.RED)
                                             .setTimestamp(Instant.now())
                                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.config.prohibitWord.wordAlreadyHere", event), args[2]));
+                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.config.prohibitWord.wordAlreadyHere"), args[2]));
                                     event.reply(new MessageBuilder(errorWordAlreadyHereEmbed.build()).build());
                                     return;
                                 }
@@ -380,7 +380,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.GREEN)
                                         .setTimestamp(Instant.now())
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.prohibitWord.wordAdded", event), args[2]));
+                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.prohibitWord.wordAdded"), args[2]));
                                 event.reply(new MessageBuilder(successWordAddedEmbed.build()).build());
                             }
                             case "remove" -> {
@@ -390,7 +390,7 @@ public class ConfigCommand extends Command {
                                             .setColor(Color.RED)
                                             .setTimestamp(Instant.now())
                                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.config.prohibitWord.wordNotHere", event), args[2]));
+                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.config.prohibitWord.wordNotHere"), args[2]));
                                     event.reply(new MessageBuilder(errorWordNotHereEmbed.build()).build());
                                     return;
                                 }
@@ -401,7 +401,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.GREEN)
                                         .setTimestamp(Instant.now())
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.config.prohibitWord.wordRemoved", event), args[2]));
+                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.config.prohibitWord.wordRemoved"), args[2]));
                                 event.reply(new MessageBuilder(successWordRemovedEmbed.build()).build());
                             }
                             case "reset" -> {
@@ -410,7 +410,7 @@ public class ConfigCommand extends Command {
                                             .setColor(Color.RED)
                                             .setTimestamp(Instant.now())
                                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.config.prohibitWord.listNull", event));
+                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.config.prohibitWord.listNull"));
                                     event.reply(new MessageBuilder(errorListNullEmbed.build()).build());
                                     return;
                                 }
@@ -419,7 +419,7 @@ public class ConfigCommand extends Command {
                                         .setColor(Color.GREEN)
                                         .setTimestamp(Instant.now())
                                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.config.prohibitWord.listReseted", event));
+                                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.config.prohibitWord.listReseted"));
                                 event.reply(new MessageBuilder(successListResetedEmbed.build()).build());
                             }
                             default -> MessageHelper.syntaxError(event, this, "syntax.config");

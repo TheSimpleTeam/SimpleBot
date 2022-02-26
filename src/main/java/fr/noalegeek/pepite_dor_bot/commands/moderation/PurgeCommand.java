@@ -27,25 +27,25 @@ public class PurgeCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1) {
-            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "syntax.purge"));
             return;
         }
         int clearMessages = 1;
         try {
-            if(Integer.parseInt(args[0]) < 0) event.replyWarning(MessageHelper.translateMessage("warning.purge.numberTooSmall", event));
+            if(Integer.parseInt(args[0]) < 0) event.replyWarning(MessageHelper.translateMessage(event, "warning.purge.numberTooSmall"));
             else if (Integer.parseInt(args[0]) > 100) {
-                event.replyWarning(MessageHelper.translateMessage("warning.purge.numberTooLarge", event));
+                event.replyWarning(MessageHelper.translateMessage(event, "warning.purge.numberTooLarge"));
                 clearMessages = 100;
             } else clearMessages = Integer.parseInt(args[0]);
         } catch (NumberFormatException ignore) {
-            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.purge", event));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "syntax.purge"));
             return;
         }
         try {
             event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete().queue(unused -> event.getTextChannel().purgeMessages(messages)));
         } catch (IllegalArgumentException ex){
-            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.purge", event)).queueAfter(10, TimeUnit.SECONDS);
+            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.purge")).queueAfter(10, TimeUnit.SECONDS);
         }
-        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.purge", event), clearMessages), messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
+        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.purge"), clearMessages), messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
     }
 }

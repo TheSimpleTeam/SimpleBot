@@ -73,7 +73,7 @@ public class EvaluateCommand extends Command {
             addV8Module(MessageHelper.class);
             addV8Module(net.dv8tion.jda.api.entities.TextChannel.class);
             Object eval = engine.getExecutor(args).executeObject();
-            event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : String.format("%s %n %s %n %s %n %s", MessageHelper.translateMessage("success.eval", event), DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK.format));
+            event.reply(eval == null ? MessageHelper.translateMessage(event, "success.eval") : String.format("%s %n %s %n %s %n %s", MessageHelper.translateMessage(event, "success.eval"), DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK.format));
             engine.getGlobalObject().forEach(value -> engine.getGlobalObject().delete(value));
         } catch (JavetException e) {
             if(e.getMessage().startsWith("ReferenceError") || e.getMessage().startsWith("TypeError")) {
@@ -95,7 +95,7 @@ public class EvaluateCommand extends Command {
         pyInterpreter.set("member", event.getMember());
         pyInterpreter.exec(args);
         String eval = writer.toString();
-        event.reply(eval == null ? MessageHelper.translateMessage("success.eval", event) : String.format("%s %n %s %n %s %n %s",MessageHelper.translateMessage("success.eval", event), DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK.format));
+        event.reply(eval == null ? MessageHelper.translateMessage(event, "success.eval") : String.format("%s %n %s %n %s %n %s",MessageHelper.translateMessage(event, "success.eval"), DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, eval, DiscordFormatUtils.MULTILINE_CODE_BLOCK.format));
         pyInterpreter.cleanup();
         writer.getBuffer().setLength(0);
     }

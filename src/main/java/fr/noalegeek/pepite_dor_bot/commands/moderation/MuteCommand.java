@@ -28,30 +28,30 @@ public class MuteCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (args.length < 1) {
-            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.mute", event));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "syntax.mute"));
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(MessageHelper.getEmbed("error.commands.IDNull", event, null, null, null, (Object[]) null).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
             return;
         }
         Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user ->
             event.getGuild().retrieveMember(user).queue(member -> {
                 if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                 isMutedRoleHere(event);
-                mute(event, member, args[1] == null ? MessageHelper.translateMessage("text.commands.reasonNull", event) : MessageHelper.translateMessage("text.commands.reason", event) + " " + event.getArgs().substring(args[0].length() + 1), event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
-            }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))),
-                userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+                mute(event, member, args[1] == null ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + 1), event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId())));
+            }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.memberNull"))),
+                userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
     }
 
     public static void mute(CommandEvent event, Member targetMember, String reason, Role mutedRole) {
         if (targetMember.getRoles().contains(mutedRole)) { // Unmute
             event.getGuild().removeRoleFromMember(targetMember, mutedRole).queue();
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unmute", event),
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.unmute"),
                     targetMember.getEffectiveName(), reason));
         } else { // Mute
             event.getGuild().addRoleToMember(targetMember, mutedRole).queue();
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.mute", event),
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.mute"),
                     targetMember.getEffectiveName(), reason));
         }
     }
@@ -67,7 +67,7 @@ public class MuteCommand extends Command {
                             guildChannel.putPermissionOverride(mutedRole).setDeny(Permission.MESSAGE_WRITE).queue();
                         }
                     });
-            event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("warning.mute", event));
+            event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "warning.mute"));
             return false;
         }
         return true;

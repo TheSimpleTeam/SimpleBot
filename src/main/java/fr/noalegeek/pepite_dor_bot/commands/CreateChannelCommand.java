@@ -25,17 +25,17 @@ public class CreateChannelCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3){
-            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.createChannel", event));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "syntax.createChannel"));
             return;
         }
         if (args[1].toCharArray().length > 100) {
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.createChannel.tooManyCharacters", event));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.createChannel.tooManyCharacters"));
             return;
         }
         switch (args[0]) {
             case "text" -> event.getGuild().createTextChannel(args[1], event.getGuild().getCategoryById(args[2])).queue();
             case "voice" -> event.getGuild().createVoiceChannel(args[1], event.getGuild().getCategoryById(args[2])).queue();
-            default -> MessageHelper.syntaxError(event, this, MessageHelper.translateMessage("syntax.createChannel", event));
+            default -> MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "syntax.createChannel"));
         }
     }
 }

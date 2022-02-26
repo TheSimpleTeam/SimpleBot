@@ -64,11 +64,11 @@ public class SpigotCommand extends Command {
             try {
                 Resource pluginId = new Resource(Integer.parseInt(args[0]));
                 EmbedBuilder successPluginIDEmbed = new EmbedBuilder()
-                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage("success.spigot.pluginID.success", event)))
-                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginName", event), pluginId.getResourceName(), false)
-                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginLink", event), pluginId.getResourceLink(), false)
-                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.pluginID", event), args[0], false)
-                        .addField(MessageHelper.translateMessage("success.spigot.pluginID.description", event), getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
+                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage(event, "success.spigot.pluginID.success")))
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginName"), pluginId.getResourceName(), false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginLink"), pluginId.getResourceLink(), false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginID"), args[0], false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
                         .setColor(Color.GREEN)
                         .setTimestamp(Instant.now())
                         .setThumbnail(pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString())
@@ -80,7 +80,7 @@ public class SpigotCommand extends Command {
                             .setColor(Color.RED)
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                             .setTimestamp(Instant.now())
-                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.pluginNull", event), args[0]));
+                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.pluginID.pluginNull"), args[0]));
                     event.reply(new MessageBuilder(errorPluginIDNullEmbed.build()).build());
                     return;
                 }
@@ -90,7 +90,7 @@ public class SpigotCommand extends Command {
                         .setColor(Color.RED)
                         .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                         .setTimestamp(Instant.now())
-                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginID.numberTooLarge", event), args[0]));
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.pluginID.numberTooLarge"), args[0]));
                 event.reply(new MessageBuilder(errorNumberTooLargeEmbed.build()).build());
             }
         } else {
@@ -99,7 +99,7 @@ public class SpigotCommand extends Command {
                 try {
                     List<Author> users = Author.getByName(args[1]);
                     EmbedBuilder successUserEmbed = new EmbedBuilder()
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.spigot.user.success", event), args[1]))
+                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.spigot.user.success"), args[1]))
                             .setTimestamp(Instant.now())
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                             .setColor(Color.GREEN)
@@ -114,7 +114,7 @@ public class SpigotCommand extends Command {
                                 .setColor(Color.RED)
                                 .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.user", event), args[1]));
+                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.user"), args[1]));
                         event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
                         return;
                     }
@@ -125,7 +125,7 @@ public class SpigotCommand extends Command {
                 try {
                     List<Resource> resources = Resource.getResourcesByName(event.getArgs());
                     EmbedBuilder successPluginNameEmbed = new EmbedBuilder()
-                            .setTitle(resources.size() == 1 ? String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.singular", event), UnicodeCharacters.whiteHeavyCheckMarkEmoji) : String.format(MessageHelper.translateMessage("success.spigot.pluginName.success.plural", event), UnicodeCharacters.whiteHeavyCheckMarkEmoji))
+                            .setTitle(resources.size() == 1 ? String.format(MessageHelper.translateMessage(event, "success.spigot.pluginName.success.singular"), UnicodeCharacters.whiteHeavyCheckMarkEmoji) : String.format(MessageHelper.translateMessage(event, "success.spigot.pluginName.success.plural"), UnicodeCharacters.whiteHeavyCheckMarkEmoji))
                             .setThumbnail("https://static.spigotmc.org/img/spigot.png")
                             .setTimestamp(Instant.now())
                             .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getEffectiveAvatarUrl())
@@ -140,7 +140,7 @@ public class SpigotCommand extends Command {
                                 .setColor(Color.RED)
                                 .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage("error.spigot.pluginName", event), event.getArgs()));
+                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.pluginName"), event.getArgs()));
                         event.reply(new MessageBuilder(errorPluginNameNullEmbed.build()).build());
                         return;
                     }

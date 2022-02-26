@@ -152,22 +152,22 @@ public class Main {
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
-        StringBuilder help = new StringBuilder(String.format(MessageHelper.translateMessage("help.commands", event), event.getSelfUser().getName()));
+        StringBuilder help = new StringBuilder(String.format(MessageHelper.translateMessage(event, "help.commands"), event.getSelfUser().getName()));
         Command.Category category = null;
         List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> {
             String key = o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName();
-            return MessageHelper.translateMessage(key, event);
+            return MessageHelper.translateMessage(event, key);
         })).toList();
         for (Command command : botCommands) {
             if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
                 if (!Objects.equals(category, command.getCategory())) {
                     category = command.getCategory();
                     category = category == null ? CommandCategories.NONE.category : category;
-                    help.append("\n\n__").append(MessageHelper.translateMessage(category.getName(), event)).append("__:\n");
+                    help.append("\n\n__").append(MessageHelper.translateMessage(event, category.getName())).append("__:\n");
                 }
                 String helpCommand;
                 try {
-                    helpCommand = MessageHelper.translateMessage(command.getHelp(), event);
+                    helpCommand = MessageHelper.translateMessage(event, command.getHelp());
                 } catch (NullPointerException ignored) {
                     helpCommand = command.getHelp();
                 }
@@ -178,12 +178,12 @@ public class Main {
         }
         User owner = event.getJDA().getUserById(b.ownerID);
         if (owner != null) {
-            help.append("\n\n").append(MessageHelper.translateMessage("help.contact", event)).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
+            help.append("\n\n").append(MessageHelper.translateMessage(event, "help.contact")).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
             if (event.getClient().getServerInvite() != null)
-                help.append(' ').append(MessageHelper.translateMessage("help.discord", event)).append(' ').append(b.serverInvite);
+                help.append(' ').append(MessageHelper.translateMessage(event, "help.discord")).append(' ').append(b.serverInvite);
         }
         event.replyInDm(help.toString(), unused -> {
-        }, t -> event.reply(MessageHelper.translateMessage("help.DMBlocked", event)));
+        }, t -> event.reply(MessageHelper.translateMessage(event, "help.DMBlocked")));
     }
 
     private static void setupLocalizations() throws IOException {

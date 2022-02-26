@@ -50,7 +50,7 @@ public class GithubCommand extends Command {
         if(isCommandDisabled()) {
             EmbedBuilder errorDisabledEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.github.disabled", event))
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.github.disabled"))
                     .setTimestamp(Instant.now())
                     .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getEffectiveAvatarUrl());
             event.reply(new MessageBuilder(errorDisabledEmbed.build()).build());
@@ -68,7 +68,7 @@ public class GithubCommand extends Command {
                 } catch (IOException ignored) {
                     EmbedBuilder errorRepositoryDontExistEmbed = new EmbedBuilder()
                             .setColor(Color.RED)
-                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.github.search.repositoryDontExist", event))
+                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.github.search.repositoryDontExist"))
                             .setTimestamp(Instant.now())
                             .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getEffectiveAvatarUrl());
                     event.reply(new MessageBuilder(errorRepositoryDontExistEmbed.build()).build());
@@ -78,15 +78,15 @@ public class GithubCommand extends Command {
                     EmbedBuilder successSearchEmbed = new EmbedBuilder()
                             .setTimestamp(Instant.now())
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.github.search.success", event))
+                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.github.search.success"))
                             .setThumbnail(repository.getOwner().getAvatarUrl())
                             .setColor(getColor(repository.getLanguage()))
-                            .addField(MessageHelper.translateMessage("success.github.search.repositoryName", event), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
-                            .addField(MessageHelper.translateMessage("success.github.search.author", event), repository.getOwnerName(), false)
-                            .addField(MessageHelper.translateMessage("success.github.search.description", event), repository.getDescription(), false)
-                            .addField(MessageHelper.translateMessage("success.github.search.fileREADME", event), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
-                            .addField(MessageHelper.translateMessage("success.github.search.license", event), getLicense(repository, event), false)
-                            .addField(MessageHelper.translateMessage("success.github.search.mainLanguage", event), repository.getLanguage(), false);
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.repositoryName"), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.author"), repository.getOwnerName(), false)
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false)
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.license"), getLicense(repository, event), false)
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false);
                     event.reply(new MessageBuilder(successSearchEmbed.build()).build());
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event, this);
@@ -96,7 +96,7 @@ public class GithubCommand extends Command {
                 try {
                     EmbedBuilder successListEmbed = new EmbedBuilder()
                             .setTimestamp(Instant.now())
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage("success.github.list", event), name))
+                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.github.list"), name))
                             .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                             .setThumbnail(github.getUser(args[1]).getAvatarUrl());
                     for (String ghname : github.getUser(args[1]).getRepositories().keySet()) {
@@ -115,7 +115,7 @@ public class GithubCommand extends Command {
     }
 
     private String getLicense(GHRepository repo, CommandEvent event) throws IOException {
-        return repo.getLicense() == null ? MessageHelper.translateMessage("success.github.noLicense", event) : repo.getLicense().getName();
+        return repo.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repo.getLicense().getName();
     }
 
     private String readmeString(String readme) {

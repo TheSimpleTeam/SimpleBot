@@ -23,7 +23,7 @@ public class GetBotIpCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         try {
-            event.replyInDm(String.format(MessageHelper.translateMessage("success.getBotIp", event), RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.ipify.org/"))));
+            event.replyInDm(String.format(MessageHelper.translateMessage(event, "success.getBotIp"), RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.ipify.org/"))));
         } catch (IOException ex) {
             MessageHelper.sendError(ex, event, this);
         }

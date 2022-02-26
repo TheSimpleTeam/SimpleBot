@@ -69,7 +69,7 @@ public class IssueCommand extends Command {
                     .setColor(Color.RED)
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.issue.githubTokenNotValid", event));
+                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.issue.githubTokenNotValid"));
             event.reply(new MessageBuilder(errorGithubTokenNotValidEmbed.build()).build());
             return;
         }
@@ -80,11 +80,11 @@ public class IssueCommand extends Command {
                         .setColor(Color.RED)
                         .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                         .setTimestamp(Instant.now())
-                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage("error.issue.bodyParameterNotHere", event));
+                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.issue.bodyParameterNotHere"));
                 event.reply(new MessageBuilder(errorBodyParameterNotHereEmbed.build()).build());
                 return;
             }
-           this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "title", MessageHelper.translateMessage("text.issue.issue", event)))).body(String.format(MessageHelper.translateMessage("success.issue.success", event) + "\n\n" + MessageHelper.translateMessage("text.issue.issue", event) + MessageHelper.translateMessage("text.issue.twoSuperimposedPoints", event) + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "body", event.getArgs())))).create();
+           this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "title", MessageHelper.translateMessage(event, "text.issue.issue")))).body(String.format(MessageHelper.translateMessage(event, "success.issue.success") + "\n\n" + MessageHelper.translateMessage(event, "text.issue.issue") + MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "body", event.getArgs())))).create();
         } catch (IOException | ParseException exception) {
             MessageHelper.sendError(exception, event, this);
         }

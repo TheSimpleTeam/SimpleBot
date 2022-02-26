@@ -57,18 +57,19 @@ public class Listener extends ListenerAdapter {
     //TODO New config for onGuildMemberJoin/Leave : a boolean that active the member join/leave embed into the system channel (Called = systemConfigJoin)
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        /*if(Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())){
+        if(Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId())){
             if(event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())) == null){
-
+                if(event.getGuild().getOwner() != null && event.getGuild().getOwner().getUser().hasPrivateChannel()) event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.channelConfiguredDontExist", null, null, null, (Object[]) null)).build()).queue());
+                return;
             }
-        }*/
+        }
         if (Main.getServerConfig().channelMemberJoin().containsKey(event.getGuild().getId()) && event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())) != null) {
             try {
                 event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder()
                         .setThumbnail(event.getMember().getUser().getEffectiveAvatarUrl())
-                        .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
-                        .addField(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
-                        .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("success.listener.onGuildMemberJoin.newMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.countMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
+                        .setTitle(String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin"), event.getMember().getEffectiveName(), event.getGuild().getName()))
+                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member"), event.getMember().getAsMention(), false)
+                        .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.newMember")), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
                         .setTimestamp(Instant.now())
                         .setColor(Color.GREEN)
                         .build()).build()).queue();
@@ -80,7 +81,7 @@ public class Listener extends ListenerAdapter {
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.listener.onGuildMemberJoin.channelMemberJoinHasntPermission", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
+                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.channelMemberJoinHasntPermission"), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
                                 .build()).build()).queue());
             }
             return;
@@ -91,9 +92,9 @@ public class Listener extends ListenerAdapter {
         try {
             event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder()
                     .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                    .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
-                    .addField(MessageHelper.translateMessage("text.listener.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
-                    .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("success.listener.onGuildMemberJoin.newMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.countMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
+                    .setTitle(String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin"), event.getMember().getEffectiveName(), event.getGuild().getName()))
+                    .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member"), event.getMember().getAsMention(), false)
+                    .addField(new StringBuilder().append(UnicodeCharacters.heavyPlusSign).append(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.newMember")).toString(), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
                     .setTimestamp(Instant.now())
                     .setColor(Color.GREEN)
                     .build()).build()).queue();
@@ -105,7 +106,7 @@ public class Listener extends ListenerAdapter {
                             .setColor(Color.RED)
                             .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
                             .setTimestamp(Instant.now())
-                            .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.listener.onGuildMemberJoin.systemChannelHasntPermission", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
+                            .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.systemChannelHasntPermission"), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
                             .build()).build()).queue());
         }
         /*}*/
@@ -118,7 +119,7 @@ public class Listener extends ListenerAdapter {
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.listener.onGuildMemberJoin.joinRoleNull", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
+                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.joinRoleNull"), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
                                 .build()).build()).queue());
                 return;
             }
@@ -130,7 +131,7 @@ public class Listener extends ListenerAdapter {
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.listener.onGuildMemberJoin.botCantManageRole", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), MessageHelper.getTag(event.getUser()), event.getGuild().getName())))
+                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.botCantManageRole"), MessageHelper.getTag(event.getUser()), event.getGuild().getName())))
                                 .build()).build()).queue());
                 return;
             }
@@ -144,7 +145,7 @@ public class Listener extends ListenerAdapter {
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.listener.onGuildMemberJoin.hierarchyRoles", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), MessageHelper.getTag(event.getUser()), event.getGuild().getName())))
+                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.hierarchyRoles"), MessageHelper.getTag(event.getUser()), event.getGuild().getName())))
                                 .build()).build()).queue());
             }
         }
@@ -156,9 +157,9 @@ public class Listener extends ListenerAdapter {
             try {
                 event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder()
                         .setThumbnail(event.getUser().getEffectiveAvatarUrl())
-                        .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberLeave.memberLeave", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getUser().getName(), event.getGuild().getName()))
-                        .addField(MessageHelper.translateMessage("text.listener.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
-                        .addField(String.format("%s %s", UnicodeCharacters.heavyMinusSign, MessageHelper.translateMessage("success.listener.onGuildMemberLeave.lostMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("success.listener.onGuildMemberLeave.countMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
+                        .setTitle(String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave"), event.getUser().getName(), event.getGuild().getName()))
+                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member"), event.getMember().getAsMention(), false)
+                        .addField(String.format("%s %s", UnicodeCharacters.heavyMinusSign, MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.lostMember")), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.countMember"), event.getGuild().getMemberCount()), false)
                         .setTimestamp(Instant.now())
                         .setColor(Color.GREEN)
                         .build()).build()).queue();
@@ -170,7 +171,7 @@ public class Listener extends ListenerAdapter {
                                 .setColor(Color.RED)
                                 .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
                                 .setTimestamp(Instant.now())
-                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.listener.onGuildMemberLeave.channelMemberLeaveHasntPermission", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
+                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberLeave.channelMemberLeaveHasntPermission"), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
                                 .build()).build()).queue());
             }
             return;
@@ -181,9 +182,9 @@ public class Listener extends ListenerAdapter {
         try {
             event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder()
                     .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                    .setTitle(String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.memberJoin", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getEffectiveName(), event.getGuild().getName()))
-                    .addField(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.member", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getMember().getAsMention(), false)
-                    .addField(String.format("%s %s", UnicodeCharacters.heavyPlusSign, MessageHelper.translateMessage("success.listener.onGuildMemberJoin.newMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild())), String.format(MessageHelper.translateMessage("success.listener.onGuildMemberJoin.countMember", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), event.getGuild().getMemberCount()), false)
+                    .setTitle(String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin"), event.getMember().getEffectiveName(), event.getGuild().getName()))
+                    .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member"), event.getMember().getAsMention(), false)
+                    .addField(new StringBuilder().append(UnicodeCharacters.heavyPlusSign).append(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.newMember")).toString(), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
                     .setTimestamp(Instant.now())
                     .setColor(Color.GREEN)
                     .build()).build()).queue();
@@ -195,7 +196,7 @@ public class Listener extends ListenerAdapter {
                             .setColor(Color.RED)
                             .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
                             .setTimestamp(Instant.now())
-                            .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("error.listener.onGuildMemberJoin.systemChannelHasntPermission", event.getUser(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
+                            .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.systemChannelHasntPermission"), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
                             .build()).build()).queue());
         }
         /*}*/
@@ -207,7 +208,7 @@ public class Listener extends ListenerAdapter {
         if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember())) {
             event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.listener.onGuildMessageReceived.prefix", event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), Main.getPrefix(event.getGuild()))))
+                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage(event.getAuthor(), null, event.getGuild(), "success.listener.onGuildMessageReceived.prefix"), Main.getPrefix(event.getGuild()))))
                     .setTimestamp(Instant.now())
                     .setColor(Color.GREEN)
                     .build()).build()).queue();
@@ -242,7 +243,7 @@ public class Listener extends ListenerAdapter {
             }
             event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage("success.listener.onGuildMessageReceived.didYouMean", event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), Main.getPrefix(event.getGuild()), cmd)))
+                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage(event.getAuthor(), null, event.getGuild(), "success.listener.onGuildMessageReceived.didYouMean"), Main.getPrefix(event.getGuild()), cmd)))
                     .setTimestamp(Instant.now())
                     .setColor(Color.GREEN)
                     .build()).build()).queue();
@@ -252,7 +253,7 @@ public class Listener extends ListenerAdapter {
             if (event.getMessage().getContentRaw().toLowerCase().startsWith(String.format("%sprohibitword", Main.getPrefix(event.getGuild()))) && event.getMember() != null && event.getMember().isOwner()) return;
             if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
                     .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage("success.listener.onGuildMessageReceived.prohibitedWord", event.getAuthor(), event.getGuild().getOwner() == null ? null : event.getGuild().getOwner().getUser(), event.getGuild()), prohibitedWord)))
+                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getAuthor(), null, event.getGuild(), "success.listener.onGuildMessageReceived.prohibitedWord"), prohibitedWord)))
                     .setTimestamp(Instant.now())
                     .setColor(Color.RED)
                     .build()).build()).queue());

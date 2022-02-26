@@ -55,7 +55,7 @@ public class TranslateCommand extends Command {
                     .setColor(Color.GREEN)
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage("success.translate.success", event));
+                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.translate.success"));
             if (args[0].length() > 1024) {
                 int charactersCount = 0;
                 List<String> list = new ArrayList<>();
@@ -71,9 +71,9 @@ public class TranslateCommand extends Command {
                 }
                 System.out.println(list);
                 for (int i = 0; i < Math.ceil(args[0].length() / 1024D); i++)
-                    successEmbed.addField(i == 0 ? MessageHelper.translateMessage("success.translate.text", event) : "", list.get(i), true);
+                    successEmbed.addField(i == 0 ? MessageHelper.translateMessage(event, "success.translate.text") : "", list.get(i), true);
             } else
-                successEmbed.addField(MessageHelper.translateMessage("success.translate.text", event), args[0], true);
+                successEmbed.addField(MessageHelper.translateMessage(event, "success.translate.text"), args[0], true);
             //System.out.println(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)));
             String translatedArgs = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString();
             if (translatedArgs.length() > 1024) {
@@ -91,14 +91,14 @@ public class TranslateCommand extends Command {
                 }
                 for (String str : list) System.out.println(str);
                 for (int i = 0; i < Math.ceil(translatedArgs.length() / 1024D); i++)
-                    successEmbed.addField(i == 0 ? MessageHelper.translateMessage("success.translate.translatedText", event) : "", list.get(i), true);
+                    successEmbed.addField(i == 0 ? MessageHelper.translateMessage(event, "success.translate.translatedText") : "", list.get(i), true);
             } else
-                successEmbed.addField(MessageHelper.translateMessage("success.translate.translatedText", event), translatedArgs, true);
-            successEmbed.addField(MessageHelper.translateMessage("success.translate.isoCodeText", event), language1.name().toLowerCase(Locale.ROOT), true)
-                    .addField(MessageHelper.translateMessage("success.translate.languageText", event), MessageHelper.translateMessage(language1.languageName, event), true)
+                successEmbed.addField(MessageHelper.translateMessage(event, "success.translate.translatedText"), translatedArgs, true);
+            successEmbed.addField(MessageHelper.translateMessage(event, "success.translate.isoCodeText"), language1.name().toLowerCase(Locale.ROOT), true)
+                    .addField(MessageHelper.translateMessage(event, "success.translate.languageText"), MessageHelper.translateMessage(event, language1.languageName), true)
                     .addBlankField(true)
-                    .addField(MessageHelper.translateMessage("success.translate.isoCodeTranslation", event), language2.name().toLowerCase(Locale.ROOT), true)
-                    .addField(MessageHelper.translateMessage("success.translate.languageTranslation", event), MessageHelper.translateMessage(language2.languageName, event), true)
+                    .addField(MessageHelper.translateMessage(event, "success.translate.isoCodeTranslation"), language2.name().toLowerCase(Locale.ROOT), true)
+                    .addField(MessageHelper.translateMessage(event, "success.translate.languageTranslation"), MessageHelper.translateMessage(event, language2.languageName), true)
                     .addBlankField(true);
             event.reply(new MessageBuilder(successEmbed.build()).build());
         } catch (IOException exception) {
