@@ -14,7 +14,6 @@ import fr.noalegeek.pepite_dor_bot.cli.commands.HelpCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.SendMessageCommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.TestCommand;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
-import fr.noalegeek.pepite_dor_bot.commands.moderation.TempbanCommand;
 import fr.noalegeek.pepite_dor_bot.config.Infos;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
@@ -148,6 +147,15 @@ public class Main {
             }, 5, TimeUnit.SECONDS);
         } else {
             LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
+        }
+        for(Map config : getServerConfigs()){
+            if(config == null){
+                try {
+                    Listener.saveConfigs();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            }
         }
     }
 
@@ -351,6 +359,10 @@ public class Main {
     }
 
     public static ServerConfig getServerConfig() { return serverConfig; }
+
+    public static Map[] getServerConfigs(){
+        return new Map[]{serverConfig.channelMemberLeave(), serverConfig.channelMemberJoin(), serverConfig.guildJoinRole(), serverConfig.prefix(), serverConfig.prohibitWords(), serverConfig.language(), serverConfig.mutedRole(), serverConfig.tempBan(), serverConfig.withoutMutedRole()};
+    }
 
     public static EventWaiter getEventWaiter() {
         return waiter;

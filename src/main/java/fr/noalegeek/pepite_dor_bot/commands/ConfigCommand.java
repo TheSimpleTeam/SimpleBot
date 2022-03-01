@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
+import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -33,26 +34,14 @@ public class ConfigCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().isOwner()){
-            event.reply(new MessageBuilder(new EmbedBuilder()
-                    .setColor(Color.RED)
-                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTimestamp(Instant.now())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, MessageHelper.translateMessage(event, "error.config.notOwner")))
-                    .build()).build());
-            return;
-        }
-        for(Map config : getManualConfigs()){
-            if(config == null){
-                try {
-                    new File("config/server-config.json").delete();
-                    Main.setupServerConfig();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-                break;
+        Arrays.stream(Main.getServerConfigs()).filter(Objects::isNull).forEach(config -> {
+            try {
+                new File("config/server-config.json").delete();
+                Main.setupServerConfig();
+            } catch (IOException exception) {
+                exception.printStackTrace();
             }
-        }
+        });
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, "syntax.config");
@@ -429,9 +418,5 @@ public class ConfigCommand extends Command {
                 }
             }
         }
-    }
-
-    private static Map[] getManualConfigs(){ // Returns an array of maps that are configurations that can only be changed by command and by the server's owner
-        return new Map[]{Main.getServerConfig().channelMemberJoin(), Main.getServerConfig().channelMemberLeave(), Main.getServerConfig().language(), Main.getServerConfig().prefix(), Main.getServerConfig().guildJoinRole(), Main.getServerConfig().prohibitWords()};
     }
 }
