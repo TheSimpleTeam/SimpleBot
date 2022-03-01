@@ -4,7 +4,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.0"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
     id 'com.bmuschko.docker-java-application' version '7.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC2'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
 }
 
@@ -67,7 +67,7 @@ dependencies {
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

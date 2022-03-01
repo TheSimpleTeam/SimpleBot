@@ -3,6 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
@@ -34,7 +35,7 @@ public class ConfigCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        Arrays.stream(Main.getServerConfigs()).filter(Objects::isNull).forEach(config -> {
+        Arrays.stream(ServerConfig.class.getDeclaredFields()).filter(Objects::isNull).forEach(config -> {
             try {
                 new File("config/server-config.json").delete();
                 Main.setupServerConfig();

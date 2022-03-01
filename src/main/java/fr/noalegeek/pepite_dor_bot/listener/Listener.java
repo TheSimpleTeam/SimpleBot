@@ -82,13 +82,11 @@ public class Listener extends ListenerAdapter {
                         .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member"), event.getMember().getAsMention(), false)
                         .addField(new StringBuilder().append(UnicodeCharacters.heavyPlusSign).append(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.newMember")).toString(), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
-                return;
             } catch (InsufficientPermissionException exception) {
                 if (event.getGuild().getOwner() != null) event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.channelMemberJoinHasntPermission", null, null, null, MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild())).build()).build()).queue());
             }
         }
-        /*if(Main.getServerConfig().systemChannelMemberJoin().contains(event.getGuild().getId())){
-
+        /* else if(Main.getServerConfig().systemChannelMemberJoin().contains(event.getGuild().getId())){
         if (event.getGuild().getSystemChannel() == null)
             return;
         try {
@@ -104,53 +102,33 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        if (Main.getServerConfig().channelMemberLeave().containsKey(event.getGuild().getId()) && event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())) != null) {
+        if (Main.getServerConfig().channelMemberLeave().containsKey(event.getGuild().getId())) {
+            if(event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())) == null){
+                if(event.getGuild().getOwner() != null && event.getGuild().getOwner().getUser().hasPrivateChannel()) event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(), "error.listener.onGuildMemberLeave.channelConfiguredDontExist", null, null, null, MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))).build()).queue());
+                return;
+            }
             try {
-                event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(new EmbedBuilder()
-                        .setThumbnail(event.getUser().getEffectiveAvatarUrl())
-                        .setTitle(String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave"), event.getUser().getName(), event.getGuild().getName()))
+                event.getGuild().getTextChannelById(Main.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave", null, null, event.getUser().getEffectiveAvatarUrl(), event.getUser().getName(), event.getGuild().getName())
                         .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member"), event.getMember().getAsMention(), false)
-                        .addField(String.format("%s %s", UnicodeCharacters.heavyMinusSign, MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.lostMember")), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.countMember"), event.getGuild().getMemberCount()), false)
-                        .setTimestamp(Instant.now())
-                        .setColor(Color.GREEN)
+                        .addField(new StringBuilder().append(UnicodeCharacters.heavyMinusSign).append(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.lostMember")).toString(), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.countMember"), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
             } catch (InsufficientPermissionException exception) {
-                if (event.getGuild().getOwner() == null)
-                    return;
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
-                        privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
-                                .setColor(Color.RED)
-                                .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
-                                .setTimestamp(Instant.now())
-                                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberLeave.channelMemberLeaveHasntPermission"), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
-                                .build()).build()).queue());
+                if (event.getGuild().getOwner() != null)
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(), "error.listener.onGuildMemberLeave.channelMemberLeaveHasntPermission", null, null, null, MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild())).build()).build()).queue());
             }
-            return;
         }
+        /*else if(Main.getServerConfig().systemChannelMemberJoin().get(event.getGuild().getId())){
         if (event.getGuild().getSystemChannel() == null)
             return;
-        /*if(Main.getServerConfig().systemChannelMemberJoin().get(event.getGuild().getId())){*/
         try {
-            event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(new EmbedBuilder()
-                    .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                    .setTitle(String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin"), event.getMember().getEffectiveName(), event.getGuild().getName()))
+            event.getGuild().getSystemChannel().sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin", null, null, event.getMember().getUser().getAvatarUrl(), event.getMember().getEffectiveName(), event.getGuild().getName())
                     .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member"), event.getMember().getAsMention(), false)
                     .addField(new StringBuilder().append(UnicodeCharacters.heavyPlusSign).append(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.newMember")).toString(), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
-                    .setTimestamp(Instant.now())
-                    .setColor(Color.GREEN)
                     .build()).build()).queue();
         } catch (InsufficientPermissionException exception) {
-            if (event.getGuild().getOwner() == null)
-                return;
-            event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel ->
-                    privateChannel.sendMessage(new MessageBuilder(new EmbedBuilder()
-                            .setColor(Color.RED)
-                            .setFooter(event.getGuild().getOwner().getUser().getName(), event.getGuild().getOwner().getUser().getEffectiveAvatarUrl())
-                            .setTimestamp(Instant.now())
-                            .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.systemChannelHasntPermission"), MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild()))))
-                            .build()).build()).queue());
+            if (event.getGuild().getOwner() == null) event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(), "error.listener.onGuildMemberJoin.systemChannelHasntPermission", null, null, null, MessageHelper.getTag(event.getUser()), event.getGuild().getName(), Main.getPrefix(event.getGuild()), Main.getPrefix(event.getGuild())).build()).build()).queue());
         }
-        /*}*/
+        }*/
     }
 
     @Override

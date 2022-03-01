@@ -148,15 +148,6 @@ public class Main {
         } else {
             LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
         }
-        for(Map config : getServerConfigs()){
-            if(config == null){
-                try {
-                    Listener.saveConfigs();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-            }
-        }
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot b) {
@@ -359,10 +350,6 @@ public class Main {
     }
 
     public static ServerConfig getServerConfig() { return serverConfig; }
-
-    public static Map[] getServerConfigs(){
-        return new Map[]{serverConfig.channelMemberLeave(), serverConfig.channelMemberJoin(), serverConfig.guildJoinRole(), serverConfig.prefix(), serverConfig.prohibitWords(), serverConfig.language(), serverConfig.mutedRole(), serverConfig.tempBan(), serverConfig.withoutMutedRole()};
-    }
 
     public static EventWaiter getEventWaiter() {
         return waiter;
