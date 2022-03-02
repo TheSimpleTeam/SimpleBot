@@ -30,16 +30,12 @@ import fr.noalegeek.pepite_dor_bot.GithubInfo;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.cli.*;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
-import java.awt.*;
 import java.io.IOException;
-import java.time.Instant;
 
 @RequireConfig("botGithubToken")
 public class IssueCommand extends Command {
@@ -65,23 +61,13 @@ public class IssueCommand extends Command {
         try {
             this.github.checkApiUrlValidity();
         } catch (IOException ex) {
-            EmbedBuilder errorGithubTokenNotValidEmbed = new EmbedBuilder()
-                    .setColor(Color.RED)
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTimestamp(Instant.now())
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.issue.githubTokenNotValid"));
-            event.reply(new MessageBuilder(errorGithubTokenNotValidEmbed.build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.githubTokenNotValid", null, null, null, (Object[]) null).build()).build());
             return;
         }
         try {
             addOptions(new Options());
             if (new DefaultParser().parse(new Options(), args).getOptions().length != 0 && !new DefaultParser().parse(new Options(), args).hasOption("body")) {
-                EmbedBuilder errorBodyParameterNotHereEmbed = new EmbedBuilder()
-                        .setColor(Color.RED)
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                        .setTimestamp(Instant.now())
-                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.issue.bodyParameterNotHere"));
-                event.reply(new MessageBuilder(errorBodyParameterNotHereEmbed.build()).build());
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.bodyParameterNotHere", null, null, null, (Object[]) null).build()).build());
                 return;
             }
            this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "title", MessageHelper.translateMessage(event, "text.issue.issue")))).body(String.format(MessageHelper.translateMessage(event, "success.issue.success") + "\n\n" + MessageHelper.translateMessage(event, "text.issue.issue") + MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "body", event.getArgs())))).create();

@@ -31,7 +31,7 @@ public class MessageHelper {
     public static void syntaxError(CommandEvent event, Command command, String informations) {
         StringBuilder argumentsBuilder = new StringBuilder();
         if (command.getArguments() == null)
-            argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.argumentsNull"));
+            argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.argumentsNull"));
         else if (!command.getArguments().startsWith("arguments."))
             argumentsBuilder.append(command.getArguments());
         else {
@@ -49,10 +49,10 @@ public class MessageHelper {
                         if (!Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty()) {
                             argumentsBuilder.append("__");
                             switch (finalLenght) {
-                                case 1 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.oneArgument"));
-                                case 2 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.twoArguments"));
-                                case 3 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.threeArguments"));
-                                case 4 -> argumentsBuilder.append(translateMessage(event, "text.commands.syntaxError.arguments.fourArguments"));
+                                case 1 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.oneArgument"));
+                                case 2 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.twoArguments"));
+                                case 3 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.threeArguments"));
+                                case 4 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.fourArguments"));
                                 default -> argumentsBuilder.append("The devs forgotten to add the syntax with the length of ").append(finalLenght);
                             }
                             argumentsBuilder.append("__").append("\n\n");
@@ -68,19 +68,15 @@ public class MessageHelper {
         }
         String examples;
         if (command.getExample() == null)
-            examples = translateMessage(event, "text.commands.syntaxError.examples.exampleNull");
+            examples = translateMessage(event, "error.commands.syntaxError.examples.exampleNull");
         else if (command.getExample().startsWith("example."))
             examples = Arrays.toString(Stream.of(translateMessage(event, command.getExample()).split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
         else
             examples = Arrays.toString(Stream.of(command.getExample().split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
-        EmbedBuilder syntaxErrorEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setTimestamp(Instant.now())
-                .setFooter(getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage(event, "text.commands.syntaxError.syntaxError"), command.getName()))
-                .addField(command.getArguments().startsWith("arguments.") ? translateMessage(event, command.getArguments()).split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.arguments.argument") : translateMessage(event, "text.commands.syntaxError.arguments.arguments") : command.getArguments().split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.arguments.argument") : translateMessage(event, "text.commands.syntaxError.arguments.arguments"), argumentsBuilder.toString(), false)
-                .addField(translateMessage(event, "text.commands.syntaxError.help"), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage(event, "text.commands.syntaxError.help.helpNull") : translateMessage(event, command.getHelp()).contains("²") ? translateMessage(event, command.getHelp()).split("²")[0] : translateMessage(event, command.getHelp()), false)
-                .addField(command.getExample().startsWith("example.") ? translateMessage(event, command.getExample()).split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.examples.example") : translateMessage(event, "text.commands.syntaxError.examples.examples") : command.getExample().split("²").length == 1 ? translateMessage(event, "text.commands.syntaxError.examples.example") : translateMessage(event, "text.commands.syntaxError.examples.examples"), examples, false);
+        EmbedBuilder embedBuilder = getEmbed(event, "error.commands.syntaxError.syntaxError", null, null, null, command.getName())
+                .addField(command.getArguments().startsWith("arguments.") ? translateMessage(event, command.getArguments()).split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.arguments.argument") : translateMessage(event, "error.commands.syntaxError.arguments.arguments") : command.getArguments().split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.arguments.argument") : translateMessage(event, "error.commands.syntaxError.arguments.arguments"), argumentsBuilder.toString(), false)
+                .addField(translateMessage(event, "error.commands.syntaxError.help"), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage(event, "error.commands.syntaxError.help.helpNull") : translateMessage(event, command.getHelp()).contains("²") ? translateMessage(event, command.getHelp()).split("²")[0] : translateMessage(event, command.getHelp()), false)
+                .addField(command.getExample().startsWith("example.") ? translateMessage(event, command.getExample()).split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.examples.example") : translateMessage(event, "error.commands.syntaxError.examples.examples") : command.getExample().split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.examples.example") : translateMessage(event, "error.commands.syntaxError.examples.examples"), examples, false);
         if (informations != null) {
             if (translateMessage(event, informations).length() > 1024) {
                 int field = 0;
@@ -89,30 +85,22 @@ public class MessageHelper {
                     informationsBuilder.append(character);
                     if(character == '²') {
                         field++;
-                        syntaxErrorEmbed.addField(field == 1 ? translateMessage(event, "text.commands.syntaxError.informations") : "", informationsBuilder.toString(), false);
+                        embedBuilder.addField(field == 1 ? translateMessage(event, "error.commands.syntaxError.informations") : "", informationsBuilder.toString(), false);
                     }
                 }
             } else
-                syntaxErrorEmbed.addField(translateMessage(event, "text.commands.syntaxError.informations"), translateMessage(event, informations), false);
+                embedBuilder.addField(translateMessage(event, "error.commands.syntaxError.informations"), translateMessage(event, informations), false);
         }
         //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
-        event.reply(new MessageBuilder(syntaxErrorEmbed.build()).build());
+        event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 
     public static void sendError(Exception exception, CommandEvent event, Command command) {
-        EmbedBuilder sendErrorEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setFooter(getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTimestamp(Instant.now())
-                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + translateMessage(event, "text.commands.sendError.error"))
-                .addField(translateMessage(event, "text.commands.sendError.sendError"), exception.getMessage(), false)
-                .addField(translateMessage(event, "text.commands.sendError.command"), Main.getPrefix(event.getGuild()) + command.getName(), false);
-        if (command.getArguments() == null || command.getArguments().isEmpty()) {
-            event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
-            return;
-        }
-        sendErrorEmbed.addField(translateMessage(event, "text.commands.sendError.arguments"), event.getArgs(), false);
-        event.reply(new MessageBuilder(sendErrorEmbed.build()).build());
+        EmbedBuilder embedBuilder = getEmbed(event, "error.commands.sendError.error", null, null, null, (Object[]) null)
+                .addField(translateMessage(event, "error.commands.sendError.sendError"), exception.getMessage(), false)
+                .addField(translateMessage(event, "error.commands.sendError.command"), Main.getPrefix(event.getGuild()) + command.getName(), false);
+        if (command.getArguments() == null || command.getArguments().isEmpty()) embedBuilder.addField(translateMessage(event, "error.commands.sendError.arguments"), event.getArgs(), false);
+        event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 
     public static EmbedBuilder getEmbed(CommandEvent event, String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
@@ -140,15 +128,7 @@ public class MessageHelper {
 
     public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event) {
         if (member.canInteract(target) && bot.canInteract(target)) return false;
-        EmbedBuilder errorCantInteractEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setFooter(getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTimestamp(Instant.now());
-        if (!member.canInteract(target))
-            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + translateMessage(event, "text.commands.cantInteract.member"));
-        if (!bot.canInteract(target))
-            errorCantInteractEmbed.setTitle(UnicodeCharacters.crossMarkEmoji + " " + translateMessage(event, "text.commands.cantInteract.bot"));
-        event.reply(new MessageBuilder(errorCantInteractEmbed.build()).build());
+        event.reply(new MessageBuilder(getEmbed(event, !member.canInteract(target) ? "error.commands.cantInteract.member" : "error.commands.cantInteract.bot", null, null, null, (Object[]) null).build()).build());
         return true;
     }
 
@@ -169,19 +149,15 @@ public class MessageHelper {
             if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
                 skip++;
             final long _skip = skip;
-            EmbedBuilder errorKeyNullEmbed = new EmbedBuilder()
-                    .setColor(Color.RED)
-                    .setTimestamp(Instant.now())
-                    .setFooter(getTag(author), author.getEffectiveAvatarUrl())
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(translateMessage(author, channel, guild, "error.translateMessage.error"), key))
+            EmbedBuilder embedBuilder = getEmbed(author, channel, guild, "error.translateMessage.error", null, null, null, key)
                     .addField(translateMessage(author, channel, guild, "error.translateMessage.key"), key, false)
                     .addField(translateMessage(author, channel, guild, "error.translateMessage.class"), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
                     .addField(translateMessage(author, channel, guild, "error.translateMessage.method"), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
                     .addField(translateMessage(author, channel, guild, "error.translateMessage.lineNumber"), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
             if (channel != null)
-                channel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue();
+                channel.sendMessage(new MessageBuilder(embedBuilder.build()).build()).queue();
             if (guild.getOwner() != null)
-                guild.getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(errorKeyNullEmbed.build()).build()).queue());
+                guild.getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(embedBuilder.build()).build()).queue());
             throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {

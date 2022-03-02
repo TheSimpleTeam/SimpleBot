@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 
 import java.awt.Color;
-import java.time.Instant;
 
 public class GuildInfoCommand extends Command {
 
@@ -25,7 +24,7 @@ public class GuildInfoCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.guildInfo.serverName", Color.BLUE, null, event.getGuild().getIconUrl(), (Object[]) null)
+        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.guildInfo.success", Color.BLUE, null, event.getGuild().getIconUrl(), event.getGuild().getName())
                 .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.guildInfo.success"), event.getGuild().getName())).toString())
                 .addField(MessageHelper.translateMessage(event, "success.guildInfo.nitroLevel"), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
                 .addField(MessageHelper.translateMessage(event, "success.guildInfo.membersOnTheServer"), String.valueOf(event.getGuild().getMemberCount()), false)

@@ -4,10 +4,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
-import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.io.IOUtils;
@@ -21,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.util.Map;
 
 @RequireConfig("botGithubToken")
@@ -48,12 +45,7 @@ public class GithubCommand extends Command {
             return;
         }
         if(isCommandDisabled()) {
-            EmbedBuilder errorDisabledEmbed = new EmbedBuilder()
-                    .setColor(Color.RED)
-                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.github.disabled"))
-                    .setTimestamp(Instant.now())
-                    .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getEffectiveAvatarUrl());
-            event.reply(new MessageBuilder(errorDisabledEmbed.build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.disabled", null, null, null, (Object[]) null).build()).build());
             return;
         }
         switch (args[0]) {
@@ -66,43 +58,29 @@ public class GithubCommand extends Command {
                 try {
                     repository = github.getRepository(args[1] + "/" + args[2]);
                 } catch (IOException ignored) {
-                    EmbedBuilder errorRepositoryDontExistEmbed = new EmbedBuilder()
-                            .setColor(Color.RED)
-                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.github.search.repositoryDontExist"))
-                            .setTimestamp(Instant.now())
-                            .setFooter(MessageHelper.getTag(event.getAuthor()) + event.getAuthor().getEffectiveAvatarUrl());
-                    event.reply(new MessageBuilder(errorRepositoryDontExistEmbed.build()).build());
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.search.repositoryDontExist", null, null, null, (Object[]) null).build()).build());
                     return;
                 }
                 try {
-                    EmbedBuilder successSearchEmbed = new EmbedBuilder()
-                            .setTimestamp(Instant.now())
-                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.github.search.success"))
-                            .setThumbnail(repository.getOwner().getAvatarUrl())
-                            .setColor(getColor(repository.getLanguage()))
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.github.search.success", getColor(repository.getLanguage()), null, repository.getOwner().getAvatarUrl(), (Object[]) null)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.repositoryName"), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.author"), repository.getOwnerName(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.license"), getLicense(repository, event), false)
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false);
-                    event.reply(new MessageBuilder(successSearchEmbed.build()).build());
-                } catch (IOException ex) {
-                    MessageHelper.sendError(ex, event, this);
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false)
+                            .build()).build());
+                } catch (IOException exception) {
+                    MessageHelper.sendError(exception, event, this);
                 }
                 break;
             case "list":
                 try {
-                    EmbedBuilder successListEmbed = new EmbedBuilder()
-                            .setTimestamp(Instant.now())
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.github.list"), name))
-                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                            .setThumbnail(github.getUser(args[1]).getAvatarUrl());
+                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.list", null, null, github.getUser(args[1]).getAvatarUrl(), name);
                     for (String ghname : github.getUser(args[1]).getRepositories().keySet()) {
-                        successListEmbed.addField(ghname, github.getUser(args[1]).getRepositories().get(ghname).getHtmlUrl().toString(), false);
+                        embedBuilder.addField(ghname, github.getUser(args[1]).getRepositories().get(ghname).getHtmlUrl().toString(), false);
                     }
-                    event.reply(new MessageBuilder(successListEmbed.build()).build());
+                    event.reply(new MessageBuilder(embedBuilder.build()).build());
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event, this);
                     return;
@@ -139,14 +117,13 @@ public class GithubCommand extends Command {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    private int getColor(String language) {
+    private Color getColor(String language) {
         try {
             Map<String, Map<String, String>> lang = Main.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
-            return getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"));
+            return Color.getColor(String.valueOf(getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"))));
         } catch (IOException exception) {
             exception.printStackTrace();
-            return Color.RED.getRGB();
+            return Color.RED;
         }
     }
 
