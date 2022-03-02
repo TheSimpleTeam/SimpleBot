@@ -39,6 +39,7 @@ import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 
 public class SpigotCommand extends Command {
@@ -60,62 +61,37 @@ public class SpigotCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        if(args[0].chars().allMatch(Character::isDigit)) { //Search for plugin with a ID
+        if(args[0].chars().allMatch(Character::isDigit)) { //Search for plugin with an ID
             try {
                 Resource pluginId = new Resource(Integer.parseInt(args[0]));
-                EmbedBuilder successPluginIDEmbed = new EmbedBuilder()
-                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage(event, "success.spigot.pluginID.success")))
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.spigot.pluginID.success", null, null, pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString(), (Object[]) null)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginName"), pluginId.getResourceName(), false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginLink"), pluginId.getResourceLink(), false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginID"), args[0], false)
-                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
-                        .setColor(Color.GREEN)
-                        .setTimestamp(Instant.now())
-                        .setThumbnail(pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
-                event.reply(new MessageBuilder(successPluginIDEmbed.build()).build());
-            } catch (IOException e) {
-                if(e instanceof FileNotFoundException) {
-                    EmbedBuilder errorPluginIDNullEmbed = new EmbedBuilder()
-                            .setColor(Color.RED)
-                            .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                            .setTimestamp(Instant.now())
-                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.pluginID.pluginNull"), args[0]));
-                    event.reply(new MessageBuilder(errorPluginIDNullEmbed.build()).build());
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
+                        .build()).build());
+            } catch (IOException exception) {
+                if(exception instanceof FileNotFoundException) {
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.spigot.pluginID.pluginNull", null, null, null, args[0]).build()).build());
                     return;
                 }
-                MessageHelper.sendError(e, event, this);
-            } catch (NumberFormatException e){
-                EmbedBuilder errorNumberTooLargeEmbed = new EmbedBuilder()
-                        .setColor(Color.RED)
-                        .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                        .setTimestamp(Instant.now())
-                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.pluginID.numberTooLarge"), args[0]));
-                event.reply(new MessageBuilder(errorNumberTooLargeEmbed.build()).build());
+                MessageHelper.sendError(exception, event, this);
+            } catch (NumberFormatException exception){
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, args[0]).build()).build());
             }
         } else {
             //Search for a Spigot user
             if(args[0].equalsIgnoreCase("user")) {
                 try {
                     List<Author> users = Author.getByName(args[1]);
-                    EmbedBuilder successUserEmbed = new EmbedBuilder()
-                            .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "success.spigot.user.success"), args[1]))
-                            .setTimestamp(Instant.now())
-                            .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                            .setColor(Color.GREEN)
-                            .setThumbnail(users.stream().findFirst().get().getIconURL());
+                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.spigot.user.success", null, null, users.stream().findFirst().get().getIconURL(), args[1]);
                     for (Author author : users) {
-                        successUserEmbed.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
+                        embedBuilder.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
                     }
-                    event.reply(new MessageBuilder(successUserEmbed.build()).build());
+                    event.reply(new MessageBuilder(embedBuilder.build()).build());
                 } catch (IOException exception){
                     if(exception instanceof FileNotFoundException) {
-                        EmbedBuilder errorEmptyUserListEmbed = new EmbedBuilder()
-                                .setColor(Color.RED)
-                                .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                                .setTimestamp(Instant.now())
-                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.user"), args[1]));
-                        event.reply(new MessageBuilder(errorEmptyUserListEmbed.build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.spigot.user", null, null, null, args[1]).build()).build());
                         return;
                     }
                     MessageHelper.sendError(exception, event, this);
@@ -124,41 +100,19 @@ public class SpigotCommand extends Command {
                 //Search for plugin with his name
                 try {
                     List<Resource> resources = Resource.getResourcesByName(event.getArgs());
-                    EmbedBuilder successPluginNameEmbed = new EmbedBuilder()
-                            .setTitle(resources.size() == 1 ? String.format(MessageHelper.translateMessage(event, "success.spigot.pluginName.success.singular"), UnicodeCharacters.whiteHeavyCheckMarkEmoji) : String.format(MessageHelper.translateMessage(event, "success.spigot.pluginName.success.plural"), UnicodeCharacters.whiteHeavyCheckMarkEmoji))
-                            .setThumbnail("https://static.spigotmc.org/img/spigot.png")
-                            .setTimestamp(Instant.now())
-                            .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl() == null ? event.getAuthor().getDefaultAvatarUrl() : event.getAuthor().getEffectiveAvatarUrl())
-                            .setColor(Color.GREEN);
+                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, resources.size() == 1 ? "success.spigot.pluginName.success.singular" : "success.spigot.pluginName.success.plural", null, null, "https://static.spigotmc.org/img/spigot.png", (Object[]) null);
                     for (Resource resource : resources) {
-                        successPluginNameEmbed.addField(resource.getResourceName(), resource.getResourceLink(), true);
+                        embedBuilder.addField(resource.getResourceName(), resource.getResourceLink(), true);
                     }
-                    event.reply(successPluginNameEmbed.build());
+                    event.reply(embedBuilder.build());
                 } catch (IOException | NullPointerException e) {
                     if(e instanceof FileNotFoundException) {
-                        EmbedBuilder errorPluginNameNullEmbed = new EmbedBuilder()
-                                .setColor(Color.RED)
-                                .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                                .setTimestamp(Instant.now())
-                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.spigot.pluginName"), event.getArgs()));
-                        event.reply(new MessageBuilder(errorPluginNameNullEmbed.build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.spigot.pluginName", null, null, null, event.getArgs()).build()).build());
                         return;
                     }
                     MessageHelper.sendError(e, event, this);
                 }
             }
         }
-    }
-
-    private String getDescription(String desc) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < desc.toCharArray().length; i++) {
-            if (i == 1020) {
-                builder.append("...");
-                break;
-            }
-            builder.append(desc.toCharArray()[i]);
-        }
-        return builder.toString();
     }
 }

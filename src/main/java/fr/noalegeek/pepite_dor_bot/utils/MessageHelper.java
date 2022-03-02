@@ -122,6 +122,18 @@ public class MessageHelper {
         return embedBuilder;
     }
 
+    public static String getDescription(String desc) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < desc.toCharArray().length; i++) {
+            if (i == 1021) {
+                stringBuilder.append("...");
+                break;
+            }
+            stringBuilder.append(desc.toCharArray()[i]);
+        }
+        return stringBuilder.toString();
+    }
+
     public static String formatShortDate(OffsetDateTime date) {
         return date.getDayOfMonth() + "/" + (date.getMonthValue() < 10 ? "0" + date.getMonthValue(): date.getMonthValue()) + "/" + date.getYear();
     }

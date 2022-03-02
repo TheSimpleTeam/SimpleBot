@@ -37,12 +37,7 @@ public class MCServerCommand extends Command {
         }
         try {
             if (!Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("online").getAsBoolean()) {
-                EmbedBuilder errorServerOfflineEmbed = new EmbedBuilder()
-                        .setColor(Color.RED)
-                        .setTimestamp(Instant.now())
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.mcServer.offlineServer"));
-                event.reply(new MessageBuilder(errorServerOfflineEmbed.build()).build());
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.mcServer.offlineServer", null, null, null, (Object[]) null).build()).build());
                 return;
             }
             //We get the informations like https://github.com/Minemobs/McStatusJava/blob/master/src/main/java/fr/minemobs/test/Main.java

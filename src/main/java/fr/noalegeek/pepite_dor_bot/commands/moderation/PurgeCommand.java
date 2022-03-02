@@ -41,11 +41,7 @@ public class PurgeCommand extends Command {
             MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "syntax.purge"));
             return;
         }
-        try {
-            event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getMessage().delete().queue(unused -> event.getTextChannel().purgeMessages(messages)));
-        } catch (IllegalArgumentException ex){
-            event.getChannel().sendMessage(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.purge")).queueAfter(10, TimeUnit.SECONDS);
-        }
+        event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getTextChannel().purgeMessages(messages));
         event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.purge"), clearMessages), messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
     }
 }

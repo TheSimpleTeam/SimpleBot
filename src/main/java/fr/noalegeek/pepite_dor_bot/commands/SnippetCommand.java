@@ -29,15 +29,11 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import sh.stein.carbon.CarbonService;
 import sh.stein.carbon.ImageOptions;
 import sh.stein.carbon.PlaywrightCarbonService;
 
-import java.awt.Color;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,13 +73,7 @@ public class SnippetCommand extends Command {
                 .fontFamily(ImageOptions.FontFamily.JetBrainsMono)
                 .theme(ImageOptions.Theme.NightOwl)
                 .build();
-        EmbedBuilder warningTakeTooLongEmbed = new EmbedBuilder()
-                .setColor(Color.ORANGE)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTimestamp(Instant.now())
-                .setTitle(String.format("%s %s",
-                        UnicodeCharacters.warningSignEmoji, MessageHelper.translateMessage(event, "warning.snippet")));
-        event.getMessage().reply(new MessageBuilder(warningTakeTooLongEmbed.build()).build()).queue(warningTakeTooLongMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTooLongMessage.delete().queue()));
+        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.snippet", null, null, null, (Object[]) null).build()).build()).queue(warningTakeTooLongMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTooLongMessage.delete().queue()));
     }
 
     private ImageOptions.Language getLanguage(String language) {

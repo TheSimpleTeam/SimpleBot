@@ -66,7 +66,7 @@ public class GithubCommand extends Command {
                             .addField(MessageHelper.translateMessage(event, "success.github.search.repositoryName"), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.author"), repository.getOwnerName(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false)
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), readmeString(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.getDescription(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.license"), getLicense(repository, event), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false)
                             .build()).build());
@@ -94,18 +94,6 @@ public class GithubCommand extends Command {
 
     private String getLicense(GHRepository repo, CommandEvent event) throws IOException {
         return repo.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repo.getLicense().getName();
-    }
-
-    private String readmeString(String readme) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < readme.toCharArray().length; i++) {
-            if(i == 1020) {
-                builder.append("...");
-                break;
-            }
-            builder.append(readme.toCharArray()[i]);
-        }
-        return builder.toString();
     }
 
     private boolean isCommandDisabled() {
