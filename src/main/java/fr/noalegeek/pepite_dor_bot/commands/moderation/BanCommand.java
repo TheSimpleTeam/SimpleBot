@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
@@ -37,7 +37,7 @@ public class BanCommand extends Command {
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
             event.getGuild().retrieveMember(user).queue(member -> {
                 if (MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
                 if (args[1] == null || args[1].isEmpty()) args[1] = "7";

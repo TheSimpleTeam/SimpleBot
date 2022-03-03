@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
@@ -40,10 +40,10 @@ public class UnbanCommand extends Command {
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveBanList().queue(banList -> {
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveBanList().queue(banList -> {
             if(banList.stream().anyMatch(banUser -> user.getId().equals(banUser.getUser().getId()))) {
                 event.getGuild().unban(user).queue(unused -> {
-                    Main.getServerConfig().tempBan().remove(new StringBuilder().append(user.getId()).append("-").append(event.getGuild().getId()).toString());
+                    SimpleBot.getServerConfig().tempBan().remove(new StringBuilder().append(user.getId()).append("-").append(event.getGuild().getId()).toString());
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.unban", null, null, null, user.getName(), args.length == 1 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : new StringBuilder().append(MessageHelper.translateMessage(event, "text.commands.reason")).append(" ").append(event.getArgs().substring(args[0].length() + 1)).toString()).build()).build());
                 });
                 return;

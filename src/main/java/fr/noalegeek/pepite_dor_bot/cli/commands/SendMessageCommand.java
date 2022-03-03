@@ -24,7 +24,7 @@
 
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import org.jetbrains.annotations.NotNull;
 
 public class SendMessageCommand implements CLICommand {
@@ -43,7 +43,7 @@ public class SendMessageCommand implements CLICommand {
     public void execute(CommandEvent event) {
         String msg = "Hello from CLI Commands";
         if(event.args().length == 0) {
-            Main.LOGGER.warning("You should use arguments !");
+            SimpleBot.LOGGER.warning("You should use arguments !");
         } else {
             msg = String.join(" ", event.args());
         }

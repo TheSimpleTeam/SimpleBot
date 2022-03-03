@@ -25,7 +25,7 @@
 package fr.simpleteam.simplebot.api
 
 import com.google.gson.Gson
-import fr.noalegeek.pepite_dor_bot.Main
+import fr.noalegeek.pepite_dor_bot.SimpleBot
 import fr.simpleteam.simplebot.api.jda.Guild
 import io.ktor.application.*
 import io.ktor.features.*
@@ -41,7 +41,7 @@ import java.util.stream.Collectors
 
 class Server(private val jda : JDA, private val gson: Gson) {
 
-    private val LOGGER: Logger = Main.LOGGER
+    private val LOGGER: Logger = SimpleBot.LOGGER
 
     fun server() {
         embeddedServer(Netty, port = 8080) {

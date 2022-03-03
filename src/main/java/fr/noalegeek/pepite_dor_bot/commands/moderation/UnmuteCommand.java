@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -37,13 +37,13 @@ public class UnmuteCommand extends Command {
             event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.unmute.mutedRoleDontExist"));
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
-            if (!member.getRoles().contains(event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId()))) || !MuteCommand.isMutedRoleHere(event)) {
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+            if (!member.getRoles().contains(event.getGuild().getRoleById(SimpleBot.getServerConfig().mutedRole().get(event.getGuild().getId()))) || !MuteCommand.isMutedRoleHere(event)) {
                 event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "error.unmute.notMuted"), user.getName()));
                 return;
             }
             event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.unmute"), user.getName(), args.length == 2 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + 2)));
-            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(Main.getServerConfig().mutedRole().get(event.getGuild().getId()))).queue();
+            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(SimpleBot.getServerConfig().mutedRole().get(event.getGuild().getId()))).queue();
         }), userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
     }
 }

@@ -3,7 +3,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
@@ -76,7 +76,7 @@ public class TranslateCommand extends Command {
             } else
                 successEmbed.addField(MessageHelper.translateMessage(event, "success.translate.text"), args[0], true);
             //System.out.println(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)));
-            String translatedArgs = Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString();
+            String translatedArgs = SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString();
             if (translatedArgs.length() > 1024) {
                 int charactersCount = 0;
                 List<String> list = new ArrayList<>();

@@ -54,7 +54,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-public class Main {
+public class SimpleBot {
 
     private static JDA jda;
     private static CommandClient client;
@@ -62,7 +62,7 @@ public class Main {
     private static ServerConfig serverConfig;
     private static final EventWaiter waiter = new EventWaiter();
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new RecordTypeAdapterFactory()).setPrettyPrinting().create();
-    public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(SimpleBot.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
     public static final Eval eval = new Eval();
     private static Map<String, JsonObject> localizations;
@@ -102,7 +102,7 @@ public class Main {
                 .setPrefix(infos.prefix())
                 .useHelpBuilder(true)
                 .setServerInvite(b.serverInvite)
-                .setPrefixFunction(Main::getPrefix)
+                .setPrefixFunction(SimpleBot::getPrefix)
                 .setStatus(OnlineStatus.ONLINE);
         setupCommands(clientBuilder, b);
         client = clientBuilder.setHelpConsumer(e -> getHelpConsumer(e, b)).build();

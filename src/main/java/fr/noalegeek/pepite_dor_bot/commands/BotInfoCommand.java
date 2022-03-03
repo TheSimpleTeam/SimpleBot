@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -35,7 +35,7 @@ public class BotInfoCommand extends Command {
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.github"), "https://github.com/TheSimpleTeam/SimpleBot", false)
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.invitationLink"), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false);
         if(event.getSelfMember().getNickname() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.botInfo.name"), event.getSelfUser().getName(), false);
-        if(Main.getServerConfig().prefix().get(event.getGuild().getId()) != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.botInfo.serverPrefix"), Main.getServerConfig().prefix().get(event.getGuild().getId()), false).addField(MessageHelper.translateMessage(event, "success.botInfo.prefix"), Main.getInfos().prefix(), false);
+        if(SimpleBot.getServerConfig().prefix().get(event.getGuild().getId()) != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.botInfo.serverPrefix"), SimpleBot.getServerConfig().prefix().get(event.getGuild().getId()), false).addField(MessageHelper.translateMessage(event, "success.botInfo.prefix"), SimpleBot.getInfos().prefix(), false);
         event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 }

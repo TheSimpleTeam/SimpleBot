@@ -1,6 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.utils;
 
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -33,7 +33,7 @@ public class RequestHelper {
                 .url(newURL)
                 .build();
 
-        return Main.httpClient.newCall(request).execute();
+        return SimpleBot.httpClient.newCall(request).execute();
     }
 
     public static Response sendPostRequest(@NotNull String url, @NotNull JSONObject json) throws IOException {
@@ -42,7 +42,7 @@ public class RequestHelper {
                 .url(url)
                 .post(body)
                 .build();
-        return Main.httpClient.newCall(request).execute();
+        return SimpleBot.httpClient.newCall(request).execute();
     }
 
 }

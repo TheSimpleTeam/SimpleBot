@@ -25,7 +25,7 @@
 package fr.noalegeek.pepite_dor_bot.cli;
 
 import com.google.common.collect.ImmutableList;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.cli.commands.CLICommand;
 import fr.noalegeek.pepite_dor_bot.cli.commands.CommandEvent;
 import net.dv8tion.jda.api.JDA;
@@ -59,7 +59,7 @@ public class CLI {
                 CLICommand command = opCommand.get();
                 command.execute(new CommandEvent(Arrays.copyOfRange(arg, 1, arg.length), jda, this));
             } else {
-                Main.LOGGER.warning("This command does not exist !");
+                SimpleBot.LOGGER.warning("This command does not exist !");
             }
         } while (true);
     }

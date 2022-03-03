@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
@@ -34,7 +34,7 @@ public class GithubCommand extends Command {
         this.help = "help.github";
         this.example = "search PufferTeam SuperPack";
         this.aliases = new String[]{"ghub","gith","gh"};
-        this.github = new GitHubBuilder().withOAuthToken(Main.getInfos().botGithubToken()).build();
+        this.github = new GitHubBuilder().withOAuthToken(SimpleBot.getInfos().botGithubToken()).build();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class GithubCommand extends Command {
 
     private Color getColor(String language) {
         try {
-            Map<String, Map<String, String>> lang = Main.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
+            Map<String, Map<String, String>> lang = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
             return Color.getColor(String.valueOf(getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"))));
         } catch (IOException exception) {
             exception.printStackTrace();

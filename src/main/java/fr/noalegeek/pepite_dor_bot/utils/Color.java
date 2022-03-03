@@ -1,6 +1,6 @@
 package fr.noalegeek.pepite_dor_bot.utils;
 
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 
 public enum Color {
     //Color end string, color reset
@@ -81,7 +81,7 @@ public enum Color {
     private final String code;
 
     Color(String code) {
-        this.code = Main.isTTY() ? code : "";
+        this.code = SimpleBot.isTTY() ? code : "";
     }
 
     public static String colorize(String text, Color... colors) {

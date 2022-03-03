@@ -24,7 +24,7 @@
 
 package fr.noalegeek.pepite_dor_bot.cli.commands;
 
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import org.jetbrains.annotations.NotNull;
 
 public class TestCommand implements CLICommand {
@@ -46,8 +46,8 @@ public class TestCommand implements CLICommand {
 
     @Override
     public void execute(CommandEvent event) {
-        System.out.println(Main.getServerConfig().tempBan().size());
-        Main.getServerConfig().tempBan().forEach((s, s2) -> System.out.printf("""
+        System.out.println(SimpleBot.getServerConfig().tempBan().size());
+        SimpleBot.getServerConfig().tempBan().forEach((s, s2) -> System.out.printf("""
                 Id: %s              GuildID: %s                  Time: %s
                 """, s.split("-")[0], s.split("-")[1], s2));
     }

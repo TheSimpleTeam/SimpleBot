@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.utils;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -70,9 +70,9 @@ public class MessageHelper {
         if (command.getExample() == null)
             examples = translateMessage(event, "error.commands.syntaxError.examples.exampleNull");
         else if (command.getExample().startsWith("example."))
-            examples = Arrays.toString(Stream.of(translateMessage(event, command.getExample()).split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
+            examples = Arrays.toString(Stream.of(translateMessage(event, command.getExample()).split("²")).map(example -> example = SimpleBot.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
         else
-            examples = Arrays.toString(Stream.of(command.getExample().split("²")).map(example -> example = Main.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
+            examples = Arrays.toString(Stream.of(command.getExample().split("²")).map(example -> example = SimpleBot.getPrefix(event.getGuild()) + command.getName() + " " + example).toArray()).replace("[", "").replace("]", "").replace(",", "");
         EmbedBuilder embedBuilder = getEmbed(event, "error.commands.syntaxError.syntaxError", null, null, null, command.getName())
                 .addField(command.getArguments().startsWith("arguments.") ? translateMessage(event, command.getArguments()).split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.arguments.argument") : translateMessage(event, "error.commands.syntaxError.arguments.arguments") : command.getArguments().split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.arguments.argument") : translateMessage(event, "error.commands.syntaxError.arguments.arguments"), argumentsBuilder.toString(), false)
                 .addField(translateMessage(event, "error.commands.syntaxError.help"), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage(event, "error.commands.syntaxError.help.helpNull") : translateMessage(event, command.getHelp()).contains("²") ? translateMessage(event, command.getHelp()).split("²")[0] : translateMessage(event, command.getHelp()), false)
@@ -98,7 +98,7 @@ public class MessageHelper {
     public static void sendError(Exception exception, CommandEvent event, Command command) {
         EmbedBuilder embedBuilder = getEmbed(event, "error.commands.sendError.error", null, null, null, (Object[]) null)
                 .addField(translateMessage(event, "error.commands.sendError.sendError"), exception.getMessage(), false)
-                .addField(translateMessage(event, "error.commands.sendError.command"), Main.getPrefix(event.getGuild()) + command.getName(), false);
+                .addField(translateMessage(event, "error.commands.sendError.command"), SimpleBot.getPrefix(event.getGuild()) + command.getName(), false);
         if (command.getArguments() == null || command.getArguments().isEmpty()) embedBuilder.addField(translateMessage(event, "error.commands.sendError.arguments"), event.getArgs(), false);
         event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
@@ -155,8 +155,8 @@ public class MessageHelper {
     }
 
     public static String translateMessage(@NotNull User author, @Nullable TextChannel channel, @NotNull Guild guild, @NotNull String key) {
-        if (Optional.ofNullable(Main.getLocalizations().get(Main.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).isPresent()) return Optional.ofNullable(Main.getLocalizations().get(Main.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).get().getAsString();
-        if (Main.getLocalizations().get("en").get(key) == null) {
+        if (Optional.ofNullable(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).isPresent()) return Optional.ofNullable(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).get().getAsString();
+        if (SimpleBot.getLocalizations().get("en").get(key) == null) {
             long skip = 2;
             if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
                 skip++;
@@ -173,7 +173,7 @@ public class MessageHelper {
             throw new NullPointerException("The key " + key + " does not exist!");
         }
         try {
-            return Main.getLocalizations().get("en").get(key).getAsString();
+            return SimpleBot.getLocalizations().get("en").get(key).getAsString();
         } catch (NullPointerException ex) {
             return key;
         }
@@ -186,11 +186,11 @@ public class MessageHelper {
      */
     public static List<String> translateMessageAllLanguages(@NotNull String key){
         List<String> listMessageTranslated = new ArrayList<>();
-        for(String lang : Main.getLangs()){
-            if(Main.getLocalizations().get(lang).get(key) == null){
+        for(String lang : SimpleBot.getLangs()){
+            if(SimpleBot.getLocalizations().get(lang).get(key) == null){
                 throw new NullPointerException("The key " + key + " doesn't exist in the language " + lang);
             }
-            listMessageTranslated.add(Main.getLocalizations().get(lang).get(key).getAsString());
+            listMessageTranslated.add(SimpleBot.getLocalizations().get(lang).get(key).getAsString());
         }
         return listMessageTranslated;
     }

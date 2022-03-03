@@ -26,7 +26,7 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.commands.MathsCommand;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.listener.Listener;
@@ -67,7 +67,7 @@ public class TempbanCommand extends Command {
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
             if(MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
             try {
                 int days  = Integer.parseInt(args[1]);
@@ -86,7 +86,7 @@ public class TempbanCommand extends Command {
                 try {
                     member.ban(days, args.length == 3 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3)).queue(unused -> {
                         try {
-                            Main.getServerConfig().tempBan().put(member.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(Arrays.stream(MathsCommand.Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[2].replaceAll("\\d+", ""))).findFirst().get().functionName.toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), Integer.parseInt(args[2].replaceAll("\\D+", "")))).format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss")));
+                            SimpleBot.getServerConfig().tempBan().put(member.getId() + "-" + event.getGuild().getId(), ((LocalDateTime) LocalDateTime.class.getDeclaredMethod("plus" + StringUtils.capitalize(Arrays.stream(MathsCommand.Date.values()).filter(dates -> dates.name().equalsIgnoreCase(args[2].replaceAll("\\d+", ""))).findFirst().get().functionName.toLowerCase(Locale.ROOT)), long.class).invoke(LocalDateTime.now(), Integer.parseInt(args[2].replaceAll("\\D+", "")))).format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss")));
                             try {
                                 Listener.saveConfigs();
                             } catch (IOException e) {

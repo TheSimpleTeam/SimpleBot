@@ -4,7 +4,7 @@ import com.caoccao.javet.exceptions.JavetException;
 import com.caoccao.javet.interop.V8Runtime;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
 import fr.noalegeek.pepite_dor_bot.utils.Eval;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
@@ -28,9 +28,9 @@ public class EvaluateCommand extends Command {
         this.help = "help.eval";
         this.aliases = new String[]{"eval", "e"};
         this.arguments = "arguments.eval";
-        this.engine = Main.eval.getV8Runtime();
-        this.pyInterpreter = Main.eval.getPyInterpreter();
-        this.writer = Main.eval.getWriter();
+        this.engine = SimpleBot.eval.getV8Runtime();
+        this.pyInterpreter = SimpleBot.eval.getPyInterpreter();
+        this.writer = SimpleBot.eval.getWriter();
     }
 //TODO fusionner Eval class in util with this class
     @Override
@@ -67,7 +67,7 @@ public class EvaluateCommand extends Command {
             addV8Module(event.getClient(), "client");
             addV8Module(event.getGuild(), "guild");
             addV8Module(event.getMember(), "member");
-            addV8Module(Main.class);
+            addV8Module(SimpleBot.class);
             addV8Module(MessageBuilder.class);
             addV8Module(EmbedBuilder.class);
             addV8Module(MessageHelper.class);

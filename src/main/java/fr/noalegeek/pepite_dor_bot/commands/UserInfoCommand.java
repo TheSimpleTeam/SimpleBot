@@ -2,7 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
@@ -43,7 +43,7 @@ public class UserInfoCommand extends Command {
                 embedBuilder.addField(MessageHelper.translateMessage(event, "success.userInfo.nickname"), event.getMember().getNickname(), false);
             event.reply(new MessageBuilder(embedBuilder.build()).build());
         }
-        Main.getJda().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
+        SimpleBot.getJda().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
                         event.getGuild().retrieveMember(user).queue(member -> {
                             EmbedBuilder successEmbed = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, user.getEffectiveAvatarUrl(), (Object[]) null)
                                     .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor()))).toString())
