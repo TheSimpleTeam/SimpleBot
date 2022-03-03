@@ -44,12 +44,7 @@ public class MathsCommand extends Command {
                 mXparser.disableUlpRounding();
                 for (char c : args[0].toCharArray()) {
                     if (List.of(UnicodeCharacters.getAllExponentsCharacters()).contains(c)) {
-                        EmbedBuilder errorExponentsCharactersEmbed = new EmbedBuilder()
-                                .setColor(Color.RED)
-                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                .setTimestamp(Instant.now())
-                                .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.maths.calculate.exponentsCharacters"));
-                        event.reply(new MessageBuilder(errorExponentsCharactersEmbed.build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
                         return;
                     }
                 }
@@ -58,22 +53,13 @@ public class MathsCommand extends Command {
                         MessageHelper.syntaxError(event, this, "informations.maths");
                         return;
                     }
-                    event.reply(new MessageBuilder(new EmbedBuilder()
-                            .setColor(Color.RED)
-                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                            .setTimestamp(Instant.now())
-                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.maths.syntax"), calculateReplaceArgs(args[0].replaceAll("\\s+", ""))))
-                            .build()).build());
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).build()).build());
                     return;
                 }
-                EmbedBuilder successEmbed = new EmbedBuilder()
-                        .setColor(Color.GREEN)
-                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                        .setTimestamp(Instant.now())
-                        .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.maths.calculate.success"))
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null, (Object[]) null)
                         .addField(MessageHelper.translateMessage(event, "success.maths.calculate.mathematicalExpression"), calculateReplaceArgs(args[0].replaceAll("\\s+", "")), false)
-                        .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false);
-                event.reply(new MessageBuilder(successEmbed.build()).build());
+                        .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false)
+                        .build()).build());
             }
             case 2 -> {
                 switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -83,31 +69,17 @@ public class MathsCommand extends Command {
                         mXparser.disableUlpRounding();
                         for (char c : args[1].toCharArray()) {
                             if (List.of(UnicodeCharacters.getAllExponentsCharacters()).contains(c)) {
-                                EmbedBuilder errorExponentsCharactersEmbed = new EmbedBuilder()
-                                        .setColor(Color.RED)
-                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTimestamp(Instant.now())
-                                        .setTitle(UnicodeCharacters.crossMarkEmoji + " " + MessageHelper.translateMessage(event, "error.maths.calculate.exponentsCharacters"));
-                                event.reply(new MessageBuilder(errorExponentsCharactersEmbed.build()).build());
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
                             }
                         }
                         if (!new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).checkSyntax()) {
-                            event.reply(new MessageBuilder(new EmbedBuilder()
-                                    .setColor(Color.RED)
-                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                    .setTimestamp(Instant.now())
-                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.maths.syntax"), calculateReplaceArgs(args[1].replaceAll("\\s+", ""))))
-                                    .build()).build());
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).build()).build());
                             return;
                         }
-                        EmbedBuilder successEmbed = new EmbedBuilder()
-                                .setColor(Color.GREEN)
-                                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                .setTimestamp(Instant.now())
-                                .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.maths.calculate.success"))
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null, (Object[]) null)
                                 .addField(MessageHelper.translateMessage(event, "success.maths.calculate.mathematicalExpression"), calculateReplaceArgs(args[1].replaceAll("\\s+", "")), false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false);
-                        event.reply(new MessageBuilder(successEmbed.build()).build());
+                                .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false)
+                                .build()).build());
                     }
                     default -> MessageHelper.syntaxError(event, this, "informations.maths");
                 }
@@ -126,34 +98,21 @@ public class MathsCommand extends Command {
                                 } else return;
                             } else return;
                         } else {
-                            event.reply(new MessageBuilder(new EmbedBuilder()
-                                    .setColor(Color.RED)
-                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                    .setTimestamp(Instant.now())
-                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.maths.syntax"), calculateReplaceArgs(args[2].replaceAll("\\s+", ""))))
-                                    .build()).build());
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
                             return;
                         }
                         switch (args[1]) {
-                            case "number" -> {
-                                EmbedBuilder successPrimeNumberNumberEmbed = new EmbedBuilder()
-                                        .setTimestamp(Instant.now())
-                                        .setColor(numberIsPrime(number) ? Color.GREEN : Color.RED)
-                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(String.format("%s %s", numberIsPrime(number) ? UnicodeCharacters.whiteHeavyCheckMarkEmoji : UnicodeCharacters.crossMarkEmoji, numberIsPrime(number) ? String.format(MessageHelper.translateMessage(event, "success.maths.primeNumber.isPrime"), number) : String.format(MessageHelper.translateMessage(event, "success.maths.primeNumber.isNotPrime"), number)));
-                                event.reply(new MessageBuilder(successPrimeNumberNumberEmbed.build()).build());
-                            }
+                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, numberIsPrime(number) ? "success.maths.primeNumber.isPrime" : "error.maths.primeNumber.isNotPrime", null, null, null, number).build()).build());
                             case "list" -> {
                                 //TODO optimize that if possible
-                                EmbedBuilder successPrimeNumberListEmbed = new EmbedBuilder()
-                                        .setTimestamp(Instant.now())
-                                        .setColor(Color.GREEN)
-                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage(event, "success.maths.primeNumber.list.success"), number)));
                                 StringBuilder listBuilder = new StringBuilder();
                                 List<String> primeNumberList = new ArrayList<>();
                                 for (long i = 2; i <= number; i++) {
                                     if (numberIsPrime(i)) primeNumberList.add(String.valueOf(i));
+                                }
+                                if(primeNumberList.isEmpty()){
+                                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.primeNumber.list.error", null, null, null, number).build()).build());
+                                    return;
                                 }
                                 for (String string : primeNumberList) {
                                     listBuilder.append(string).append(", ");
@@ -168,7 +127,7 @@ public class MathsCommand extends Command {
                                     }
                                     listBuilder.insert(0, "...");
                                 }
-                                event.reply(new MessageBuilder(successPrimeNumberListEmbed.setDescription(listBuilder.deleteCharAt(listBuilder.toString().length() - 2)).build()).build());
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.primeNumber.list.success", null, listBuilder.deleteCharAt(listBuilder.toString().length() - 2).toString(), null, number).build()).build());
                             }
                         }
                     }
@@ -184,38 +143,19 @@ public class MathsCommand extends Command {
                                 } else return;
                             } else return;
                         } else {
-                            event.reply(new MessageBuilder(new EmbedBuilder()
-                                    .setColor(Color.RED)
-                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                    .setTimestamp(Instant.now())
-                                    .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.maths.syntax"), calculateReplaceArgs(args[2].replaceAll("\\s+", ""))))
-                                    .build()).build());
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
                             return;
                         }
                         switch (args[1]) {
-                            case "number" -> {
-                                EmbedBuilder successPerfectNumberNumberEmbed = new EmbedBuilder()
-                                        .setTimestamp(Instant.now())
-                                        .setColor(numberIsPerfect(number) ? Color.GREEN : Color.RED)
-                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(String.format("%s %s", numberIsPerfect(number) ? UnicodeCharacters.whiteHeavyCheckMarkEmoji : UnicodeCharacters.crossMarkEmoji, numberIsPerfect(number) ? String.format(MessageHelper.translateMessage(event, "success.maths.perfectNumber.isPerfect"), number) : String.format(MessageHelper.translateMessage(event, "success.maths.perfectNumber.isNotPerfect"), number)));
-                                event.reply(new MessageBuilder(successPerfectNumberNumberEmbed.build()).build());
-                            }
+                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, numberIsPerfect(number) ? "success.maths.perfectNumber.isPerfect" : "error.maths.perfectNumber.isNotPerfect", null, null, null, number).build()).build());
                             case "list" -> {
-                                EmbedBuilder successPerfectNumberListEmbed = new EmbedBuilder()
-                                        .setTimestamp(Instant.now())
-                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage(event, "success.maths.perfectNumber.list.success"), number)));
                                 StringBuilder listBuilder = new StringBuilder();
                                 List<String> perfectNumberList = new ArrayList<>();
                                 for (long i = 2; i <= number; i++) {
                                     if (numberIsPerfect(i)) perfectNumberList.add(String.valueOf(i));
                                 }
-                                successPerfectNumberListEmbed
-                                        .setColor(perfectNumberList.isEmpty() ? Color.RED : Color.GREEN)
-                                        .setTitle(String.format("%s %s", perfectNumberList.isEmpty() ? UnicodeCharacters.crossMarkEmoji : UnicodeCharacters.whiteHeavyCheckMarkEmoji, perfectNumberList.isEmpty() ? String.format(MessageHelper.translateMessage(event, "success.maths.perfectNumber.list.error"), number) : String.format(MessageHelper.translateMessage(event, "success.maths.perfectNumber.list.success"), number)));
                                 if(perfectNumberList.isEmpty()){
-                                    event.reply(new MessageBuilder(successPerfectNumberListEmbed.build()).build());
+                                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.primeNumber.list.error", null, null, null, number).build()).build());
                                     return;
                                 }
                                 for (String string : perfectNumberList) {
@@ -231,7 +171,7 @@ public class MathsCommand extends Command {
                                     }
                                     listBuilder.insert(0, "...");
                                 }
-                                event.reply(new MessageBuilder(successPerfectNumberListEmbed.setDescription(listBuilder.deleteCharAt(listBuilder.toString().length() - 2)).build()).build());
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.primeNumber.list.success", null, listBuilder.deleteCharAt(listBuilder.toString().length() - 2).toString(), null, number).build()).build());
                             }
                         }
                     }
@@ -244,12 +184,7 @@ public class MathsCommand extends Command {
                         for(int i = 0 ; i < Unit.values().length; i++){
                             for(Unit unit : Unit.values()) {
                                 if (Unit.values()[i] != unit && Unit.values()[i].name().equals(unit.name())) {
-                                    EmbedBuilder errorSameSymbolsEmbed = new EmbedBuilder()
-                                            .setColor(Color.RED)
-                                            .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                            .setTimestamp(Instant.now())
-                                            .setTitle(UnicodeCharacters.crossMarkEmoji + " " + String.format(MessageHelper.translateMessage(event, "error.maths.convert.sameSymbols"), MessageHelper.translateMessage(event, Unit.values()[i].unitName), MessageHelper.translateMessage(event, unit.unitName), Unit.values()[i].name()));
-                                    event.reply(new MessageBuilder(errorSameSymbolsEmbed.build()).build());
+                                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.convert.sameSymbols", null, null, null, MessageHelper.translateMessage(event, Unit.values()[i].unitName), MessageHelper.translateMessage(event, unit.unitName), Unit.values()[i].name()).build()).build());
                                     return;
                                 }
                             }
@@ -266,43 +201,19 @@ public class MathsCommand extends Command {
                                     unit2 = units;
                                 }
                             }
-                            if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType) {
-                                EmbedBuilder errorUnitEmbed = new EmbedBuilder()
-                                        .setColor(Color.RED)
-                                        .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                        .setTimestamp(Instant.now());
-                                if (unit1 == null && unit2 == null) { //Verify if the specified units don't exist
-                                    event.reply(new MessageBuilder(errorUnitEmbed.setTitle(MessageHelper.translateMessage(event, "error.maths.convert.unitsDontExist")).build()).build());
-                                    return;
-                                } else if (unit1 == null) { //Verify if the first specified unit don't exist
-                                    event.reply(new MessageBuilder(errorUnitEmbed.setTitle(MessageHelper.translateMessage(event, "error.maths.convert.firstUnitDontExist")).build()).build());
-                                    return;
-                                } else if (unit2 == null) { //Verify if the second specified unit don't exist
-                                    event.reply(new MessageBuilder(errorUnitEmbed.setTitle(MessageHelper.translateMessage(event, "error.maths.convert.secondUnitDontExist")).build()).build());
-                                    return;
-                                } else { //Verify if the unit types specified unit aren't equals
-                                    event.reply(new MessageBuilder(errorUnitEmbed.setTitle(MessageHelper.translateMessage(event, "error.maths.convert.notSameUnitType")).build()).build());
-                                    return;
-                                }
+                            if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType){
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null, (Object[]) null)).build());
+                                return;
                             }
                             String factor = String.valueOf(unit1.factor / unit2.factor);
-                            EmbedBuilder successEmbed = new EmbedBuilder()
-                                    .setColor(Color.GREEN)
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, MessageHelper.translateMessage(event, "success.maths.convert.success")))
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null, (Object[]) null)
                                     .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
                                     .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * Double.parseDouble(factor)).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
                                     .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), factor.replace("E", "x10^"), false)
                                     .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
-                                    .setTimestamp(Instant.now())
-                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl());
-                            event.reply(new MessageBuilder(successEmbed.build()).build());
-                        } catch (NumberFormatException ignore) {
-                            event.reply(new MessageBuilder(new EmbedBuilder() // Sends a notAnNumber embed
-                                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event, "error.commands.notAnNumber"), args[1])))
-                                    .setColor(Color.RED)
-                                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                                    .setTimestamp(Instant.now())
                                     .build()).build());
+                        } catch (NumberFormatException ignore) {
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnNumber", null, null, null, args[1]).build()).build());
                         }
                     }
                     default -> MessageHelper.syntaxError(event, this, "informations.maths");
@@ -332,12 +243,7 @@ public class MathsCommand extends Command {
             Long.parseLong(integerNumber);
             return true;
         } catch (NumberFormatException exception) {
-            EmbedBuilder numberTooLargeEmbed = new EmbedBuilder()
-                    .setColor(Color.RED)
-                    .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTimestamp(Instant.now())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event, "error.commands.numberTooLarge"), integerNumber)));
-            event.reply(new MessageBuilder(numberTooLargeEmbed.build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, integerNumber).build()).build());
             return false;
         }
     }
@@ -353,12 +259,7 @@ public class MathsCommand extends Command {
 
     public static boolean isIntegerNumberWithEmbed(CommandEvent event, String string) {
         if (string.chars().allMatch(Character::isDigit)) return true;
-        EmbedBuilder notAnIntegerNumberEmbed = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
-                .setTimestamp(Instant.now())
-                .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event, "error.commands.notAnIntegerNumber"), string)));
-        event.reply(new MessageBuilder(notAnIntegerNumberEmbed.build()).build());
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnIntegerNumber", null, null, null, string).build()).build());
         return false;
     }
 

@@ -28,6 +28,7 @@ public class TranslateCommand extends Command {
         this.example = "example.translate";
         this.arguments = "arguments.translate";
         this.help = "help.translate";
+        this.hidden = true;
         this.category = CommandCategories.FUN.category;
     }
 

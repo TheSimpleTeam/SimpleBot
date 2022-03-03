@@ -135,12 +135,7 @@ public class Listener extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
         if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember())) {
-            event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
-                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage(event.getAuthor(), null, event.getGuild(), "success.listener.onGuildMessageReceived.prefix"), Main.getPrefix(event.getGuild()))))
-                    .setTimestamp(Instant.now())
-                    .setColor(Color.GREEN)
-                    .build()).build()).queue();
+            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.prefix", null, null, null, Main.getPrefix(event.getGuild())).build()).build()).queue();
         }
         if (Main.getServerConfig().prohibitWords() == null) {
             new File("config/server-config.json").delete();
@@ -170,22 +165,12 @@ public class Listener extends ListenerAdapter {
                     highestResult = _highestResult;
                 }
             }
-            event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
-                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.whiteHeavyCheckMarkEmoji, String.format(MessageHelper.translateMessage(event.getAuthor(), null, event.getGuild(), "success.listener.onGuildMessageReceived.didYouMean"), Main.getPrefix(event.getGuild()), cmd)))
-                    .setTimestamp(Instant.now())
-                    .setColor(Color.GREEN)
-                    .build()).build()).queue();
+            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.didYouMean", null, null, null, Main.getPrefix(event.getGuild()), cmd).build()).build()).queue();
         }
         if (!Main.getServerConfig().prohibitWords().containsKey(event.getGuild().getId())) return;
         for (String prohibitedWord : Main.getServerConfig().prohibitWords().get(event.getGuild().getId())) {
             if (event.getMessage().getContentRaw().toLowerCase().startsWith(String.format("%sprohibitword", Main.getPrefix(event.getGuild()))) && event.getMember() != null && event.getMember().isOwner()) return;
-            if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage().reply(new MessageBuilder(new EmbedBuilder()
-                    .setFooter(event.getAuthor().getName(), event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(String.format("%s %s", UnicodeCharacters.crossMarkEmoji, String.format(MessageHelper.translateMessage(event.getAuthor(), null, event.getGuild(), "success.listener.onGuildMessageReceived.prohibitedWord"), prohibitedWord)))
-                    .setTimestamp(Instant.now())
-                    .setColor(Color.RED)
-                    .build()).build()).queue());
+            if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.prohibitedWord", null, null, null, prohibitedWord).build()).build()).queue());
         }
     }
 }
