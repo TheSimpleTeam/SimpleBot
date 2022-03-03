@@ -22,7 +22,7 @@ public class MCServerCommand extends Command {
         this.cooldown = 5;
         this.help = "help.mcServer";
         this.example = "hypixel.net";
-        this.aliases = new String[]{"minecraftserv","minecrafts","mcserver","mcserv","mcs","mserver","mserv","ms"};
+        this.aliases = new String[]{"mcs"};
         this.arguments = "arguments.mcServer";
         this.category = CommandCategories.INFO.category;
         this.guildOnly = true;
@@ -41,14 +41,11 @@ public class MCServerCommand extends Command {
                 return;
             }
             //We get the informations like https://github.com/Minemobs/McStatusJava/blob/master/src/main/java/fr/minemobs/test/Main.java
-            EmbedBuilder successEmbed = new EmbedBuilder()
-                    .setTimestamp(Instant.now())
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.mcServer.success", null, null, null, (Object[]) null)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.ipAdress"), Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("ip").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.port"), Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("port").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.version"), Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("version").getAsString(), false)
-                    .addField(MessageHelper.translateMessage(event, "success.mcServer.connectedPlayers"), String.valueOf(Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("players").getAsJsonObject().get("online").getAsInt()), false)
-                    .setColor(Color.GREEN);
-            event.reply(new MessageBuilder(successEmbed.build()).build());
+                    .addField(MessageHelper.translateMessage(event, "success.mcServer.connectedPlayers"), String.valueOf(Main.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("players").getAsJsonObject().get("online").getAsInt()), false).build()).build());
         } catch (IOException exception) {
             MessageHelper.sendError(exception, event, this);
         }

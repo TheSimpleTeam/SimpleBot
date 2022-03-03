@@ -221,6 +221,7 @@
   "success.say.success": "Quelqu\u0027un a dit...",
   "success.shutdown": "Le bot a bien été éteint !",
   "success.spigot.pluginID.description": "Description",
+  "success.mcServer.success": "Serveur Minecraft trouvé",
   "success.spigot.pluginID.pluginID": "Plugin ID",
   "success.spigot.pluginID.pluginLink": "Lien du plugin",
   "success.spigot.pluginID.pluginName": "Nom du plugin",

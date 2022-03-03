@@ -242,6 +242,7 @@
   "success.spigot.pluginID.success": "Plugin found",
   "success.spigot.pluginName.success.plural": "Plugins found",
   "success.spigot.pluginName.success.singular": "Plugin found",
+  "success.mcServer.success": "Minecraft server found",
   "success.spigot.user.success": "List of Spigot users with the name `%s`.",
   "success.suggestion.suggestion": "Suggestion",
   "success.suggestion.author": "Author of the suggestion",
