@@ -12,10 +12,8 @@ import org.mariuszgromada.math.mxparser.mXparser;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 
 public class MathsCommand extends Command {
 
@@ -43,7 +41,7 @@ public class MathsCommand extends Command {
                 mXparser.disableCanonicalRounding();
                 mXparser.disableUlpRounding();
                 for (char c : args[0].toCharArray()) {
-                    if (List.of(UnicodeCharacters.getAllExponentsCharacters()).contains(c)) {
+                    if (Objects.equals(UnicodeCharacters.getAllExponentsCharacters(), c)) {
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
                         return;
                     }
@@ -68,7 +66,7 @@ public class MathsCommand extends Command {
                         mXparser.disableCanonicalRounding();
                         mXparser.disableUlpRounding();
                         for (char c : args[1].toCharArray()) {
-                            if (List.of(UnicodeCharacters.getAllExponentsCharacters()).contains(c)) {
+                            if (Objects.equals(UnicodeCharacters.getAllExponentsCharacters(), c)) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
                             }
                         }
@@ -264,8 +262,7 @@ public class MathsCommand extends Command {
     }
 
     public static boolean isIntegerNumber(String string) {
-        if (string.chars().allMatch(Character::isDigit)) return true;
-        return false;
+        return string.chars().allMatch(Character::isDigit);
     }
 
     public static boolean numberIsPrime(long number) {
