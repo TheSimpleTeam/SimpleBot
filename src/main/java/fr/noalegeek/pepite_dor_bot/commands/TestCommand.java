@@ -78,8 +78,6 @@ public class TestCommand extends Command {
             }
         } else embedBuilder.addField("__" + MessageHelper.translateMessage("text.commands.syntaxError.informations", event) + "__", str, false);
         event.reply(embedBuilder.build());*/
-        for(Command command : SimpleBot.getClient().getCommands().stream().filter(command -> command.getCategory() != null && command.getCategory().getName().equals(CommandCategories.MISC.category.getName())).toList())
-            System.out.println(command.getName());
         System.out.println("""
                 
                 e

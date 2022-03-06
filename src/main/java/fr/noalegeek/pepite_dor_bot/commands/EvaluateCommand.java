@@ -5,6 +5,7 @@ import com.caoccao.javet.interop.V8Runtime;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.SimpleBot;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.enums.DiscordFormatUtils;
 import fr.noalegeek.pepite_dor_bot.utils.Eval;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
@@ -31,6 +32,7 @@ public class EvaluateCommand extends Command {
         this.engine = SimpleBot.eval.getV8Runtime();
         this.pyInterpreter = SimpleBot.eval.getPyInterpreter();
         this.writer = SimpleBot.eval.getWriter();
+        this.category = CommandCategories.MISC.category;
     }
 
     @Override
