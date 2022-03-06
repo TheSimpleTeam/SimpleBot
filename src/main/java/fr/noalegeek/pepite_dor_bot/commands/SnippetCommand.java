@@ -52,7 +52,7 @@ public class SnippetCommand extends Command {
                   System.out.println("Hello World");
                 }```""";
         this.arguments = "arguments.snippet";
-        this.category = CommandCategories.FUN.category;
+        this.category = CommandCategories.MISC.category;
     }
 
     @Override

@@ -29,6 +29,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.GithubInfo;
 import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.commands.annotations.RequireConfig;
+import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.cli.*;
@@ -48,6 +49,7 @@ public class IssueCommand extends Command {
         this.help = "help.issue";
         this.arguments = "arguments.issue";
         this.example = "example.issue";
+        this.category = CommandCategories.MISC.category;
         this.github = new GitHubBuilder().withOAuthToken(SimpleBot.getInfos().botGithubToken()).build();
     }
 
