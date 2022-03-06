@@ -30,6 +30,8 @@ import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Listener extends ListenerAdapter {
 
@@ -153,10 +155,13 @@ public class Listener extends ListenerAdapter {
                 return;
             double highestResult = 0;
             String cmd = null;
-            for (Command command : SimpleBot.getClient().getCommands()) {
-                double _highestResult = LevenshteinDistance.getDistance(cmdName, command.getName());
+            List<String> commandNames = new ArrayList<>();
+            commands.addAll(SimpleBot.getClient().getCommands().map(Command::getName).collect(Collectors.toList()));
+            commands.add("help");
+            for (String commandName : commandNames) {
+                double _highestResult = LevenshteinDistance.getDistance(cmdName, commandNames);
                 double b = 0;
-                String _alias = command.getName();
+                String _alias = commandNames;
                 if (b > _highestResult) {
                     _highestResult = b;
                 }
