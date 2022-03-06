@@ -279,7 +279,7 @@
   "error.commands.syntaxError.help.helpNull": "Aucune aide disponible.",
   "error.commands.syntaxError.informations": "Informations :",
   "error.commands.syntaxError.syntaxError": "Erreur de syntaxe pour la commande `%s`",
-  "text.issue": "Issue",
+  "text.issue.issue": "Issue",
   "text.issue.twoSuperimposedPoints": " :",
   "text.listener.member": "Membre",
   "text.maths.convert.angstrom": "Ångström",
