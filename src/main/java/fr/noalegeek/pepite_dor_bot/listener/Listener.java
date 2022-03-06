@@ -159,9 +159,9 @@ public class Listener extends ListenerAdapter {
             commands.addAll(SimpleBot.getClient().getCommands().map(Command::getName).collect(Collectors.toList()));
             commands.add("help");
             for (String commandName : commandNames) {
-                double _highestResult = LevenshteinDistance.getDistance(cmdName, commandNames);
+                double _highestResult = LevenshteinDistance.getDistance(cmdName, commandName);
                 double b = 0;
-                String _alias = commandNames;
+                String _alias = commandName;
                 if (b > _highestResult) {
                     _highestResult = b;
                 }
