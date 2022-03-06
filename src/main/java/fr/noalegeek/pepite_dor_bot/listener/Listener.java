@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Listener extends ListenerAdapter {
 
@@ -156,7 +157,7 @@ public class Listener extends ListenerAdapter {
             double highestResult = 0;
             String cmd = null;
             List<String> commands = new ArrayList<>();
-            commands.addAll(SimpleBot.getClient().getCommands().map(Command::getName).collect(Collectors.toList()));
+            commands.addAll(SimpleBot.getClient().getCommands().stream().map(Command::getName).collect(Collectors.toList()));
             commands.add("help");
             for (String commandName : commands) {
                 double _highestResult = LevenshteinDistance.getDistance(cmdName, commandName);
