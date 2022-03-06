@@ -1,4 +1,4 @@
-package fr.noalegeek.pepite_dor_bot.utils;
+package fr.noalegeek.pepite_dor_bot.enums;
 
 import fr.noalegeek.pepite_dor_bot.SimpleBot;
 

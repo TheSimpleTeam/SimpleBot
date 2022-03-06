@@ -150,38 +150,32 @@ public class SimpleBot {
         }
     }
 
-    private static void getHelpConsumer(CommandEvent event, Bot b) {
-        StringBuilder help = new StringBuilder(String.format(MessageHelper.translateMessage(event, "help.commands"), event.getSelfUser().getName()));
+    private static void getHelpConsumer(CommandEvent event, Bot bot) {
+        StringBuilder helpBuilder = new StringBuilder(String.format(MessageHelper.translateMessage(event, "help.commands"), event.getSelfUser().getName()));
         Command.Category category = null;
-        List<Command> botCommands = b.commands.stream().sorted(Comparator.comparing(o -> {
-            String key = o.getCategory() != null ? o.getCategory().getName() : CommandCategories.NONE.category.getName();
+        List<Command> botCommands = bot.commands.stream().sorted(Comparator.comparing(command -> {
+            String key = command.getCategory() != null ? command.getCategory().getName() : CommandCategories.NONE.category.getName();
             return MessageHelper.translateMessage(event, key);
         })).toList();
         for (Command command : botCommands) {
             if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
                 if (!Objects.equals(category, command.getCategory())) {
-                    category = command.getCategory();
-                    category = category == null ? CommandCategories.NONE.category : category;
-                    help.append("\n\n__").append(MessageHelper.translateMessage(event, category.getName())).append("__:\n");
+                    category = (category == null ? CommandCategories.NONE.category : command.getCategory());
+                    helpBuilder.append("\n\n__").append(MessageHelper.translateMessage(event, category.getName())).append("__:\n");
                 }
-                String helpCommand;
-                try {
-                    helpCommand = MessageHelper.translateMessage(event, command.getHelp());
-                } catch (NullPointerException ignored) {
-                    helpCommand = command.getHelp();
-                }
-                help.append("\n`").append(infos.prefix()).append(infos.prefix() == null ? " " : "").append(command.getName())
-                        .append(command.getArguments() == null ? "`" : " " + command.getArguments() + "`")
-                        .append(" - ").append(helpCommand);
+                if(MessageHelper.translateMessage(event, command.getHelp()).contains("²")) {
+                    for (int index = 0; index < MessageHelper.translateMessage(event, command.getHelp()).split("²").length - 1; index++) {
+                        helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp()).split("²")[index]).append("*");
+                    }
+                } else helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(command.getArguments() == null ? "`" : " " + (command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments())).append("`").append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
             }
         }
-        User owner = event.getJDA().getUserById(b.ownerID);
-        if (owner != null) {
-            help.append("\n\n").append(MessageHelper.translateMessage(event, "help.contact")).append(" **").append(owner.getName()).append("**#").append(owner.getDiscriminator());
+        if (event.getJDA().getUserById(bot.ownerID) != null) {
+            helpBuilder.append("\n\n").append(MessageHelper.translateMessage(event, "help.contact")).append(" **").append(MessageHelper.getTag(event.getJDA().getUserById(bot.ownerID))).append("**");
             if (event.getClient().getServerInvite() != null)
-                help.append(' ').append(MessageHelper.translateMessage(event, "help.discord")).append(' ').append(b.serverInvite);
+                helpBuilder.append(' ').append(MessageHelper.translateMessage(event, "help.discord")).append(' ').append(bot.serverInvite);
         }
-        event.replyInDm(help.toString(), unused -> {
+        event.replyInDm(helpBuilder.toString(), unused -> {
         }, t -> event.reply(MessageHelper.translateMessage(event, "help.DMBlocked")));
     }
 

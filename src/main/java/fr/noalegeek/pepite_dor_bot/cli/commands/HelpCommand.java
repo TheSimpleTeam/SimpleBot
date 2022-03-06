@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static fr.noalegeek.pepite_dor_bot.utils.Color.*;
+import static fr.noalegeek.pepite_dor_bot.enums.Color.*;
 
 public class HelpCommand implements CLICommand {
 

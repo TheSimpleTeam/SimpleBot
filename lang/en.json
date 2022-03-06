@@ -12,7 +12,7 @@
   "arguments.mute": "\u003cmember\u0027s ID/mention\u003e [reason]",
   "arguments.purge": "\u003cnumber of messages\u003e",
   "arguments.say": "\u003ctext\u003e",
-  "arguments.snippet": "```\u003cprogramm\u003e```",
+  "arguments.snippet": "\u003cprogramm\u003e",
   "arguments.spigot": "\u003cSpigot plugin ID|user|plugin name\u003e",
   "arguments.suggestion": "\u003csuggestion\u003e",
   "arguments.tempban": "\u003cmember\u0027s ID/mention\u003e \u003ctime\u003e \u003cban time\u003e [reason]",

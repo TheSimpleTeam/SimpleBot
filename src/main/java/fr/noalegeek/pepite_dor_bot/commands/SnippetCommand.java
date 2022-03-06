@@ -27,7 +27,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils;
+import fr.noalegeek.pepite_dor_bot.enums.DiscordFormatUtils;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.MessageBuilder;
 import sh.stein.carbon.CarbonService;

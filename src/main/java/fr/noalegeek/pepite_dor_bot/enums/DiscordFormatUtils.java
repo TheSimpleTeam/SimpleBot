@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package fr.noalegeek.pepite_dor_bot.utils;
+package fr.noalegeek.pepite_dor_bot.enums;
 
 public enum DiscordFormatUtils {
 
@@ -57,7 +57,7 @@ public enum DiscordFormatUtils {
     }
 
     /**
-     * This function should be used only if you want to format your text with {@link fr.noalegeek.pepite_dor_bot.utils.DiscordFormatUtils#MULTILINE_CODE_BLOCK}
+     * This function should be used only if you want to format your text with {@link DiscordFormatUtils#MULTILINE_CODE_BLOCK}
      * @param text Your text
      * @param language The programming language
      * @return The formatted text
