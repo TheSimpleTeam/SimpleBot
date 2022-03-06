@@ -29,17 +29,13 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.commands.MathsCommand;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.listener.Listener;
+import fr.noalegeek.pepite_dor_bot.listeners.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;

@@ -6,7 +6,6 @@ import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import net.dv8tion.jda.api.MessageBuilder;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.awt.Color;
 import java.io.IOException;

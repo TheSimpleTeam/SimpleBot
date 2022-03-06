@@ -5,17 +5,12 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.config.ServerConfig;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.listener.Listener;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.*;
 import java.util.List;
 

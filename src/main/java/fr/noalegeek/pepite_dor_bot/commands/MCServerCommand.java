@@ -6,14 +6,10 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
-import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
-import java.awt.Color;
 import java.io.IOException;
-import java.time.Instant;
 
 public class MCServerCommand extends Command {
 

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package fr.noalegeek.pepite_dor_bot;
+package fr.noalegeek.pepite_dor_bot.enums;
 
 public enum GithubInfo {
 

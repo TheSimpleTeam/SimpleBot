@@ -7,7 +7,6 @@ import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
 import fr.noalegeek.pepite_dor_bot.utils.RequestHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class GetBotIpCommand extends Command {
 
