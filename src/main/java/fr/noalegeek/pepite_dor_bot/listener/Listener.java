@@ -156,15 +156,11 @@ public class Listener extends ListenerAdapter {
                 return;
             double highestResult = 0;
             String cmd = null;
-            List<String> commands = SimpleBot.getClient().getCommands().stream().map(Command::getName).collect(Collectors.toList());
-            commands.add("help");
-            for (String commandName : commands) {
+            for (String commandName : new StringBuilder().append(Arrays.toString(SimpleBot.getClient().getCommands().stream().map(Command::getName).toArray()).replace("[", "").replace("]", "")).append(", help").toString().split(", ")) {
                 double _highestResult = LevenshteinDistance.getDistance(cmdName, commandName);
                 double b = 0;
                 String _alias = commandName;
-                if (b > _highestResult) {
-                    _highestResult = b;
-                }
+                if (b > _highestResult) _highestResult = b;
                 if (highestResult < _highestResult) {
                     cmd = _alias;
                     highestResult = _highestResult;
