@@ -29,7 +29,7 @@ public class TranslateCommand extends Command {
         this.arguments = "arguments.translate";
         this.help = "help.translate";
         this.hidden = true;
-        this.category = CommandCategories.FUN.category;
+        this.category = CommandCategories.MISC.category;
     }
 
     @Override

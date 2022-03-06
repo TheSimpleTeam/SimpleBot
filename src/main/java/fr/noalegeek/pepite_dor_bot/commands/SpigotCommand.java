@@ -45,7 +45,7 @@ public class SpigotCommand extends Command {
         this.cooldown = 5;
         this.example = "80802";
         this.help = "help.spigot";
-        this.category = CommandCategories.INFO.category;
+        this.category = CommandCategories.UTILITY.category;
         this.arguments = "arguments.spigot";
     }
 

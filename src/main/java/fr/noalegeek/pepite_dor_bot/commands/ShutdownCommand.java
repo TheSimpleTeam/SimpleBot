@@ -16,6 +16,7 @@ public class ShutdownCommand extends Command {
         this.aliases = new String[]{"sd","shutd","sdown"};
         this.guildOnly = false;
         this.ownerCommand = true;
+        this.hidden = true;
         this.category = CommandCategories.MISC.category;
     }
 

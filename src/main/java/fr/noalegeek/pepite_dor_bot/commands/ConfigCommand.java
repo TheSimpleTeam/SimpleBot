@@ -23,7 +23,7 @@ public class ConfigCommand extends Command {
         this.example = "example.config";
         this.aliases = new String[]{"cf", "parameter", "par"};
         this.arguments = "arguments.config";
-        this.category = CommandCategories.CONFIG.category;
+        this.category = CommandCategories.UTILITY.category;
         this.guildOnly = true;
         this.guildOwnerCommand = true;
     }

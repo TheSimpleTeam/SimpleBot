@@ -18,7 +18,7 @@ public class InviteCommand extends Command {
         this.example = "create";
         this.arguments = "<create/bot>";
         this.help = "help.invite";
-        this.category = CommandCategories.MISC.category;
+        this.category = CommandCategories.UTILITY.category;
     }
 
     @Override

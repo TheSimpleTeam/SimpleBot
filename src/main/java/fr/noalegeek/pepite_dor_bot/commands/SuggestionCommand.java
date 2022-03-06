@@ -18,7 +18,7 @@ public class SuggestionCommand extends Command {
         this.aliases = new String[]{"su", "suggest"};
         this.cooldown = 30;
         this.arguments = "arguments.suggestion";
-        this.category = CommandCategories.MISC.category;
+        this.category = CommandCategories.UTILITY.category;
     }
 
     @Override

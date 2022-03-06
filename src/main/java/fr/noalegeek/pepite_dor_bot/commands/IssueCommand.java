@@ -50,6 +50,7 @@ public class IssueCommand extends Command {
         this.arguments = "arguments.issue";
         this.example = "example.issue";
         this.category = CommandCategories.MISC.category;
+        this.guildOwnerCommand = true;
         this.github = new GitHubBuilder().withOAuthToken(SimpleBot.getInfos().botGithubToken()).build();
     }
 

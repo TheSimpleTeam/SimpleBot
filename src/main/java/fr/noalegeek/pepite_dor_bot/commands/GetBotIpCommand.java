@@ -17,6 +17,7 @@ public class GetBotIpCommand extends Command {
         this.name = "getbotip";
         this.aliases = new String[]{"gbi"};
         this.ownerCommand = true;
+        this.hidden = true;
     }
 
     @Override

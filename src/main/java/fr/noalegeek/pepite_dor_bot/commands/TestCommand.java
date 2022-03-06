@@ -2,6 +2,7 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
 
 public class TestCommand extends Command {
@@ -11,9 +12,9 @@ public class TestCommand extends Command {
         this.help = "help.test";
         this.cooldown = 5;
         this.name = "test";
-        this.hidden = true;
         this.aliases = new String[]{"t", "te", "tes"};
         this.ownerCommand = true;
+        this.hidden = true;
     }
 
     @Override
@@ -77,5 +78,12 @@ public class TestCommand extends Command {
             }
         } else embedBuilder.addField("__" + MessageHelper.translateMessage("text.commands.syntaxError.informations", event) + "__", str, false);
         event.reply(embedBuilder.build());*/
+        for(Command command : SimpleBot.getClient().getCommands().stream().filter(command -> command.getCategory() != null && command.getCategory().getName().equals(CommandCategories.MISC.category.getName())).toList())
+            System.out.println(command.getName());
+        System.out.println("""
+                
+                e
+                
+                """);
     }
 }

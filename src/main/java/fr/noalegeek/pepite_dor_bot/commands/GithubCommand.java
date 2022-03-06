@@ -41,7 +41,7 @@ public class GithubCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this, "informations.github");
             return;
         }
         if(isCommandDisabled()) {
@@ -51,12 +51,12 @@ public class GithubCommand extends Command {
         switch (args[0]) {
             case "search":
                 if(args.length != 3) {
-                    MessageHelper.syntaxError(event, this, null);
+                    MessageHelper.syntaxError(event, this, "informations.github");
                     return;
                 }
                 GHRepository repository;
                 try {
-                    repository = github.getRepository(args[1] + "/" + args[2]);
+                    repository = github.getRepository(new StringBuilder().append(args[1]).append("/").append(args[2]).toString());
                 } catch (IOException ignored) {
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.search.repositoryDontExist", null, null, null, (Object[]) null).build()).build());
                     return;
@@ -67,7 +67,7 @@ public class GithubCommand extends Command {
                             .addField(MessageHelper.translateMessage(event, "success.github.search.author"), repository.getOwnerName(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.getDescription(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.license"), getLicense(repository, event), false)
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.license"), repository.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repository.getLicense().getName(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false)
                             .build()).build());
                 } catch (IOException exception) {
@@ -87,13 +87,9 @@ public class GithubCommand extends Command {
                 }
                 break;
             default:
-                MessageHelper.syntaxError(event, this, null);
+                MessageHelper.syntaxError(event, this, "informations.github");
                 break;
         }
-    }
-
-    private String getLicense(GHRepository repo, CommandEvent event) throws IOException {
-        return repo.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repo.getLicense().getName();
     }
 
     private boolean isCommandDisabled() {
