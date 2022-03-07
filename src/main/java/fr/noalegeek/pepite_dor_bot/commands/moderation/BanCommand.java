@@ -25,7 +25,7 @@ public class BanCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (args.length < 2) {
-            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "informations.ban"));
+            MessageHelper.syntaxError(event, this, MessageHelper.translateMessage(event, "information.ban"));
             return;
         }
         if (args[0].replaceAll("\\D+", "").isEmpty()) {

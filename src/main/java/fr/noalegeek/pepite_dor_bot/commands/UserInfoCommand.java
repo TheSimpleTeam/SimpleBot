@@ -28,7 +28,7 @@ public class UserInfoCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (args.length > 1) {
-            MessageHelper.syntaxError(event, this, "informations.userInfo");
+            MessageHelper.syntaxError(event, this, "information.userInfo");
             return;
         }
         if (args.length == 0) {

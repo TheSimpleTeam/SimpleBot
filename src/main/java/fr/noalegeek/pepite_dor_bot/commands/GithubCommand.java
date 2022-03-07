@@ -41,7 +41,7 @@ public class GithubCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 2 && args.length != 3) {
-            MessageHelper.syntaxError(event, this, "informations.github");
+            MessageHelper.syntaxError(event, this, "information.github");
             return;
         }
         if(isCommandDisabled()) {
@@ -51,7 +51,7 @@ public class GithubCommand extends Command {
         switch (args[0]) {
             case "search":
                 if(args.length != 3) {
-                    MessageHelper.syntaxError(event, this, "informations.github");
+                    MessageHelper.syntaxError(event, this, "information.github");
                     return;
                 }
                 GHRepository repository;
@@ -77,8 +77,8 @@ public class GithubCommand extends Command {
             case "list":
                 try {
                     EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.list", null, null, github.getUser(args[1]).getAvatarUrl(), name);
-                    for (String ghname : github.getUser(args[1]).getRepositories().keySet()) {
-                        embedBuilder.addField(ghname, github.getUser(args[1]).getRepositories().get(ghname).getHtmlUrl().toString(), false);
+                    for (String repositoryName : github.getUser(args[1]).getRepositories().keySet()) {
+                        embedBuilder.addField(repositoryName, github.getUser(args[1]).getRepositories().get(repositoryName).getHtmlUrl().toString(), false);
                     }
                     event.reply(new MessageBuilder(embedBuilder.build()).build());
                 } catch (IOException ex) {
@@ -87,7 +87,7 @@ public class GithubCommand extends Command {
                 }
                 break;
             default:
-                MessageHelper.syntaxError(event, this, "informations.github");
+                MessageHelper.syntaxError(event, this, "information.github");
                 break;
         }
     }

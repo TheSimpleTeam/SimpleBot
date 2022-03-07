@@ -29,7 +29,7 @@ public class MathsCommand extends Command {
         String[] args = event.getArgs().split("\\s+");
         StringBuilder unitsList = new StringBuilder();
         if (args.length < 1) {
-            MessageHelper.syntaxError(event, this, String.format("informations.maths", unitsList));
+            MessageHelper.syntaxError(event, this, String.format("information.maths", unitsList));
             return;
         }
         switch (args.length) {
@@ -45,7 +45,7 @@ public class MathsCommand extends Command {
                 }
                 if (!new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).checkSyntax()) {
                     if(args[0].replaceAll("\\D+", "").isEmpty()) {
-                        MessageHelper.syntaxError(event, this, "informations.maths");
+                        MessageHelper.syntaxError(event, this, "information.maths");
                         return;
                     }
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).build()).build());
@@ -76,7 +76,7 @@ public class MathsCommand extends Command {
                                 .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false)
                                 .build()).build());
                     }
-                    default -> MessageHelper.syntaxError(event, this, "informations.maths");
+                    default -> MessageHelper.syntaxError(event, this, "information.maths");
                 }
             }
             case 3 -> {
@@ -170,7 +170,7 @@ public class MathsCommand extends Command {
                             }
                         }
                     }
-                    default -> MessageHelper.syntaxError(event, this, "informations.maths");
+                    default -> MessageHelper.syntaxError(event, this, "information.maths");
                 }
             }
             case 4 -> {
@@ -211,10 +211,10 @@ public class MathsCommand extends Command {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnNumber", null, null, null, args[1]).build()).build());
                         }
                     }
-                    default -> MessageHelper.syntaxError(event, this, "informations.maths");
+                    default -> MessageHelper.syntaxError(event, this, "information.maths");
                 }
             }
-            default -> MessageHelper.syntaxError(event, this, "informations.maths");
+            default -> MessageHelper.syntaxError(event, this, "information.maths");
         }
     }
 

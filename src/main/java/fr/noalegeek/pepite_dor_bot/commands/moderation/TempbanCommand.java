@@ -56,7 +56,7 @@ public class TempbanCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (args.length < 3) {
-            MessageHelper.syntaxError(event, this, "informations.tempban");
+            MessageHelper.syntaxError(event, this, "information.tempban");
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
@@ -72,7 +72,7 @@ public class TempbanCommand extends Command {
                     event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "warning.commands.commandsBan"));
                 }
                 if (MathsCommand.Unit.getAllSymbolsByType(MathsCommand.UnitType.TIME).stream().filter(symbolDate -> symbolDate.equalsIgnoreCase(args[2].replaceAll("\\d+", ""))).findFirst().isEmpty()) {
-                    MessageHelper.syntaxError(event, this, "informations.tempban");
+                    MessageHelper.syntaxError(event, this, "information.tempban");
                     return;
                 }
                 if(Arrays.stream(MathsCommand.Date.values()).filter(date -> date.name().equals(args[2].replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(args[2].replaceAll("\\D+", "")) > 3155760000D){
@@ -94,7 +94,7 @@ public class TempbanCommand extends Command {
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.tempban", null, null, null, args.length == 3 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3), MathsCommand.dateTime(args[2], event)).build()).build());
                     });
                 } catch (NumberFormatException exception) {
-                    MessageHelper.syntaxError(event, this, "informations.tempban");
+                    MessageHelper.syntaxError(event, this, "information.tempban");
                 }
             } catch (NumberFormatException exception) {
                 event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.ban.notAnNumber"));

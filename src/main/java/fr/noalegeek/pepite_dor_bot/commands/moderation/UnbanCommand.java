@@ -26,7 +26,7 @@ public class UnbanCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if (args.length < 1) {
-            MessageHelper.syntaxError(event, this, "informations.unban");
+            MessageHelper.syntaxError(event, this, "information.unban");
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){

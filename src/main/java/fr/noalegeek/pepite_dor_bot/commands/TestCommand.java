@@ -24,7 +24,7 @@ public class TestCommand extends Command {
         StringBuilder stringBuilder = new StringBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         StringBuilder stringB = new StringBuilder();
-        stringB.append(MessageHelper.translateMessage("informations.maths", event));
+        stringB.append(MessageHelper.translateMessage("information.maths", event));
         for(MathsCommand.UnitType unitType : MathsCommand.UnitType.values()){
             for(int index = -1; index <= Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().size() - 1; index++){
                 stringB.append(index == -1 ? unitType == MathsCommand.UnitType.LENGTH ? MessageHelper.translateMessage("text.maths.convert.lengthList", event) + "\n" : MessageHelper.translateMessage("text.maths.convert.timeList", event) + "\n" : index == Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().size() - 1 ? "- **" + Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(index).name() + "** (" + MessageHelper.translateMessage(Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(index).unitName, event) + ").\n" : "- **" + Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(index).name() + "** (" + MessageHelper.translateMessage(Arrays.stream(MathsCommand.Unit.values()).filter(unit -> unit.unitType == unitType).toList().get(index).unitName, event) + ");\n");
@@ -34,7 +34,7 @@ public class TestCommand extends Command {
         for(char c : stringB.toString().toCharArray()){
             stringBuilder.append(c);
             charactersCount++;
-            if (field == 0 ? charactersCount == 1024 : charactersCount / field == 1024 || (field == Math.floor(MessageHelper.translateMessage("informations.maths", event).toCharArray().length / 1024D) && (charactersCount / 1024D - field) * 1024 == (MessageHelper.translateMessage("informations.maths", event).toCharArray().length / 1024D - field) * 1024)) {
+            if (field == 0 ? charactersCount == 1024 : charactersCount / field == 1024 || (field == Math.floor(MessageHelper.translateMessage("information.maths", event).toCharArray().length / 1024D) && (charactersCount / 1024D - field) * 1024 == (MessageHelper.translateMessage("information.maths", event).toCharArray().length / 1024D - field) * 1024)) {
                 field++;
                 list.add(stringBuilder.toString());
                 stringBuilder.setLength(0);
@@ -78,10 +78,11 @@ public class TestCommand extends Command {
             }
         } else embedBuilder.addField("__" + MessageHelper.translateMessage("text.commands.syntaxError.informations", event) + "__", str, false);
         event.reply(embedBuilder.build());*/
+        //todo
         System.out.println("""
                 
-                e
                 
+                       
                 """);
     }
 }
