@@ -35,7 +35,7 @@ public class InviteCommand extends Command {
             case "bot" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.invite.bot.success", null, null, null, event.getSelfMember().getEffectiveName())
                     .addField(MessageHelper.translateMessage(event, "success.invite.bot.invitationLink"), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
                     .build()).build());
-            default -> MessageHelper.syntaxError(event, this, "syntax.invite");
+            default -> MessageHelper.syntaxError(event, this, "information.invite");
         }
     }
 }
