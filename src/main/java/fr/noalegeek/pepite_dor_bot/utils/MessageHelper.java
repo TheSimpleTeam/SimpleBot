@@ -81,7 +81,7 @@ public class MessageHelper {
             if (translateMessage(event, informations).length() > 1024) {
                 int field = 0;
                 StringBuilder informationsBuilder = new StringBuilder();
-                for (char character : information.toCharArray()) {
+                for (char character : informations.toCharArray()) {
                     informationsBuilder.append(character);
                     if(character == '²') {
                         field++;

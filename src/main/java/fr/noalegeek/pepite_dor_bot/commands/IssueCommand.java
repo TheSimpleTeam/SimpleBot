@@ -58,7 +58,7 @@ public class IssueCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s");
         if(args.length == 0) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this, "information.issue");
             return;
         }
         try {
