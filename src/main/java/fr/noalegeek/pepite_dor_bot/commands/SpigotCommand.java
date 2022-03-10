@@ -53,17 +53,17 @@ public class SpigotCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(event.getArgs().replaceAll("\\s+", "").isEmpty()) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this, "information.spigot");
             return;
         }
         if(args[0].chars().allMatch(Character::isDigit)) { //Search for plugin with an ID
             try {
-                Resource pluginId = new Resource(Integer.parseInt(args[0]));
-                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.spigot.pluginID.success", null, null, pluginId.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : pluginId.getResourceIconLink().toString(), (Object[]) null)
-                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginName"), pluginId.getResourceName(), false)
-                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginLink"), pluginId.getResourceLink(), false)
+                Resource plugin = new Resource(Integer.parseInt(args[0]));
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.spigot.pluginID.success", null, null, plugin.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : plugin.getResourceIconLink().toString(), (Object[]) null)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginName"), plugin.getResourceName(), false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginLink"), plugin.getResourceLink(), false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginID"), args[0], false)
-                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.getDescription(pluginId.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.getDescription(plugin.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
                         .build()).build());
             } catch (IOException exception) {
                 if(exception instanceof FileNotFoundException) {

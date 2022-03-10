@@ -78,12 +78,14 @@ public class TestCommand extends Command {
             }
         } else embedBuilder.addField("__" + MessageHelper.translateMessage("text.commands.syntaxError.informations", event) + "__", str, false);
         event.reply(embedBuilder.build());*/
-        //todo mcserver, snippet, spigot, suggestion, unshort url
+        //todo suggestion, unshort url
         System.out.println("""
                                 
-                L'argument est :
-                
-                - **programme** envoie une image du bout de code spécifié.
+                Les arguments sont :
+
+                - **ID du plugin Spigot** cherche un plugin Spigot avec son identifiant;
+                - **utilisateur Spigot** donne une liste d'utilisateurs Spigot ayant des noms proches avec le nom spécifié;
+                - **nom du plugin** donne une liste de plugins Spigot ayant des noms proches avec le nom spécifié.
                  
                 """);
     }
