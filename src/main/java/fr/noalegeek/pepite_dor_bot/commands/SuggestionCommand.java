@@ -23,8 +23,10 @@ public class SuggestionCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if(event.getAuthor().isBot()) return;
-        if(event.getArgs().isEmpty()) MessageHelper.syntaxError(event,this, null);
+        if(event.getArgs().isEmpty()){
+            MessageHelper.syntaxError(event, this, "information.suggestion");
+            return;
+        }
         if(event.getJDA().getGuildById("846048803554852904") == null) {
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.suggestion.guildNull", null, null, null, (Object[]) null).build()).build());
             return;
