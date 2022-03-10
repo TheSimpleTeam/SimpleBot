@@ -81,8 +81,10 @@ public class TestCommand extends Command {
         //todo mcserver, snippet, spigot, suggestion, unshort url
         System.out.println("""
                                 
+                L'argument est :
                 
- 
+                - **programme** envoie une image du bout de code spécifié.
+                 
                 """);
     }
 }

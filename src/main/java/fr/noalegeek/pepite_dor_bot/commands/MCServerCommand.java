@@ -28,7 +28,7 @@ public class MCServerCommand extends Command {
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
         if(args.length != 1) {
-            MessageHelper.syntaxError(event, this, null);
+            MessageHelper.syntaxError(event, this, "information.mcServer");
             return;
         }
         try {
@@ -36,12 +36,12 @@ public class MCServerCommand extends Command {
                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.mcServer.offlineServer", null, null, null, (Object[]) null).build()).build());
                 return;
             }
-            //We get the informations like https://github.com/Minemobs/McStatusJava/blob/master/src/main/java/fr/minemobs/test/SimpleBot.java
+            JsonObject serverInformation = SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class);
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.mcServer.success", null, null, null, (Object[]) null)
-                    .addField(MessageHelper.translateMessage(event, "success.mcServer.ipAdress"), SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("ip").getAsString(), false)
-                    .addField(MessageHelper.translateMessage(event, "success.mcServer.port"), SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("port").getAsString(), false)
-                    .addField(MessageHelper.translateMessage(event, "success.mcServer.version"), SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("version").getAsString(), false)
-                    .addField(MessageHelper.translateMessage(event, "success.mcServer.connectedPlayers"), String.valueOf(SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("players").getAsJsonObject().get("online").getAsInt()), false).build()).build());
+                    .addField(MessageHelper.translateMessage(event, "success.mcServer.ipAdress"), serverInformation.get("ip").getAsString(), false)
+                    .addField(MessageHelper.translateMessage(event, "success.mcServer.port"), serverInformation.get("port").getAsString(), false)
+                    .addField(MessageHelper.translateMessage(event, "success.mcServer.version"), serverInformation.get("version").getAsString(), false)
+                    .addField(MessageHelper.translateMessage(event, "success.mcServer.connectedPlayers"), String.valueOf(serverInformation.get("players").getAsJsonObject().get("online").getAsInt()), false).build()).build());
         } catch (IOException exception) {
             MessageHelper.sendError(exception, event, this);
         }
