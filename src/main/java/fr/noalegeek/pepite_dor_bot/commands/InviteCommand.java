@@ -24,8 +24,8 @@ public class InviteCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(event.getArgs().length() != 1) {
-            MessageHelper.syntaxError(event, this, "syntax.invite");
+        if(args.length != 1) {
+            MessageHelper.syntaxError(event, this, "information.invite");
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
