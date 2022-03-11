@@ -78,11 +78,5 @@ public class TestCommand extends Command {
             }
         } else embedBuilder.addField("__" + MessageHelper.translateMessage("text.commands.syntaxError.informations", event) + "__", str, false);
         event.reply(embedBuilder.build());*/
-        //todo unshort url
-        System.out.println("""
-                                
-                
-                 
-                """);
     }
 }
