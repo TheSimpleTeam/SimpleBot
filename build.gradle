@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.johnrengelman.shadow" version "7.1.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
     id 'com.bmuschko.docker-java-application' version '7.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
@@ -39,9 +39,9 @@ repositories {
 
 dependencies {
     //JDA & JDA-Utilities
-    implementation("net.dv8tion:JDA:4.3.0_339")
+    implementation("net.dv8tion:JDA:5.0.0-alpha.9")
     implementation('ch.qos.logback:logback-classic:1.2.10')
-    implementation('pw.chew:jda-chewtils:1.22.0') {
+    implementation('pw.chew:jda-chewtils:1.23.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
