@@ -25,7 +25,7 @@
 package fr.simpleteam.simplebot.api
 
 import com.google.gson.Gson
-import fr.noalegeek.simplebot.SimpleBot
+import net.thesimpleteam.simplebot.SimpleBot
 import fr.simpleteam.simplebot.api.jda.Guild
 import io.ktor.application.*
 import io.ktor.features.*

@@ -4,5 +4,5 @@ WORKDIR /app
 COPY lang lang/
 COPY build/docker/libs libs/
 COPY build/docker/classes classes/
-ENTRYPOINT ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "fr.noalegeek.simplebot.SimpleBot"]
+ENTRYPOINT ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "SimpleBot"]
 EXPOSE 8080
