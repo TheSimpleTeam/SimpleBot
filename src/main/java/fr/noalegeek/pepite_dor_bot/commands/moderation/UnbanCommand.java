@@ -2,9 +2,10 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 
 public class UnbanCommand extends Command {
@@ -12,38 +13,35 @@ public class UnbanCommand extends Command {
     public UnbanCommand() {
         this.name = "unban";
         this.arguments = "arguments.unban";
-        this.aliases = new String[]{"ub","unb","uban","pa","pardon"};
+        this.aliases = new String[]{"pardon"};
         this.category = CommandCategories.STAFF.category;
         this.help = "help.unban";
         this.guildOnly = true;
-        this.example = "285829396009451522";
+        this.example = "285829396009451522 wrong person";
+        this.userPermissions = new Permission[]{Permission.BAN_MEMBERS};
+        this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.BAN_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.BAN_MEMBERS.getName()));
-            return;
-        }
         String[] args = event.getArgs().split("\\s+");
-        if (args.length != 1 && args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event, this));
+        if (args.length < 1) {
+            MessageHelper.syntaxError(event, this, "information.unban");
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
-            if(event.getGuild().retrieveBanList().complete().stream().anyMatch(ban -> ban.getUser() == user)) {
-                String reason;
-                if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
-                else reason = MessageHelper.translateMessage("text.commands.reason", event) + args[1];
-                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unban", event), user.getName(), reason));
-                event.getGuild().unban(user).queue();
+        if(args[0].replaceAll("\\D+", "").isEmpty()){
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
+            return;
+        }
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveBanList().queue(banList -> {
+            if(banList.stream().anyMatch(banUser -> user.getId().equals(banUser.getUser().getId()))) {
+                event.getGuild().unban(user).queue(unused -> {
+                    SimpleBot.getServerConfig().tempBan().remove(new StringBuilder().append(user.getId()).append("-").append(event.getGuild().getId()).toString());
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.unban", null, null, null, user.getName(), args.length == 1 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : new StringBuilder().append(MessageHelper.translateMessage(event, "text.commands.reason")).append(" ").append(event.getArgs().substring(args[0].length() + 1)).toString()).build()).build());
+                });
                 return;
             }
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unban", event), user.getName()));
-        }, userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.unban", null, null, null, user.getName()).build()).build());
+        }), userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null, (Object[]) null).build()).build()));
     }
 }

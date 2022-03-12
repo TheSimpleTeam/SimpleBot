@@ -2,50 +2,48 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 
 public class UnmuteCommand extends Command {
+
     public UnmuteCommand() {
         this.name = "unmute";
-        this.aliases = new String[]{"um","umute","unm"};
         this.guildOnly = true;
         this.cooldown = 5;
-        this.arguments = "<identifiant/mention du membre> <raison>";
-        this.example = "363811352688721930";
+        this.arguments = "arguments.unmute";
+        this.example = "363811352688721930 wrong person";
         this.category = CommandCategories.STAFF.category;
-        this.help = "Démute un membre seulement si la personne est déjà mute.";
+        this.help = "help.unmute";
+        this.userPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
+        this.botPermissions = new Permission[]{Permission.MANAGE_CHANNEL};
     }
+
     @Override
     protected void execute(CommandEvent event) {
-        if (event.getAuthor().isBot()) return;
-        if(!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.MESSAGE_MANAGE.getName()));
-            return;
-        }
         String[] args = event.getArgs().split("\\s+");
-        if (args.length != 1 && args.length != 2) {
-            event.replyError(MessageHelper.syntaxError(event, this));
+        if (args.length < 2) {
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
-        Main.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
-            if(!member.getRoles().contains(event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event))) || !MuteCommand.isMutedRoleHere(event)){
-                event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.unmute", event), user.getName()));
+        if(args[0].replaceAll("\\D+", "").isEmpty()){
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
+            return;
+        }
+        if (MuteCommand.isMutedRoleHere(event)) {
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.unmute.mutedRoleDontExist"));
+            return;
+        }
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+            if (!member.getRoles().contains(event.getGuild().getRoleById(SimpleBot.getServerConfig().mutedRole().get(event.getGuild().getId()))) || !MuteCommand.isMutedRoleHere(event)) {
+                event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "error.unmute.notMuted"), user.getName()));
                 return;
             }
-            String reason;
-            if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.reasonNull", event);
-            else reason = MessageHelper.translateMessage("text.reason", event) + args[1];
-            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.unmute", event), user.getName(), reason));
-            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(Main.getServerConfig().mutedRole.get(event))).queue();
-        }), userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.unmute"), user.getName(), args.length == 2 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + 2)));
+            event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(SimpleBot.getServerConfig().mutedRole().get(event.getGuild().getId()))).queue();
+        }), userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
     }
 }

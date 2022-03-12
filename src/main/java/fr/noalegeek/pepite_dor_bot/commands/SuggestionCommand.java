@@ -2,43 +2,49 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.Color;
-import java.time.Clock;
-import java.time.OffsetDateTime;
 
 public class SuggestionCommand extends Command {
 
     public SuggestionCommand() {
         this.guildOnly = true;
-        this.help = "Envoie une suggestion aux développeurs.";
+        this.help = "help.suggestion";
         this.name = "suggestion";
-        this.aliases = new String[]{"sugg", "su","sug","sugge","suggest"};
+        this.aliases = new String[]{"su", "suggest"};
         this.cooldown = 30;
-        this.arguments = "<suggestion>";
-        this.category = CommandCategories.MISC.category;
+        this.arguments = "arguments.suggestion";
+        this.category = CommandCategories.UTILITY.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(event.getAuthor().isBot()) return;
-        TextChannel suggestionChannel = event.getJDA().getGuildById(846048803554852904L).getTextChannelById(848599555540123648L);
-        MessageEmbed embedSuggestion = new EmbedBuilder()
-                .setTitle(event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + " a fait une suggestion.")
-                .setColor(Color.YELLOW)
-                .setFooter("💡 "+OffsetDateTime.now(Clock.systemUTC()))
-                .addField("Suggestion  ", "```" + event.getArgs() + "```", false)
-                .build();
         if(event.getArgs().isEmpty()){
-            event.replyError(MessageHelper.syntaxError(event,this));
+            MessageHelper.syntaxError(event, this, "information.suggestion");
+            return;
         }
-        suggestionChannel.sendMessage(embedSuggestion).queue();
-        event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "La suggestion à bien été envoyée.");
-        event.getMessage().delete().queue();
+        if(event.getJDA().getGuildById("846048803554852904") == null) {
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.suggestion.guildNull", null, null, null, (Object[]) null).build()).build());
+            return;
+        }
+        if (event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648") == null) {
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.suggestion.channelNull", null, null, null, (Object[]) null).build()).build());
+            return;
+        }
+        event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed(event, "success.suggestion.suggestion", null, null, null, (Object[]) null)
+                .setTitle(new StringBuilder().append(UnicodeCharacters.electricLightBulbEmoji).append(" ").append("success.suggestion.suggestion").toString())
+                .setColor(Color.YELLOW)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion"), event.getArgs(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.author"), event.getAuthor().getName(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.id"), event.getAuthor().getName(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.tag"), "#" + event.getAuthor().getDiscriminator(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.guildName"), event.getGuild().getName(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.guildID"), event.getGuild().getId(), false)
+                .build()).build()).queue();
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.suggestion.success", null, null, null, (Object[]) null).build()).build());
     }
 }

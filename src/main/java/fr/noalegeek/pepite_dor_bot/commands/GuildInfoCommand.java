@@ -2,42 +2,34 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.command.impl.CommandClientImpl;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 
 import java.awt.Color;
-import java.time.Instant;
 
 public class GuildInfoCommand extends Command {
-
-    /**
-     * {@link CommandClientImpl}
-     */
 
     public GuildInfoCommand() {
         this.name = "guildinfo";
         this.aliases = new String[]{"guildi", "gi","ginfo"};
         this.guildOnly = true;
-        this.help = "Donne des informations sur le serveur.";
+        this.help = "help.guildInfo";
         this.cooldown = 5;
         this.category = CommandCategories.INFO.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        MessageEmbed embedGuildInfo = new EmbedBuilder()
-                .setAuthor(MessageHelper.getTag(event.getMember().getUser()), null, event.getMember().getUser().getEffectiveAvatarUrl())
-                .setThumbnail(event.getGuild().getIconUrl())
-                .addField("Nom du serveur", event.getGuild().getName(), false)
-                .addField("Niveau de nitro", String.valueOf(event.getGuild().getBoostTier().getKey()), false)
-                .addField("Créateur du serveur", event.getGuild().getOwner().getNickname() == null ? event.getGuild().getOwner().getUser().getName() : event.getGuild().getOwner().getNickname(), false)
-                .addField("Membres sur le discord", String.valueOf(event.getGuild().getMemberCount()), false)
-                .setColor(Color.GREEN)
-                .setFooter("ℹ "+ Instant.now())
-                .build();
-        event.reply(embedGuildInfo);
+        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.guildInfo.success", Color.BLUE, null, event.getGuild().getIconUrl(), event.getGuild().getName())
+                .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.guildInfo.success"), event.getGuild().getName())).toString())
+                .addField(MessageHelper.translateMessage(event, "success.guildInfo.nitroLevel"), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
+                .addField(MessageHelper.translateMessage(event, "success.guildInfo.membersOnTheServer"), String.valueOf(event.getGuild().getMemberCount()), false)
+                .addField(MessageHelper.translateMessage(event, "success.guildInfo.membersConnectedToTheServer"), String.valueOf(event.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() != OnlineStatus.OFFLINE).toList().size()), false);
+        if(event.getGuild().getOwner() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.guildInfo.serverOwner"), event.getGuild().getOwner().getEffectiveName(), false);
+        event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 }

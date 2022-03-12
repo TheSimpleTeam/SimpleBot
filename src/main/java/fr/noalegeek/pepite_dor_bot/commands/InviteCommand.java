@@ -3,7 +3,8 @@ package fr.noalegeek.pepite_dor_bot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.MessageBuilder;
 
 import java.util.Locale;
 
@@ -14,34 +15,27 @@ public class InviteCommand extends Command {
         this.aliases = new String[]{"inv", "i"};
         this.guildOnly = true;
         this.cooldown = 10;
+        this.example = "create";
         this.arguments = "<create/bot>";
-        this.help = "Crée une invitation du serveur.";
-        this.category = CommandCategories.MISC.category;
+        this.help = "help.invite";
+        this.category = CommandCategories.UTILITY.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(event.getArgs().length() == 0) {
-            event.replyError(MessageHelper.syntaxError(event, this)+"Les arguments disponibles sont **create** et **bot**.\n" +
-                    "L'argument **create** crée un lien d'invitation du serveur où a été fait la commande.\n" +
-                    "L'argument **bot** envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur.");
+        if(args.length != 1) {
+            MessageHelper.syntaxError(event, this, "information.invite");
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "create":
-                event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + "Voici ton lien d'invitation du serveur " + event.getGuild().getName() +
-                        ", n'hésite pas à faire venir plein de personnes !\n" + event.getTextChannel().createInvite().complete().getUrl());
-                break;
-            case "bot":
-                String discordInviteURL = "https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591";
-                event.replySuccess("Voici le lien d'invitation pour inviter le bot sur ton serveur !\n"+String.format(discordInviteURL, event.getJDA().getSelfUser().getId()));
-                break;
-            default:
-                event.replyError(MessageHelper.syntaxError(event, this)+"Les arguments disponibles sont **create** et **bot**.\n" +
-                        "L'argument **create** crée un lien d'invitation du serveur où a été fait la commande.\n" +
-                        "L'argument **bot** envoie le lien d'invitation du bot pour l'inviter sur n'importe quel serveur.");
-                break;
+            case "create" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.invite.create.success", null, null, null, event.getGuild().getName())
+                    .addField(MessageHelper.translateMessage(event, "success.invite.create.invitationLink"), event.getTextChannel().createInvite().complete().getUrl(), false)
+                    .build()).build());
+            case "bot" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.invite.bot.success", null, null, null, event.getSelfMember().getEffectiveName())
+                    .addField(MessageHelper.translateMessage(event, "success.invite.bot.invitationLink"), String.format("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8589934591", event.getJDA().getSelfUser().getId()), false)
+                    .build()).build());
+            default -> MessageHelper.syntaxError(event, this, "information.invite");
         }
     }
 }

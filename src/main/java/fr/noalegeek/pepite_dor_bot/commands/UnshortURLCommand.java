@@ -2,67 +2,52 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.MessageBuilder;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 public class UnshortURLCommand extends Command {
 
     public UnshortURLCommand() {
         this.name = "unshorturl";
         this.aliases = new String[]{"usu"};
-        this.arguments = "<URL>";
-        this.help = "Donne la redirection d'un lien.";
+        this.arguments = "arguments.unshorturl";
+        this.help = "help.unshorturl";
         this.category = CommandCategories.MISC.category;
-        this.example = "Liens AdFly";
+        this.example = "shorturl.at/aszN3";
     }
 
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty()) {
-            event.replyError(MessageHelper.syntaxError(event, this));
+            MessageHelper.syntaxError(event, this, null);
             return;
         }
         try {
-            event.replySuccess(String.format("`%s`", getURL(event.getArgs().split("\\s")[0])));
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.unshortURL.success", Color.GREEN, null, null, (Object[]) null)
+                    .addField(MessageHelper.translateMessage(event, "success.unshortURL.link"), !event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0], false)
+                    .addField(MessageHelper.translateMessage(event, "success.unshortURL.redirection"), new StringBuilder().append('`').append(getURL(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])).append('`').toString(), false)
+                    .build()).build());
         } catch (IOException e) {
-            MessageHelper.sendError(e, event);
+            MessageHelper.sendError(e, event, this);
         }
     }
 
-    public String getURL(String _url) throws IOException {
-        String url = unshortenUrl(_url);
-        String[] urls = url.replace("https://", "").replace("http://", "").split("/");
-        if(urls[0].equalsIgnoreCase("preview.tinyurl.com")) {
-            Document doc = Jsoup.connect(_url).get();
-            Elements redirectURL = doc.getElementById("contentcontainer").getElementsByAttribute("blockquote");
-            Main.LOGGER.info(String.valueOf(redirectURL.size()));
-            String docText = doc.body().text();
-            return docText.substring(docText.indexOf("to: "), docText.indexOf(" Proceed")).replace("to: ", "").replace(" Proceed", "");
-        }
-        return url;
+    public String getURL(String url) throws IOException {
+        return unshortUrl(url).replaceFirst("http(s?)://", "").split("/")[0].equalsIgnoreCase("preview.tinyurl.com") ? Jsoup.connect(unshortUrl(url)).get().body().text().substring(Jsoup.connect(unshortUrl(url)).get().body().text().indexOf("to: "), Jsoup.connect(unshortUrl(url)).get().body().text().indexOf(" Proceed")).replace("to: ", "").replace(" Proceed", "") : unshortUrl(url);
     }
 
-    public static String unshortenUrl(final String shortUrl) throws IOException {
+    public static String unshortUrl(final String shortUrl) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(shortUrl).openConnection();
         connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("HEAD");
         connection.setConnectTimeout(10000);
-        int responseCode = connection.getResponseCode();
-        String url = connection.getHeaderField("Location");
-        if (responseCode / 100 == 3 && url != null) {
-            String expandedUrl = unshortenUrl(url);
-            if (Objects.equals(expandedUrl, url)) return url;
-            return expandedUrl;
-        }
-        return shortUrl;
+        return connection.getResponseCode() / 100 == 3 && connection.getHeaderField("Location") != null ? unshortUrl(connection.getHeaderField("Location")).equals(connection.getHeaderField("Location")) ? connection.getHeaderField("Location") : unshortUrl(connection.getHeaderField("Location")) : shortUrl;
     }
 }

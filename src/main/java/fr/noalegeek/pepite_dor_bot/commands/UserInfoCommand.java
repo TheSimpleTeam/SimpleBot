@@ -2,56 +2,58 @@ package fr.noalegeek.pepite_dor_bot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.MessageBuilder;
 
-import java.awt.Color;
-import java.time.Instant;
+import java.awt.*;
 
 public class UserInfoCommand extends Command {
 
     public UserInfoCommand() {
         this.name = "userinfo";
-        this.aliases = new String[]{"useri", "ui","uinfo"};
-        this.arguments = "<mention de l'utilisateur>";
+        this.aliases = new String[]{"useri", "ui", "uinfo"};
+        this.arguments = "arguments.userInfo";
         this.guildOnly = true;
         this.cooldown = 5;
-        this.help = "Donne des informations sur l'auteur ou sur la personne mentionnée.";
-        this.example = "@minemobs";
+        this.help = "help.userInfo";
+        this.example = "363811352688721930";
         this.category = CommandCategories.INFO.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        Member member = event.getMember();
-        User user = event.getAuthor();
-        if(!event.getMessage().getMentionedMembers().isEmpty() && event.getMessage().getMentionedMembers().get(0) != null && !event.getMessage().getMentionedUsers().isEmpty() &&
-                event.getMessage().getMentionedUsers().get(0) != null) {
-            member = event.getMessage().getMentionedMembers().get(0);
-            user = event.getMessage().getMentionedUsers().get(0);
-        } else if(event.getMessage().getMentionedMembers().isEmpty() && !event.getMessage().getMentionedUsers().isEmpty() &&
-                event.getMessage().getMentionedUsers().get(0) != null) {
-            user = event.getMessage().getMentionedUsers().get(0);
+        String[] args = event.getArgs().split("\\s+");
+        if (args.length > 1) {
+            MessageHelper.syntaxError(event, this, "information.userInfo");
+            return;
         }
-        MessageEmbed embedUserInfo = new EmbedBuilder()
-                .setFooter("ℹ "+Instant.now())
-                .setColor(Color.BLUE)
-                .addField("Nom d'utilistateur", member.getNickname() == null ? member.getUser().getName() : member.getNickname(), false)
-                .addField("Identifiant", member.getUser().getId(), false)
-                .addField("Date de création du compte", MessageHelper.formatShortDate(member.getTimeCreated()), true)
-                .addField("Cet utilisateur à rejoint le", MessageHelper.formatShortDate(member.getTimeJoined()), false)
-                .addField("Joue à", getUserActivityName(member), false)
-                .setAuthor(MessageHelper.getTag(user), null, user.getEffectiveAvatarUrl())
-                .build();
-        event.reply(embedUserInfo);
-    }
-
-    private String getUserActivityName(Member member) {
-        if(member.getActivities().isEmpty() || member.getActivities().get(0) == null) return "Rien";
-        return member.getActivities().get(0).getName();
+        if (args.length == 0) {
+            EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, event.getAuthor().getEffectiveAvatarUrl(), (Object[]) null)
+                    .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor()))).toString())
+                    .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), event.getMember().getUser().getId(), false)
+                    .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(event.getMember().getTimeJoined()), false)
+                    .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(event.getMember().getTimeCreated()), false)
+                    .addField(MessageHelper.translateMessage(event, "success.userInfo.activity"), event.getMember().getActivities().isEmpty() ? MessageHelper.translateMessage(event, "text.commands.nothing") : event.getMember().getActivities().toString(), false);
+            if (event.getMember().getNickname() != null)
+                embedBuilder.addField(MessageHelper.translateMessage(event, "success.userInfo.nickname"), event.getMember().getNickname(), false);
+            event.reply(new MessageBuilder(embedBuilder.build()).build());
+        }
+        SimpleBot.getJda().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
+                        event.getGuild().retrieveMember(user).queue(member -> {
+                            EmbedBuilder successEmbed = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, user.getEffectiveAvatarUrl(), (Object[]) null)
+                                    .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor()))).toString())
+                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), member.getUser().getId(), false)
+                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(member.getTimeJoined()), false)
+                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(member.getTimeCreated()), false)
+                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.activity"), member.getActivities().isEmpty() ? MessageHelper.translateMessage(event, "text.commands.nothing") : member.getActivities().toString(), false);
+                            if (member.getNickname() != null)
+                                successEmbed.addField(MessageHelper.translateMessage(event, "success.userInfo.nickname"), member.getNickname(), false);
+                            event.reply(new MessageBuilder(successEmbed.build()).build());
+                        }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.memberNull"))),
+                userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
     }
 }

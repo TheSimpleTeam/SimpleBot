@@ -1,7 +1,6 @@
 {
   "token": "YOUR-TOKEN-HERE",
-  "prefix": "!",
-  "defaultRoleID": "YOUR-ROLE-ID",
+  "prefix": "sb!",
   "timeBetweenStatusChange": 15,
   "autoSaveDelay": 15,
   "activities": [
@@ -9,5 +8,5 @@
     "example",
     "check my mentions"
   ],
-  "githubToken": "YOUR-GITHUB-TOKEN"
+  "botGithubToken": "YOUR-GITHUB-TOKEN"
 }

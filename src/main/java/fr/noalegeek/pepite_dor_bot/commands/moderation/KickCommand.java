@@ -2,43 +2,40 @@ package fr.noalegeek.pepite_dor_bot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import fr.noalegeek.pepite_dor_bot.Main;
+import fr.noalegeek.pepite_dor_bot.SimpleBot;
 import fr.noalegeek.pepite_dor_bot.enums.CommandCategories;
-import fr.noalegeek.pepite_dor_bot.utils.helpers.MessageHelper;
+import fr.noalegeek.pepite_dor_bot.utils.MessageHelper;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 
 public class KickCommand extends Command {
     public KickCommand() {
         this.name = "kick";
-        this.aliases = new String[]{"k", "ki", "kic"};
         this.guildOnly = true;
         this.cooldown = 5;
         this.arguments = "arguments.kick";
-        this.example = "363811352688721930";
+        this.example = "363811352688721930 spam";
         this.category = CommandCategories.STAFF.category;
         this.help = "help.kick";
+        this.aliases = new String[]{"exclude"};
+        this.userPermissions = new Permission[]{Permission.KICK_MEMBERS};
+        this.botPermissions = new Permission[]{Permission.KICK_MEMBERS};
     }
     @Override
     protected void execute(CommandEvent event) {
-        if(!event.getMember().hasPermission(Permission.KICK_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.userHasNotPermission", event), Permission.KICK_MEMBERS.getName()));
-            return;
-        }
-        if(!event.getSelfMember().hasPermission(Permission.KICK_MEMBERS)){
-            event.replyError(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("error.commands.botHasNotPermission", event), Permission.KICK_MEMBERS.getName()));
-            return;
-        }
         String[] args = event.getArgs().split("\\s+");
-        if (args.length == 0 || args.length >= 3) {
-            event.replyError(MessageHelper.syntaxError(event, this));
+        if (args.length < 1) {
+            MessageHelper.syntaxError(event, this, "information.kick");
             return;
         }
-        Main.getJda().retrieveUserById(args[1].replaceAll("\\D+","")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
-            String reason;
-            if(args[1] == null || args[1].isEmpty()) reason = MessageHelper.translateMessage("text.commands.reasonNull", event);
-            else reason = MessageHelper.translateMessage("text.commands.reason", event) + args[1];
-            event.replySuccess(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage("success.kick", event), user.getName(), reason));
+        if(args[0].replaceAll("\\D+", "").isEmpty()){
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
+            return;
+        }
+        SimpleBot.getJda().retrieveUserById(args[1].replaceAll("\\D+","")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+            event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.kick"), user.getName(), args.length == 2 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + 2)));
             event.getGuild().kick(member).queue();
-        }, memberNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.memberNull", event))), userNull -> event.replyError(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage("error.commands.userNull", event)));
+        }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.memberNull"))),
+                userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
     }
 }

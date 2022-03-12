@@ -3,17 +3,24 @@ plugins {
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
+    id 'com.bmuschko.docker-java-application' version '7.1.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
 }
 
-ext.graalVersion = '21.2.0'
+ext.graalVersion = '22.0.0.2'
 
-group 'fr.noalegeek'
+group 'fr.thesimpleteam'
 version '1.0'
 
-mainClassName = "fr.noalegeek.pepite_dor_bot.Main"
+mainClassName = "fr.noalegeek.pepite_dor_bot.SimpleBot"
 
-sourceCompatibility = targetCompatibility = 17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
+
+import com.bmuschko.gradle.docker.tasks.image.*
+
+import java.util.concurrent.Callable
 
 graal {
     version "$graalVersion"
@@ -21,6 +28,7 @@ graal {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
@@ -31,27 +39,90 @@ repositories {
 
 dependencies {
     //JDA & JDA-Utilities
-    implementation("net.dv8tion:JDA:4.3.0_310")
-    implementation('pw.chew:jda-chewtils:1.24.1') {
-        exclude group: 'pw.chew:jda-chewtils-command:1.24.1'
+    implementation("net.dv8tion:JDA:4.4.0_350")
+    implementation('ch.qos.logback:logback-classic:1.2.11')
+    implementation('pw.chew:jda-chewtils:1.23.0') {
+        exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
-    //GraalJS
+    //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
-    // necessary to integrate with legacy ScriptEngine based implementation
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
+    implementation('com.caoccao.javet:javet:1.1.0')
+    implementation 'org.python:jython-standalone:2.7.2'
+    //CLI
+    implementation 'commons-cli:commons-cli:1.5.0'
+    //API
+    implementation('io.ktor:ktor-server-core:1.6.7')
+    implementation('io.ktor:ktor-server-host-common:1.6.7')
+    implementation('io.ktor:ktor-server-netty:1.6.7')
+    implementation('io.ktor:ktor-serialization:1.6.7')
     //Other
-    implementation group: 'org.kohsuke', name: 'github-api', version: '1.303'
+    implementation 'com.github.TheSimpleTeam:Spiget:master-SNAPSHOT'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation("com.google.guava:guava:31.0.1-jre")
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.135'
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.10.2'
-    implementation 'com.google.code.gson:gson:2.9.0'
-
+    implementation 'sh.stein:carbon-api:1.2'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
+docker {
+    javaApplication {
+        baseImage = ''
+        getApiVersion().set("1.0")
+        maintainer = 'Minemobs <minemobs.pro@gmail.com>'
+        jvmArgs = ['-Xms256m', '-Xmx1024m']
+    }
+}
+
+task copyLangs(type: Copy) {
+    from('lang')
+    into("$buildDir/docker/lang")
+}
+
+task createDockerFile(type: Dockerfile) {
+    dependsOn(clean)
+    dependsOn(dockerSyncBuildContext)
+    finalizedBy(copyLangs)
+    from('eclipse-temurin:17_35-jdk-focal')
+    label([MAINTAINER: "Minemobs <minemobs.pro@gmail.com>"])
+    workingDir("/app")
+    addFile("lang", "lang/")
+    addFile("libs", "libs/")
+    addFile("classes", "classes/")
+    entryPoint(project.provider(new Callable<List<String>>() {
+        @Override
+        List<String> call() throws Exception {
+            ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "fr.noalegeek.pepite_dor_bot.SimpleBot"]
+        }
+    }))
+    exposePort(8080)
+}
+
+task buildDocker(type: DockerBuildImage) {
+    dependsOn createDockerFile
+    dockerFile.set(file("$buildDir/docker/Dockerfile"))
+    images.add("thesimpleteam/$project.name:$project.version")
+}
+
 test {
     useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
