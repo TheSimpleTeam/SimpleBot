@@ -26,6 +26,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Listener extends ListenerAdapter {
 
@@ -149,7 +152,9 @@ public class Listener extends ListenerAdapter {
                 return;
             double highestResult = 0;
             String cmd = null;
-            for (String commandName : new StringBuilder().append(Arrays.toString(SimpleBot.getClient().getCommands().stream().map(Command::getName).toArray()).replace("[", "").replace("]", "")).append(", help").toString().split(", ")) {
+            var cmds = SimpleBot.getClient().getCommands().stream().map(Command::getName).toList();
+            cmds.add("help");
+            for (String commandName : cmds) {
                 double _highestResult = LevenshteinDistance.getDistance(cmdName, commandName);
                 double b = 0;
                 String _alias = commandName;
