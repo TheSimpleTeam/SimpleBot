@@ -8,6 +8,15 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import fr.simpleteam.simplebot.api.Server;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.thesimpleteam.simplebot.cli.CLI;
 import net.thesimpleteam.simplebot.cli.CLIBuilder;
 import net.thesimpleteam.simplebot.cli.commands.HelpCommand;
@@ -21,15 +30,6 @@ import net.thesimpleteam.simplebot.gson.RecordTypeAdapterFactory;
 import net.thesimpleteam.simplebot.listeners.Listener;
 import net.thesimpleteam.simplebot.utils.Eval;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
-import fr.simpleteam.simplebot.api.Server;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import okhttp3.OkHttpClient;
 import org.python.core.PrePy;
 import org.reflections.Reflections;
@@ -77,14 +77,13 @@ public class SimpleBot {
             String arg = "";
             try {
                 arg = args[0];
-            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {
-            }
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
             setupLogs();
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
             serverConfig = setupServerConfig();
             LOGGER.info("Servers config loaded");
-            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing("sb!help")).enableIntents(EnumSet.allOf(GatewayIntent.class))
+            jda = JDABuilder.createDefault(infos.token()).setActivity(Activity.playing(infos.prefix() + "help")).enableIntents(EnumSet.allOf(GatewayIntent.class))
                     .enableCache(CacheFlag.ONLINE_STATUS).build();
             setupLocalizations();
         } catch (IOException ex) {
@@ -161,7 +160,9 @@ public class SimpleBot {
                                 helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp()).split("²")[index]).append("*");
                             }
                         } else {
-                            helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ? command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`").append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
+                            helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ?
+                                    command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`")
+                                    .append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
                         }
                     }
                 }
@@ -195,10 +196,10 @@ public class SimpleBot {
     }
 
     /**
-     * <p>Instantiates all classes from the package {@link fr.noalegeek.simplebot.commands}</p>
+     * <p>Instantiates all classes from the package {@link net.thesimpleteam.simplebot.commands}</p>
      */
     private static void setupCommands(CommandClientBuilder clientBuilder, Bot b) {
-        Reflections reflections = new Reflections("fr.noalegeek.pepite_dor_bot.commands");
+        Reflections reflections = new Reflections("net.thesimpleteam.simplebot.commands");
         Set<Class<? extends Command>> commands = reflections.getSubTypesOf(Command.class);
         for (Class<? extends Command> command : commands) {
             if (hasConfig(command)) {

@@ -13,12 +13,14 @@ ext.graalVersion = '22.0.0.2'
 group 'fr.thesimpleteam'
 version '1.0'
 
-mainClassName = "fr.noalegeek.pepite_dor_bot.SimpleBot"
+mainClassName = "net.thesimpleteam.simplebot.SimpleBot"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
 
-import com.bmuschko.gradle.docker.tasks.image.*
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 import java.util.concurrent.Callable
 
@@ -40,7 +42,6 @@ repositories {
 dependencies {
     //JDA & JDA-Utilities
     implementation("net.dv8tion:JDA:4.4.0_350")
-    implementation('ch.qos.logback:logback-classic:1.2.11')
     implementation('pw.chew:jda-chewtils:1.23.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
@@ -68,7 +69,6 @@ dependencies {
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
@@ -100,7 +100,7 @@ task createDockerFile(type: Dockerfile) {
     entryPoint(project.provider(new Callable<List<String>>() {
         @Override
         List<String> call() throws Exception {
-            ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "fr.noalegeek.pepite_dor_bot.SimpleBot"]
+            ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "net.thesimpleteam.simplebot.SimpleBot"]
         }
     }))
     exposePort(8080)
@@ -110,6 +110,12 @@ task buildDocker(type: DockerBuildImage) {
     dependsOn createDockerFile
     dockerFile.set(file("$buildDir/docker/Dockerfile"))
     images.add("thesimpleteam/$project.name:$project.version")
+}
+
+shadowJar {
+    exclude 'plugins'
+    exclude 'config'
+    exclude 'logs'
 }
 
 test {

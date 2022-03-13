@@ -2,8 +2,9 @@
 /.gradle/
 /build/
 /bin/
-/logs/
-config.json
-config/server-config.json
+/src/main/resources/logs/
+/src/main/resources/plugins/
+/src/main/resources/config/config.json
+/src/main/resources/config/server-config.json
 gradle.properties
 /Dockerfile_*

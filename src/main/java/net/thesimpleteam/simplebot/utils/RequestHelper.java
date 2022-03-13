@@ -1,16 +1,18 @@
 package net.thesimpleteam.simplebot.utils;
 
+import com.google.gson.JsonObject;
 import net.thesimpleteam.simplebot.SimpleBot;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
 
 import java.io.IOException;
 
 public class RequestHelper {
+
+    private RequestHelper() {}
 
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -36,7 +38,7 @@ public class RequestHelper {
         return SimpleBot.httpClient.newCall(request).execute();
     }
 
-    public static Response sendPostRequest(@NotNull String url, @NotNull JSONObject json) throws IOException {
+    public static Response sendPostRequest(@NotNull String url, @NotNull JsonObject json) throws IOException {
         RequestBody body = RequestBody.create(JSON, json.toString());
         Request request = new Request.Builder()
                 .url(url)
@@ -44,5 +46,4 @@ public class RequestHelper {
                 .build();
         return SimpleBot.httpClient.newCall(request).execute();
     }
-
 }

@@ -2,23 +2,28 @@ package net.thesimpleteam.simplebot.utils;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.thesimpleteam.simplebot.SimpleBot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.thesimpleteam.simplebot.SimpleBot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MessageHelper {
 
-    private MessageHelper() {
-    }
+    private MessageHelper() {}
 
     public static String getTag(final User user) {
         return user.getName() + "#" + user.getDiscriminator();
@@ -44,20 +49,21 @@ public class MessageHelper {
                 }
                 int indexList = 1;
                 for (int length = 1; length <= loop; length++) {
-                    int finalLenght = length;
-                    if (Arrays.stream(translateMessage(event, command.getArguments()).split("²")).anyMatch(arguments -> arguments.split(">").length == finalLenght)) {
-                        if (!Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().isEmpty()) {
+                    int finalLength = length;
+                    if (Arrays.stream(translateMessage(event, command.getArguments()).split("²")).anyMatch(arguments -> arguments.split(">").length == finalLength)) {
+                        if (!Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLength)
+                                .toList().isEmpty()) {
                             argumentsBuilder.append("__");
-                            switch (finalLenght) {
+                            switch (finalLength) {
                                 case 1 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.oneArgument"));
                                 case 2 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.twoArguments"));
                                 case 3 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.threeArguments"));
                                 case 4 -> argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.fourArguments"));
-                                default -> argumentsBuilder.append("The devs forgotten to add the syntax with the length of ").append(finalLenght);
+                                default -> argumentsBuilder.append("The devs forgotten to add the syntax with the length of ").append(finalLength);
                             }
                             argumentsBuilder.append("__").append("\n\n");
-                            for (int index = 0; index < Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().size(); index++) {
-                                argumentsBuilder.append(Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLenght).toList().get(index)).append(" **->** *").append(translateMessage(event, command.getHelp()).split("²")[indexList]).append("*\n");
+                            for (int index = 0; index < Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLength).toList().size(); index++) {
+                                argumentsBuilder.append(Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLength).toList().get(index)).append(" **->** *").append(translateMessage(event, command.getHelp()).split("²")[indexList]).append("*\n");
                                 indexList++;
                             }
                             argumentsBuilder.append("\n");
@@ -107,14 +113,18 @@ public class MessageHelper {
         return getEmbed(event.getAuthor(), event.getTextChannel(), event.getGuild(), title, color, description, thumbnail, formatArgs);
     }
 
-    public static EmbedBuilder getEmbed(@NotNull User author, @Nullable TextChannel channel, @NotNull Guild guild, @NotNull String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
+    public static EmbedBuilder getEmbed(@NotNull User author, @Nullable TextChannel channel, @NotNull Guild guild, @NotNull String title, @Nullable Color color, @Nullable String description,
+                                        @Nullable String thumbnail, @Nullable Object... formatArgs) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setTimestamp(Instant.now()).setFooter(getTag(author), author.getEffectiveAvatarUrl());
         if(title.startsWith("success.")){
-            embedBuilder.setColor(Color.GREEN).setTitle(new StringBuilder().append(UnicodeCharacters.whiteHeavyCheckMarkEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) : translateMessage(author, channel, guild, title)).toString());
+            embedBuilder.setColor(Color.GREEN).setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
+                    translateMessage(author, channel, guild, title)));
         } else if(title.startsWith("error.")){
-            embedBuilder.setColor(Color.RED).setTitle(new StringBuilder().append(UnicodeCharacters.crossMarkEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) : translateMessage(author, channel, guild, title)).toString());
+            embedBuilder.setColor(Color.RED).setTitle(UnicodeCharacters.crossMarkEmoji + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
+                    translateMessage(author, channel, guild, title)));
         } else if(title.startsWith("warning.")){
-            embedBuilder.setColor(0xff7f00).setTitle(new StringBuilder().append(UnicodeCharacters.warningSignEmoji).append(" ").append(formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) : translateMessage(author, channel, guild, title)).toString());
+            embedBuilder.setColor(0xff7f00).setTitle(UnicodeCharacters.warningSignEmoji + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
+                    translateMessage(author, channel, guild, title)));
         }
         if(color != null) embedBuilder.setColor(color);
         if(description != null && description.length() <= 4096) embedBuilder.setDescription(description);
