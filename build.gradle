@@ -13,7 +13,13 @@ ext.graalVersion = '22.0.0.2'
 group 'fr.thesimpleteam'
 version '1.0'
 
-mainClassName = "net.thesimpleteam.simplebot.SimpleBot"
+application {
+    mainClassName = "net.thesimpleteam.simplebot.SimpleBot"
+    tasks.run.setWorkingDir(file(sourceSets.main.resources.srcDirs[0]))
+    run {
+        getSystemProperties().put("simplebot.dev", "true")
+    }
+}
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
@@ -45,7 +51,7 @@ dependencies {
     implementation('pw.chew:jda-chewtils:1.23.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
-    implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:-SNAPSHOT'
+    implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:ab05b178ae'
     //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
@@ -68,6 +74,7 @@ dependencies {
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
+    implementation 'org.fusesource.jansi:jansi:2.4.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
@@ -87,6 +94,18 @@ task copyLangs(type: Copy) {
     into("$buildDir/docker/lang")
 }
 
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
+}
+
 task createDockerFile(type: Dockerfile) {
     dependsOn(clean)
     dependsOn(dockerSyncBuildContext)
@@ -98,7 +117,7 @@ task createDockerFile(type: Dockerfile) {
     addFile("libs", "libs/")
     addFile("classes", "classes/")
     entryPoint(project.provider(new Callable<List<String>>() {
-        @Override
+        @Override 
         List<String> call() throws Exception {
             ["java", "-Xms256m", "-Xmx1024m", "-cp", "/app/resources:/app/classes:/app/libs/*", "net.thesimpleteam.simplebot.SimpleBot"]
         }

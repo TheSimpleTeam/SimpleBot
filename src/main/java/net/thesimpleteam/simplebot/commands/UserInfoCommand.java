@@ -2,6 +2,8 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.entities.User;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
@@ -10,6 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
 import java.awt.*;
+import java.util.Optional;
 
 public class UserInfoCommand extends Command {
 
@@ -31,9 +34,9 @@ public class UserInfoCommand extends Command {
             MessageHelper.syntaxError(event, this, "information.userInfo");
             return;
         }
-        if (args.length == 0) {
+        if (event.getArgs().isEmpty()) {
             EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, event.getAuthor().getEffectiveAvatarUrl(), (Object[]) null)
-                    .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor()))).toString())
+                    .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor())))
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), event.getMember().getUser().getId(), false)
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(event.getMember().getTimeJoined()), false)
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(event.getMember().getTimeCreated()), false)
@@ -41,11 +44,14 @@ public class UserInfoCommand extends Command {
             if (event.getMember().getNickname() != null)
                 embedBuilder.addField(MessageHelper.translateMessage(event, "success.userInfo.nickname"), event.getMember().getNickname(), false);
             event.reply(new MessageBuilder(embedBuilder.build()).build());
+            return;
         }
-        SimpleBot.getJda().retrieveUserById(event.getArgs().split("\\s+")[0].replaceAll("\\D+", "")).queue(user ->
+        Optional<User> userOp = event.getMessage().getMentionedUsers().stream().findFirst();
+        SimpleBot.getJda().retrieveUserById(userOp.map(ISnowflake::getId)
+                .orElseGet(() -> event.getArgs().split("\\s+")[0].replaceAll("\\D+", ""))).queue(user ->
                         event.getGuild().retrieveMember(user).queue(member -> {
                             EmbedBuilder successEmbed = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, user.getEffectiveAvatarUrl(), (Object[]) null)
-                                    .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor()))).toString())
+                                    .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(user)))
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), member.getUser().getId(), false)
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(member.getTimeJoined()), false)
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(member.getTimeCreated()), false)

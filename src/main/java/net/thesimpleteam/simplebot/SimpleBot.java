@@ -31,6 +31,7 @@ import net.thesimpleteam.simplebot.listeners.Listener;
 import net.thesimpleteam.simplebot.utils.Eval;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import okhttp3.OkHttpClient;
+import org.fusesource.jansi.internal.CLibrary;
 import org.python.core.PrePy;
 import org.reflections.Reflections;
 
@@ -38,10 +39,7 @@ import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -72,12 +70,13 @@ public class SimpleBot {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        System.out.println("Is in dev mode :" + isInDevMode());
         executorService = Executors.newScheduledThreadPool(3);
         try {
             String arg = "";
             try {
                 arg = args[0];
-            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {}
             setupLogs();
             infos = readConfig(arg);
             LOGGER.info("Bot config loaded");
@@ -134,7 +133,7 @@ public class SimpleBot {
                     });
                 }), 0, 1, TimeUnit.SECONDS);
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
-        if (PrePy.isInteractive()) {
+        if (CLibrary.isatty(CLibrary.STDIN_FILENO) == 1 || isInDevMode()) {
             executorService.schedule(() -> {
                 try {
                     CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
@@ -185,9 +184,9 @@ public class SimpleBot {
             LOGGER.severe("PLEASE DOWNLOAD THE LANG FOLDER FROM OUR REPOSITORY!");
             System.exit(-1);
         }
-        File[] _langs = f.listFiles();
-        if (_langs == null) return;
-        for (File lang : _langs) {
+        File[] langsFile = f.listFiles();
+        if (langsFile == null) return;
+        for (File lang : langsFile) {
             langS.add(lang.getName().replaceAll(".json", ""));
             objects.put(lang.getName().replaceAll(".json", ""), gson.fromJson(Files.newBufferedReader(lang.toPath(), StandardCharsets.UTF_8), JsonObject.class));
         }
@@ -319,6 +318,36 @@ public class SimpleBot {
         ServerConfig config = gson.fromJson(reader, ServerConfig.class);
         reader.close();
         return config;
+    }
+
+    public static boolean doesFileExist(String path) {
+        if(isInDevMode()) {
+            return new File(path).exists();
+        }
+        try(AutoCloseable o = SimpleBot.class.getResourceAsStream(path)) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isInDevMode() {
+        String property = System.getProperty("simplebot.dev");
+        return property != null && property.equals("true");
+    }
+
+    public static InputStream getFile(String path) {
+        if (!doesFileExist(path)) {
+            return null;
+        }
+        if(isInDevMode()) {
+            try {
+                return Files.newInputStream(Path.of(path));
+            } catch (IOException ignored) {
+                return null;
+            }
+        }
+        return SimpleBot.class.getResourceAsStream(path);
     }
 
     public static String getPrefix(MessageReceivedEvent event) {

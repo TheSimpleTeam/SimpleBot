@@ -4,6 +4,8 @@ import com.google.common.base.Throwables;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
@@ -26,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -94,8 +97,8 @@ public class Listener extends ListenerAdapter {
                                 event.getMember().getEffectiveName(), event.getGuild().getName())
                         .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member"),
                                 event.getMember().getAsMention(), false)
-                        .addField(new StringBuilder().append(UnicodeCharacters.heavyPlusSign).append(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberJoin.newMember")).toString(), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
+                        .addField(UnicodeCharacters.HEAVY_PLUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
+                                "success.listener.onGuildMemberJoin.newMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
                                 "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
             } catch (InsufficientPermissionException exception) {
@@ -122,8 +125,8 @@ public class Listener extends ListenerAdapter {
                         MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave", null, null,
                                         event.getUser().getEffectiveAvatarUrl(), event.getUser().getName(), event.getGuild().getName())
                         .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member"), event.getMember().getAsMention(), false)
-                        .addField(new StringBuilder().append(UnicodeCharacters.heavyMinusSign).append(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberLeave.lostMember")).toString(), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
+                        .addField(UnicodeCharacters.HEAVY_MINUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
+                                "success.listener.onGuildMemberLeave.lostMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
                                 "success.listener.onGuildMemberLeave.countMember"), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
             } catch (InsufficientPermissionException exception) {
@@ -137,11 +140,17 @@ public class Listener extends ListenerAdapter {
         }
     }
 
+    private User getUserFromReferencedMessage(Message message) {
+        return message == null ? null : message.getAuthor();
+    }
+
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
-        if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember())) {
-            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.prefix",
+        if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember()) &&
+                !Objects.equals(getUserFromReferencedMessage(event.getMessage().getReferencedMessage()), event.getJDA().getSelfUser())) {
+            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(),
+                    "success.listener.onGuildMessageReceived.prefix",
                     null, null, null, SimpleBot.getPrefix(event.getGuild())).build()).build()).queue();
         }
         if (SimpleBot.getServerConfig().prohibitWords() == null) {
@@ -164,10 +173,9 @@ public class Listener extends ListenerAdapter {
             for (String commandName : Stream.concat(SimpleBot.getClient().getCommands().stream().map(Command::getName), Stream.of("help")).toList()) {
                 double _highestResult = LevenshteinDistance.getDistance(cmdName, commandName);
                 double b = 0;
-                String _alias = commandName;
                 if (b > _highestResult) _highestResult = b;
                 if (highestResult < _highestResult) {
-                    cmd = _alias;
+                    cmd = commandName;
                     highestResult = _highestResult;
                 }
             }

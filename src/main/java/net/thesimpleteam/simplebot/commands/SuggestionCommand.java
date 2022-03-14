@@ -36,12 +36,11 @@ public class SuggestionCommand extends Command {
             return;
         }
         event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed(event, "success.suggestion.suggestion", null, null, null, (Object[]) null)
-                .setTitle(new StringBuilder().append(UnicodeCharacters.electricLightBulbEmoji).append(" ").append("success.suggestion.suggestion").toString())
+                .setTitle(UnicodeCharacters.ELECTRIC_LIGHT_BULB_EMOJI + " " + "success.suggestion.suggestion")
                 .setColor(Color.YELLOW)
-                .addField(MessageHelper.translateMessage(event, "success.suggestion"), event.getArgs(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.suggestion"), event.getArgs(), false)
                 .addField(MessageHelper.translateMessage(event, "success.suggestion.author"), event.getAuthor().getName(), false)
-                .addField(MessageHelper.translateMessage(event, "success.suggestion.id"), event.getAuthor().getName(), false)
-                .addField(MessageHelper.translateMessage(event, "success.suggestion.tag"), "#" + event.getAuthor().getDiscriminator(), false)
+                .addField(MessageHelper.translateMessage(event, "success.suggestion.id"), event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator(), false)
                 .addField(MessageHelper.translateMessage(event, "success.suggestion.guildName"), event.getGuild().getName(), false)
                 .addField(MessageHelper.translateMessage(event, "success.suggestion.guildID"), event.getGuild().getId(), false)
                 .build()).build()).queue();

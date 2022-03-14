@@ -56,7 +56,7 @@ public class GithubCommand extends Command {
                 }
                 GHRepository repository;
                 try {
-                    repository = github.getRepository(new StringBuilder().append(args[1]).append("/").append(args[2]).toString());
+                    repository = github.getRepository(args[1] + "/" + args[2]);
                 } catch (IOException ignored) {
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.search.repositoryDontExist", null, null, null, (Object[]) null).build()).build());
                     return;
@@ -83,7 +83,6 @@ public class GithubCommand extends Command {
                     event.reply(new MessageBuilder(embedBuilder.build()).build());
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event, this);
-                    return;
                 }
                 break;
             default:
@@ -101,6 +100,7 @@ public class GithubCommand extends Command {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     private Color getColor(String language) {
         try {
             Map<String, Map<String, String>> lang = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);

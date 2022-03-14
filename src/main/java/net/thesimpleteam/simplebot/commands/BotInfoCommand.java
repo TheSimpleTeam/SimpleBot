@@ -25,7 +25,7 @@ public class BotInfoCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.unshortURL.success", Color.BLUE, null, "success.unshortURL.success", (Object[]) null)
+        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.botInfo.success", Color.BLUE, null, event.getSelfUser().getAvatarUrl(), event.getSelfUser().getName())
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.id"), event.getSelfUser().getId(), false)
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.tag"), "#" + event.getSelfUser().getDiscriminator(), false)
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.creationDate"), MessageHelper.formatShortDate(event.getSelfMember().getTimeCreated()), false)

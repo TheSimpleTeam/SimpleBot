@@ -26,13 +26,16 @@ package net.thesimpleteam.simplebot.utils;
 
 public class UnicodeCharacters {
 
-    public final static String crossMarkEmoji = "\u274C";
-    public final static String electricLightBulbEmoji = "\uD83D\uDCA1";
-    public final static String whiteHeavyCheckMarkEmoji = "\u2705";
-    public final static String informationSourceEmoji = "\u2139";
-    public final static String warningSignEmoji = "\u26A0";
-    public final static String heavyPlusSign = "\u2795";
-    public final static String heavyMinusSign = "\u2796";
+    private UnicodeCharacters() {}
+
+    public static final String CROSS_MARK_EMOJI = "\u274C";
+    public static final String crossMarkEmoji = CROSS_MARK_EMOJI;
+    public static final String ELECTRIC_LIGHT_BULB_EMOJI = "\uD83D\uDCA1";
+    public static final String WHITE_HEAVY_CHECK_MARK_EMOJI = "\u2705";
+    public static final String INFORMATION_SOURCE_EMOJI = "\u2139";
+    public static final String WARNING_SIGN_EMOJI = "\u26A0";
+    public static final String HEAVY_PLUS_SIGN = "\u2795";
+    public static final String HEAVY_MINUS_SIGN = "\u2796";
 
 
     public static char[] getAllExponentsCharacters() {

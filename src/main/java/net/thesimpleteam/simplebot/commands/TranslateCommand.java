@@ -56,7 +56,7 @@ public class TranslateCommand extends Command {
                     .setColor(Color.GREEN)
                     .setFooter(MessageHelper.getTag(event.getAuthor()), event.getAuthor().getEffectiveAvatarUrl())
                     .setTimestamp(Instant.now())
-                    .setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + MessageHelper.translateMessage(event, "success.translate.success"));
+                    .setTitle(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI + " " + MessageHelper.translateMessage(event, "success.translate.success"));
             if (args[0].length() > 1024) {
                 int charactersCount = 0;
                 List<String> list = new ArrayList<>();
@@ -75,7 +75,6 @@ public class TranslateCommand extends Command {
                     successEmbed.addField(i == 0 ? MessageHelper.translateMessage(event, "success.translate.text") : "", list.get(i), true);
             } else
                 successEmbed.addField(MessageHelper.translateMessage(event, "success.translate.text"), args[0], true);
-            //System.out.println(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)));
             String translatedArgs = SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(String.format("https://lingva.ml/api/v1/%s/%s/%s", language1.name().toLowerCase(Locale.ROOT), language2.name().toLowerCase(Locale.ROOT), URLEncoder.encode(args[0], StandardCharsets.UTF_8)))), JsonObject.class).get("translation").getAsString();
             if (translatedArgs.length() > 1024) {
                 int charactersCount = 0;

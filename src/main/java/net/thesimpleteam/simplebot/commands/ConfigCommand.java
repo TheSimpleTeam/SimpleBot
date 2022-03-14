@@ -40,7 +40,7 @@ public class ConfigCommand extends Command {
         });
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2 && args.length != 3) {
-            MessageHelper.syntaxError(event, this, "syntax.config");
+            MessageHelper.syntaxError(event, this, "information.config");
             return;
         }
         switch (args.length) {
@@ -85,7 +85,7 @@ public class ConfigCommand extends Command {
                             return;
                         }
                         SimpleBot.getServerConfig().language().put(event.getGuild().getId(), args[1]);
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.localization.configured", null, null, null, new StringBuilder().append(":flag_").append(args[0].replace("en", "us: / :flag_gb")).append(":").toString()).build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.localization.configured", null, null, null, ":flag_" + args[0].replace("en", "us: / :flag_gb") + ":").build()).build());
                     }
                     case "setprefix" -> {
                         if (event.getArgs().split(" setprefix ")[1].isEmpty()) {
@@ -108,7 +108,7 @@ public class ConfigCommand extends Command {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.setPrefix.configured", null, null, null, args[1]).build()).build());
                         }
                     }
-                    default -> MessageHelper.syntaxError(event, this, "syntax.config");
+                    default -> MessageHelper.syntaxError(event, this, "information.config");
                 }
             }
             case 3 -> {
@@ -187,7 +187,7 @@ public class ConfigCommand extends Command {
                                     }
                                 }
                             }
-                            default -> MessageHelper.syntaxError(event, this, "syntax.config");
+                            default -> MessageHelper.syntaxError(event, this, "information.config");
                         }
                     }
                     case "prohibitword" -> {
@@ -222,10 +222,10 @@ public class ConfigCommand extends Command {
                                 SimpleBot.getServerConfig().prohibitWords().remove(event.getGuild().getId());
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.prohibitWord.listReseted", null, null, null, (Object[]) null).build()).build());
                             }
-                            default -> MessageHelper.syntaxError(event, this, "syntax.config");
+                            default -> MessageHelper.syntaxError(event, this, "information.config");
                         }
                     }
-                    default -> MessageHelper.syntaxError(event, this, "syntax.config");
+                    default -> MessageHelper.syntaxError(event, this, "information.config");
                 }
             }
         }

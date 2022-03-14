@@ -117,13 +117,13 @@ public class MessageHelper {
                                         @Nullable String thumbnail, @Nullable Object... formatArgs) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setTimestamp(Instant.now()).setFooter(getTag(author), author.getEffectiveAvatarUrl());
         if(title.startsWith("success.")){
-            embedBuilder.setColor(Color.GREEN).setTitle(UnicodeCharacters.whiteHeavyCheckMarkEmoji + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
+            embedBuilder.setColor(Color.GREEN).setTitle(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
                     translateMessage(author, channel, guild, title)));
         } else if(title.startsWith("error.")){
-            embedBuilder.setColor(Color.RED).setTitle(UnicodeCharacters.crossMarkEmoji + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
+            embedBuilder.setColor(Color.RED).setTitle(UnicodeCharacters.CROSS_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
                     translateMessage(author, channel, guild, title)));
         } else if(title.startsWith("warning.")){
-            embedBuilder.setColor(0xff7f00).setTitle(UnicodeCharacters.warningSignEmoji + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
+            embedBuilder.setColor(0xff7f00).setTitle(UnicodeCharacters.WARNING_SIGN_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title), formatArgs) :
                     translateMessage(author, channel, guild, title)));
         }
         if(color != null) embedBuilder.setColor(color);
@@ -161,6 +161,10 @@ public class MessageHelper {
      * @throws NullPointerException if the key does not exist in any localization files
      */
     public static String translateMessage(@NotNull CommandEvent event, @NotNull String key) {
+        return translateMessage(event.getAuthor(), event.getTextChannel(), event.getGuild(), key);
+    }
+
+    public static String translateMessage(@NotNull String key, @NotNull CommandEvent event) {
         return translateMessage(event.getAuthor(), event.getTextChannel(), event.getGuild(), key);
     }
 

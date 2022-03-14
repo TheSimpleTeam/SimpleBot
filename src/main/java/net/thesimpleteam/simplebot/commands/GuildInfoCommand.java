@@ -25,7 +25,7 @@ public class GuildInfoCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.guildInfo.success", Color.BLUE, null, event.getGuild().getIconUrl(), event.getGuild().getName())
-                .setTitle(new StringBuilder().append(UnicodeCharacters.informationSourceEmoji).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.guildInfo.success"), event.getGuild().getName())).toString())
+                .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.guildInfo.success"), event.getGuild().getName()))
                 .addField(MessageHelper.translateMessage(event, "success.guildInfo.nitroLevel"), String.valueOf(event.getGuild().getBoostTier().getKey()), false)
                 .addField(MessageHelper.translateMessage(event, "success.guildInfo.membersOnTheServer"), String.valueOf(event.getGuild().getMemberCount()), false)
                 .addField(MessageHelper.translateMessage(event, "success.guildInfo.membersConnectedToTheServer"), String.valueOf(event.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() != OnlineStatus.OFFLINE).toList().size()), false);
