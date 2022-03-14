@@ -51,7 +51,7 @@ dependencies {
     implementation('pw.chew:jda-chewtils:1.23.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
-    implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:ab05b178ae'
+    implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:2.1'
     //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
