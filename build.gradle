@@ -50,7 +50,7 @@ dependencies {
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
-    implementation('com.caoccao.javet:javet:1.1.0')
+    implementation('com.caoccao.javet:javet:1.1.1')
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.5.0'
