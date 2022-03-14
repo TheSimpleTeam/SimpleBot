@@ -3,9 +3,9 @@ plugins {
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
-    id 'com.bmuschko.docker-java-application' version '7.1.0'
+    id 'com.bmuschko.docker-java-application' version '7.3.0'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
 }
 
 ext.graalVersion = '22.0.0.2'
@@ -56,7 +56,7 @@ dependencies {
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
-    implementation('com.caoccao.javet:javet:1.1.0')
+    implementation('com.caoccao.javet:javet:1.1.1')
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.5.0'
