@@ -9,6 +9,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.simpleteam.simplebot.api.Server;
+import io.tunabytes.bytecode.MixinsBootstrap;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -72,6 +73,7 @@ public class SimpleBot {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Is in dev mode :" + isInDevMode());
         executorService = Executors.newScheduledThreadPool(3);
+        MixinsBootstrap.init();
         try {
             String arg = "";
             try {
