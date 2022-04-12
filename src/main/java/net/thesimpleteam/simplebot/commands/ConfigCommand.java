@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.config.ServerConfig;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
+import net.thesimpleteam.simplebot.listeners.Listener;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.GuildChannel;
@@ -228,6 +229,11 @@ public class ConfigCommand extends Command {
                     default -> MessageHelper.syntaxError(event, this, "information.config");
                 }
             }
+        }
+        try {
+            Listener.saveConfigs();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 }

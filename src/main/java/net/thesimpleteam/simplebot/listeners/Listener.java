@@ -182,10 +182,8 @@ public class Listener extends ListenerAdapter {
             event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.didYouMean",
                     null, null, null, SimpleBot.getPrefix(event.getGuild()), cmd).build()).build()).queue();
         }
-        if (!SimpleBot.getServerConfig().prohibitWords().containsKey(event.getGuild().getId())) return;
+        if (!SimpleBot.getServerConfig().prohibitWords().containsKey(event.getGuild().getId()) || (SimpleBot.getServerConfig().prohibitWords().containsKey(event.getGuild().getId()) && (event.getMessage().getContentRaw().toLowerCase().startsWith(String.format("%sprohibitword", SimpleBot.getPrefix(event.getGuild()))) || (event.getMember() != null && event.getMember().isOwner())))) return;
         for (String prohibitedWord : SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId())) {
-            if (event.getMessage().getContentRaw().toLowerCase().startsWith(String.format("%sprohibitword", SimpleBot.getPrefix(event.getGuild()))) && event.getMember() != null && event.getMember().isOwner())
-                return;
             if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage()
                     .reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "error.listener.onGuildMessageReceived.prohibitedWord",
                             null, null, null, prohibitedWord).build()).build()).queue());
