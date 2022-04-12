@@ -88,7 +88,7 @@ public class ConfigCommand extends Command {
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.localization.configured", null, null, null, ":flag_" + args[1].replace("en", "us: / :flag_gb") + ":").build()).build());
                     }
                     case "setprefix" -> {
-                        if (event.getArgs().split(" setprefix ")[1].isEmpty()) {
+                        if (event.getArgs().split(" setprefix ")[0].isEmpty()) {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.setPrefix.prefixIsEmpty", null, null, null, (Object[]) null).build()).build());
                             return;
                         }
