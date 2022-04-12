@@ -217,7 +217,7 @@
   "success.listener.onGuildMemberLeave.memberLeave": "%s has left the server __%s__ !",
   "success.listener.onGuildMessageReceived.didYouMean": "Did you mean `%s%s`?",
   "success.listener.onGuildMessageReceived.prefix": "The server\u0027s bot\u0027s prefix is `%s`.",
-  "success.listener.onGuildMessageReceived.prohibitedWord": "The word `%s` is one of the forbidden words!",
+  "error.listener.onGuildMessageReceived.prohibitedWord": "The word `%s` is one of the forbidden words!",
   "success.maths.calculate.mathematicalExpression": "Mathematical expression",
   "success.maths.calculate.result": "Result",
   "success.maths.calculate.success": "Calculated mathematical expression",

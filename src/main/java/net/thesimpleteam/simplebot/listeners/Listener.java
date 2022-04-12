@@ -187,7 +187,7 @@ public class Listener extends ListenerAdapter {
             if (event.getMessage().getContentRaw().toLowerCase().startsWith(String.format("%sprohibitword", SimpleBot.getPrefix(event.getGuild()))) && event.getMember() != null && event.getMember().isOwner())
                 return;
             if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage()
-                    .reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.prohibitedWord",
+                    .reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "error.listener.onGuildMessageReceived.prohibitedWord",
                             null, null, null, prohibitedWord).build()).build()).queue());
         }
     }

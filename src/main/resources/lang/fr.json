@@ -202,7 +202,7 @@
   "success.listener.onGuildMemberLeave.memberLeave": "%s a quitté le serveur __%s__ !",
   "success.listener.onGuildMessageReceived.didYouMean": "Voulez-vous dire `%s%s` ?",
   "success.listener.onGuildMessageReceived.prefix": "Le préfixe du bot du serveur est `%s`.",
-  "success.listener.onGuildMessageReceived.prohibitedWord": "Le mot `%s` fait partie des mots interdits !",
+  "error.listener.onGuildMessageReceived.prohibitedWord": "Le mot `%s` fait partie des mots interdits !",
   "success.maths.calculate.mathematicalExpression": "Expression mathématique",
   "success.maths.calculate.result": "Résultat",
   "success.maths.calculate.success": "Expression mathématique calculée",
