@@ -52,11 +52,13 @@ dependencies {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:ab05b178ae'
+    //ByteCode
+    implementation 'net.bytebuddy:byte-buddy:1.12.8'
     //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
-    implementation('com.caoccao.javet:javet:1.1.1')
+    implementation('com.caoccao.javet:javet:1.1.2')
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.5.0'
@@ -75,7 +77,7 @@ dependencies {
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
     implementation 'org.fusesource.jansi:jansi:2.4.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.20'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
