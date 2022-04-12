@@ -73,7 +73,6 @@ public class SimpleBot {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Is in dev mode :" + isInDevMode());
         executorService = Executors.newScheduledThreadPool(3);
-        MixinsBootstrap.init();
         try {
             String arg = "";
             try {

@@ -81,11 +81,11 @@ public class ConfigCommand extends Command {
                             return;
                         }
                         if (args[1].equals(SimpleBot.getServerConfig().language().get(event.getGuild().getId()))) {
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.localization.sameAsConfig", null, null, null, (Object[]) null).build()).build());
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.localization.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
                             return;
                         }
                         SimpleBot.getServerConfig().language().put(event.getGuild().getId(), args[1]);
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.localization.configured", null, null, null, ":flag_" + args[0].replace("en", "us: / :flag_gb") + ":").build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.localization.configured", null, null, null, ":flag_" + args[1].replace("en", "us: / :flag_gb") + ":").build()).build());
                     }
                     case "setprefix" -> {
                         if (event.getArgs().split(" setprefix ")[1].isEmpty()) {
