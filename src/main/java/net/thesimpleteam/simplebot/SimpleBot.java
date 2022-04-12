@@ -162,7 +162,7 @@ public class SimpleBot {
                         } else {
                             helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ?
                                     command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`")
-                                    .append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
+                                    .append(" \u27A1 *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
                         }
                     }
                 }
