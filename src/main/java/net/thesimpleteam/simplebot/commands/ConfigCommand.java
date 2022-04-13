@@ -109,6 +109,20 @@ public class ConfigCommand extends Command {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.setPrefix.configured", null, null, null, args[1]).build()).build());
                         }
                     }
+                    case "prohibitword" -> {
+                        //I fixed his issue, bc he's dumb like he has 2 braincells left.
+                        // - Minemobs
+                        if(args[1].equalsIgnoreCase("reset")) {
+                            if (SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null) {
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.listNull", null, null, null, (Object[]) null).build()).build());
+                                return;
+                            }
+                            SimpleBot.getServerConfig().prohibitWords().remove(event.getGuild().getId());
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.prohibitWord.listReseted", null, null, null, (Object[]) null).build()).build());
+                            break;
+                        }
+                        MessageHelper.syntaxError(event, this, "information.config");
+                    }
                     default -> MessageHelper.syntaxError(event, this, "information.config");
                 }
             }
@@ -195,7 +209,7 @@ public class ConfigCommand extends Command {
                         switch (args[1].toLowerCase(Locale.ROOT)) {
                             case "add" -> {
                                 List<String> prohibitWords = SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId());
-                                if (prohibitWords.contains(args[1])) {
+                                if (prohibitWords.contains(args[2])) {
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.wordAlreadyHere", null, null, null, args[2]).build()).build());
                                     return;
                                 }
@@ -206,7 +220,7 @@ public class ConfigCommand extends Command {
                             }
                             case "remove" -> {
                                 List<String> prohibitWords = SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId());
-                                if (!prohibitWords.contains(args[1])) {
+                                if (!prohibitWords.contains(args[2])) {
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.wordNotHere", null, null, null, args[2]).build()).build());
                                     return;
                                 }
@@ -214,14 +228,6 @@ public class ConfigCommand extends Command {
                                 SimpleBot.getServerConfig().prohibitWords().remove(event.getGuild().getId());
                                 SimpleBot.getServerConfig().prohibitWords().put(event.getGuild().getId(), prohibitWords);
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.prohibitWord.wordRemoved", null, null, null, args[2]).build()).build());
-                            }
-                            case "reset" -> {
-                                if (SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null) {
-                                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.listNull", null, null, null, (Object[]) null).build()).build());
-                                    return;
-                                }
-                                SimpleBot.getServerConfig().prohibitWords().remove(event.getGuild().getId());
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.prohibitWord.listReseted", null, null, null, (Object[]) null).build()).build());
                             }
                             default -> MessageHelper.syntaxError(event, this, "information.config");
                         }
