@@ -1,5 +1,6 @@
 package net.thesimpleteam.simplebot.commands;
 
+import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.thesimpleteam.simplebot.SimpleBot;
@@ -10,8 +11,16 @@ import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
-import java.io.File;
+import javax.management.ReflectionException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.List;
 
@@ -29,16 +38,68 @@ public class ConfigCommand extends Command {
         this.guildOwnerCommand = true;
     }
 
+    private enum JsonType {
+        ARRAY,
+        STRING,
+        BOOLEAN,
+        INT,
+        OBJECT;
+
+        private static JsonType getFromType(Class<?> type) {
+            try {
+                if(type.isAssignableFrom(List.class)) {
+                    return ARRAY;
+                } else if(type == String.class) {
+                    return STRING;
+                } else if(type.isAssignableFrom(Number.class)) {
+                    return INT;
+                }else if(type == Boolean.class) {
+                    return BOOLEAN;
+                } else {
+                    return OBJECT;
+                }
+            } catch (Exception e) {
+                return OBJECT;
+            }
+        }
+    }
+
     @Override
     protected void execute(CommandEvent event) {
-        Arrays.stream(ServerConfig.class.getDeclaredFields()).filter(Objects::isNull).forEach(config -> {
+        /**
+         * @author minemobs
+         * bad code btw
+         */
+        List<Field> config = Arrays.stream(ServerConfig.class.getDeclaredFields()).filter(f -> {
             try {
-                new File("config/server-config.json").delete();
-                SimpleBot.setupServerConfig();
-            } catch (IOException exception) {
-                exception.printStackTrace();
+                f.trySetAccessible();
+                return f.get(SimpleBot.getServerConfig()) == null;
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
-        });
+        }).toList();
+        if (!config.isEmpty()) {
+            Path p = Path.of("config/server-config.json");
+            try(BufferedWriter bw = Files.newBufferedWriter(p, StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                JsonObject o = SimpleBot.gson.fromJson(SimpleBot.gson.toJson(SimpleBot.getServerConfig()), JsonObject.class);
+                config.forEach(c -> {
+                    Object obj = switch (JsonType.getFromType(c.getType())) {
+                        case ARRAY -> new Object[0];
+                        case STRING -> "something";
+                        case INT -> Byte.MAX_VALUE;
+                        case OBJECT -> new Object();
+                        case BOOLEAN -> true;
+                    };
+                    o.add(c.getName(), SimpleBot.gson.fromJson(SimpleBot.gson.toJson(obj), JsonObject.class));
+                });
+                System.out.println(o.toString());
+                bw.write(SimpleBot.gson.toJson(o));
+            } catch (IOException e) {
+                e.printStackTrace();
+                MessageHelper.sendError(e, event, this);
+                return;
+            }
+        }
         String[] args = event.getArgs().split("\\s+");
         if (args.length != 2 && args.length != 3) {
             MessageHelper.syntaxError(event, this, "information.config");
