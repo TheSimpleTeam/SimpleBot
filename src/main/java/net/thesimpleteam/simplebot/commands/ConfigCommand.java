@@ -94,6 +94,13 @@ public class ConfigCommand extends Command {
                 });
                 System.out.println(o.toString());
                 bw.write(SimpleBot.gson.toJson(o));
+                try {
+                    var sc = SimpleBot.class.getDeclaredField("serverConfig");
+                    sc.trySetAccessible();
+                    sc.set(null, SimpleBot.gson.fromJson(o, ServerConfig.class));
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 MessageHelper.sendError(e, event, this);
