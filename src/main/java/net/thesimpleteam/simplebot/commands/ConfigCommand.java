@@ -138,7 +138,7 @@ public class ConfigCommand extends Command {
                             }
                             if (SimpleBot.getServerConfig().guildJoinRole().get(event.getGuild().getId()) == null || !SimpleBot.getServerConfig().guildJoinRole().get(event.getGuild().getId()).equals(event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")).getId())) {
                                 SimpleBot.getServerConfig().guildJoinRole().put(event.getGuild().getId(), event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")).getId());
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.joinRole.configured", null, null, null, (Object[]) null).build()).build());
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.joinRole.configured", null, null, null, event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")).getName()).build()).build());
                                 return;
                             }
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.joinRole.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
