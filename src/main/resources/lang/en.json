@@ -38,6 +38,7 @@
   "error.commands.userHasNotPermission": "Error! You cannot execute this command because you do not have **%s** permission.",
   "error.commands.userNull": "Error! You must specify an existing person.",
   "error.config.channelMember.join.IDIsInvalid": "Error! You have specified an invalid ID for the welcome message channel.",
+  "error.config.channelMember.leave.IDIsInvalid": "Error! You have specified an invalid ID for the departure message channel.",
   "error.config.channelMember.join.channelNull": "Error! The channel you want to change for the welcome messages does not exist.",
   "error.config.channelMember.join.notConfigured": "Error! The channel for welcome messages has not been configured so you can\u0027t reset it.",
   "error.config.channelMember.join.sameAsConfigured": "Error! The channel you want to change for the welcome messages is the same as the one currently configured.",
