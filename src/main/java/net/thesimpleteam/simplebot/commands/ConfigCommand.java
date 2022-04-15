@@ -119,27 +119,27 @@ public class ConfigCommand extends Command {
                         if (args[1].equalsIgnoreCase("reset")) {
                             if (SimpleBot.getServerConfig().guildJoinRole().get(event.getGuild().getId()) == null) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.joinRole.notConfigured", null, null, null, (Object[]) null).build()).build());
-                                return;
+                                break;
                             }
                             SimpleBot.getServerConfig().guildJoinRole().remove(event.getGuild().getId());
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.joinRole.reset", null, null, null, (Object[]) null).build()).build());
                         } else {
                             if (args[1].replaceAll("\\D+", "").isEmpty()) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.joinRole.IDIsInvalid", null, null, null, (Object[]) null).build()).build());
-                                return;
+                                break;
                             }
                             if (event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")) == null) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.joinRole.roleNull", null, null, null, (Object[]) null).build()).build());
-                                return;
+                                break;
                             }
                             if (event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")).isManaged()) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.joinRole.roleManaged", null, null, null, (Object[]) null).build()).build());
-                                return;
+                                break;
                             }
                             if (SimpleBot.getServerConfig().guildJoinRole().get(event.getGuild().getId()) == null || !SimpleBot.getServerConfig().guildJoinRole().get(event.getGuild().getId()).equals(event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")).getId())) {
                                 SimpleBot.getServerConfig().guildJoinRole().put(event.getGuild().getId(), event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")).getId());
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.joinRole.configured", null, null, null, event.getGuild().getRoleById(args[1].replaceAll("\\D+", "")).getName()).build()).build());
-                                return;
+                                break;
                             }
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.joinRole.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
                         }
@@ -147,11 +147,11 @@ public class ConfigCommand extends Command {
                     case "localization" -> {
                         if (Arrays.stream(SimpleBot.getLangs()).noneMatch(lang -> lang.equalsIgnoreCase(args[1]))) {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.localization.languageDontExist", null, null, null, (Object[]) null).build()).build());
-                            return;
+                            break;
                         }
                         if (args[1].equals(SimpleBot.getServerConfig().language().get(event.getGuild().getId()))) {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.localization.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
-                            return;
+                            break;
                         }
                         SimpleBot.getServerConfig().language().put(event.getGuild().getId(), args[1]);
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.localization.configured", null, null, null, ":flag_" + args[1].replace("en", "us: / :flag_gb") + ":").build()).build());
@@ -159,19 +159,19 @@ public class ConfigCommand extends Command {
                     case "setprefix" -> {
                         if (event.getArgs().split(" setprefix ")[0].isEmpty()) {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.setPrefix.prefixIsEmpty", null, null, null, (Object[]) null).build()).build());
-                            return;
+                            break;
                         }
                         if (args[1].equalsIgnoreCase("reset")) {
                             if (!SimpleBot.getServerConfig().prefix().containsKey(event.getGuild().getId())) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.setPrefix.notConfigured", null, null, null, (Object[]) null).build()).build());
-                                return;
+                                break;
                             }
                             SimpleBot.getServerConfig().prefix().remove(event.getGuild().getId());
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.setPrefix.reset", null, null, null, (Object[]) null).build()).build());
                         } else {
                             if (args[1].equals(SimpleBot.getServerConfig().prefix().get(event.getGuild().getId()))) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.setPrefix.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
-                                return;
+                                break;
                             }
                             SimpleBot.getServerConfig().prefix().put(event.getGuild().getId(), args[1]);
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.setPrefix.configured", null, null, null, args[1]).build()).build());
@@ -183,7 +183,7 @@ public class ConfigCommand extends Command {
                         if(args[1].equalsIgnoreCase("reset")) {
                             if (SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.listNull", null, null, null, (Object[]) null).build()).build());
-                                return;
+                                break;
                             }
                             SimpleBot.getServerConfig().prohibitWords().remove(event.getGuild().getId());
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.prohibitWord.listReseted", null, null, null, (Object[]) null).build()).build());
@@ -203,32 +203,32 @@ public class ConfigCommand extends Command {
                                     case "reset" -> {
                                         if (SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null) {
                                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.join.notConfigured", null, null, null, (Object[]) null).build()).build());
-                                            return;
+                                            break;
                                         }
+                                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.join.reset", null, null, null, event.getGuild().getGuildChannelById(SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getName()).build()).build());
                                         SimpleBot.getServerConfig().channelMemberJoin().remove(event.getGuild().getId());
-                                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.join.reset", null, null, null, event.getGuild().getGuildChannelById(SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getAsMention()).build()).build());
                                     }
                                     case "this" -> {
                                         if (SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !event.getChannel().getId().equals(event.getChannel().getId())) {
                                             SimpleBot.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), event.getChannel().getId());
-                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.join.configured", null, null, null, ((GuildChannel) event.getChannel()).getAsMention()).build()).build());
-                                            return;
+                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.join.configured", null, null, null, event.getChannel().getName()).build()).build());
+                                            break;
                                         }
                                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.join.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
                                     }
                                     default -> {
                                         if (args[2].replaceAll("\\D+", "").isEmpty()) {
                                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.join.IDIsInvalid", null, null, null, (Object[]) null).build()).build());
-                                            return;
+                                            break;
                                         }
                                         if (event.getGuild().getGuildChannelById(args[2].replaceAll("\\D+", "")) == null) {
                                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.join.channelNull", null, null, null, (Object[]) null).build()).build());
-                                            return;
+                                            break;
                                         }
                                         if (SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId()) == null || !SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId()).equals(args[2].replaceAll("\\D+", ""))) {
                                             SimpleBot.getServerConfig().channelMemberJoin().put(event.getGuild().getId(), args[2].replaceAll("\\D+", ""));
-                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.join.configured", null, null, null, ((GuildChannel) event.getChannel()).getAsMention()).build()).build());
-                                            return;
+                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.join.configured", null, null, null, event.getChannel().getName()).build()).build());
+                                            break;
                                         }
                                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.join.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
                                     }
@@ -238,33 +238,33 @@ public class ConfigCommand extends Command {
                                 switch (args[2].toLowerCase(Locale.ROOT)){
                                     case "reset" -> {
                                         if (SimpleBot.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null) {
-                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.leave.notAsConfigured", null, null, null, (Object[]) null).build()).build());
-                                            return;
+                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.leave.notConfigured", null, null, null, (Object[]) null).build()).build());
+                                            break;
                                         }
+                                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.leave.reset", null, null, null, event.getGuild().getGuildChannelById(SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).getName()).build()).build());
                                         SimpleBot.getServerConfig().channelMemberLeave().remove(event.getGuild().getId());
-                                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.leave.reset", null, null, null, (Object[]) null).build()).build());
                                     }
                                     case "this" -> {
                                         if (SimpleBot.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null || !SimpleBot.getServerConfig().channelMemberLeave().get(event.getGuild().getId()).equals(event.getChannel().getId())) {
                                             SimpleBot.getServerConfig().channelMemberLeave().put(event.getGuild().getId(), event.getChannel().getId());
-                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.leave.configured", null, null, null, ((GuildChannel) event.getChannel()).getAsMention()).build()).build());
-                                            return;
+                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.leave.configured", null, null, null, event.getChannel().getName()).build()).build());
+                                            break;
                                         }
                                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.leave.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
                                     }
                                     default -> {
                                         if (args[2].replaceAll("\\D+", "").isEmpty()) {
                                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.leave.IDIsInvalid", null, null, null, (Object[]) null).build()).build());
-                                            return;
+                                            break;
                                         }
                                         if (event.getGuild().getGuildChannelById(args[2].replaceAll("\\D+", "")) == null) {
                                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.leave.channelNull", null, null, null, (Object[]) null).build()).build());
-                                            return;
+                                            break;
                                         }
                                         if (SimpleBot.getServerConfig().channelMemberLeave().get(event.getGuild().getId()) == null || !SimpleBot.getServerConfig().channelMemberLeave().get(event.getGuild().getId()).equals(args[2].replaceAll("\\D+", ""))) {
                                             SimpleBot.getServerConfig().channelMemberLeave().put(event.getGuild().getId(), args[2].replaceAll("\\D+", ""));
-                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.leave.configured", null, null, null, ((GuildChannel) event.getChannel()).getAsMention()).build()).build());
-                                            return;
+                                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.config.channelMember.leave.configured", null, null, null, event.getChannel().getName()).build()).build());
+                                            break;
                                         }
                                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.channelMember.leave.sameAsConfigured", null, null, null, (Object[]) null).build()).build());
                                     }
@@ -279,7 +279,7 @@ public class ConfigCommand extends Command {
                                 List<String> prohibitWords = SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId());
                                 if (prohibitWords.contains(args[2])) {
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.wordAlreadyHere", null, null, null, args[2]).build()).build());
-                                    return;
+                                    break;
                                 }
                                 prohibitWords.add(args[2]);
                                 SimpleBot.getServerConfig().prohibitWords().remove(event.getGuild().getId());
@@ -290,7 +290,7 @@ public class ConfigCommand extends Command {
                                 List<String> prohibitWords = SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null ? new ArrayList<>() : SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId());
                                 if (!prohibitWords.contains(args[2])) {
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.wordNotHere", null, null, null, args[2]).build()).build());
-                                    return;
+                                    break;
                                 }
                                 prohibitWords.remove(args[2]);
                                 SimpleBot.getServerConfig().prohibitWords().remove(event.getGuild().getId());
