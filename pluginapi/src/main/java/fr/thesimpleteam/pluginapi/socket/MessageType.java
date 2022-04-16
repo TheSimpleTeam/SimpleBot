@@ -31,10 +31,12 @@ public enum MessageType implements Serializable {
     // Client (Simple Bot) -> Server (Plugin Loader)
 
     TRIGGER_EVENT,
+    SHUTDOWN,
 
     // Server (Plugin Loader) -> Client (Simple Bot)
 
     LOG_MESSAGE,
+    REPLY,
 
     ;
 

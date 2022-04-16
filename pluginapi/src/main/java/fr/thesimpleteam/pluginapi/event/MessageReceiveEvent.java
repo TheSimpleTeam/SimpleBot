@@ -32,18 +32,24 @@ public class MessageReceiveEvent extends Event implements Serializable {
 
     private final String message;
     private final String authorName;
+    private final String channelId;
 
-    public MessageReceiveEvent(String message, String authorName) {
+    public MessageReceiveEvent(String message, String authorName, String channelId) {
         this.message = message;
         this.authorName = authorName;
+        this.channelId = channelId;
     }
 
     public void reply(String message) {
-        this.getPlugin().getLoader().reply(message);
+        this.getPlugin().getLoader().reply(message, channelId);
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public String getChannelId() {
+        return channelId;
     }
 
     public String getAuthorName() {

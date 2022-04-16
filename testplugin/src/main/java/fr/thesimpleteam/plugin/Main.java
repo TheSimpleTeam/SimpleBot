@@ -35,17 +35,19 @@ public class Main extends BasePlugin implements Listener {
 
     @EventHandler
     public void onMessage(MessageReceiveEvent event) {
-        event.reply("Receieved message from " + event.getAuthorName() + " : " + event.getMessage());
+        if(event.getMessage().equalsIgnoreCase("HelloWorld")) {
+            event.reply("Hello " + event.getAuthorName());
+        }
     }
 
     @Override
     public void onEnable() {
-        System.out.println("Enabled");
+        getLogger().info("Enabled");
         getLoader().addListener(this, this);
     }
 
     @Override
     public void onDisable() {
-        System.out.println("Disabled");
+        getLogger().info("Disabled");
     }
 }

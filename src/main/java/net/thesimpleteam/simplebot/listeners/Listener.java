@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,6 +41,7 @@ public class Listener extends ListenerAdapter {
     public void onShutdown(@NotNull ShutdownEvent event) {
         try {
             Listener.saveConfigs();
+            PluginService.stop();
         } catch (IOException ex) {
             SimpleBot.LOGGER.severe(Throwables.getStackTraceAsString(ex));
         }
@@ -148,7 +150,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        PluginService.callEvent(new MessageReceiveEvent(event.getMessage().getContentRaw(), event.getAuthor().getName()));
+        PluginService.callEvent(new MessageReceiveEvent(event.getMessage().getContentRaw(), event.getAuthor().getName(), event.getChannel().getId()));
         if (event.getAuthor().isBot()) return;
         if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember()) &&
                 !Objects.equals(getUserFromReferencedMessage(event.getMessage().getReferencedMessage()), event.getJDA().getSelfUser())) {
@@ -174,12 +176,12 @@ public class Listener extends ListenerAdapter {
             double highestResult = 0;
             String cmd = null;
             for (String commandName : Stream.concat(SimpleBot.getClient().getCommands().stream().map(Command::getName), Stream.of("help")).toList()) {
-                double _highestResult = LevenshteinDistance.getDistance(cmdName, commandName);
+                double highestRes = LevenshteinDistance.getDistance(cmdName, commandName);
                 double b = 0;
-                if (b > _highestResult) _highestResult = b;
-                if (highestResult < _highestResult) {
+                if (b > highestRes) highestRes = b;
+                if (highestResult < highestRes) {
                     cmd = commandName;
-                    highestResult = _highestResult;
+                    highestResult = highestRes;
                 }
             }
             event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.didYouMean",

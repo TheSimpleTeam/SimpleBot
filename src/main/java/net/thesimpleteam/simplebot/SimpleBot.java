@@ -142,11 +142,21 @@ public class SimpleBot {
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
-            }, 5, TimeUnit.SECONDS);
+            }, 2, TimeUnit.SECONDS);
         } else {
             LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
         }
-        executorService.schedule(PluginService::startPluginLoader, 5, TimeUnit.SECONDS);
+        executorService.schedule(PluginService::startPluginLoader, 2, TimeUnit.SECONDS);
+        if(!isInDevMode()) {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try(var bw = Files.newBufferedWriter(Paths.get("config/config.json"), StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                    bw.write(gson.toJson(infos));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }));
+        }
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot bot) {
@@ -283,8 +293,16 @@ public class SimpleBot {
             configTemplate.setWritable(false);
         }
         Reader reader = Files.newBufferedReader(config.toPath(), StandardCharsets.UTF_8);
-        Infos infos = gson.fromJson(reader, Infos.class);
+        JsonObject json = gson.fromJson(reader, JsonObject.class);
+        Infos infos = gson.fromJson(json, Infos.class);
         reader.close();
+        if(!isInDevMode()) {
+            json.remove("token");
+            json.addProperty("token", "hidden-token");
+            try(var bw = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                bw.write(gson.toJson(json));
+            }
+        }
         return infos;
     }
 

@@ -14,6 +14,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 public class PluginService {
 
@@ -21,6 +22,7 @@ public class PluginService {
 
     private static final boolean alreadyLoaded = false;
     private static ObjectOutputStream os;
+    private static Process p;
 
     public static void startPluginLoader() {
         if(alreadyLoaded) return;
@@ -32,7 +34,7 @@ public class PluginService {
         ProcessBuilder builder = new ProcessBuilder(javaPath.toString(), "-jar", "plugins/PluginLoader.jar");
         builder.inheritIO();
         try {
-            Process p = builder.start();
+            p = builder.start();
             new Thread(() -> {
                 Socket socket = null;
                 while(socket == null) {
@@ -62,7 +64,11 @@ public class PluginService {
                         } else if(o instanceof Plugin pl) {
                             SimpleBot.LOGGER.info(pl.name() + " loaded");
                         } else if(o instanceof SocketMessage msg) {
-                            if(msg.getMessageType() == MessageType.LOG_MESSAGE) SimpleBot.LOGGER.info(msg.getMessage());
+                            if(msg.getMessageType() == MessageType.REPLY) {
+                                String channelId = msg.getMessage().substring(msg.getMessage().lastIndexOf(':') + 1);
+                                String content = msg.getMessage().substring(0, msg.getMessage().lastIndexOf(':'));
+                                SimpleBot.getJda().getTextChannelById(channelId).sendMessage(content).queue();
+                            }
                         }
                     }
                 } catch (IOException | ClassNotFoundException e) {
@@ -76,8 +82,7 @@ public class PluginService {
                 }
                 p.destroy();
             }).start();
-            p.waitFor();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -89,5 +94,20 @@ public class PluginService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void stop() throws IOException {
+        os.writeObject(MessageType.SHUTDOWN);
+        SimpleBot.LOGGER.info("Shutting down...");
+        try {
+            p.waitFor(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            p.destroyForcibly();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void blockThread() throws InterruptedException {
+        p.waitFor();
     }
 }

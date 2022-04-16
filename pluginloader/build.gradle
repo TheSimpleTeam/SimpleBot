@@ -13,6 +13,9 @@ repositories {
 
 application {
     mainClassName = 'fr.thesimpleteam.loader.Main'
+    run {
+        setEnabled(false)
+    }
 }
 
 dependencies {

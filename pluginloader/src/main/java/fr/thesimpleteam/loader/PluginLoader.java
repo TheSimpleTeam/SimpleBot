@@ -36,11 +36,7 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -101,9 +97,9 @@ public class PluginLoader implements IPluginLoader {
     }
 
     @Override
-    public void reply(String message) {
+    public void reply(String message, String channelId) {
         try {
-            os.writeObject(new SocketMessage(message, MessageType.LOG_MESSAGE));
+            os.writeObject(new SocketMessage(message + ":" + channelId, MessageType.REPLY));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,10 +142,15 @@ public class PluginLoader implements IPluginLoader {
                         if(o instanceof SocketMessage sm) {
                             if (sm.getMessageType() == MessageType.TRIGGER_EVENT) {
                                 callEvent((Event) sm.getObject());
+                            } else if (MessageType.SHUTDOWN == sm.getMessageType()) {
+                                stop(is, socket);
                             }
                         }
                     } catch (EOFException e) {
                         break;
+                    } catch (SocketException e) {
+                        //Why didn't it shut down ??
+                        stop(is, socket);
                     } catch (IOException | ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -159,6 +160,14 @@ public class PluginLoader implements IPluginLoader {
                 throw new RuntimeException(e);
             }
         }).start();
+    }
+
+    private void stop(InputStream is, Socket socket) throws IOException {
+        plugins.forEach(pl -> pl.plugin.onDisable());
+        os.close();
+        is.close();
+        socket.close();
+        System.exit(0);
     }
 
     private void loadPlugin(Path jarFile) {

@@ -25,13 +25,17 @@
 package fr.thesimpleteam.pluginapi;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 public abstract class BasePlugin implements Serializable {
 
     public static final long serialVersionUID = 112410L;
     private transient IPluginLoader loader;
+    private static transient Logger logger;
 
-    protected BasePlugin() {}
+    protected BasePlugin() {
+        logger = Logger.getLogger(getClass().getName());
+    }
 
     public String getName() {
         return getClass().getAnnotation(Plugin.class).name();
@@ -47,6 +51,10 @@ public abstract class BasePlugin implements Serializable {
 
     public String getWebsite() {
         return getClass().getAnnotation(Plugin.class).website();
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 
     public Plugin getAnnotation() {

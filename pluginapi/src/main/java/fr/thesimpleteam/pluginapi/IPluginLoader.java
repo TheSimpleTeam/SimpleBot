@@ -31,7 +31,7 @@ public interface IPluginLoader {
 
     void callEvent(Event event);
 
-    void reply(String message);
+    void reply(String message, String channelId);
 
     void addListener(BasePlugin plugin, Listener... listeners);
 
