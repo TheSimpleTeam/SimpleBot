@@ -38,7 +38,7 @@ public class MathsCommand extends Command {
                 mXparser.disableCanonicalRounding();
                 mXparser.disableUlpRounding();
                 for (char c : args[0].toCharArray()) {
-                    if (Objects.equals(UnicodeCharacters.getAllExponentsCharacters(), c)) {
+                    if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
                         return;
                     }
@@ -63,7 +63,7 @@ public class MathsCommand extends Command {
                         mXparser.disableCanonicalRounding();
                         mXparser.disableUlpRounding();
                         for (char c : args[1].toCharArray()) {
-                            if (Objects.equals(UnicodeCharacters.getAllExponentsCharacters(), c)) {
+                            if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
                             }
                         }

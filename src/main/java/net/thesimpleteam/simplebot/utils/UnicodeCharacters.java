@@ -24,6 +24,9 @@
 
 package net.thesimpleteam.simplebot.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UnicodeCharacters {
 
     private UnicodeCharacters() {}
@@ -38,7 +41,22 @@ public class UnicodeCharacters {
     public static final String HEAVY_MINUS_SIGN = "\u2796";
 
 
-    public static char[] getAllExponentsCharacters() {
-        return new char[]{'\u2070', '\u00B9', '\u00B2', '\u00B3', '\u2074', '\u2075', '\u2076', '\u2077', '\u2078', '\u2079', '\u207A', '\u207B', '\u207D', '\u207E'};
+    public static List<Character> getAllExponentCharacters() {
+        List<Character> exponentCharactersList = new ArrayList<>();
+        exponentCharactersList.add('\u2070');
+        exponentCharactersList.add('\u00B9');
+        exponentCharactersList.add('\u00B2');
+        exponentCharactersList.add('\u00B3');
+        exponentCharactersList.add('\u2074');
+        exponentCharactersList.add('\u2075');
+        exponentCharactersList.add('\u2076');
+        exponentCharactersList.add('\u2077');
+        exponentCharactersList.add('\u2078');
+        exponentCharactersList.add('\u2079');
+        exponentCharactersList.add('\u207A');
+        exponentCharactersList.add('\u207B');
+        exponentCharactersList.add('\u207D');
+        exponentCharactersList.add('\u207E');
+        return exponentCharactersList;
     }
 }
