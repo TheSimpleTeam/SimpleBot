@@ -29,6 +29,7 @@ import net.thesimpleteam.simplebot.config.ServerConfig;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.gson.RecordTypeAdapterFactory;
 import net.thesimpleteam.simplebot.listeners.Listener;
+import net.thesimpleteam.simplebot.plugins.PluginService;
 import net.thesimpleteam.simplebot.utils.Eval;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import okhttp3.OkHttpClient;
@@ -67,8 +68,7 @@ public class SimpleBot {
     private static String[] langs;
     private static ScheduledExecutorService executorService;
 
-    private record Bot(List<Command> commands, String ownerID, String serverInvite) {
-    }
+    private record Bot(List<Command> commands, String ownerID, String serverInvite) { }
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Is in dev mode :" + isInDevMode());
@@ -146,6 +146,7 @@ public class SimpleBot {
         } else {
             LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
         }
+        executorService.schedule(PluginService::startPluginLoader, 5, TimeUnit.SECONDS);
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot bot) {
@@ -161,7 +162,8 @@ public class SimpleBot {
                             }
                         } else {
                             helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ?
-                                    command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`")
+                                    command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "")
+                                    .append("`")
                                     .append(" \u27A1 *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
                         }
                     }

@@ -2,6 +2,7 @@ package net.thesimpleteam.simplebot.listeners;
 
 import com.google.common.base.Throwables;
 import com.jagrosh.jdautilities.command.Command;
+import fr.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -15,6 +16,7 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.config.ServerConfig;
+import net.thesimpleteam.simplebot.plugins.PluginService;
 import net.thesimpleteam.simplebot.utils.LevenshteinDistance;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.thesimpleteam.simplebot.utils.UnicodeCharacters;
@@ -146,6 +148,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        PluginService.callEvent(new MessageReceiveEvent(event.getMessage().getContentRaw(), event.getAuthor().getName()));
         if (event.getAuthor().isBot()) return;
         if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember()) &&
                 !Objects.equals(getUserFromReferencedMessage(event.getMessage().getReferencedMessage()), event.getJDA().getSelfUser())) {

@@ -1,3 +1,5 @@
 rootProject.name = 'simplebot'
-include 'jna'
+include 'pluginapi'
+include 'pluginloader'
+include 'testplugin'
 

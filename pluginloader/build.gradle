@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'fr.thesimpleteam'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClassName = 'fr.thesimpleteam.loader.Main'
+}
+
+dependencies {
+    implementation project(':pluginapi')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+shadowJar {
+    destinationDirectory.set(file("$rootDir/src/main/resources/plugins"))
+    archiveFileName.set('PluginLoader.jar')
+    archiveVersion.set('')
+}
+
+test {
+    useJUnitPlatform()
+}
