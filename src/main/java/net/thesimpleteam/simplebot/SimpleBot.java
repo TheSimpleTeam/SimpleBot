@@ -40,6 +40,8 @@ import org.reflections.Reflections;
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.OverlappingFileLockException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.LocalDateTime;
@@ -72,7 +74,8 @@ public class SimpleBot {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Is in dev mode :" + isInDevMode());
-        executorService = Executors.newScheduledThreadPool(3);
+        executorService = Executors.newScheduledThreadPool(6);
+        MixinsBootstrap.init(false);
         try {
             String arg = "";
             try {
@@ -147,16 +150,6 @@ public class SimpleBot {
             LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
         }
         executorService.schedule(PluginService::startPluginLoader, 2, TimeUnit.SECONDS);
-        if(!isInDevMode()) {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try(var bw = Files.newBufferedWriter(Paths.get("config/config.json"), StandardCharsets.UTF_8,
-                        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                    bw.write(gson.toJson(infos));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
-        }
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot bot) {
@@ -168,7 +161,9 @@ public class SimpleBot {
                     if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
                         if (MessageHelper.translateMessage(event, command.getHelp()).contains("²")) {
                             for (int index = 0; index < MessageHelper.translateMessage(event, command.getHelp()).split("²").length - 1; index++) {
-                                helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp()).split("²")[index]).append("*");
+                                helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ")
+                                        .append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`")
+                                        .append(" -> *").append(MessageHelper.translateMessage(event, command.getHelp()).split("²")[index]).append("*");
                             }
                         } else {
                             helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ?
@@ -293,14 +288,13 @@ public class SimpleBot {
             configTemplate.setWritable(false);
         }
         Reader reader = Files.newBufferedReader(config.toPath(), StandardCharsets.UTF_8);
-        JsonObject json = gson.fromJson(reader, JsonObject.class);
-        Infos infos = gson.fromJson(json, Infos.class);
+        Infos infos = gson.fromJson(reader, Infos.class);
         reader.close();
-        if(!isInDevMode()) {
-            json.remove("token");
-            json.addProperty("token", "hidden-token");
-            try(var bw = Files.newBufferedWriter(config.toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                bw.write(gson.toJson(json));
+        try (FileChannel channel = new RandomAccessFile(config, "rw").getChannel()) {
+            try {
+                channel.tryLock();
+            } catch (OverlappingFileLockException e) {
+                LOGGER.log(Level.SEVERE, "The configuration file is already locked by another process. Please close the other instance of the bot and try again.");
             }
         }
         return infos;
@@ -345,7 +339,7 @@ public class SimpleBot {
         if(isInDevMode()) {
             return new File(path).exists();
         }
-        try(AutoCloseable o = SimpleBot.class.getResourceAsStream(path)) {
+        try(AutoCloseable ignored = SimpleBot.class.getResourceAsStream(path)) {
             return true;
         } catch (Exception e) {
             return false;
