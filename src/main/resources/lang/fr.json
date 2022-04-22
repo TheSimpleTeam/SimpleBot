@@ -32,7 +32,7 @@
   "error.commands.memberNull": "Erreur ! Vous devez spécifier une personne présente sur le serveur.",
   "error.commands.notAnIntegerNumber": "Erreur ! `%s` n\u0027est pas un nombre entier.",
   "error.commands.notAnNumber": "Erreur ! `%s` n\u0027est pas un nombre.",
-  "error.commands.numberTooLarge": "Erreur ! `%s` est un nombre trop grand.",
+  "error.commands.numberTooLarge": "Erreur ! `%s` est un nombre trop grand. Ce nombre doit se situer entre `%s` et `%s` inclusivement.",
   "error.commands.userHasNotPermission": "Erreur ! Vous ne pouvez pas exécuter cette commande car vous n\u0027avez pas la permission **%s**.",
   "error.commands.userNull": "Erreur ! Vous devez spécifier une personne existante.",
   "error.config.channelMember.join.IDIsInvalid": "Erreur ! Vous avez spécifié un identifiant invalide pour le salon des messages de bienvenue.",

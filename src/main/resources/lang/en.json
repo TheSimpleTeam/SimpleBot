@@ -33,7 +33,7 @@
   "error.commands.memberNull": "Error! You must specify a person present on the server.",
   "error.commands.notAnIntegerNumber": "Error! `%s` is not a integer number.",
   "error.commands.notAnNumber": "Error! `%s` is not a number.",
-  "error.commands.numberTooLarge": "Error! `%s` is too large a number.",
+  "error.commands.numberTooLarge": "Error! `%s` is too large a number. This number must be between `%s` and `%s` inclusive.",
   "error.commands.userCantInteractTarget": "Error! You do not have permission to ban this member.",
   "error.commands.userHasNotPermission": "Error! You cannot execute this command because you do not have **%s** permission.",
   "error.commands.userNull": "Error! You must specify an existing person.",
