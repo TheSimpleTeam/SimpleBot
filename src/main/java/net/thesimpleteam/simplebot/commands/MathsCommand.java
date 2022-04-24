@@ -87,10 +87,10 @@ public class MathsCommand extends Command {
                     case "primenumber" -> {
                         long number;
                         if (isIntegerNumber(args[2]))
-                            number = Long.parseLong(args[2]);
+                            number = Long.parseLong(args[2].split("\\.")[0]);
                         else if (new Expression(args[2]).checkSyntax()){
                             if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
-                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).substring(String.valueOf(new Expression(args[2]).calculate()).toCharArray().length - 4, String.valueOf(new Expression(args[2]).calculate()).toCharArray().length - 2));
+                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
                         } else {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
@@ -130,10 +130,10 @@ public class MathsCommand extends Command {
                     case "perfectnumber" -> {
                         long number;
                         if (isIntegerNumber(args[2]))
-                            number = Long.parseLong(args[2]);
+                            number = Long.parseLong(args[2].split("\\.")[0]);
                         else if (new Expression(args[2]).checkSyntax()){
                             if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
-                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).substring(String.valueOf(new Expression(args[2]).calculate()).toCharArray().length - 4, String.valueOf(new Expression(args[2]).calculate()).toCharArray().length - 2));
+                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
                         } else {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
@@ -182,7 +182,7 @@ public class MathsCommand extends Command {
                                 }
                             }
                         }
-                        if(isParsableDouble(event, args[1].replace(',', '.'))) return;
+                        if(!isParsableDouble(event, args[1].replace(',', '.'))) return;
                         double number = Double.parseDouble(args[1].replace(',', '.'));
                         Unit unit1 = null;
                         Unit unit2 = null;
@@ -247,9 +247,9 @@ public class MathsCommand extends Command {
         if(!isNumber(string)) return false;
         try {
             Long.parseLong(string);
-            return false;
-        } catch (NumberFormatException exception) {
             return true;
+        } catch (NumberFormatException exception) {
+            return false;
         }
     }
 
@@ -263,6 +263,38 @@ public class MathsCommand extends Command {
         if(!isNumber(string)) return false;
         try {
             Double.parseDouble(string);
+            return true;
+        } catch(NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    public static boolean isParsableByte(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableByte(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Byte.MIN_VALUE, Byte.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableByte(String string) {
+        if(!isNumber(string)) return false;
+        try {
+            Byte.parseByte(string);
+            return true;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    public static boolean isParsableShort(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableShort(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Short.MIN_VALUE, Short.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableShort(String string) {
+        if(!isNumber(string)) return false;
+        try {
+            Short.parseShort(string);
             return true;
         } catch (NumberFormatException exception) {
             return false;
@@ -279,41 +311,9 @@ public class MathsCommand extends Command {
         if(!isNumber(string)) return false;
         try {
             Float.parseFloat(string);
-            return false;
-        } catch (NumberFormatException exception) {
             return true;
-        }
-    }
-
-    public static boolean isParsableByte(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableByte(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Byte.MIN_VALUE, Byte.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    public static boolean isParsableByte(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Byte.parseByte(string);
-            return false;
         } catch (NumberFormatException exception) {
-            return true;
-        }
-    }
-
-    public static boolean isParsableShort(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableShort(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Short.MIN_VALUE, Short.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    public static boolean isParsableShort(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Short.parseShort(string);
             return false;
-        } catch (NumberFormatException exception) {
-            return true;
         }
     }
 
@@ -327,9 +327,9 @@ public class MathsCommand extends Command {
         if(!isNumber(string)) return false;
         try {
             Integer.parseInt(string);
-            return false;
-        } catch (NumberFormatException exception) {
             return true;
+        } catch (NumberFormatException exception) {
+            return false;
         }
     }
 
