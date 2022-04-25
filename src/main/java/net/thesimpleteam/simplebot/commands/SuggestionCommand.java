@@ -36,7 +36,7 @@ public class SuggestionCommand extends Command {
             return;
         }
         event.getJDA().getGuildById("846048803554852904").getTextChannelById("848599555540123648").sendMessage(new MessageBuilder(MessageHelper.getEmbed(event, "success.suggestion.suggestion", null, null, null, (Object[]) null)
-                .setTitle(UnicodeCharacters.ELECTRIC_LIGHT_BULB_EMOJI + " " + "success.suggestion.suggestion")
+                .setTitle(new StringBuilder().append(UnicodeCharacters.ELECTRIC_LIGHT_BULB_EMOJI).append(" ").append(MessageHelper.translateMessage(event, "success.suggestion.suggestion")).toString())
                 .setColor(Color.YELLOW)
                 .addField(MessageHelper.translateMessage(event, "success.suggestion.suggestion"), event.getArgs(), false)
                 .addField(MessageHelper.translateMessage(event, "success.suggestion.author"), event.getAuthor().getName(), false)
