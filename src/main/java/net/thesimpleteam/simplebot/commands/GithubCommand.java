@@ -81,10 +81,14 @@ public class GithubCommand extends Command {
                 try {
                     EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.list", null, null, github.getUser(args[1]).getAvatarUrl(), name);
                     List<GHRepository> repositories = new ArrayList<>(github.getUser(args[1]).getRepositories().values());
-                    repositories.sort(Comparator.comparing(GHRepository::getStargazersCount)
+                    repositories.sort(
+                            Comparator.comparing(GHRepository::getStargazersCount)
+                                    .reversed()
                                     .thenComparing(GHRepository::getForksCount)
+                                    .reversed()
                                     .thenComparing(GHRepository::getWatchersCount)
-                            .thenComparing(GHRepository::getName));
+                                    .reversed()
+                                    .thenComparing(GHRepository::getName));
                     repositories.forEach(repo -> embedBuilder.addField(repo.getName(), repo.getHtmlUrl().toString(), false));
                     event.reply(new MessageBuilder(embedBuilder.build()).build());
                 } catch (IOException ex) {
