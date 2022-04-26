@@ -6,6 +6,8 @@ import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.thesimpleteam.simplebot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.MessageBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.internal.StringUtil;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.mXparser;
 
@@ -48,6 +50,7 @@ public class MathsCommand extends Command {
                         MessageHelper.syntaxError(event, this, "information.maths");
                         return;
                     }
+                    System.out.println(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).getErrorMessage());
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).build()).build());
                     return;
                 }
@@ -81,17 +84,14 @@ public class MathsCommand extends Command {
             }
             case 3 -> {
                 switch (args[0].toLowerCase(Locale.ROOT)) {
-                    case "primenumber" -> { //Verify if a number is a prime number or make a list of all prime numbers up to the specified number
+                    case "primenumber" -> {
                         long number;
-                        if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
-                            if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
+                        if (isIntegerNumber(args[2]))
+                            number = Long.parseLong(args[2].split("\\.")[0]);
+                        else if (new Expression(args[2]).checkSyntax()){
+                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
+                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
-                        } else if (new Expression(args[2]).checkSyntax()){
-                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                if(notIntegerNumberTooLargeWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                    number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
-                                } else return;
-                            } else return;
                         } else {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
                             return;
@@ -113,7 +113,8 @@ public class MathsCommand extends Command {
                                     listBuilder.append(string).append(", ");
                                 }
                                 if(listBuilder.toString().length() >= 4096) {
-                                    while (listBuilder.toString().length() > 4096 - 3) { //We subtract 3 because we add that string "..." into the listBuilder
+                                    //We subtract 3 because we add that string "..." into the listBuilder
+                                    while (listBuilder.toString().length() > 4096 - 3) {
                                         primeNumberList.remove(0);
                                         listBuilder = new StringBuilder();
                                         for (String string : primeNumberList) {
@@ -126,17 +127,14 @@ public class MathsCommand extends Command {
                             }
                         }
                     }
-                    case "perfectnumber" -> { //Verify if a number is a perfect number or make a list of all perfect numbers up to the specified number
+                    case "perfectnumber" -> {
                         long number;
-                        if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
-                            if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
+                        if (isIntegerNumber(args[2]))
+                            number = Long.parseLong(args[2].split("\\.")[0]);
+                        else if (new Expression(args[2]).checkSyntax()){
+                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
+                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
-                        } else if (new Expression(args[2]).checkSyntax()){
-                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                if(notIntegerNumberTooLargeWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                    number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
-                                } else return;
-                            } else return;
                         } else {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
                             return;
@@ -184,32 +182,28 @@ public class MathsCommand extends Command {
                                 }
                             }
                         }
-                        try {
-                            double number = Double.parseDouble(args[1].replace(',', '.'));
-                            Unit unit1 = null;
-                            Unit unit2 = null;
-                            for (Unit units : Unit.values()) {
-                                if (units.name().equals(args[2])) {
-                                    unit1 = units;
-                                }
-                                if (units.name().equals(args[3])) {
-                                    unit2 = units;
-                                }
+                        if(!isParsableDouble(event, args[1].replace(',', '.'))) return;
+                        double number = Double.parseDouble(args[1].replace(',', '.'));
+                        Unit unit1 = null;
+                        Unit unit2 = null;
+                        for (Unit unit : Unit.values()) {
+                            if (unit.name().equals(args[2])) {
+                                unit1 = unit;
                             }
-                            if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType){
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null, (Object[]) null)).build());
-                                return;
+                            if (unit.name().equals(args[3])) {
+                                unit2 = unit;
                             }
-                            String factor = String.valueOf(unit1.factor / unit2.factor);
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null, (Object[]) null)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * Double.parseDouble(factor)).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), factor.replace("E", "x10^"), false)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
-                                    .build()).build());
-                        } catch (NumberFormatException ignore) {
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnNumber", null, null, null, args[1]).build()).build());
                         }
+                        if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType){
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null, (Object[]) null)).build());
+                            return;
+                        }
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null, (Object[]) null)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), String.valueOf(unit1.factor / unit2.factor).replace("E", "x10^"), false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
+                                .build()).build());
                     }
                     default -> MessageHelper.syntaxError(event, this, "information.maths");
                 }
@@ -233,19 +227,106 @@ public class MathsCommand extends Command {
         return builder.toString();
     }
 
-    public static boolean notIntegerNumberTooLargeWithEmbed(CommandEvent event, String integerNumber) {
+    public static boolean isNumber(String string){
+        return string.replaceAll("\\d+", "").replace(".", "").isEmpty() && StringUtils.countMatches(string, '.') < 2;
+    }
+
+    public static boolean isNumber(CommandEvent event, String string){
+        if(isNumber(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnNumber", null, null, null, string).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableLong(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableLong(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Long.MIN_VALUE, Long.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableLong(String string) {
+        if(!isNumber(string)) return false;
         try {
-            Long.parseLong(integerNumber);
+            Long.parseLong(string);
             return true;
         } catch (NumberFormatException exception) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, integerNumber).build()).build());
             return false;
         }
     }
 
-    public static boolean notIntegerNumberTooLarge(String integerNumber) {
+    public static boolean isParsableDouble(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableDouble(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Double.MIN_VALUE, Double.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableDouble(String string) {
+        if(!isNumber(string)) return false;
         try {
-            Long.parseLong(integerNumber);
+            Double.parseDouble(string);
+            return true;
+        } catch(NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    public static boolean isParsableByte(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableByte(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Byte.MIN_VALUE, Byte.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableByte(String string) {
+        if(!isNumber(string)) return false;
+        try {
+            Byte.parseByte(string);
+            return true;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    public static boolean isParsableShort(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableShort(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Short.MIN_VALUE, Short.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableShort(String string) {
+        if(!isNumber(string)) return false;
+        try {
+            Short.parseShort(string);
+            return true;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    public static boolean isParsableFloat(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableFloat(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Float.MIN_VALUE, Float.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableFloat(String string) {
+        if(!isNumber(string)) return false;
+        try {
+            Float.parseFloat(string);
+            return true;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    public static boolean isParsableInt(CommandEvent event, String string) {
+        if(isNumber(event, string) && isParsableInt(string)) return true;
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Integer.MIN_VALUE, Integer.MAX_VALUE).build()).build());
+        return false;
+    }
+
+    public static boolean isParsableInt(String string) {
+        if(!isNumber(string)) return false;
+        try {
+            Integer.parseInt(string);
             return true;
         } catch (NumberFormatException exception) {
             return false;
@@ -253,13 +334,13 @@ public class MathsCommand extends Command {
     }
 
     public static boolean isIntegerNumberWithEmbed(CommandEvent event, String string) {
-        if (string.chars().allMatch(Character::isDigit)) return true;
+        if(isParsableDouble(event, string) && isIntegerNumber(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnIntegerNumber", null, null, null, string).build()).build());
         return false;
     }
 
     public static boolean isIntegerNumber(String string) {
-        return string.chars().allMatch(Character::isDigit);
+        return isParsableDouble(string) && Math.ceil(Double.parseDouble(string)) == Double.parseDouble(string);
     }
 
     public static boolean numberIsPrime(long number) {
@@ -271,13 +352,18 @@ public class MathsCommand extends Command {
     }
 
     public static boolean numberIsPerfect(long number) {
-        if (number <= 1) return false;
-        return longListSum(getDivisorsWithoutNumber(number)) == number;
+        return number > 1 && longListSum(getDivisorsWithoutNumber(number)) == number;
     }
 
     public static List<Long> getDivisorsWithoutNumber(long number){
+        List<Long> divisors = getDivisorsWithNumber(number);
+        divisors.remove(divisors.size() - 1);
+        return divisors;
+    }
+
+    public static List<Long> getDivisorsWithNumber(long number){
         List<Long> divisors = new ArrayList<>();
-        for(long divisor = 1; divisor < number; divisor++){
+        for(long divisor = 1; divisor <= number; divisor++){
             if(number % divisor == 0) divisors.add(divisor);
         }
         return divisors;

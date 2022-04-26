@@ -7,7 +7,6 @@ public class UnicodeCharacters {
     private UnicodeCharacters() {}
 
     public static final String CROSS_MARK_EMOJI = "\u274C";
-    public static final String crossMarkEmoji = CROSS_MARK_EMOJI;
     public static final String ELECTRIC_LIGHT_BULB_EMOJI = "\uD83D\uDCA1";
     public static final String WHITE_HEAVY_CHECK_MARK_EMOJI = "\u2705";
     public static final String INFORMATION_SOURCE_EMOJI = "\u2139";

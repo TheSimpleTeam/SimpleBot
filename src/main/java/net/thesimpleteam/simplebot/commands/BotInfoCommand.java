@@ -7,6 +7,7 @@ import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.thesimpleteam.simplebot.utils.UnicodeCharacters;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.Color;
@@ -25,7 +26,8 @@ public class BotInfoCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.botInfo.success", Color.BLUE, null, event.getSelfUser().getAvatarUrl(), event.getSelfUser().getName())
+        EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.botInfo.success", Color.BLUE, null, event.getSelfUser().getAvatarUrl(), (Object[]) null)
+                .setTitle(new StringBuilder().append(UnicodeCharacters.INFORMATION_SOURCE_EMOJI).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.botInfo.success"), event.getSelfUser().getName())).toString())
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.id"), event.getSelfUser().getId(), false)
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.tag"), "#" + event.getSelfUser().getDiscriminator(), false)
                 .addField(MessageHelper.translateMessage(event, "success.botInfo.creationDate"), MessageHelper.formatShortDate(event.getSelfMember().getTimeCreated()), false)
