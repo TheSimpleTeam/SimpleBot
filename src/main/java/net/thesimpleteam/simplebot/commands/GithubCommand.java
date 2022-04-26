@@ -2,12 +2,12 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.commands.annotations.RequireConfig;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.GHRepository;
@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 @RequireConfig("botGithubToken")
@@ -58,7 +61,7 @@ public class GithubCommand extends Command {
                 try {
                     repository = github.getRepository(args[1] + "/" + args[2]);
                 } catch (IOException ignored) {
-                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.search.repositoryDontExist", null, null, null, (Object[]) null).build()).build());
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.search.repositoryDontExist", null, null, null).build()).build());
                     return;
                 }
                 try {
@@ -77,9 +80,12 @@ public class GithubCommand extends Command {
             case "list":
                 try {
                     EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.list", null, null, github.getUser(args[1]).getAvatarUrl(), name);
-                    for (String repositoryName : github.getUser(args[1]).getRepositories().keySet()) {
-                        embedBuilder.addField(repositoryName, github.getUser(args[1]).getRepositories().get(repositoryName).getHtmlUrl().toString(), false);
-                    }
+                    List<GHRepository> repositories = new ArrayList<>(github.getUser(args[1]).getRepositories().values());
+                    repositories.sort(Comparator.comparing(GHRepository::getStargazersCount)
+                                    .thenComparing(GHRepository::getForksCount)
+                                    .thenComparing(GHRepository::getWatchersCount)
+                            .thenComparing(GHRepository::getName));
+                    repositories.forEach(repo -> embedBuilder.addField(repo.getName(), repo.getHtmlUrl().toString(), false));
                     event.reply(new MessageBuilder(embedBuilder.build()).build());
                 } catch (IOException ex) {
                     MessageHelper.sendError(ex, event, this);

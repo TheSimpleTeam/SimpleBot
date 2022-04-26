@@ -26,12 +26,12 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.thesimpleteam.simplebot.enums.GithubInfo;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.commands.annotations.RequireConfig;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
+import net.thesimpleteam.simplebot.enums.GithubInfo;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
-import net.dv8tion.jda.api.MessageBuilder;
 import org.apache.commons.cli.*;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
@@ -56,23 +56,30 @@ public class IssueCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s");
-        if(args.length == 0) {
+        if(event.getArgs().isBlank() || args.length == 0) {
             MessageHelper.syntaxError(event, this, "information.issue");
             return;
         }
         try {
             this.github.checkApiUrlValidity();
         } catch (IOException ex) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.githubTokenNotValid", null, null, null, (Object[]) null).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.githubTokenNotValid", null, null, null).build()).build());
             return;
         }
         try {
-            addOptions(new Options());
-            if (new DefaultParser().parse(new Options(), args).getOptions().length != 0 && !new DefaultParser().parse(new Options(), args).hasOption("body")) {
-                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.bodyParameterNotHere", null, null, null, (Object[]) null).build()).build());
+            Options options = new Options();
+            addOptions(options);
+            CommandLine parser = new DefaultParser().parse(options, args);
+            if (parser.getOptions().length != 0 && !parser.hasOption("body")) {
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.bodyParameterNotHere", null, null, null).build()).build());
                 return;
             }
-           this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "title", MessageHelper.translateMessage(event, "text.issue.issue")))).body(String.format(MessageHelper.translateMessage(event, "success.issue.success") + "\n\n" + MessageHelper.translateMessage(event, "text.issue.issue") + MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(new Options(), args), "body", event.getArgs())))).create();
+           this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(parser, "title",
+                   MessageHelper.translateMessage(event, "text.issue.issue"))))
+                   .body(String.format(MessageHelper.translateMessage(event, "success.issue.success") + "\n\n" + MessageHelper.translateMessage(event, "text.issue.issue") +
+                           MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(),
+                           event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(options, args),
+                                   "body", event.getArgs())))).create();
         } catch (IOException | ParseException exception) {
             MessageHelper.sendError(exception, event, this);
         }
