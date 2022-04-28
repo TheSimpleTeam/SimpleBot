@@ -512,5 +512,5 @@
   "warning.mute": ":warning: Le rôle configuré par défaut n\u0027est pas présent donc j\u0027ai créé un nouveau rôle nommé \"Muted Role\".",
   "warning.purge.numberTooLarge": ":warning: La valeur maximale est de 100. La valeur a donc été défini à 100 !",
   "warning.purge.numberTooSmall": ":warning: La valeur minimum est de 1. La valeur a donc été défini à 1 !",
-  "warning.snippet": "Le résultat de l\u0027exécution de cette commande peut prendre du temps à venir."
+  "warning.commands.takeTime": "Le résultat de l\u0027exécution de cette commande peut prendre du temps à venir."
 }

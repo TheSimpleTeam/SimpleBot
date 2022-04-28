@@ -62,9 +62,7 @@ public class SnippetCommand extends Command {
             return;
         }
         ImageOptions.Language language = ImageOptions.Language.Auto;
-        if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format) && getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) {
-            language = getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
-        }
+        if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format) && getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) language = getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
         List<String> list = new LinkedList<>(Arrays.asList(event.getArgs().split("\n")));
         list.remove(0);
         list.remove(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
@@ -73,7 +71,7 @@ public class SnippetCommand extends Command {
                 .fontFamily(ImageOptions.FontFamily.JetBrainsMono)
                 .theme(ImageOptions.Theme.NightOwl)
                 .build();
-        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.snippet", null, null, null, (Object[]) null).build()).build()).queue(warningTakeTooLongMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTooLongMessage.delete().queue()));
+        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.commands.takeTime", null, null, null, (Object[]) null).build()).build()).queue(warningTakeTimeMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTimeMessage.delete().queue()));
     }
 
     private ImageOptions.Language getLanguage(String language) {

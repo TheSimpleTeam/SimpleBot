@@ -52,8 +52,8 @@ public class GithubCommand extends Command {
             return;
         }
         switch (args[0]) {
-            case "search":
-                if(args.length != 3) {
+            case "search" -> {
+                if (args.length != 3) {
                     MessageHelper.syntaxError(event, this, "information.github");
                     return;
                 }
@@ -76,28 +76,26 @@ public class GithubCommand extends Command {
                 } catch (IOException exception) {
                     MessageHelper.sendError(exception, event, this);
                 }
-                break;
-            case "list":
-                try {
-                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.list", null, null, github.getUser(args[1]).getAvatarUrl(), name);
-                    List<GHRepository> repositories = new ArrayList<>(github.getUser(args[1]).getRepositories().values());
-                    repositories.sort(
-                            Comparator.comparing(GHRepository::getStargazersCount)
-                                    .reversed()
-                                    .thenComparing(GHRepository::getForksCount)
-                                    .reversed()
-                                    .thenComparing(GHRepository::getWatchersCount)
-                                    .reversed()
-                                    .thenComparing(GHRepository::getName));
-                    repositories.forEach(repo -> embedBuilder.addField(repo.getName(), repo.getHtmlUrl().toString(), false));
-                    event.reply(new MessageBuilder(embedBuilder.build()).build());
-                } catch (IOException ex) {
-                    MessageHelper.sendError(ex, event, this);
-                }
-                break;
-            default:
-                MessageHelper.syntaxError(event, this, "information.github");
-                break;
+            }
+            case "list" ->
+                    event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.commands.takeTime", null, null, null).build()).build()).queue(message -> {
+                        try {
+                            EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.list", null, null, github.getUser(args[1]).getAvatarUrl(), name);
+                            List<GHRepository> repositories = new ArrayList<>(github.getUser(args[1]).getRepositories().values());
+                            repositories.stream().sorted(Comparator.comparing(GHRepository::getStargazersCount)
+                                            .reversed()
+                                            .thenComparing(GHRepository::getForksCount)
+                                            .reversed()
+                                            .thenComparing(GHRepository::getWatchersCount)
+                                            .reversed()
+                                            .thenComparing(GHRepository::getName))
+                                    .forEach(repository -> embedBuilder.addField(new StringBuilder().append(repository.getName()).append(" \u2B50 ").append(repository.getStargazersCount()).append(" <:github_fork:969261831359197214> ").append(repository.getForksCount()).toString(), repository.getHtmlUrl().toString(), false));
+                            event.getMessage().reply(new MessageBuilder(embedBuilder.build()).build()).queue(unused -> message.delete().queue());
+                        } catch (IOException e) {
+                            MessageHelper.sendError(e, event, this);
+                        }
+                    });
+            default -> MessageHelper.syntaxError(event, this, "information.github");
         }
     }
 

@@ -2,6 +2,7 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.dv8tion.jda.api.Permission;
@@ -29,7 +30,7 @@ public class CreateChannelCommand extends Command {
             return;
         }
         if (args[1].toCharArray().length > 100) {
-            event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.createChannel.tooManyCharacters"));
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.createChannel.tooManyCharacters", null, null, null, (Object[]) null)).build());
             return;
         }
         switch (args[0]) {
