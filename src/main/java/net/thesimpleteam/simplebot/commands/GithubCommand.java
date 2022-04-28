@@ -21,10 +21,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequireConfig("botGithubToken")
 public class GithubCommand extends Command {
@@ -71,7 +68,8 @@ public class GithubCommand extends Command {
                             .addField(MessageHelper.translateMessage(event, "success.github.search.repositoryName"), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.author"), repository.getOwnerName(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false)
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.getDescription(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8)), false)
+                            //TODO: translate "No README found"
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.getDescription(getReadme(repository).orElse("No README found")), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.license"), repository.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repository.getLicense().getName(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false)
                             .build()).build());
@@ -110,6 +108,14 @@ public class GithubCommand extends Command {
             return DateTimeFormatter.ofPattern("MM/dd/yy").format(repo.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private Optional<String> getReadme(GHRepository repository) {
+        try {
+            return Optional.of(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            return Optional.empty();
         }
     }
 
