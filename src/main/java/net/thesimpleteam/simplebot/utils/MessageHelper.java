@@ -14,7 +14,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -98,9 +100,9 @@ public class MessageHelper {
         event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 
-    public static void sendError(Exception exception, CommandEvent event, Command command) {
+    public static void sendError(Exception e, CommandEvent event, Command command) {
         EmbedBuilder embedBuilder = getEmbed(event, "error.commands.sendError.error", null, null, null, (Object[]) null)
-                .addField(translateMessage(event, "error.commands.sendError.sendError"), exception.getMessage(), false)
+                .addField(translateMessage(event, "error.commands.sendError.sendError"), e.getMessage(), false)
                 .addField(translateMessage(event, "error.commands.sendError.command"), SimpleBot.getPrefix(event.getGuild()) + command.getName(), false);
         if (command.getArguments() == null || command.getArguments().isEmpty()) embedBuilder.addField(translateMessage(event, "error.commands.sendError.arguments"), event.getArgs(), false);
         event.reply(new MessageBuilder(embedBuilder.build()).build());
@@ -129,20 +131,20 @@ public class MessageHelper {
         return embedBuilder;
     }
 
-    public static String getDescription(String desc) {
+    public static String getDescription(String string, int intDelimiter) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < desc.toCharArray().length; i++) {
-            if (i == 1021) {
+        for (int i = 0; i < string.toCharArray().length; i++) {
+            if (i == intDelimiter - 3) {
                 stringBuilder.append("...");
                 break;
             }
-            stringBuilder.append(desc.toCharArray()[i]);
+            stringBuilder.append(string.toCharArray()[i]);
         }
         return stringBuilder.toString();
     }
 
-    public static String formatShortDate(OffsetDateTime date) {
-        return date.getDayOfMonth() + "/" + (date.getMonthValue() < 10 ? "0" + date.getMonthValue(): date.getMonthValue()) + "/" + date.getYear();
+    public static String formatShortDate(LocalDateTime date) {
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
     }
 
     public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event) {

@@ -42,8 +42,8 @@ public class MCServerCommand extends Command {
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.port"), serverInformation.get("port").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.version"), serverInformation.get("version").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.connectedPlayers"), String.valueOf(serverInformation.get("players").getAsJsonObject().get("online").getAsInt()), false).build()).build());
-        } catch (IOException exception) {
-            MessageHelper.sendError(exception, event, this);
+        } catch (IOException e) {
+            MessageHelper.sendError(e, event, this);
         }
     }
 }

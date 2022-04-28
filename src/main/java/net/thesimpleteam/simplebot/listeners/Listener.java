@@ -74,7 +74,7 @@ public class Listener extends ListenerAdapter {
                 } else {
                     try {
                         event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(SimpleBot.getServerConfig().guildJoinRole().get(event.getGuild().getId()))).queue();
-                    } catch (HierarchyException exception) {
+                    } catch (HierarchyException e) {
                         if (event.getGuild().getOwner() != null) event.getGuild().getOwner().getUser().openPrivateChannel()
                                 .queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(),
                                         "error.listener.onGuildMemberJoin.hierarchyRoles", null, null, null, MessageHelper.getTag(event.getUser()),
@@ -101,7 +101,7 @@ public class Listener extends ListenerAdapter {
                                 "success.listener.onGuildMemberJoin.newMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
                                 "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
-            } catch (InsufficientPermissionException exception) {
+            } catch (InsufficientPermissionException e) {
                 if (event.getGuild().getOwner() != null) event.getGuild().getOwner().getUser().openPrivateChannel()
                         .queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(),
                                 "error.listener.onGuildMemberJoin.channelMemberJoinHasntPermission", null, null, null, MessageHelper.getTag(event.getUser()),
@@ -129,7 +129,7 @@ public class Listener extends ListenerAdapter {
                                 "success.listener.onGuildMemberLeave.lostMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
                                 "success.listener.onGuildMemberLeave.countMember"), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
-            } catch (InsufficientPermissionException exception) {
+            } catch (InsufficientPermissionException e) {
                 if (event.getGuild().getOwner() != null) {
                     event.getGuild().getOwner().getUser().openPrivateChannel()
                             .queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(),

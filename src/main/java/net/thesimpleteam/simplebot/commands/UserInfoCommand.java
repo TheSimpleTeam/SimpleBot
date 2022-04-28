@@ -38,8 +38,8 @@ public class UserInfoCommand extends Command {
             EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, event.getAuthor().getEffectiveAvatarUrl(), (Object[]) null)
                     .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor())))
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), event.getMember().getUser().getId(), false)
-                    .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(event.getMember().getTimeJoined()), false)
-                    .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(event.getMember().getTimeCreated()), false)
+                    .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(event.getMember().getTimeJoined().toLocalDateTime()), false)
+                    .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(event.getMember().getTimeCreated().toLocalDateTime()), false)
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.activity"), event.getMember().getActivities().isEmpty() ? MessageHelper.translateMessage(event, "text.commands.nothing") : event.getMember().getActivities().toString(), false);
             if (event.getMember().getNickname() != null)
                 embedBuilder.addField(MessageHelper.translateMessage(event, "success.userInfo.nickname"), event.getMember().getNickname(), false);
@@ -53,8 +53,8 @@ public class UserInfoCommand extends Command {
                             EmbedBuilder successEmbed = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, user.getEffectiveAvatarUrl(), (Object[]) null)
                                     .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(user)))
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), member.getUser().getId(), false)
-                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(member.getTimeJoined()), false)
-                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(member.getTimeCreated()), false)
+                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(member.getTimeJoined().toLocalDateTime()), false)
+                                    .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(member.getTimeCreated().toLocalDateTime()), false)
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.activity"), member.getActivities().isEmpty() ? MessageHelper.translateMessage(event, "text.commands.nothing") : member.getActivities().toString(), false);
                             if (member.getNickname() != null)
                                 successEmbed.addField(MessageHelper.translateMessage(event, "success.userInfo.nickname"), member.getNickname(), false);

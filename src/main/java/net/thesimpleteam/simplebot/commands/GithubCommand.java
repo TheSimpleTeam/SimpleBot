@@ -2,6 +2,7 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.typesafe.config.ConfigException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.SimpleBot;
@@ -64,17 +65,20 @@ public class GithubCommand extends Command {
                     return;
                 }
                 try {
-                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.github.search.success", getColor(repository.getLanguage()), null, repository.getOwner().getAvatarUrl(), (Object[]) null)
+                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.search.success", getColor(repository.getLanguage()), null, repository.getOwner().getAvatarUrl(), (Object[]) null)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.repositoryName"), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.author"), repository.getOwnerName(), false)
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false)
-                            //TODO: translate "No README found"
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.getDescription(getReadme(repository).orElse("No README found")), false)
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.license"), repository.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repository.getLicense().getName(), false)
-                            .addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false)
-                            .build()).build());
-                } catch (IOException exception) {
-                    MessageHelper.sendError(exception, event, this);
+                            .addField(MessageHelper.translateMessage(event, "success.github.search.license"), repository.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repository.getLicense().getName(), false);
+                    if(repository.getDescription() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false);
+                    if(repository.getLanguage() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false);
+                    try{
+                        embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.getDescription(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8), 1024), false);
+                    } catch (IOException ignored) {
+
+                    }
+                    event.reply(new MessageBuilder(embedBuilder).build());
+                } catch (IOException e) {
+                    MessageHelper.sendError(e, event, this);
                 }
             }
             case "list" ->
@@ -89,25 +93,19 @@ public class GithubCommand extends Command {
                                             .thenComparing(GHRepository::getWatchersCount)
                                             .reversed()
                                             .thenComparing(GHRepository::getName))
-                                    .forEach(repository ->
-                                            embedBuilder.addField(repository.getName() + " \u2B50 " + repository.getStargazersCount()
-                                                    + " <:github_fork:969261831359197214> " + repository.getForksCount() +
-                                                    " \uD83D\uDCC5 " + getDate(repository),
-                                                    repository.getHtmlUrl().toString(), false));
+                                    .forEach(repository -> {
+                                        try {
+                                            embedBuilder.addField(repository.getName() + " \u2B50 " + repository.getStargazersCount() + " <:github_fork:969261831359197214> " + repository.getForksCount() + " \uD83D\uDCC5 " + MessageHelper.formatShortDate(repository.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()), repository.getHtmlUrl().toString(), false);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    });
                             event.getMessage().reply(new MessageBuilder(embedBuilder.build()).build()).queue(unused -> message.delete().queue());
                         } catch (IOException e) {
                             MessageHelper.sendError(e, event, this);
                         }
                     });
             default -> MessageHelper.syntaxError(event, this, "information.github");
-        }
-    }
-
-    private String getDate(GHRepository repo) {
-        try {
-            return DateTimeFormatter.ofPattern("MM/dd/yy").format(repo.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -132,9 +130,9 @@ public class GithubCommand extends Command {
     private Color getColor(String language) {
         try {
             Map<String, Map<String, String>> lang = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
-            return Color.getColor(String.valueOf(getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"))));
-        } catch (IOException exception) {
-            exception.printStackTrace();
+            return language == null ? Color.RED : Color.getColor(String.valueOf(getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"))));
+        } catch (IOException e) {
+            e.printStackTrace();
             return Color.RED;
         }
     }

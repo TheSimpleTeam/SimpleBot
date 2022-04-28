@@ -80,8 +80,8 @@ public class IssueCommand extends Command {
                            MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(),
                            event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(options, args),
                                    "body", event.getArgs())))).create();
-        } catch (IOException | ParseException exception) {
-            MessageHelper.sendError(exception, event, this);
+        } catch (IOException | ParseException e) {
+            MessageHelper.sendError(e, event, this);
         }
     }
 

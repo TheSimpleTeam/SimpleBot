@@ -88,15 +88,15 @@ public class TempbanCommand extends Command {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
-                            MessageHelper.sendError(exception, event, this);
+                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                            MessageHelper.sendError(e, event, this);
                         }
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.tempban", null, null, null, args.length == 3 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3), MathsCommand.dateTime(args[2], event)).build()).build());
                     });
-                } catch (NumberFormatException exception) {
+                } catch (NumberFormatException e) {
                     MessageHelper.syntaxError(event, this, "information.tempban");
                 }
-            } catch (NumberFormatException exception) {
+            } catch (NumberFormatException e) {
                 event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.ban.notAnNumber"));
             }
         }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.memberNull"))), userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));

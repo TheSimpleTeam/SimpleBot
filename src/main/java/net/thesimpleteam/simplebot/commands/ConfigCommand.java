@@ -306,8 +306,8 @@ public class ConfigCommand extends Command {
         }
         try {
             Listener.saveConfigs();
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

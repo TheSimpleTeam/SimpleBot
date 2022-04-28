@@ -248,7 +248,7 @@ public class MathsCommand extends Command {
         try {
             Long.parseLong(string);
             return true;
-        } catch (NumberFormatException exception) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
@@ -264,7 +264,7 @@ public class MathsCommand extends Command {
         try {
             Double.parseDouble(string);
             return true;
-        } catch(NumberFormatException exception) {
+        } catch(NumberFormatException e) {
             return false;
         }
     }
@@ -280,7 +280,7 @@ public class MathsCommand extends Command {
         try {
             Byte.parseByte(string);
             return true;
-        } catch (NumberFormatException exception) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
@@ -296,7 +296,7 @@ public class MathsCommand extends Command {
         try {
             Short.parseShort(string);
             return true;
-        } catch (NumberFormatException exception) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
@@ -312,7 +312,7 @@ public class MathsCommand extends Command {
         try {
             Float.parseFloat(string);
             return true;
-        } catch (NumberFormatException exception) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
@@ -328,7 +328,7 @@ public class MathsCommand extends Command {
         try {
             Integer.parseInt(string);
             return true;
-        } catch (NumberFormatException exception) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }

@@ -64,15 +64,15 @@ public class SpigotCommand extends Command {
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginLink"), plugin.getResourceLink(), false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginID"), args[0], false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.downloads"), String.valueOf(plugin.getDownloads()), false)
-                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.getDescription(plugin.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.getDescription(plugin.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", ""), 1024), false)
                         .build()).build());
-            } catch (IOException exception) {
-                if(exception instanceof FileNotFoundException) {
+            } catch (IOException e) {
+                if(e instanceof FileNotFoundException) {
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.spigot.pluginID.pluginNull", null, null, null, args[0]).build()).build());
                     return;
                 }
-                MessageHelper.sendError(exception, event, this);
-            } catch (NumberFormatException exception){
+                MessageHelper.sendError(e, event, this);
+            } catch (NumberFormatException e){
                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, args[0]).build()).build());
             }
         } else {
@@ -85,12 +85,12 @@ public class SpigotCommand extends Command {
                         embedBuilder.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
                     }
                     event.reply(new MessageBuilder(embedBuilder.build()).build());
-                } catch (IOException exception){
-                    if(exception instanceof FileNotFoundException) {
+                } catch (IOException e){
+                    if(e instanceof FileNotFoundException) {
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.spigot.user", null, null, null, args[1]).build()).build());
                         return;
                     }
-                    MessageHelper.sendError(exception, event, this);
+                    MessageHelper.sendError(e, event, this);
                 }
             } else {
                 //Search for plugin with his name
