@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -89,13 +91,25 @@ public class GithubCommand extends Command {
                                             .thenComparing(GHRepository::getWatchersCount)
                                             .reversed()
                                             .thenComparing(GHRepository::getName))
-                                    .forEach(repository -> embedBuilder.addField(new StringBuilder().append(repository.getName()).append(" \u2B50 ").append(repository.getStargazersCount()).append(" <:github_fork:969261831359197214> ").append(repository.getForksCount()).toString(), repository.getHtmlUrl().toString(), false));
+                                    .forEach(repository ->
+                                            embedBuilder.addField(repository.getName() + " \u2B50 " + repository.getStargazersCount()
+                                                    + " <:github_fork:969261831359197214> " + repository.getForksCount() +
+                                                    " \uD83D\uDCC5 " + getDate(repository),
+                                                    repository.getHtmlUrl().toString(), false));
                             event.getMessage().reply(new MessageBuilder(embedBuilder.build()).build()).queue(unused -> message.delete().queue());
                         } catch (IOException e) {
                             MessageHelper.sendError(e, event, this);
                         }
                     });
             default -> MessageHelper.syntaxError(event, this, "information.github");
+        }
+    }
+
+    private String getDate(GHRepository repo) {
+        try {
+            return DateTimeFormatter.ofPattern("MM/dd/yy").format(repo.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
