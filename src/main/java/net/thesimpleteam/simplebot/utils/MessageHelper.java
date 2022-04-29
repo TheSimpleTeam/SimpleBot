@@ -101,7 +101,7 @@ public class MessageHelper {
     }
 
     public static void sendError(Exception e, CommandEvent event, Command command) {
-        EmbedBuilder embedBuilder = getEmbed(event, "error.commands.sendError.error", null, null, null, (Object[]) null)
+        EmbedBuilder embedBuilder = getEmbed(event, "error.commands.sendError.error", null, null, null)
                 .addField(translateMessage(event, "error.commands.sendError.sendError"), e.getMessage(), false)
                 .addField(translateMessage(event, "error.commands.sendError.command"), SimpleBot.getPrefix(event.getGuild()) + command.getName(), false);
         if (command.getArguments() == null || command.getArguments().isEmpty()) embedBuilder.addField(translateMessage(event, "error.commands.sendError.arguments"), event.getArgs(), false);
@@ -149,7 +149,7 @@ public class MessageHelper {
 
     public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event) {
         if (member.canInteract(target) && bot.canInteract(target)) return false;
-        event.reply(new MessageBuilder(getEmbed(event, !member.canInteract(target) ? "error.commands.cantInteract.member" : "error.commands.cantInteract.bot", null, null, null, (Object[]) null).build()).build());
+        event.reply(new MessageBuilder(getEmbed(event, !member.canInteract(target) ? "error.commands.cantInteract.member" : "error.commands.cantInteract.bot", null, null, null).build()).build());
         return true;
     }
 

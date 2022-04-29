@@ -48,7 +48,7 @@ public class GithubCommand extends Command {
             return;
         }
         if(isCommandDisabled()) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.disabled", null, null, null, (Object[]) null).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.github.disabled", null, null, null).build()).build());
             return;
         }
         switch (args[0]) {
@@ -65,7 +65,7 @@ public class GithubCommand extends Command {
                     return;
                 }
                 try {
-                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.search.success", getColor(repository.getLanguage()), null, repository.getOwner().getAvatarUrl(), (Object[]) null)
+                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.github.search.success", getColor(repository.getLanguage()), null, repository.getOwner().getAvatarUrl())
                             .addField(MessageHelper.translateMessage(event, "success.github.search.repositoryName"), repository.getName() + " (" + repository.getUrl().toString() + ")", false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.author"), repository.getOwnerName(), false)
                             .addField(MessageHelper.translateMessage(event, "success.github.search.license"), repository.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repository.getLicense().getName(), false);

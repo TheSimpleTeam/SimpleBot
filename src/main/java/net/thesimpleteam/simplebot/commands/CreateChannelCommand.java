@@ -30,7 +30,7 @@ public class CreateChannelCommand extends Command {
             return;
         }
         if (args[1].toCharArray().length > 100) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.createChannel.tooManyCharacters", null, null, null, (Object[]) null)).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.createChannel.tooManyCharacters", null, null, null)).build());
             return;
         }
         switch (args[0]) {

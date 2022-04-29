@@ -32,7 +32,7 @@ public class MuteCommand extends Command {
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null).build()).build());
             return;
         }
         SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user ->

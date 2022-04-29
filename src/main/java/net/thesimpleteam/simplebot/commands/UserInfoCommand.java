@@ -35,7 +35,7 @@ public class UserInfoCommand extends Command {
             return;
         }
         if (event.getArgs().isEmpty()) {
-            EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, event.getAuthor().getEffectiveAvatarUrl(), (Object[]) null)
+            EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, event.getAuthor().getEffectiveAvatarUrl())
                     .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor())))
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), event.getMember().getUser().getId(), false)
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(event.getMember().getTimeJoined().toLocalDateTime()), false)
@@ -50,7 +50,7 @@ public class UserInfoCommand extends Command {
         SimpleBot.getJda().retrieveUserById(userOp.map(ISnowflake::getId)
                 .orElseGet(() -> event.getArgs().split("\\s+")[0].replaceAll("\\D+", ""))).queue(user ->
                         event.getGuild().retrieveMember(user).queue(member -> {
-                            EmbedBuilder successEmbed = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, user.getEffectiveAvatarUrl(), (Object[]) null)
+                            EmbedBuilder successEmbed = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, user.getEffectiveAvatarUrl())
                                     .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(user)))
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), member.getUser().getId(), false)
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(member.getTimeJoined().toLocalDateTime()), false)

@@ -71,7 +71,7 @@ public class SnippetCommand extends Command {
                 .fontFamily(ImageOptions.FontFamily.JetBrainsMono)
                 .theme(ImageOptions.Theme.NightOwl)
                 .build();
-        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.commands.takeTime", null, null, null, (Object[]) null).build()).build()).queue(warningTakeTimeMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTimeMessage.delete().queue()));
+        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.commands.takeTime", null, null, null).build()).build()).queue(warningTakeTimeMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTimeMessage.delete().queue()));
     }
 
     private ImageOptions.Language getLanguage(String language) {

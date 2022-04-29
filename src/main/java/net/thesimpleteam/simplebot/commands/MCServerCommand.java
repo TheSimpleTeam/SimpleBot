@@ -33,11 +33,11 @@ public class MCServerCommand extends Command {
         }
         try {
             if (!SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("online").getAsBoolean()) {
-                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.mcServer.offlineServer", null, null, null, (Object[]) null).build()).build());
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.mcServer.offlineServer", null, null, null).build()).build());
                 return;
             }
             JsonObject serverInformation = SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class);
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.mcServer.success", null, null, null, (Object[]) null)
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.mcServer.success", null, null, null)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.ipAdress"), serverInformation.get("ip").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.port"), serverInformation.get("port").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.version"), serverInformation.get("version").getAsString(), false)

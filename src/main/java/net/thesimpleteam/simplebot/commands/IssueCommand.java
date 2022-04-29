@@ -56,7 +56,7 @@ public class IssueCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s");
-        if(event.getArgs().isBlank() || args.length == 0) {
+        if (event.getArgs().isBlank() || args.length == 0) {
             MessageHelper.syntaxError(event, this, "information.issue");
             return;
         }
@@ -74,12 +74,7 @@ public class IssueCommand extends Command {
                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.bodyParameterNotHere", null, null, null).build()).build());
                 return;
             }
-           this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(parser, "title",
-                   MessageHelper.translateMessage(event, "text.issue.issue"))))
-                   .body(String.format(MessageHelper.translateMessage(event, "success.issue.success") + "\n\n" + MessageHelper.translateMessage(event, "text.issue.issue") +
-                           MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(),
-                           event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(options, args),
-                                   "body", event.getArgs())))).create();
+            this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(parser, "title", MessageHelper.translateMessage(event, "text.issue.issue")))).body(String.format(MessageHelper.translateMessage(event, "success.issue.success") + "\n\n" + MessageHelper.translateMessage(event, "text.issue.issue") + MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(options, args), "body", event.getArgs())))).create();
         } catch (IOException | ParseException e) {
             MessageHelper.sendError(e, event, this);
         }
