@@ -73,10 +73,9 @@ public class GithubCommand extends Command {
                     if(repository.getLanguage() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false);
                     try{
                         embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.getDescription(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8), 1024), false);
-                    } catch (IOException ignored) {
-
+                    } finally {
+                        event.reply(new MessageBuilder(embedBuilder).build());
                     }
-                    event.reply(new MessageBuilder(embedBuilder).build());
                 } catch (IOException e) {
                     MessageHelper.sendError(e, event, this);
                 }
