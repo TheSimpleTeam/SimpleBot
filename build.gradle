@@ -74,7 +74,7 @@ dependencies {
     implementation 'com.github.TheSimpleTeam:Spiget:master-SNAPSHOT'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation("com.google.guava:guava:31.1-jre")
-    implementation group: 'org.kohsuke', name: 'github-api', version: '1.135'
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.306'
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation "org.mariuszgromada.math:MathParser.org-mXparser:5.0.2"
     implementation 'org.reflections:reflections:0.10.2'
