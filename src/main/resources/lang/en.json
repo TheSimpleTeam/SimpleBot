@@ -100,6 +100,7 @@
   "example.createChannel": "text general 846048803554852905",
   "example.issue": "--title Help for unmute command does not exist --body Help for unmute command does not exist.",
   "example.say": "Hey, I\u0027m a robot!",
+  "example.snippet": "\n\\```java\npublic static void main(String[] args){\nSystem.out.println(\"Hello World\");\n}```\n__The specified code must be formed as above.__",
   "example.translate": "Hello everyone. --lang en fr",
   "help.DMBlocked": "Help cannot be sent because you are blocking Direct Messages.",
   "help.ban": "Bans members permanently from the server.",

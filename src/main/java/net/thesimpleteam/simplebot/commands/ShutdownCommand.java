@@ -22,6 +22,6 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.getChannel().sendMessage(new MessageBuilder(MessageHelper.getEmbed(event, "success.shutdown", Color.GREEN, null, null).build()).build()).queue(e -> event.getJDA().shutdown());
+        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.shutdown", Color.GREEN, null, null).build()).build()).queue(e -> event.getJDA().shutdown());
     }
 }
