@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-focal
+FROM eclipse-temurin:18-jdk-focal
 LABEL maintainer="Minemobs <minemobs.pro@gmail.com>"
 WORKDIR /app
 COPY src/main/resources/lang lang/
