@@ -92,14 +92,9 @@ public class Listener extends ListenerAdapter {
                 return;
             }
             try {
-                event.getGuild().getTextChannelById(SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getUser(),
-                                null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin", null, null, event.getMember().getUser().getEffectiveAvatarUrl(),
-                                event.getMember().getEffectiveName(), event.getGuild().getName())
-                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member"),
-                                event.getMember().getAsMention(), false)
-                        .addField(UnicodeCharacters.HEAVY_PLUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberJoin.newMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
+                event.getGuild().getTextChannelById(SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin", null, null, event.getMember().getUser().getEffectiveAvatarUrl(), event.getMember().getEffectiveName(), event.getGuild().getName())
+                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getMember().getAsMention(), false)
+                        .addField(UnicodeCharacters.HEAVY_PLUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.newMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.countMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
             } catch (InsufficientPermissionException e) {
                 if (event.getGuild().getOwner() != null) event.getGuild().getOwner().getUser().openPrivateChannel()
@@ -122,12 +117,9 @@ public class Listener extends ListenerAdapter {
             }
             try {
                 event.getGuild().getTextChannelById(SimpleBot.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(
-                        MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave", null, null,
-                                        event.getUser().getEffectiveAvatarUrl(), event.getUser().getName(), event.getGuild().getName())
-                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member"), event.getMember().getAsMention(), false)
-                        .addField(UnicodeCharacters.HEAVY_MINUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberLeave.lostMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberLeave.countMember"), event.getGuild().getMemberCount()), false)
+                        MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave", null, null, event.getUser().getEffectiveAvatarUrl(), event.getUser().getName(), event.getGuild().getName())
+                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getMember().getAsMention(), false)
+                        .addField(UnicodeCharacters.HEAVY_MINUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.lostMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.countMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
             } catch (InsufficientPermissionException e) {
                 if (event.getGuild().getOwner() != null) {
