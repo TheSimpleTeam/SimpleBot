@@ -124,7 +124,7 @@
   "help.say": "Sends the specified message and includes your name if you do not have permissions to manage messages.",
   "help.shutdown": "Turns off the bot.",
   "help.snippet": "Transforms the specified code into an image.",
-  "help.spigot": "Gives the name, link, ID and description of a Spigot plugin by searching for it by its ID or by its name or search for a Spigot user.",
+  "help.spigot": "Gives the name, link, ID and description of a Spigot plugin by searching for it by its ID or by its name, or search for a Spigot user.²Gives the name, link, id and description of a Spigot plugin by searching by its ID.²Gives the name, link, id and description of a Spigot plugin by searching by its name.²Find a Spigot user.",
   "help.suggestion": "Sends a suggestion to the developers.",
   "help.tempban": "Bans temporarily according to the specified time a member with his ID/mention.",
   "help.test": "A test order according to the tests to be done.",
