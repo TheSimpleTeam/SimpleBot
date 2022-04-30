@@ -36,7 +36,7 @@ public class UserInfoCommand extends Command {
         }
         if (event.getArgs().isEmpty()) {
             EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, event.getAuthor().getEffectiveAvatarUrl())
-                    .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor())))
+                    .setTitle(new StringBuilder().append(UnicodeCharacters.INFORMATION_SOURCE_EMOJI).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(event.getAuthor()))).toString())
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), event.getMember().getUser().getId(), false)
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(event.getMember().getTimeJoined().toLocalDateTime()), false)
                     .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(event.getMember().getTimeCreated().toLocalDateTime()), false)
@@ -46,12 +46,10 @@ public class UserInfoCommand extends Command {
             event.reply(new MessageBuilder(embedBuilder.build()).build());
             return;
         }
-        Optional<User> userOp = event.getMessage().getMentionedUsers().stream().findFirst();
-        SimpleBot.getJda().retrieveUserById(userOp.map(ISnowflake::getId)
-                .orElseGet(() -> event.getArgs().split("\\s+")[0].replaceAll("\\D+", ""))).queue(user ->
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user ->
                         event.getGuild().retrieveMember(user).queue(member -> {
                             EmbedBuilder successEmbed = MessageHelper.getEmbed(event, "success.userInfo.success", Color.BLUE, null, user.getEffectiveAvatarUrl())
-                                    .setTitle(UnicodeCharacters.INFORMATION_SOURCE_EMOJI + " " + String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(user)))
+                                    .setTitle(new StringBuilder().append(UnicodeCharacters.INFORMATION_SOURCE_EMOJI).append(" ").append(String.format(MessageHelper.translateMessage(event, "success.userInfo.success"), MessageHelper.getTag(user))).toString())
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.userID"), member.getUser().getId(), false)
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.joinDate"), MessageHelper.formatShortDate(member.getTimeJoined().toLocalDateTime()), false)
                                     .addField(MessageHelper.translateMessage(event, "success.userInfo.creationDate"), MessageHelper.formatShortDate(member.getTimeCreated().toLocalDateTime()), false)

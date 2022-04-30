@@ -32,15 +32,11 @@ public class UnshortURLCommand extends Command {
         try {
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.unshortURL.success", Color.GREEN, null, null)
                     .addField(MessageHelper.translateMessage(event, "success.unshortURL.link"), !event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0], false)
-                    .addField(MessageHelper.translateMessage(event, "success.unshortURL.redirection"), new StringBuilder().append('`').append(getURL(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])).append('`').toString(), false)
+                    .addField(MessageHelper.translateMessage(event, "success.unshortURL.redirection"), new StringBuilder().append('`').append(unshortUrl(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0]).replaceFirst("http(s?)://", "").split("/")[0].equalsIgnoreCase("preview.tinyurl.com") ? Jsoup.connect(unshortUrl(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])).get().body().text().substring(Jsoup.connect(unshortUrl(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])).get().body().text().indexOf("to: "), Jsoup.connect(unshortUrl(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])).get().body().text().indexOf(" Proceed")).replace("to: ", "").replace(" Proceed", "") : unshortUrl(!event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0])).append('`').toString(), false)
                     .build()).build());
         } catch (IOException e) {
             MessageHelper.sendError(e, event, this);
         }
-    }
-
-    public String getURL(String url) throws IOException {
-        return unshortUrl(url).replaceFirst("http(s?)://", "").split("/")[0].equalsIgnoreCase("preview.tinyurl.com") ? Jsoup.connect(unshortUrl(url)).get().body().text().substring(Jsoup.connect(unshortUrl(url)).get().body().text().indexOf("to: "), Jsoup.connect(unshortUrl(url)).get().body().text().indexOf(" Proceed")).replace("to: ", "").replace(" Proceed", "") : unshortUrl(url);
     }
 
     public static String unshortUrl(final String shortUrl) throws IOException {

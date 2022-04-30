@@ -40,7 +40,7 @@ public class MessageHelper {
             argumentsBuilder.append(command.getArguments());
         else {
             if (translateMessage(event, command.getArguments()).split("²").length == 1) {
-                argumentsBuilder.append(translateMessage(event, command.getArguments()));
+                argumentsBuilder.append(SimpleBot.getPrefix(event.getGuild())).append(command.getName()).append(" ").append(translateMessage(event, command.getArguments()));
             } else {
                 int loop = 1;
                 for (String arg : Arrays.stream(translateMessage(event, command.getArguments()).split("²")).toList()) {
@@ -62,7 +62,7 @@ public class MessageHelper {
                             }
                             argumentsBuilder.append("__").append("\n\n");
                             for (int index = 0; index < Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLength).toList().size(); index++) {
-                                argumentsBuilder.append(Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLength).toList().get(index)).append(" \u27A1 *").append(translateMessage(event, command.getHelp()).split("²")[indexList]).append("*\n");
+                                argumentsBuilder.append(SimpleBot.getPrefix(event.getGuild())).append(command.getName()).append(" ").append(Arrays.stream(translateMessage(event, command.getArguments()).split("²")).filter(arguments -> arguments != null && arguments.split(">").length == finalLength).toList().get(index)).append(" \u27A1 *").append(translateMessage(event, command.getHelp()).split("²")[indexList]).append("*\n");
                                 indexList++;
                             }
                             argumentsBuilder.append("\n");
