@@ -77,6 +77,5 @@ public class TestCommand extends Command {
             }
         } else embedBuilder.addField("__" + MessageHelper.translateMessage("text.commands.syntaxError.informations", event) + "__", str, false);
         event.reply(embedBuilder.build());*/
-        event.reply(MathsCommand.isIntegerNumber("6.7") + " " + MathsCommand.isIntegerNumber("6.000") + " " + MathsCommand.isIntegerNumber("65") + " " + MathsCommand.isIntegerNumber("6.0") + " " + MathsCommand.isIntegerNumber("6.0000a"));
     }
 }

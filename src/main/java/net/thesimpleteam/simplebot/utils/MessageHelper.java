@@ -151,8 +151,8 @@ public class MessageHelper {
     /**
      * @param key the localization key
      * @param event for getting the guild's ID
-     * @return the translated key in the configured language of the guild
-     * @throws NullPointerException if the key does not exist in any localization files
+     * @return the translated key in the guild's configured language
+     * @throws NullPointerException if the key does not exist in the guild's configured language or in the English localization file
      */
     public static String translateMessage(@NotNull CommandEvent event, @NotNull String key) {
         return translateMessage(event.getAuthor(), event.getMessage(), event.getGuild(), key, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString());
@@ -163,7 +163,7 @@ public class MessageHelper {
      * @param event for getting the guild's ID
      * @param lang the language where the key will be taken
      * @return the translated key in the specified language
-     * @throws NullPointerException if the key does not exist in any localization files
+     * @throws NullPointerException if the key does not exist in the specified language or in the English localization file
      */
     public static String translateMessage(@NotNull CommandEvent event, @NotNull String key, @NotNull String lang) {
         return translateMessage(event.getAuthor(), event.getMessage(), event.getGuild(), key, lang);
@@ -176,10 +176,10 @@ public class MessageHelper {
      * @param key the localization key
      * @param lang the language where the key will be taken
      * @return the translated key in the specified language
-     * @throws NullPointerException if the key does not exist in any localization files
+     * @throws NullPointerException if the key does not exist in the specified language or in the English localization file
      */
     public static String translateMessage(@NotNull User author, @Nullable Message message, @NotNull Guild guild, @NotNull String key, @NotNull String lang) {
-        if (Optional.ofNullable(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).isPresent()) return Optional.ofNullable(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).get().getAsString();
+        if (SimpleBot.getLocalizations().containsKey(lang)) return SimpleBot.getLocalizations().get(lang).get(key).getAsString();
         if (SimpleBot.getLocalizations().get("en").get(key) == null) {
             long skip = 2;
             if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
