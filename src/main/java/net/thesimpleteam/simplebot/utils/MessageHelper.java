@@ -4,10 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.thesimpleteam.simplebot.SimpleBot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Stream;
@@ -109,21 +105,20 @@ public class MessageHelper {
     }
 
     public static EmbedBuilder getEmbed(CommandEvent event, String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
-        return getEmbed(event.getAuthor(), event.getTextChannel(), event.getGuild(), title, color, description, thumbnail, formatArgs);
+        return getEmbed(event.getAuthor(), event.getMessage(), event.getGuild(), title, color, description, thumbnail, formatArgs);
     }
 
-    public static EmbedBuilder getEmbed(@NotNull User author, @Nullable TextChannel channel, @NotNull Guild guild, @NotNull String title, @Nullable Color color, @Nullable String description,
-                                        @Nullable String thumbnail, @Nullable Object... formatArgs) {
+    public static EmbedBuilder getEmbed(@NotNull User author, @Nullable Message message, @NotNull Guild guild, @NotNull String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setTimestamp(Instant.now()).setFooter(getTag(author), author.getEffectiveAvatarUrl());
         if(title.startsWith("success.")){
-            embedBuilder.setColor(Color.GREEN).setTitle(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
-                    translateMessage(author, channel, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
+            embedBuilder.setColor(Color.GREEN).setTitle(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
+                    translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
         } else if(title.startsWith("error.")){
-            embedBuilder.setColor(Color.RED).setTitle(UnicodeCharacters.CROSS_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
-                    translateMessage(author, channel, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
+            embedBuilder.setColor(Color.RED).setTitle(UnicodeCharacters.CROSS_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
+                    translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
         } else if(title.startsWith("warning.")){
-            embedBuilder.setColor(0xff7f00).setTitle(UnicodeCharacters.WARNING_SIGN_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, channel, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
-                    translateMessage(author, channel, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
+            embedBuilder.setColor(0xff7f00).setTitle(UnicodeCharacters.WARNING_SIGN_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
+                    translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
         }
         if(color != null) embedBuilder.setColor(color);
         if(description != null && description.length() <= 4096) embedBuilder.setDescription(description);
@@ -156,27 +151,47 @@ public class MessageHelper {
     /**
      * @param key the localization key
      * @param event for getting the guild's ID
-     * @return the translated value
+     * @return the translated key in the configured language of the guild
      * @throws NullPointerException if the key does not exist in any localization files
      */
     public static String translateMessage(@NotNull CommandEvent event, @NotNull String key) {
-        return translateMessage(event.getAuthor(), event.getTextChannel(), event.getGuild(), key, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString());
+        return translateMessage(event.getAuthor(), event.getMessage(), event.getGuild(), key, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString());
     }
 
-    public static String translateMessage(@NotNull User author, @Nullable TextChannel channel, @NotNull Guild guild, @NotNull String key, @NotNull String lang) {
+    /**
+     * @param key the localization key
+     * @param event for getting the guild's ID
+     * @param lang the language where the key will be taken
+     * @return the translated key in the specified language
+     * @throws NullPointerException if the key does not exist in any localization files
+     */
+    public static String translateMessage(@NotNull CommandEvent event, @NotNull String key, @NotNull String lang) {
+        return translateMessage(event.getAuthor(), event.getMessage(), event.getGuild(), key, lang);
+    }
+
+    /**
+     * @param author used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#getEmbed(User, Message, Guild, String, Color, String, String, Object...)} function
+     * @param message used to send the embedBuilder
+     * @param guild used to get the configured language and to send the embedBuilder to the guild's owner's private channel
+     * @param key the localization key
+     * @param lang the language where the key will be taken
+     * @return the translated key in the specified language
+     * @throws NullPointerException if the key does not exist in any localization files
+     */
+    public static String translateMessage(@NotNull User author, @Nullable Message message, @NotNull Guild guild, @NotNull String key, @NotNull String lang) {
         if (Optional.ofNullable(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).isPresent()) return Optional.ofNullable(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).get(key)).get().getAsString();
         if (SimpleBot.getLocalizations().get("en").get(key) == null) {
             long skip = 2;
             if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(f -> f.skip(1).findFirst().orElseThrow()).getMethodName().equalsIgnoreCase("getHelpConsumer"))
                 skip++;
             final long _skip = skip;
-            EmbedBuilder embedBuilder = getEmbed(author, channel, guild, "error.translateMessage.error", null, null, null, key)
-                    .addField(translateMessage(author, channel, guild, "error.translateMessage.key", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), key, false)
-                    .addField(translateMessage(author, channel, guild, "error.translateMessage.class", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
-                    .addField(translateMessage(author, channel, guild, "error.translateMessage.method", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
-                    .addField(translateMessage(author, channel, guild, "error.translateMessage.lineNumber", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
-            if (channel != null)
-                channel.sendMessage(new MessageBuilder(embedBuilder.build()).build()).queue();
+            EmbedBuilder embedBuilder = getEmbed(author, message, guild, "error.translateMessage.error", null, null, null, key)
+                    .addField(translateMessage(author, message, guild, "error.translateMessage.key", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), key, false)
+                    .addField(translateMessage(author, message, guild, "error.translateMessage.class", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getDeclaringClass().getSimpleName(), false)
+                    .addField(translateMessage(author, message, guild, "error.translateMessage.method", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getMethodName(), false)
+                    .addField(translateMessage(author, message, guild, "error.translateMessage.lineNumber", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), String.valueOf(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(stackFrameStream -> stackFrameStream.skip(_skip).findFirst().orElseThrow()).getLineNumber()), false);
+            if (message != null)
+                message.reply(new MessageBuilder(embedBuilder.build()).build()).queue();
             if (guild.getOwner() != null)
                 guild.getOwner().getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(embedBuilder.build()).build()).queue());
             throw new NullPointerException("The key " + key + " does not exist!");
@@ -186,21 +201,5 @@ public class MessageHelper {
         } catch (NullPointerException ex) {
             return key;
         }
-    }
-
-    /**
-     * @param key the localization key
-     * @return a String list with all the translations of the key
-     * @throws NullPointerException if the key does not exist in a language
-     */
-    public static List<String> translateMessageAllLanguages(@NotNull String key){
-        List<String> listMessageTranslated = new ArrayList<>();
-        for(String lang : SimpleBot.getLangs()){
-            if(SimpleBot.getLocalizations().get(lang).get(key) == null){
-                throw new NullPointerException("The key " + key + " doesn't exist in the language " + lang);
-            }
-            listMessageTranslated.add(SimpleBot.getLocalizations().get(lang).get(key).getAsString());
-        }
-        return listMessageTranslated;
     }
 }
