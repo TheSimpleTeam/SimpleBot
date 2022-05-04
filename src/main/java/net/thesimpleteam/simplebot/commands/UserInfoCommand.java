@@ -57,7 +57,7 @@ public class UserInfoCommand extends Command {
                             if (member.getNickname() != null)
                                 successEmbed.addField(MessageHelper.translateMessage(event, "success.userInfo.nickname"), member.getNickname(), false);
                             event.reply(new MessageBuilder(successEmbed.build()).build());
-                        }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.memberNull"))),
-                userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
+                        }, memberNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.memberNull", null, null, null).build()).build())),
+                userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null).build()).build()));
     }
 }

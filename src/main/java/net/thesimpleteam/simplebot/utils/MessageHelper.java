@@ -20,14 +20,19 @@ public class MessageHelper {
 
     private MessageHelper() {}
 
+    /**
+     * @param user user
+     * @return user's name + # + user's discriminator
+     */
     public static String getTag(final User user) {
         return user.getName() + "#" + user.getDiscriminator();
     }
 
-    public static String formattedMention(User user) {
-        return String.format("**[**%s**]** ", user.getAsMention());
-    }
-
+    /**
+     * @param event event
+     * @param command the command that is being executed
+     * @param informations provides information on the usages of the command
+     */
     public static void syntaxError(CommandEvent event, Command command, String informations) {
         StringBuilder argumentsBuilder = new StringBuilder();
         if (command.getArguments() == null)
@@ -96,37 +101,66 @@ public class MessageHelper {
         event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 
-    public static void sendError(Exception e, CommandEvent event, Command command) {
+    /**
+     * @param exception used to get the exception message
+     * @param event used to send the embedBuilder, to get the guild, the args and used by {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(CommandEvent, String)} function
+     * @param command used in verifications and to get the command's name
+     */
+    public static void sendError(Exception exception, CommandEvent event, Command command) {
         EmbedBuilder embedBuilder = getEmbed(event, "error.commands.sendError.error", null, null, null)
-                .addField(translateMessage(event, "error.commands.sendError.sendError"), e.getMessage(), false)
+                .addField(translateMessage(event, "error.commands.sendError.sendError"), exception.getMessage(), false)
                 .addField(translateMessage(event, "error.commands.sendError.command"), SimpleBot.getPrefix(event.getGuild()) + command.getName(), false);
         if (command.getArguments() == null || command.getArguments().isEmpty()) embedBuilder.addField(translateMessage(event, "error.commands.sendError.arguments"), event.getArgs(), false);
         event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 
+    /**
+     * @param event used to get the author, the message and the guild
+     * @param title used to set the color of the embed depending on the title
+     * @param color used to set the color if it's not green, red or orange
+     * @param description used to set the description of the embed when description is not null
+     * @param thumbnail used to set the thumbnail of the embed when thumbnail is not null
+     * @param formatArgs format the title with a {@link String#format(String, Object...)} when formatArgs is not null
+     * @return an embed builder depending on the parameters
+     */
     public static EmbedBuilder getEmbed(CommandEvent event, String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
         return getEmbed(event.getAuthor(), event.getMessage(), event.getGuild(), title, color, description, thumbnail, formatArgs);
     }
 
+    /**
+     * @param author used to set the footer of the embed builder, by {@link net.thesimpleteam.simplebot.utils.MessageHelper#getTag(User)} and {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(User, Message, Guild, String, String)} functions
+     * @param message used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(User, Message, Guild, String, String)} function
+     * @param guild used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(User, Message, Guild, String, String)} function
+     * @param title used to set the color of the embed depending on the title
+     * @param color used to set the color if it's not green, red or orange
+     * @param description used to set the description of the embed when description is not null
+     * @param thumbnail used to set the thumbnail of the embed when thumbnail is not null
+     * @param formatArgs format the title with a {@link String#format(String, Object...)} when formatArgs is not null
+     * @return an embed builder depending on the parameters
+     */
     public static EmbedBuilder getEmbed(@NotNull User author, @Nullable Message message, @NotNull Guild guild, @NotNull String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setTimestamp(Instant.now()).setFooter(getTag(author), author.getEffectiveAvatarUrl());
-        if(title.startsWith("success.")){
-            embedBuilder.setColor(Color.GREEN).setTitle(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
-                    translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
-        } else if(title.startsWith("error.")){
-            embedBuilder.setColor(Color.RED).setTitle(UnicodeCharacters.CROSS_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
-                    translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
-        } else if(title.startsWith("warning.")){
-            embedBuilder.setColor(0xff7f00).setTitle(UnicodeCharacters.WARNING_SIGN_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) :
-                    translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())));
-        }
         if(color != null) embedBuilder.setColor(color);
+        else {
+            if (title.startsWith("success.")) {
+                embedBuilder.setColor(Color.GREEN).setTitle(new StringBuilder().append(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI).append(" ").append(formatArgs != null ? String.format(translateMessage(author, message, guild, title, String.valueOf(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")))), formatArgs) : translateMessage(author, message, guild, title, String.valueOf(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en"))))).toString());
+            } else if (title.startsWith("error.")) {
+                embedBuilder.setColor(Color.RED).setTitle(new StringBuilder().append(UnicodeCharacters.CROSS_MARK_EMOJI).append(" ").append(formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())).toString());
+            } else if (title.startsWith("warning.")) {
+                embedBuilder.setColor(0xff7f00).setTitle(new StringBuilder().append(UnicodeCharacters.WARNING_SIGN_EMOJI).append(" ").append(formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString()), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(guild.getId(), "en")).getAsString())).toString());
+            }
+        }
         if(description != null && description.length() <= 4096) embedBuilder.setDescription(description);
         if(thumbnail != null) embedBuilder.setThumbnail(thumbnail);
         return embedBuilder;
     }
 
-    public static String getDescription(String string, int intDelimiter) {
+    /**
+     * @param string that will be shortened depending on the intDelimiter
+     * @param intDelimiter the number of characters that will be displayed in the string - 3
+     * @return the string shortened depending on the intDelimiter
+     */
+    public static String stringShortener(String string, int intDelimiter) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < string.toCharArray().length; i++) {
             if (i == intDelimiter - 3) {
@@ -138,10 +172,21 @@ public class MessageHelper {
         return stringBuilder.toString();
     }
 
+    /**
+     * @param date that will be formatted
+     * @return the formatted date
+     */
     public static String formatShortDate(LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
     }
 
+    /**
+     * @param member that will be verified if the member can interact with the target
+     * @param bot that will be verified if the bot can interact with the target
+     * @param target the target
+     * @param event used to send the embed and used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#getEmbed(CommandEvent, String, Color, String, String, Object...)} function
+     * @return {@code true} if the member and the bot can interact with the target, {@code false} otherwise
+     */
     public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event) {
         if (member.canInteract(target) && bot.canInteract(target)) return false;
         event.reply(new MessageBuilder(getEmbed(event, !member.canInteract(target) ? "error.commands.cantInteract.member" : "error.commands.cantInteract.bot", null, null, null).build()).build());
@@ -150,20 +195,18 @@ public class MessageHelper {
 
     /**
      * @param key the localization key
-     * @param event for getting the guild's ID
+     * @param event used to get the guild's ID
      * @return the translated key in the guild's configured language
-     * @throws NullPointerException if the key does not exist in the guild's configured language or in the English localization file
      */
     public static String translateMessage(@NotNull CommandEvent event, @NotNull String key) {
-        return translateMessage(event.getAuthor(), event.getMessage(), event.getGuild(), key, SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString());
+        return translateMessage(event.getAuthor(), event.getMessage(), event.getGuild(), key, String.valueOf(SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en"))));
     }
 
     /**
      * @param key the localization key
-     * @param event for getting the guild's ID
+     * @param event used to get the guild's ID
      * @param lang the language where the key will be taken
      * @return the translated key in the specified language
-     * @throws NullPointerException if the key does not exist in the specified language or in the English localization file
      */
     public static String translateMessage(@NotNull CommandEvent event, @NotNull String key, @NotNull String lang) {
         return translateMessage(event.getAuthor(), event.getMessage(), event.getGuild(), key, lang);

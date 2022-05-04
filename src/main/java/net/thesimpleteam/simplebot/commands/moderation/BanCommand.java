@@ -32,23 +32,21 @@ public class BanCommand extends Command {
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null).build()).build());
             return;
         }
-        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> {
-            event.getGuild().retrieveMember(user).queue(member -> {
-                if (MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
-                if (args[1] == null || args[1].isEmpty()) args[1] = "7";
-                try {
-                    int days = Integer.parseInt(args[1]);
-                    if (days > 7) {
-                        days = 7;
-                        event.replyWarning(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "warning.ban"));
-                    }
-                    event.getGuild().ban(user, days).queue();
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.ban"), user.getName(), args.length == 2 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + 2)));
-                } catch (NumberFormatException ex) {
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.ban.notAnNumber"));
+        SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveMember(user).queue(member -> {
+            if (MessageHelper.cantInteract(event.getMember(), event.getSelfMember(), member, event)) return;
+            if (args[1] == null || args[1].isEmpty()) args[1] = "7";
+            try {
+                int days = Integer.parseInt(args[1]);
+                if (days > 7) {
+                    days = 7;
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.ban", null, null, null)).build());
                 }
-            }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.memberNull")));
-        }, userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
+                event.getGuild().ban(user, days).queue();
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.ban", null, null, null, user.getName(), args.length == 2 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + 2))).build());
+            } catch (NumberFormatException ex) {
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.ban.notAnNumber", null, null, null)).build());
+            }
+        }, memberNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null)).build())), userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null)).build()));
     }
 }
 

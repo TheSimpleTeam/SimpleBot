@@ -64,7 +64,7 @@ public class SpigotCommand extends Command {
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginLink"), plugin.getResourceLink(), false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginID"), args[0], false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.downloads"), String.valueOf(plugin.getDownloads()), false)
-                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.getDescription(plugin.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", ""), 1024), false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.stringShortener(plugin.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", ""), 1024), false)
                         .build()).build());
             } catch (IOException e) {
                 if(e instanceof FileNotFoundException) {

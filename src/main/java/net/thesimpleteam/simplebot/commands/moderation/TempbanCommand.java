@@ -69,7 +69,7 @@ public class TempbanCommand extends Command {
                 int days  = Integer.parseInt(args[1]);
                 if (days > 7) {
                     days = 7;
-                    event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "warning.commands.commandsBan"));
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.commands.commandsBan", null, null, null)).build());
                 }
                 if (MathsCommand.Unit.getAllSymbolsByType(MathsCommand.UnitType.TIME).stream().filter(symbolDate -> symbolDate.equalsIgnoreCase(args[2].replaceAll("\\d+", ""))).findFirst().isEmpty()) {
                     MessageHelper.syntaxError(event, this, "information.tempban");
@@ -97,8 +97,8 @@ public class TempbanCommand extends Command {
                     MessageHelper.syntaxError(event, this, "information.tempban");
                 }
             } catch (NumberFormatException e) {
-                event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.ban.notAnNumber"));
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.ban.notAnNumber", null, null, null).build()).build());
             }
-        }, memberNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.memberNull"))), userNull -> event.reply(MessageHelper.formattedMention(event.getAuthor()) + MessageHelper.translateMessage(event, "error.commands.userNull")));
+        }, memberNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.memberNull", null, null, null)).build())), userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null).build()).build()));
     }
 }
