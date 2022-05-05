@@ -2,7 +2,6 @@ package net.thesimpleteam.simplebot.utils;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import javassist.Loader;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -22,7 +21,7 @@ public class MessageHelper {
     private MessageHelper() {}
 
     /**
-     * @param user user
+     * @param user the user
      * @return user's name + # + user's discriminator
      */
     public static String getTag(final User user) {
@@ -30,7 +29,7 @@ public class MessageHelper {
     }
 
     /**
-     * @param event event
+     * @param event the event
      * @param command the command that is being executed
      * @param informations provides information on the usages of the command
      */
@@ -103,9 +102,9 @@ public class MessageHelper {
     }
 
     /**
-     * @param exception used to get the exception message
-     * @param event used to send the embedBuilder, to get the guild, the args and used by {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(CommandEvent, String)} function
-     * @param command used in verifications and to get the command's name
+     * @param exception the exception that was catched
+     * @param event the event
+     * @param command the command
      */
     public static void sendError(Exception exception, CommandEvent event, Command command) {
         EmbedBuilder embedBuilder = getEmbed(event, "error.commands.sendError.error", null, null, null)
@@ -116,12 +115,12 @@ public class MessageHelper {
     }
 
     /**
-     * @param event used to get the author, the message and the guild
-     * @param title used to set the color of the embed depending on the title
-     * @param color used to set the color if it's not green, red or orange
-     * @param description used to set the description of the embed when description is not null
-     * @param thumbnail used to set the thumbnail of the embed when thumbnail is not null
-     * @param formatArgs format the title with a {@link String#format(String, Object...)} when formatArgs is not null
+     * @param event the event
+     * @param title the title's embed
+     * @param color the color's embed
+     * @param description the description's embed
+     * @param thumbnail the thumbnail's embed
+     * @param formatArgs formats the title with a {@link String#format(String, Object...)} when formatArgs isn't null
      * @return an embed builder depending on the parameters
      */
     public static EmbedBuilder getEmbed(CommandEvent event, String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs){
@@ -129,14 +128,14 @@ public class MessageHelper {
     }
 
     /**
-     * @param author used to set the footer of the embed builder, by {@link net.thesimpleteam.simplebot.utils.MessageHelper#getTag(User)} and {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(User, Message, Guild, String, String)} functions
+     * @param author used to set footer's embed
      * @param message used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(User, Message, Guild, String, String)} function
      * @param guild used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#translateMessage(User, Message, Guild, String, String)} function
-     * @param title used to set the color of the embed depending on the title
-     * @param color used to set the color if it's not green, red or orange
-     * @param description used to set the description of the embed when description is not null
-     * @param thumbnail used to set the thumbnail of the embed when thumbnail is not null
-     * @param formatArgs format the title with a {@link String#format(String, Object...)} when formatArgs is not null
+     * @param title the title's embed
+     * @param color the color's embed
+     * @param description the description's embed
+     * @param thumbnail the thumbnail's embed
+     * @param formatArgs formats the title with a {@link String#format(String, Object...)} when formatArgs isn't null
      * @return an embed builder depending on the parameters
      */
     public static EmbedBuilder getEmbed(@NotNull User author, @Nullable Message message, @NotNull Guild guild, @NotNull String title, @Nullable Color color, @Nullable String description, @Nullable String thumbnail, @Nullable Object... formatArgs) {
@@ -157,7 +156,7 @@ public class MessageHelper {
     }
 
     /**
-     * @param string that will be shortened depending on the intDelimiter
+     * @param string the string that will be shortened depending on the intDelimiter
      * @param intDelimiter the number of characters that will be displayed in the string - 3
      * @return the string shortened depending on the intDelimiter
      */
@@ -174,7 +173,7 @@ public class MessageHelper {
     }
 
     /**
-     * @param date that will be formatted
+     * @param date the date that will be formatted
      * @return the formatted date
      */
     public static String formatShortDate(LocalDateTime date) {
@@ -182,10 +181,10 @@ public class MessageHelper {
     }
 
     /**
-     * @param member that will be verified if the member can interact with the target
-     * @param bot that will be verified if the bot can interact with the target
+     * @param member the member that will be verified if the member can interact with the target
+     * @param bot the bot that will be verified if the bot can interact with the target
      * @param target the target
-     * @param event used to send the embed and used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#getEmbed(CommandEvent, String, Color, String, String, Object...)} function
+     * @param event the event
      * @return {@code true} if the member and the bot can interact with the target, {@code false} otherwise
      */
     public static boolean cantInteract(Member member, Member bot, Member target, CommandEvent event) {
@@ -196,7 +195,7 @@ public class MessageHelper {
 
     /**
      * @param key the localization key
-     * @param event used to get the guild's ID
+     * @param event the event
      * @return the translated key in the guild's configured language
      */
     public static String translateMessage(@NotNull CommandEvent event, @NotNull String key) {
@@ -216,7 +215,7 @@ public class MessageHelper {
     /**
      * @param author used by the {@link net.thesimpleteam.simplebot.utils.MessageHelper#getEmbed(User, Message, Guild, String, Color, String, String, Object...)} function
      * @param message used to send the embedBuilder
-     * @param guild used to get the configured language and to send the embedBuilder to the guild's owner's private channel
+     * @param guild used to get the configured language and to send the embedBuilder to the guild's owner's private channel if owner isn't null
      * @param key the localization key
      * @param lang the language where the key will be taken
      * @return the translated key in the specified language
