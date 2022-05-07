@@ -212,6 +212,10 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param calculation the calculation
+     * @return the calculation with the replaced characters
+     */
     public static String calculateReplaceArgs(String calculation) {
         StringBuilder builder = new StringBuilder();
         for (char c : calculation.toCharArray()) {
@@ -219,7 +223,6 @@ public class MathsCommand extends Command {
                 case '₋' -> builder.append('-');
                 case '₊' -> builder.append('+');
                 case '÷' -> builder.append('/');
-                case ',' -> builder.append('.');
                 case 'x', '×' -> builder.append('*');
                 default -> builder.append(c);
             }
@@ -227,22 +230,40 @@ public class MathsCommand extends Command {
         return builder.toString();
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is a number, {@code false} otherwise
+     */
     public static boolean isNumber(String string){
         return string.replaceAll("\\d+", "").replace(".", "").isEmpty() && StringUtils.countMatches(string, '.') < 2;
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is a number, {@code false} otherwise and send an error embed
+     */
     public static boolean isNumber(CommandEvent event, String string){
         if(isNumber(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnNumber", null, null, null, string).build()).build());
         return false;
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is parsable in a long variable, {@code false} otherwise and send an error embed
+     */
     public static boolean isParsableLong(CommandEvent event, String string) {
         if(isNumber(event, string) && isParsableLong(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Long.MIN_VALUE, Long.MAX_VALUE).build()).build());
         return false;
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is parsable in a long variable, {@code false} otherwise
+     */
     public static boolean isParsableLong(String string) {
         if(!isNumber(string)) return false;
         try {
@@ -253,12 +274,21 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is parsable in a double variable, {@code false} otherwise and send an error embed
+     */
     public static boolean isParsableDouble(CommandEvent event, String string) {
         if(isNumber(event, string) && isParsableDouble(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Double.MIN_VALUE, Double.MAX_VALUE).build()).build());
         return false;
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is parsable in a double variable, {@code false} otherwise
+     */
     public static boolean isParsableDouble(String string) {
         if(!isNumber(string)) return false;
         try {
@@ -269,12 +299,21 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is parsable in a byte variable, {@code false} otherwise and send an error embed
+     */
     public static boolean isParsableByte(CommandEvent event, String string) {
         if(isNumber(event, string) && isParsableByte(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Byte.MIN_VALUE, Byte.MAX_VALUE).build()).build());
         return false;
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is parsable in a byte variable, {@code false} otherwise
+     */
     public static boolean isParsableByte(String string) {
         if(!isNumber(string)) return false;
         try {
@@ -285,12 +324,21 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is parsable in a short variable, {@code false} otherwise and send an error embed
+     */
     public static boolean isParsableShort(CommandEvent event, String string) {
         if(isNumber(event, string) && isParsableShort(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Short.MIN_VALUE, Short.MAX_VALUE).build()).build());
         return false;
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is parsable in a short variable, {@code false} otherwise
+     */
     public static boolean isParsableShort(String string) {
         if(!isNumber(string)) return false;
         try {
@@ -301,12 +349,21 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is parsable in a float variable, {@code false} otherwise and send an error embed
+     */
     public static boolean isParsableFloat(CommandEvent event, String string) {
         if(isNumber(event, string) && isParsableFloat(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Float.MIN_VALUE, Float.MAX_VALUE).build()).build());
         return false;
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is parsable in a float variable, {@code false} otherwise
+     */
     public static boolean isParsableFloat(String string) {
         if(!isNumber(string)) return false;
         try {
@@ -317,12 +374,21 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is parsable in an int variable, {@code false} otherwise and send an error embed
+     */
     public static boolean isParsableInt(CommandEvent event, String string) {
         if(isNumber(event, string) && isParsableInt(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Integer.MIN_VALUE, Integer.MAX_VALUE).build()).build());
         return false;
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is parsable in an int variable, {@code false} otherwise
+     */
     public static boolean isParsableInt(String string) {
         if(!isNumber(string)) return false;
         try {
@@ -333,16 +399,29 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param event the event
+     * @param string a string
+     * @return {@code true} if the string is an integer number, {@code false} otherwise and send an error embed
+     */
     public static boolean isIntegerNumberWithEmbed(CommandEvent event, String string) {
         if(isParsableDouble(event, string) && isIntegerNumber(string)) return true;
         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnIntegerNumber", null, null, null, string).build()).build());
         return false;
     }
 
+    /**
+     * @param string a string
+     * @return {@code true} if the string is an integer number, {@code false} otherwise
+     */
     public static boolean isIntegerNumber(String string) {
         return isParsableDouble(string) && Math.ceil(Double.parseDouble(string)) == Double.parseDouble(string);
     }
 
+    /**
+     * @param number a long number
+     * @return {@code true} if the number is prime, i.e. the only two number's divisors are itself and 1 {@code false} otherwise
+     */
     public static boolean numberIsPrime(long number) {
         if (number <= 1) return false;
         for (long i = 2; i <= Math.sqrt(number); i++) {
@@ -351,16 +430,28 @@ public class MathsCommand extends Command {
         return true;
     }
 
+    /**
+     * @param number a long number
+     * @return {@code true} if the number is perfect, i.e the sum of the number's divisors is equal to the number {@code false} otherwise
+     */
     public static boolean numberIsPerfect(long number) {
         return number > 1 && longListSum(getDivisorsWithoutNumber(number)) == number;
     }
 
+    /**
+     * @param number a long number
+     * @return a long list of the number's divisors without itself
+     */
     public static List<Long> getDivisorsWithoutNumber(long number){
         List<Long> divisors = getDivisorsWithNumber(number);
         divisors.remove(divisors.size() - 1);
         return divisors;
     }
 
+    /**
+     * @param number a long number
+     * @return a long list of the number's divisors with itself
+     */
     public static List<Long> getDivisorsWithNumber(long number){
         List<Long> divisors = new ArrayList<>();
         for(long divisor = 1; divisor <= number; divisor++){
@@ -369,6 +460,10 @@ public class MathsCommand extends Command {
         return divisors;
     }
 
+    /**
+     * @param longList a list of longs numbers
+     * @return a long sum of the list's elements
+     */
     public static long longListSum(List<Long> longList){
         long longListSum = 0;
         for(long longNumber : longList){
@@ -378,8 +473,8 @@ public class MathsCommand extends Command {
     }
 
     /**
-     * @param specifiedTime the time specified in for example TempbanCommand like 37d or 2086min
-     * @return a String explaining in how much years, month, weeks, days, hours, minutes or seconds
+     * @param specifiedTime the time specified in, for example, TempbanCommand like 37d or 2086min
+     * @return a string explaining in how much years, month, weeks, days, hours, minutes or seconds lasts the specified time
      */
     public static String dateTime(String specifiedTime, CommandEvent event) {
         StringBuilder stringBuilder = new StringBuilder();
