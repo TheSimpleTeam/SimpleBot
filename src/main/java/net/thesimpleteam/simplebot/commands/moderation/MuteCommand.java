@@ -43,6 +43,12 @@ public class MuteCommand extends Command {
             }, memberNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.memberNull", null, null, null).build()).build())), userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null)).build()));
     }
 
+    /**
+     * @param event the event
+     * @param targetMember the member to mute
+     * @param reason the mute's reason
+     * @param mutedRole the role to mute the member with
+     */
     public static void mute(CommandEvent event, Member targetMember, String reason, Role mutedRole) {
         if (targetMember.getRoles().contains(mutedRole)) { // Unmute
             event.getGuild().removeRoleFromMember(targetMember, mutedRole).queue();
@@ -53,6 +59,10 @@ public class MuteCommand extends Command {
         }
     }
 
+    /**
+     * @param event the event
+     * @return {@code true} if the muted role is here, {@code false} otherwise
+     */
     public static boolean isMutedRoleHere(CommandEvent event){
         if(SimpleBot.getServerConfig().mutedRole().get(event.getGuild().getId()) == null || event.getGuild().getRoleById(SimpleBot.getServerConfig().mutedRole().get(event.getGuild().getId())) == null){
             event.getGuild().createRole()

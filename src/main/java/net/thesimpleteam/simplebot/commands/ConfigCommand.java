@@ -45,19 +45,22 @@ public class ConfigCommand extends Command {
         INT,
         OBJECT;
 
+        /**
+         * @param type the class to check
+         * @return the type of the class
+         */
         private static JsonType getFromType(Class<?> type) {
             try {
-                if(type.isAssignableFrom(List.class)) {
+                if(type.isAssignableFrom(List.class))
                     return ARRAY;
-                } else if(type == String.class) {
+                else if(type == String.class)
                     return STRING;
-                } else if(type.isAssignableFrom(Number.class)) {
+                else if(type.isAssignableFrom(Number.class))
                     return INT;
-                }else if(type == Boolean.class) {
+                else if(type == Boolean.class)
                     return BOOLEAN;
-                } else {
+                else
                     return OBJECT;
-                }
             } catch (Exception e) {
                 return OBJECT;
             }
@@ -66,10 +69,6 @@ public class ConfigCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        /**
-         * @author minemobs
-         * bad code btw
-         */
         List<Field> config = Arrays.stream(ServerConfig.class.getDeclaredFields()).filter(f -> {
             try {
                 f.trySetAccessible();
@@ -178,8 +177,6 @@ public class ConfigCommand extends Command {
                         }
                     }
                     case "prohibitword" -> {
-                        //I fixed his issue, bc he's dumb like he has 2 braincells left.
-                        // - Minemobs
                         if(args[1].equalsIgnoreCase("reset")) {
                             if (SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId()) == null) {
                                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.config.prohibitWord.listNull", null, null, null).build()).build());

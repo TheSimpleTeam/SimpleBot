@@ -69,6 +69,10 @@ public class SnippetCommand extends Command {
                 .build()), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTimeMessage.delete().queue()));
     }
 
+    /**
+     * @param language the language
+     * @return the language from ImageOptions enum
+     */
     private ImageOptions.Language getLanguage(String language) {
         for (ImageOptions.Language value : ImageOptions.Language.values()) {
             switch (language.toLowerCase()) {

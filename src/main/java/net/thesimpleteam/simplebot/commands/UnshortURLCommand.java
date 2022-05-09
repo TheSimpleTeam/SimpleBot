@@ -39,11 +39,16 @@ public class UnshortURLCommand extends Command {
         }
     }
 
-    public static String unshortUrl(final String shortUrl) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(shortUrl).openConnection();
+    /**
+     * @param url the url
+     * @return the unshorten url
+     * @throws IOException
+     */
+    public static String unshortUrl(final String url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("HEAD");
         connection.setConnectTimeout(10000);
-        return connection.getResponseCode() / 100 == 3 && connection.getHeaderField("Location") != null ? unshortUrl(connection.getHeaderField("Location")).equals(connection.getHeaderField("Location")) ? connection.getHeaderField("Location") : unshortUrl(connection.getHeaderField("Location")) : shortUrl;
+        return connection.getResponseCode() / 100 == 3 && connection.getHeaderField("Location") != null ? unshortUrl(connection.getHeaderField("Location")).equals(connection.getHeaderField("Location")) ? connection.getHeaderField("Location") : unshortUrl(connection.getHeaderField("Location")) : url;
     }
 }

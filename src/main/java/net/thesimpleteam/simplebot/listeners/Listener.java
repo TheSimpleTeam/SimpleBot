@@ -44,13 +44,16 @@ public class Listener extends ListenerAdapter {
         SimpleBot.getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS); //JDA doesn't want to exit the JVM so we do a System.exit()
     }
 
+    /**
+     * This method is called when we want to save the configs
+     * @throws IOException
+     */
     public static void saveConfigs() throws IOException {
         if (!new File(new File("config/server-config.json").toPath().toUri()).exists())
             new File(new File("config/server-config.json").toPath().toUri()).createNewFile();
         if (SimpleBot.gson.fromJson(Files.newBufferedReader(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8), ServerConfig.class) == SimpleBot.getServerConfig())
             return;
-        Writer writer = Files.newBufferedWriter(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING);
+        Writer writer = Files.newBufferedWriter(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         SimpleBot.gson.toJson(SimpleBot.getServerConfig(), writer);
         writer.close();
         SimpleBot.LOGGER.info("Server config updated");

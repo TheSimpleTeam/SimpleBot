@@ -84,26 +84,29 @@ public class Eval {
     }
 
     /**
-     * @deprecated {@link Eval#getV8Runtime()}
-     * @return GraalJS's Script Engine
+     * @return the V8Runtime
      */
-    @Deprecated
-    public ScriptEngine getEngine() {
-        return engine;
-    }
-
     public V8Runtime getV8Runtime() {
         return v8Runtime;
     }
 
+    /**
+     * @return the JavetProxyConverter
+     */
     public JavetProxyConverter getJavetProxyConverter() {
         return javetProxyConverter;
     }
 
+    /**
+     * @return the PythonInterpreter
+     */
     public PythonInterpreter getPyInterpreter() {
         return pyInterpreter;
     }
 
+    /**
+     * @return the Writer
+     */
     public StringWriter getWriter() {
         return writer;
     }

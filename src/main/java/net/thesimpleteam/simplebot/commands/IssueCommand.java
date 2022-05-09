@@ -74,12 +74,15 @@ public class IssueCommand extends Command {
                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.issue.bodyParameterNotHere", null, null, null).build()).build());
                 return;
             }
-            this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", getOrDefault(parser, "title", MessageHelper.translateMessage(event, "text.issue.issue")))).body(String.format(MessageHelper.translateMessage(event, "success.issue.success") + "\n\n" + MessageHelper.translateMessage(event, "text.issue.issue") + MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints") + "\n\n%s", MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", getOrDefault(new DefaultParser().parse(options, args), "body", event.getArgs())))).create();
+            this.github.getRepositoryById(GithubInfo.REPOSITORY_ID.id).createIssue(String.join(" ", parser.hasOption("title") ? parser.getOptionValues("title") : new String[]{MessageHelper.translateMessage(event, "text.issue.issue")})).body(String.format(new StringBuilder().append(MessageHelper.translateMessage(event, "success.issue.success")).append("\n\n").append(MessageHelper.translateMessage(event, "text.issue.issue")).append(MessageHelper.translateMessage(event, "text.issue.twoSuperimposedPoints")).append("\n\n%s").toString(), MessageHelper.getTag(event.getAuthor()), event.getAuthor().getId(), event.getGuild().getName(), event.getGuild().getId(), String.join(" ", new DefaultParser().parse(options, args).hasOption("body") ? new DefaultParser().parse(options, args).getOptionValues("body") : new String[]{event.getArgs()}))).create();
         } catch (IOException | ParseException e) {
             MessageHelper.sendError(e, event, this);
         }
     }
 
+    /**
+     * @param options the options to add to the parser
+     */
     private void addOptions(Options options) {
         Option body = new Option("b", "body", true, "Add body to the issue");
         Option title = new Option("t", "title", true, "Add title to the issue");
@@ -87,9 +90,5 @@ public class IssueCommand extends Command {
         title.setArgs(Option.UNLIMITED_VALUES);
         options.addOption(body);
         options.addOption(title);
-    }
-
-    private String[] getOrDefault(CommandLine options, String option, String o) {
-        return options.hasOption(option) ? options.getOptionValues(option) : new String[]{o};
     }
 }

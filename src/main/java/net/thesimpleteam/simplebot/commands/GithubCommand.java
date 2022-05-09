@@ -108,14 +108,9 @@ public class GithubCommand extends Command {
         }
     }
 
-    private Optional<String> getReadme(GHRepository repository) {
-        try {
-            return Optional.of(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            return Optional.empty();
-        }
-    }
-
+    /**
+     * @return {@code true} if the command is disabled, {@code false} otherwise
+     */
     private boolean isCommandDisabled() {
         try {
             github.checkApiUrlValidity();
@@ -125,7 +120,10 @@ public class GithubCommand extends Command {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * @param language the principal repository's language
+     * @return the language's color
+     */
     private Color getColor(String language) {
         try {
             Map<String, Map<String, String>> lang = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
@@ -136,13 +134,17 @@ public class GithubCommand extends Command {
         }
     }
 
+    /**
+     * @param hex the hexadecimal color
+     * @return the decimal color
+     */
     private int getDecimal(String hex) {
         String digits = "0123456789ABCDEF";
         int val = 0;
         for (int i = 0; i < hex.length(); i++) {
             char c = hex.toUpperCase().charAt(i);
             int d = digits.indexOf(c);
-            val = 16*val + d;
+            val = 16 * val + d;
         }
         return val;
     }
