@@ -435,28 +435,28 @@ public class MathsCommand extends Command {
      * @return {@code true} if the number is perfect, i.e the sum of the number's divisors is equal to the number {@code false} otherwise
      */
     public static boolean numberIsPerfect(long number) {
-        return number > 1 && longListSum(getDivisorsWithoutNumber(number)) == number;
+        return number > 1 && longListSum(getDivisorsWithoutItself(number)) == number;
     }
 
     /**
      * @param number a long number
      * @return a long list of the number's divisors without itself
      */
-    public static List<Long> getDivisorsWithoutNumber(long number){
-        List<Long> divisors = getDivisorsWithNumber(number);
-        divisors.remove(divisors.size() - 1);
+    public static List<Long> getDivisorsWithoutItself(long number){
+        List<Long> divisors = new ArrayList<>();
+        for(long divisor = 1; divisor < number; divisor++){
+            if(number % divisor == 0) divisors.add(divisor);
+        }
         return divisors;
     }
 
     /**
      * @param number a long number
-     * @return a long list of the number's divisors with itself
+     * @return a long list of the number's divisors
      */
-    public static List<Long> getDivisorsWithNumber(long number){
-        List<Long> divisors = new ArrayList<>();
-        for(long divisor = 1; divisor <= number; divisor++){
-            if(number % divisor == 0) divisors.add(divisor);
-        }
+    public static List<Long> getDivisors(long number){
+        List<Long> divisors = getDivisorsWithoutItself(number);
+        divisors.add(number);
         return divisors;
     }
 
