@@ -91,7 +91,7 @@ public class TempbanCommand extends Command {
                         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                             MessageHelper.sendError(e, event, this);
                         }
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.tempban", null, null, null, args.length == 3 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3), MathsCommand.dateTime(args[2], event)).build()).build());
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.tempban", null, null, null, args.length == 3 ? MessageHelper.translateMessage(event, "text.commands.reasonNull") : MessageHelper.translateMessage(event, "text.commands.reason") + " " + event.getArgs().substring(args[0].length() + args[1].length() + args[2].length() + 3), dateTime(args[2], event)).build()).build());
                     });
                 } catch (NumberFormatException e) {
                     MessageHelper.syntaxError(event, this, "information.tempban");
@@ -100,5 +100,30 @@ public class TempbanCommand extends Command {
                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.ban.notAnNumber", null, null, null).build()).build());
             }
         }, memberNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.memberNull", null, null, null)).build())), userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null).build()).build()));
+    }
+
+    private String dateTime(String specifiedTime, CommandEvent event) {
+        StringBuilder stringBuilder = new StringBuilder();
+        double time = Arrays.stream(MathsCommand.Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
+        int differentUnitsUsed = 0;
+        for(MathsCommand.Date date : MathsCommand.Date.values()){
+            if(time / date.factor >= 1){
+                differentUnitsUsed++;
+                time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
+            }
+        }
+        time = Arrays.stream(MathsCommand.Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
+        int unitsUsedCount = 0;
+        for(MathsCommand.Date date : MathsCommand.Date.values()) {
+            if (time / date.factor >= 1){
+                stringBuilder.append((int) Math.floor(time / date.factor)).append(" ").append(time / date.factor >= 2 ? MessageHelper.translateMessage(event, date.dateTimeStringPlural) : MessageHelper.translateMessage(event, date.dateTimeStringSingular));
+                if(differentUnitsUsed > 1) {
+                    unitsUsedCount++;
+                    stringBuilder.append((unitsUsedCount + 1) == differentUnitsUsed ? new StringBuilder().append(MessageHelper.translateMessage(event, "text.maths.date.and")) : (unitsUsedCount + 1) > differentUnitsUsed ? "" : ", ");
+                    time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
+                }
+            }
+        }
+        return stringBuilder.toString();
     }
 }

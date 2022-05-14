@@ -83,30 +83,18 @@ public class Eval {
         }
     }
 
-    /**
-     * @return the V8Runtime
-     */
     public V8Runtime getV8Runtime() {
         return v8Runtime;
     }
 
-    /**
-     * @return the JavetProxyConverter
-     */
     public JavetProxyConverter getJavetProxyConverter() {
         return javetProxyConverter;
     }
 
-    /**
-     * @return the PythonInterpreter
-     */
     public PythonInterpreter getPyInterpreter() {
         return pyInterpreter;
     }
 
-    /**
-     * @return the Writer
-     */
     public StringWriter getWriter() {
         return writer;
     }

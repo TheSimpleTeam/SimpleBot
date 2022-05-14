@@ -3,11 +3,10 @@ package net.thesimpleteam.simplebot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
+import net.thesimpleteam.simplebot.utils.MathUtils;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.thesimpleteam.simplebot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.MessageBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.internal.StringUtil;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.mXparser;
 
@@ -86,10 +85,10 @@ public class MathsCommand extends Command {
                 switch (args[0].toLowerCase(Locale.ROOT)) {
                     case "primenumber" -> {
                         long number;
-                        if (isIntegerNumber(args[2]))
+                        if (MathUtils.isIntegerNumber(args[2]))
                             number = Long.parseLong(args[2].split("\\.")[0]);
                         else if (new Expression(args[2]).checkSyntax()){
-                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
+                            if(MathUtils.isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
                                 number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
                         } else {
@@ -97,13 +96,13 @@ public class MathsCommand extends Command {
                             return;
                         }
                         switch (args[1]) {
-                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, numberIsPrime(number) ? "success.maths.primeNumber.isPrime" : "error.maths.primeNumber.isNotPrime", null, null, null, number).build()).build());
+                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, MathUtils.numberIsPrime(number) ? "success.maths.primeNumber.isPrime" : "error.maths.primeNumber.isNotPrime", null, null, null, number).build()).build());
                             case "list" -> {
                                 //TODO optimize that if possible
                                 StringBuilder listBuilder = new StringBuilder();
                                 List<String> primeNumberList = new ArrayList<>();
                                 for (long i = 2; i <= number; i++) {
-                                    if (numberIsPrime(i)) primeNumberList.add(String.valueOf(i));
+                                    if (MathUtils.numberIsPrime(i)) primeNumberList.add(String.valueOf(i));
                                 }
                                 if(primeNumberList.isEmpty()){
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.primeNumber.list.error", null, null, null, number).build()).build());
@@ -129,10 +128,10 @@ public class MathsCommand extends Command {
                     }
                     case "perfectnumber" -> {
                         long number;
-                        if (isIntegerNumber(args[2]))
+                        if (MathUtils.isIntegerNumber(args[2]))
                             number = Long.parseLong(args[2].split("\\.")[0]);
                         else if (new Expression(args[2]).checkSyntax()){
-                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
+                            if(MathUtils.isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
                                 number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
                         } else {
@@ -140,12 +139,12 @@ public class MathsCommand extends Command {
                             return;
                         }
                         switch (args[1]) {
-                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, numberIsPerfect(number) ? "success.maths.perfectNumber.isPerfect" : "error.maths.perfectNumber.isNotPerfect", null, null, null, number).build()).build());
+                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, MathUtils.numberIsPerfect(number) ? "success.maths.perfectNumber.isPerfect" : "error.maths.perfectNumber.isNotPerfect", null, null, null, number).build()).build());
                             case "list" -> {
                                 StringBuilder listBuilder = new StringBuilder();
                                 List<String> perfectNumberList = new ArrayList<>();
                                 for (long i = 2; i <= number; i++) {
-                                    if (numberIsPerfect(i)) perfectNumberList.add(String.valueOf(i));
+                                    if (MathUtils.numberIsPerfect(i)) perfectNumberList.add(String.valueOf(i));
                                 }
                                 if(perfectNumberList.isEmpty()){
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.primeNumber.list.error", null, null, null, number).build()).build());
@@ -182,7 +181,7 @@ public class MathsCommand extends Command {
                                 }
                             }
                         }
-                        if(!isParsableDouble(event, args[1].replace(',', '.'))) return;
+                        if(!MathUtils.isParsableDouble(event, args[1].replace(',', '.'))) return;
                         double number = Double.parseDouble(args[1].replace(',', '.'));
                         Unit unit1 = null;
                         Unit unit2 = null;
@@ -228,277 +227,6 @@ public class MathsCommand extends Command {
             }
         }
         return builder.toString();
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is a number, {@code false} otherwise
-     */
-    public static boolean isNumber(String string){
-        return string.replaceAll("\\d+", "").replace(".", "").isEmpty() && StringUtils.countMatches(string, '.') < 2;
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is a number, {@code false} otherwise and send an error embed
-     */
-    public static boolean isNumber(CommandEvent event, String string){
-        if(isNumber(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnNumber", null, null, null, string).build()).build());
-        return false;
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is parsable in a long variable, {@code false} otherwise and send an error embed
-     */
-    public static boolean isParsableLong(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableLong(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Long.MIN_VALUE, Long.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is parsable in a long variable, {@code false} otherwise
-     */
-    public static boolean isParsableLong(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Long.parseLong(string);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is parsable in a double variable, {@code false} otherwise and send an error embed
-     */
-    public static boolean isParsableDouble(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableDouble(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Double.MIN_VALUE, Double.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is parsable in a double variable, {@code false} otherwise
-     */
-    public static boolean isParsableDouble(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Double.parseDouble(string);
-            return true;
-        } catch(NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is parsable in a byte variable, {@code false} otherwise and send an error embed
-     */
-    public static boolean isParsableByte(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableByte(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Byte.MIN_VALUE, Byte.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is parsable in a byte variable, {@code false} otherwise
-     */
-    public static boolean isParsableByte(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Byte.parseByte(string);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is parsable in a short variable, {@code false} otherwise and send an error embed
-     */
-    public static boolean isParsableShort(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableShort(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Short.MIN_VALUE, Short.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is parsable in a short variable, {@code false} otherwise
-     */
-    public static boolean isParsableShort(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Short.parseShort(string);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is parsable in a float variable, {@code false} otherwise and send an error embed
-     */
-    public static boolean isParsableFloat(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableFloat(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Float.MIN_VALUE, Float.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is parsable in a float variable, {@code false} otherwise
-     */
-    public static boolean isParsableFloat(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Float.parseFloat(string);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is parsable in an int variable, {@code false} otherwise and send an error embed
-     */
-    public static boolean isParsableInt(CommandEvent event, String string) {
-        if(isNumber(event, string) && isParsableInt(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, string, Integer.MIN_VALUE, Integer.MAX_VALUE).build()).build());
-        return false;
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is parsable in an int variable, {@code false} otherwise
-     */
-    public static boolean isParsableInt(String string) {
-        if(!isNumber(string)) return false;
-        try {
-            Integer.parseInt(string);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param event the event
-     * @param string a string
-     * @return {@code true} if the string is an integer number, {@code false} otherwise and send an error embed
-     */
-    public static boolean isIntegerNumberWithEmbed(CommandEvent event, String string) {
-        if(isParsableDouble(event, string) && isIntegerNumber(string)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnIntegerNumber", null, null, null, string).build()).build());
-        return false;
-    }
-
-    /**
-     * @param string a string
-     * @return {@code true} if the string is an integer number, {@code false} otherwise
-     */
-    public static boolean isIntegerNumber(String string) {
-        return isParsableDouble(string) && Math.ceil(Double.parseDouble(string)) == Double.parseDouble(string);
-    }
-
-    /**
-     * @param number a long number
-     * @return {@code true} if the number is prime, i.e. the only two number's divisors are itself and 1 {@code false} otherwise
-     */
-    public static boolean numberIsPrime(long number) {
-        if (number <= 1) return false;
-        for (long i = 2; i <= Math.sqrt(number); i++) {
-            if (number % i == 0) return false;
-        }
-        return true;
-    }
-
-    /**
-     * @param number a long number
-     * @return {@code true} if the number is perfect, i.e the sum of the number's divisors is equal to the number {@code false} otherwise
-     */
-    public static boolean numberIsPerfect(long number) {
-        return number > 1 && longListSum(getDivisorsWithoutItself(number)) == number;
-    }
-
-    /**
-     * @param number a long number
-     * @return a long list of the number's divisors without itself
-     */
-    public static List<Long> getDivisorsWithoutItself(long number){
-        List<Long> divisors = new ArrayList<>();
-        for(long divisor = 1; divisor < number; divisor++){
-            if(number % divisor == 0) divisors.add(divisor);
-        }
-        return divisors;
-    }
-
-    /**
-     * @param number a long number
-     * @return a long list of the number's divisors
-     */
-    public static List<Long> getDivisors(long number){
-        List<Long> divisors = getDivisorsWithoutItself(number);
-        divisors.add(number);
-        return divisors;
-    }
-
-    /**
-     * @param longList a list of longs numbers
-     * @return a long sum of the list's elements
-     */
-    public static long longListSum(List<Long> longList){
-        long longListSum = 0;
-        for(long longNumber : longList){
-            longListSum += longNumber;
-        }
-        return longListSum;
-    }
-
-    /**
-     * @param specifiedTime the time specified in, for example, TempbanCommand like 37d or 2086min
-     * @return a string explaining in how much years, month, weeks, days, hours, minutes or seconds lasts the specified time
-     */
-    public static String dateTime(String specifiedTime, CommandEvent event) {
-        StringBuilder stringBuilder = new StringBuilder();
-        double time = Arrays.stream(Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
-        int differentUnitsUsed = 0;
-        for(Date date : Date.values()){
-            if(time / date.factor >= 1){
-                differentUnitsUsed++;
-                time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
-            }
-        }
-        time = Arrays.stream(Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
-        int unitsUsedCount = 0;
-        for(Date date : Date.values()) {
-            if (time / date.factor >= 1){
-                stringBuilder.append((int) Math.floor(time / date.factor)).append(" ").append(time / date.factor >= 2 ? MessageHelper.translateMessage(event, date.dateTimeStringPlural) : MessageHelper.translateMessage(event, date.dateTimeStringSingular));
-                if(differentUnitsUsed > 1) {
-                    unitsUsedCount++;
-                    stringBuilder.append((unitsUsedCount + 1) == differentUnitsUsed ? new StringBuilder().append(MessageHelper.translateMessage(event, "text.maths.date.and")) : (unitsUsedCount + 1) > differentUnitsUsed ? "" : ", ");
-                    time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
-                }
-            }
-        }
-        return stringBuilder.toString();
     }
 
     public enum Unit {

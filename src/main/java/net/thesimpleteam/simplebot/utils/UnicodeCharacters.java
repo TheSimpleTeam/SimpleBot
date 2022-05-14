@@ -14,9 +14,6 @@ public class UnicodeCharacters {
     public static final String HEAVY_PLUS_SIGN = "\u2795";
     public static final String HEAVY_MINUS_SIGN = "\u2796";
 
-    /**
-     * @return a character list containing all the exponent characters
-     */
     public static List<Character> getAllExponentCharacters() {
         return List.of('\u2070', '\u00B9', '\u00B2', '\u00B3', '\u2074', '\u2075', '\u2076', '\u2077', '\u2078', '\u2079', '\u207A', '\u207B', '\u207D', '\u207E');
     }
