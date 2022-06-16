@@ -2,6 +2,8 @@ package net.thesimpleteam.simplebot.enums;
 
 import net.thesimpleteam.simplebot.SimpleBot;
 
+import java.util.Arrays;
+
 public enum Color {
     //Color end string, color reset
     RESET("\033[0m"),
@@ -84,13 +86,15 @@ public enum Color {
         this.code = SimpleBot.isTTY() ? code : "";
     }
 
+    /**
+     * @param text the text
+     * @param colors the colors
+     * @return the text colorized with the colors
+     */
     public static String colorize(String text, Color... colors) {
         StringBuilder b = new StringBuilder();
-        for (Color color : colors) {
-            b.append(color.toString());
-        }
-        b.append(text).append(RESET);
-        return b.toString();
+        Arrays.stream(colors).forEach(color -> b.append(color.toString()));
+        return b.append(text).append(RESET).toString();
     }
 
     @Override

@@ -51,14 +51,22 @@ public class EvaluateCommand extends Command {
         eval(language, args, event);
     }
 
+    /**
+     * @param language the language to use between JS and Python
+     * @param arg args to evaluate depending on the language
+     * @param event the event
+     */
     private void eval(Eval.Languages language, String arg, CommandEvent event) {
-        if(language == Eval.Languages.PY) {
+        if(language == Eval.Languages.PY)
             evalPY(arg, event);
-        } else {
+        else
             evalJS(arg, event);
-        }
     }
 
+    /**
+     * @param args args to evaluate in JS
+     * @param event the event
+     */
     private void evalJS(String args, CommandEvent event) {
         try {
             addV8Module(event, "event");
@@ -86,6 +94,10 @@ public class EvaluateCommand extends Command {
         }
     }
 
+    /**
+     * @param args args to evaluate in Python
+     * @param event the event
+     */
     private void evalPY(String args, CommandEvent event) {
         pyInterpreter.set("event", event);
         pyInterpreter.set("message", event.getMessage());
@@ -102,14 +114,28 @@ public class EvaluateCommand extends Command {
         writer.getBuffer().setLength(0);
     }
 
-    private void addV8Module(Object o, String name) throws JavetException {
-        engine.getGlobalObject().set(name, o);
+    /**
+     * @param object the object to add to the V8 module
+     * @param name the object's name
+     * @throws JavetException
+     */
+    private void addV8Module(Object object, String name) throws JavetException {
+        engine.getGlobalObject().set(name, object);
     }
 
+    /**
+     * @param clazz the class to add to the V8 module
+     * @param name the class's name
+     * @throws JavetException
+     */
     private void addV8Module(Class<?> clazz, String name) throws JavetException {
         engine.getGlobalObject().set(name, clazz);
     }
 
+    /**
+     * @param clazz the class to add to the V8 module
+     * @throws JavetException
+     */
     private void addV8Module(Class<?> clazz) throws JavetException {
         addV8Module(clazz, clazz.getSimpleName());
     }

@@ -25,6 +25,6 @@ public class SayCommand extends Command {
             MessageHelper.syntaxError(event,this, "information.say");
             return;
         }
-        event.getChannel().sendMessage(new StringBuilder().append((!event.getMember().hasPermission(Permission.MESSAGE_MANAGE) ? new StringBuilder(MessageHelper.getTag(event.getAuthor())).append(" ").toString() : "")).append(event.getArgs()).toString()).queue(unused -> event.getMessage().delete().queue());
+        event.getMessage().reply(new StringBuilder().append((!event.getMember().hasPermission(Permission.MESSAGE_MANAGE) ? new StringBuilder(MessageHelper.getTag(event.getAuthor())).append(" ").toString() : "")).append(event.getArgs()).toString()).queue(unused -> event.getMessage().delete().queue());
     }
 }

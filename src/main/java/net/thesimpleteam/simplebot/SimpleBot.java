@@ -9,8 +9,8 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.simpleteam.simplebot.api.Server;
-import io.tunabytes.bytecode.MixinsBootstrap;
 import net.dv8tion.jda.api.JDA;
+import io.tunabytes.bytecode.MixinsBootstrap;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -290,12 +290,10 @@ public class SimpleBot {
         Reader reader = Files.newBufferedReader(config.toPath(), StandardCharsets.UTF_8);
         Infos infos = gson.fromJson(reader, Infos.class);
         reader.close();
-        try (FileChannel channel = new RandomAccessFile(config, "rw").getChannel()) {
-            try {
-                channel.tryLock();
-            } catch (OverlappingFileLockException e) {
-                LOGGER.log(Level.SEVERE, "The configuration file is already locked by another process. Please close the other instance of the bot and try again.");
-            }
+        try(RandomAccessFile access = new RandomAccessFile(config, "rw"); FileChannel channel = access.getChannel()) {
+            channel.tryLock();
+        } catch (OverlappingFileLockException e) {
+            LOGGER.log(Level.SEVERE, "The configuration file is already locked by another process. Please close the other instance of the bot and try again.");
         }
         return infos;
     }

@@ -101,8 +101,8 @@ public class TranslateCommand extends Command {
                     .addField(MessageHelper.translateMessage(event, "success.translate.languageTranslation"), MessageHelper.translateMessage(event, language2.languageName), true)
                     .addBlankField(true);
             event.reply(new MessageBuilder(successEmbed.build()).build());
-        } catch (IOException exception) {
-            MessageHelper.sendError(exception, event, this);
+        } catch (IOException e) {
+            MessageHelper.sendError(e, event, this);
         }
     }
 

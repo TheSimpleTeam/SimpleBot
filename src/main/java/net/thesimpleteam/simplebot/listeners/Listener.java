@@ -48,13 +48,16 @@ public class Listener extends ListenerAdapter {
         SimpleBot.getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS); //JDA doesn't want to exit the JVM so we do a System.exit()
     }
 
+    /**
+     * This method is called when we want to save the configs
+     * @throws IOException
+     */
     public static void saveConfigs() throws IOException {
         if (!new File(new File("config/server-config.json").toPath().toUri()).exists())
             new File(new File("config/server-config.json").toPath().toUri()).createNewFile();
         if (SimpleBot.gson.fromJson(Files.newBufferedReader(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8), ServerConfig.class) == SimpleBot.getServerConfig())
             return;
-        Writer writer = Files.newBufferedWriter(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING);
+        Writer writer = Files.newBufferedWriter(new File("config/server-config.json").toPath(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         SimpleBot.gson.toJson(SimpleBot.getServerConfig(), writer);
         writer.close();
         SimpleBot.LOGGER.info("Server config updated");
@@ -78,7 +81,7 @@ public class Listener extends ListenerAdapter {
                 } else {
                     try {
                         event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(SimpleBot.getServerConfig().guildJoinRole().get(event.getGuild().getId()))).queue();
-                    } catch (HierarchyException exception) {
+                    } catch (HierarchyException e) {
                         if (event.getGuild().getOwner() != null) event.getGuild().getOwner().getUser().openPrivateChannel()
                                 .queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(),
                                         "error.listener.onGuildMemberJoin.hierarchyRoles", null, null, null, MessageHelper.getTag(event.getUser()),
@@ -96,16 +99,11 @@ public class Listener extends ListenerAdapter {
                 return;
             }
             try {
-                event.getGuild().getTextChannelById(SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getUser(),
-                                null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin", null, null, event.getMember().getUser().getEffectiveAvatarUrl(),
-                                event.getMember().getEffectiveName(), event.getGuild().getName())
-                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member"),
-                                event.getMember().getAsMention(), false)
-                        .addField(UnicodeCharacters.HEAVY_PLUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberJoin.newMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberJoin.countMember"), event.getGuild().getMemberCount()), false)
+                event.getGuild().getTextChannelById(SimpleBot.getServerConfig().channelMemberJoin().get(event.getGuild().getId())).sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.memberJoin", null, null, event.getMember().getUser().getEffectiveAvatarUrl(), event.getMember().getEffectiveName(), event.getGuild().getName())
+                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.member", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getMember().getAsMention(), false)
+                        .addField(UnicodeCharacters.HEAVY_PLUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.newMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberJoin.countMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
-            } catch (InsufficientPermissionException exception) {
+            } catch (InsufficientPermissionException e) {
                 if (event.getGuild().getOwner() != null) event.getGuild().getOwner().getUser().openPrivateChannel()
                         .queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(),
                                 "error.listener.onGuildMemberJoin.channelMemberJoinHasntPermission", null, null, null, MessageHelper.getTag(event.getUser()),
@@ -126,14 +124,11 @@ public class Listener extends ListenerAdapter {
             }
             try {
                 event.getGuild().getTextChannelById(SimpleBot.getServerConfig().channelMemberLeave().get(event.getGuild().getId())).sendMessage(new MessageBuilder(
-                        MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave", null, null,
-                                        event.getUser().getEffectiveAvatarUrl(), event.getUser().getName(), event.getGuild().getName())
-                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member"), event.getMember().getAsMention(), false)
-                        .addField(UnicodeCharacters.HEAVY_MINUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberLeave.lostMember"), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(),
-                                "success.listener.onGuildMemberLeave.countMember"), event.getGuild().getMemberCount()), false)
+                        MessageHelper.getEmbed(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.memberLeave", null, null, event.getUser().getEffectiveAvatarUrl(), event.getUser().getName(), event.getGuild().getName())
+                        .addField(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "text.listener.member", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getMember().getAsMention(), false)
+                        .addField(UnicodeCharacters.HEAVY_MINUS_SIGN + MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.lostMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), String.format(MessageHelper.translateMessage(event.getUser(), null, event.getGuild(), "success.listener.onGuildMemberLeave.countMember", SimpleBot.getLocalizations().get(SimpleBot.getServerConfig().language().getOrDefault(event.getGuild().getId(), "en")).getAsString()), event.getGuild().getMemberCount()), false)
                         .build()).build()).queue();
-            } catch (InsufficientPermissionException exception) {
+            } catch (InsufficientPermissionException e) {
                 if (event.getGuild().getOwner() != null) {
                     event.getGuild().getOwner().getUser().openPrivateChannel()
                             .queue(privateChannel -> privateChannel.sendMessage(new MessageBuilder(MessageHelper.getEmbed(event.getGuild().getOwner().getUser(), null, event.getGuild(),
@@ -154,9 +149,7 @@ public class Listener extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember()) &&
                 !Objects.equals(getUserFromReferencedMessage(event.getMessage().getReferencedMessage()), event.getJDA().getSelfUser())) {
-            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(),
-                    "success.listener.onGuildMessageReceived.prefix",
-                    null, null, null, SimpleBot.getPrefix(event.getGuild())).build()).build()).queue();
+            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getMessage(), event.getGuild(), "success.listener.onGuildMessageReceived.prefix", null, null, null, SimpleBot.getPrefix(event.getGuild())).build()).build()).queue();
         }
         if (SimpleBot.getServerConfig().prohibitWords() == null) {
             try {
@@ -184,14 +177,11 @@ public class Listener extends ListenerAdapter {
                     highestResult = highestRes;
                 }
             }
-            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "success.listener.onGuildMessageReceived.didYouMean",
-                    null, null, null, SimpleBot.getPrefix(event.getGuild()), cmd).build()).build()).queue();
+            event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getMessage(), event.getGuild(), "success.listener.onGuildMessageReceived.didYouMean", null, null, null, SimpleBot.getPrefix(event.getGuild()), cmd).build()).build()).queue();
         }
         if (!SimpleBot.getServerConfig().prohibitWords().containsKey(event.getGuild().getId()) || (SimpleBot.getServerConfig().prohibitWords().containsKey(event.getGuild().getId()) && (event.getMessage().getContentRaw().toLowerCase().startsWith(String.format("%sprohibitword", SimpleBot.getPrefix(event.getGuild()))) || (event.getMember() != null && event.getMember().isOwner())))) return;
         for (String prohibitedWord : SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId())) {
-            if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage()
-                    .reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getChannel(), event.getGuild(), "error.listener.onGuildMessageReceived.prohibitedWord",
-                            null, null, null, prohibitedWord).build()).build()).queue());
+            if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getMessage(), event.getGuild(), "error.listener.onGuildMessageReceived.prohibitedWord", null, null, null, prohibitedWord).build()).build()).queue());
         }
     }
 }

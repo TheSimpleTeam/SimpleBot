@@ -51,6 +51,11 @@ public enum DiscordFormatUtils {
         this.reverse = reverse;
     }
 
+    /**
+     * @param text the text
+     * @param _format the format
+     * @return the formatted text
+     */
     public static String formatText(String text, DiscordFormatUtils _format) {
         String t = _format.format + text;
         return _format.reverse ? t : t + new StringBuilder(_format.format).reverse();
@@ -58,9 +63,9 @@ public enum DiscordFormatUtils {
 
     /**
      * This function should be used only if you want to format your text with {@link DiscordFormatUtils#MULTILINE_CODE_BLOCK}
-     * @param text Your text
-     * @param language The programming language
-     * @return The formatted text
+     * @param text the text
+     * @param language the programming language
+     * @return the formatted text
      * @see <a href="https://highlightjs.org/static/demo/">List of programming languages supported by the syntax highlighting</a>
      */
     public static String formatMultilineCodeBlock(String text, String language) {

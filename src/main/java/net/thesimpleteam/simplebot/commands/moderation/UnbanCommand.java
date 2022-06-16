@@ -30,7 +30,7 @@ public class UnbanCommand extends Command {
             return;
         }
         if(args[0].replaceAll("\\D+", "").isEmpty()){
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null, (Object[]) null).build()).build());
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.IDNull", null, null, null).build()).build());
             return;
         }
         SimpleBot.getJda().retrieveUserById(args[0].replaceAll("\\D+", "")).queue(user -> event.getGuild().retrieveBanList().queue(banList -> {
@@ -42,6 +42,6 @@ public class UnbanCommand extends Command {
                 return;
             }
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.unban", null, null, null, user.getName()).build()).build());
-        }), userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null, (Object[]) null).build()).build()));
+        }), userNull -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.userNull", null, null, null).build()).build()));
     }
 }

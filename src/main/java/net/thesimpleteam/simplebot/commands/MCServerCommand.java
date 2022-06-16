@@ -27,23 +27,23 @@ public class MCServerCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String[] args = event.getArgs().split("\\s+");
-        if(args.length != 1) {
+        if(args[0] != null && args[0].isEmpty()) {
             MessageHelper.syntaxError(event, this, "information.mcServer");
             return;
         }
         try {
-            if (!SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class).get("online").getAsBoolean()) {
-                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.mcServer.offlineServer", null, null, null, (Object[]) null).build()).build());
+            if (!SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest(new StringBuilder().append("https://api.mcsrvstat.us/2/").append(args[0]).toString())), JsonObject.class).get("online").getAsBoolean()) {
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.mcServer.offlineServer", null, null, null).build()).build());
                 return;
             }
             JsonObject serverInformation = SimpleBot.gson.fromJson(RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.mcsrvstat.us/2/" + args[0])), JsonObject.class);
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.mcServer.success", null, null, null, (Object[]) null)
+            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.mcServer.success", null, null, null)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.ipAdress"), serverInformation.get("ip").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.port"), serverInformation.get("port").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.version"), serverInformation.get("version").getAsString(), false)
                     .addField(MessageHelper.translateMessage(event, "success.mcServer.connectedPlayers"), String.valueOf(serverInformation.get("players").getAsJsonObject().get("online").getAsInt()), false).build()).build());
-        } catch (IOException exception) {
-            MessageHelper.sendError(exception, event, this);
+        } catch (IOException e) {
+            MessageHelper.sendError(e, event, this);
         }
     }
 }

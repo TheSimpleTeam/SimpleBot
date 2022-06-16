@@ -4,7 +4,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
     id 'com.bmuschko.docker-java-application' version '7.3.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
 }
 
@@ -53,12 +53,12 @@ dependencies {
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:ab05b178ae'
     //ByteCode
-    implementation 'net.bytebuddy:byte-buddy:1.12.8'
+    implementation 'net.bytebuddy:byte-buddy:1.12.9'
     //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
-    implementation('com.caoccao.javet:javet:1.1.2')
+    implementation('com.caoccao.javet:javet:1.1.4')
     implementation 'org.python:jython-standalone:2.7.2'
     //CLI
     implementation 'commons-cli:commons-cli:1.5.0'
@@ -76,13 +76,13 @@ dependencies {
     implementation 'com.github.TheSimpleTeam:Spiget:master-SNAPSHOT'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation("com.google.guava:guava:31.1-jre")
-    implementation group: 'org.kohsuke', name: 'github-api', version: '1.135'
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.306'
     implementation 'org.jsoup:jsoup:1.14.3'
-    implementation "org.mariuszgromada.math:MathParser.org-mXparser:4.4.2"
+    implementation "org.mariuszgromada.math:MathParser.org-mXparser:5.0.3"
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
     implementation 'org.fusesource.jansi:jansi:2.4.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }

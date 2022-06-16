@@ -6,49 +6,40 @@ package net.thesimpleteam.simplebot.utils;
 public class LevenshteinDistance {
 
     public static int computeEditDistance(String s1, String s2) {
-        s1 = s1.toLowerCase();
-        s2 = s2.toLowerCase();
-
         int[] costs = new int[s2.length() + 1];
         for (int i = 0; i <= s1.length(); i++) {
             int lastValue = i;
             for (int j = 0; j <= s2.length(); j++) {
-                if (i == 0) {
+                if (i == 0)
                     costs[j] = j;
-                } else {
+                else {
                     if (j > 0) {
                         int newValue = costs[j - 1];
-                        if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
-                            newValue = Math.min(Math.min(newValue, lastValue),
-                                    costs[j]) + 1;
+                        if (s1.toLowerCase().charAt(i - 1) != s2.toLowerCase().charAt(j - 1)) {
+                            newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
                         }
                         costs[j - 1] = lastValue;
                         lastValue = newValue;
                     }
                 }
             }
-            if (i > 0) {
-                costs[s2.length()] = lastValue;
-            }
+            if (i > 0)
+                costs[s2.toLowerCase().length()] = lastValue;
         }
-        return costs[s2.length()];
+        return costs[s2.toLowerCase().length()];
     }
 
     public static double getDistance(String s1, String s2) {
         double similarityOfStrings;
-        int editDistance;
         if (s1.length() < s2.length()) { // s1 should always be bigger
             String swap = s1;
             s1 = s2;
             s2 = swap;
         }
-        int bigLen = s1.length();
-        editDistance = computeEditDistance(s1, s2);
-        if (bigLen == 0) {
+        if (s1.length() == 0)
             similarityOfStrings = 1.0; /* both strings are zero length */
-        } else {
-            similarityOfStrings = (bigLen - editDistance) / (double) bigLen;
-        }
+        else
+            similarityOfStrings = (s1.length() - computeEditDistance(s1, s2)) / (double) s1.length();
         return similarityOfStrings;
     }
 }

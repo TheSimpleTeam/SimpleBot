@@ -2,6 +2,7 @@ package net.thesimpleteam.simplebot.commands.moderation;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.dv8tion.jda.api.Permission;
@@ -42,6 +43,6 @@ public class PurgeCommand extends Command {
             return;
         }
         event.getTextChannel().getHistory().retrievePast(clearMessages).queue(messages -> event.getTextChannel().purgeMessages(messages));
-        event.reply(MessageHelper.formattedMention(event.getAuthor()) + String.format(MessageHelper.translateMessage(event, "success.purge"), clearMessages), messageSuccess -> messageSuccess.delete().queueAfter(10, TimeUnit.SECONDS));
+        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.purge", null, null, null, clearMessages)).build());
     }
 }

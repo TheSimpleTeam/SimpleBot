@@ -3,6 +3,7 @@ package net.thesimpleteam.simplebot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
+import net.thesimpleteam.simplebot.utils.MathUtils;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.thesimpleteam.simplebot.utils.UnicodeCharacters;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -38,8 +39,8 @@ public class MathsCommand extends Command {
                 mXparser.disableCanonicalRounding();
                 mXparser.disableUlpRounding();
                 for (char c : args[0].toCharArray()) {
-                    if (Objects.equals(UnicodeCharacters.getAllExponentsCharacters(), c)) {
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
+                    if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
                         return;
                     }
                 }
@@ -48,10 +49,11 @@ public class MathsCommand extends Command {
                         MessageHelper.syntaxError(event, this, "information.maths");
                         return;
                     }
+                    System.out.println(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).getErrorMessage());
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).build()).build());
                     return;
                 }
-                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null, (Object[]) null)
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null)
                         .addField(MessageHelper.translateMessage(event, "success.maths.calculate.mathematicalExpression"), calculateReplaceArgs(args[0].replaceAll("\\s+", "")), false)
                         .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false)
                         .build()).build());
@@ -63,15 +65,15 @@ public class MathsCommand extends Command {
                         mXparser.disableCanonicalRounding();
                         mXparser.disableUlpRounding();
                         for (char c : args[1].toCharArray()) {
-                            if (Objects.equals(UnicodeCharacters.getAllExponentsCharacters(), c)) {
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null, (Object[]) null).build()).build());
+                            if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
                             }
                         }
                         if (!new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).checkSyntax()) {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).build()).build());
                             return;
                         }
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null, (Object[]) null)
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null)
                                 .addField(MessageHelper.translateMessage(event, "success.maths.calculate.mathematicalExpression"), calculateReplaceArgs(args[1].replaceAll("\\s+", "")), false)
                                 .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false)
                                 .build()).build());
@@ -81,29 +83,26 @@ public class MathsCommand extends Command {
             }
             case 3 -> {
                 switch (args[0].toLowerCase(Locale.ROOT)) {
-                    case "primenumber" -> { //Verify if a number is a prime number or make a list of all prime numbers up to the specified number
+                    case "primenumber" -> {
                         long number;
-                        if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
-                            if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
+                        if (MathUtils.isIntegerNumber(args[2]))
+                            number = Long.parseLong(args[2].split("\\.")[0]);
+                        else if (new Expression(args[2]).checkSyntax()){
+                            if(MathUtils.isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
+                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
-                        } else if (new Expression(args[2]).checkSyntax()){
-                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                if(notIntegerNumberTooLargeWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                    number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
-                                } else return;
-                            } else return;
                         } else {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
                             return;
                         }
                         switch (args[1]) {
-                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, numberIsPrime(number) ? "success.maths.primeNumber.isPrime" : "error.maths.primeNumber.isNotPrime", null, null, null, number).build()).build());
+                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, MathUtils.numberIsPrime(number) ? "success.maths.primeNumber.isPrime" : "error.maths.primeNumber.isNotPrime", null, null, null, number).build()).build());
                             case "list" -> {
                                 //TODO optimize that if possible
                                 StringBuilder listBuilder = new StringBuilder();
                                 List<String> primeNumberList = new ArrayList<>();
                                 for (long i = 2; i <= number; i++) {
-                                    if (numberIsPrime(i)) primeNumberList.add(String.valueOf(i));
+                                    if (MathUtils.numberIsPrime(i)) primeNumberList.add(String.valueOf(i));
                                 }
                                 if(primeNumberList.isEmpty()){
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.primeNumber.list.error", null, null, null, number).build()).build());
@@ -113,7 +112,8 @@ public class MathsCommand extends Command {
                                     listBuilder.append(string).append(", ");
                                 }
                                 if(listBuilder.toString().length() >= 4096) {
-                                    while (listBuilder.toString().length() > 4096 - 3) { //We subtract 3 because we add that string "..." into the listBuilder
+                                    //We subtract 3 because we add that string "..." into the listBuilder
+                                    while (listBuilder.toString().length() > 4096 - 3) {
                                         primeNumberList.remove(0);
                                         listBuilder = new StringBuilder();
                                         for (String string : primeNumberList) {
@@ -126,28 +126,25 @@ public class MathsCommand extends Command {
                             }
                         }
                     }
-                    case "perfectnumber" -> { //Verify if a number is a perfect number or make a list of all perfect numbers up to the specified number
+                    case "perfectnumber" -> {
                         long number;
-                        if (isIntegerNumber(args[2])) { //Verify if the arg is a number, else if it's an expression, else is not a valid arg. We need to overlay these if because all these boolean functions (isAnNumber, isAnIntegerNumber, notNumberTooLarge) return an embed error if any of these boolean functions return false.
-                            if (notIntegerNumberTooLargeWithEmbed(event, args[2])) number = Long.parseLong(args[2]);
+                        if (MathUtils.isIntegerNumber(args[2]))
+                            number = Long.parseLong(args[2].split("\\.")[0]);
+                        else if (new Expression(args[2]).checkSyntax()){
+                            if(MathUtils.isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
+                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
-                        } else if (new Expression(args[2]).checkSyntax()){
-                            if(isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                if(notIntegerNumberTooLargeWithEmbed(event, String.valueOf(new Expression(args[2]).calculate()))){
-                                    number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()));
-                                } else return;
-                            } else return;
                         } else {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
                             return;
                         }
                         switch (args[1]) {
-                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, numberIsPerfect(number) ? "success.maths.perfectNumber.isPerfect" : "error.maths.perfectNumber.isNotPerfect", null, null, null, number).build()).build());
+                            case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, MathUtils.numberIsPerfect(number) ? "success.maths.perfectNumber.isPerfect" : "error.maths.perfectNumber.isNotPerfect", null, null, null, number).build()).build());
                             case "list" -> {
                                 StringBuilder listBuilder = new StringBuilder();
                                 List<String> perfectNumberList = new ArrayList<>();
                                 for (long i = 2; i <= number; i++) {
-                                    if (numberIsPerfect(i)) perfectNumberList.add(String.valueOf(i));
+                                    if (MathUtils.numberIsPerfect(i)) perfectNumberList.add(String.valueOf(i));
                                 }
                                 if(perfectNumberList.isEmpty()){
                                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.primeNumber.list.error", null, null, null, number).build()).build());
@@ -184,32 +181,28 @@ public class MathsCommand extends Command {
                                 }
                             }
                         }
-                        try {
-                            double number = Double.parseDouble(args[1].replace(',', '.'));
-                            Unit unit1 = null;
-                            Unit unit2 = null;
-                            for (Unit units : Unit.values()) {
-                                if (units.name().equals(args[2])) {
-                                    unit1 = units;
-                                }
-                                if (units.name().equals(args[3])) {
-                                    unit2 = units;
-                                }
+                        if(!MathUtils.isParsableDouble(event, args[1].replace(',', '.'))) return;
+                        double number = Double.parseDouble(args[1].replace(',', '.'));
+                        Unit unit1 = null;
+                        Unit unit2 = null;
+                        for (Unit unit : Unit.values()) {
+                            if (unit.name().equals(args[2])) {
+                                unit1 = unit;
                             }
-                            if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType){
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null, (Object[]) null)).build());
-                                return;
+                            if (unit.name().equals(args[3])) {
+                                unit2 = unit;
                             }
-                            String factor = String.valueOf(unit1.factor / unit2.factor);
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null, (Object[]) null)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * Double.parseDouble(factor)).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), factor.replace("E", "x10^"), false)
-                                    .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
-                                    .build()).build());
-                        } catch (NumberFormatException ignore) {
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnNumber", null, null, null, args[1]).build()).build());
                         }
+                        if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType){
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null)).build());
+                            return;
+                        }
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), String.valueOf(unit1.factor / unit2.factor).replace("E", "x10^"), false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
+                                .build()).build());
                     }
                     default -> MessageHelper.syntaxError(event, this, "information.maths");
                 }
@@ -218,6 +211,10 @@ public class MathsCommand extends Command {
         }
     }
 
+    /**
+     * @param calculation the calculation
+     * @return the calculation with the replaced characters
+     */
     public static String calculateReplaceArgs(String calculation) {
         StringBuilder builder = new StringBuilder();
         for (char c : calculation.toCharArray()) {
@@ -225,99 +222,11 @@ public class MathsCommand extends Command {
                 case '₋' -> builder.append('-');
                 case '₊' -> builder.append('+');
                 case '÷' -> builder.append('/');
-                case ',' -> builder.append('.');
                 case 'x', '×' -> builder.append('*');
                 default -> builder.append(c);
             }
         }
         return builder.toString();
-    }
-
-    public static boolean notIntegerNumberTooLargeWithEmbed(CommandEvent event, String integerNumber) {
-        try {
-            Long.parseLong(integerNumber);
-            return true;
-        } catch (NumberFormatException exception) {
-            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, integerNumber).build()).build());
-            return false;
-        }
-    }
-
-    public static boolean notIntegerNumberTooLarge(String integerNumber) {
-        try {
-            Long.parseLong(integerNumber);
-            return true;
-        } catch (NumberFormatException exception) {
-            return false;
-        }
-    }
-
-    public static boolean isIntegerNumberWithEmbed(CommandEvent event, String string) {
-        if (string.chars().allMatch(Character::isDigit)) return true;
-        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.notAnIntegerNumber", null, null, null, string).build()).build());
-        return false;
-    }
-
-    public static boolean isIntegerNumber(String string) {
-        return string.chars().allMatch(Character::isDigit);
-    }
-
-    public static boolean numberIsPrime(long number) {
-        if (number <= 1) return false;
-        for (long i = 2; i <= Math.sqrt(number); i++) {
-            if (number % i == 0) return false;
-        }
-        return true;
-    }
-
-    public static boolean numberIsPerfect(long number) {
-        if (number <= 1) return false;
-        return longListSum(getDivisorsWithoutNumber(number)) == number;
-    }
-
-    public static List<Long> getDivisorsWithoutNumber(long number){
-        List<Long> divisors = new ArrayList<>();
-        for(long divisor = 1; divisor < number; divisor++){
-            if(number % divisor == 0) divisors.add(divisor);
-        }
-        return divisors;
-    }
-
-    public static long longListSum(List<Long> longList){
-        long longListSum = 0;
-        for(long longNumber : longList){
-            longListSum += longNumber;
-        }
-        return longListSum;
-    }
-
-    /**
-     * @param specifiedTime the time specified in for example TempbanCommand like 37d or 2086min
-     * @return a String explaining in how much years, month, weeks, days, hours, minutes or seconds
-     */
-    public static String dateTime(String specifiedTime, CommandEvent event) {
-        StringBuilder stringBuilder = new StringBuilder();
-        double time = Arrays.stream(Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
-        int differentUnitsUsed = 0;
-        for(Date date : Date.values()){
-            if(time / date.factor >= 1){
-                differentUnitsUsed++;
-                time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
-            }
-        }
-        time = Arrays.stream(Date.values()).filter(date -> date.name().equals(specifiedTime.replaceAll("\\d+", ""))).findFirst().get().factor * Double.parseDouble(specifiedTime.replaceAll("\\D+", ""));
-        int unitsUsedCount = 0;
-        for(Date date : Date.values()) {
-            if (time / date.factor >= 1){
-                stringBuilder.append((int) Math.floor(time / date.factor)).append(" ").append(time / date.factor >= 2 ? MessageHelper.translateMessage(event, date.dateTimeStringPlural) : MessageHelper.translateMessage(event, date.dateTimeStringSingular));
-                if(differentUnitsUsed > 1) {
-                    unitsUsedCount++;
-                    stringBuilder.append((unitsUsedCount + 1) == differentUnitsUsed ? new StringBuilder().append(MessageHelper.translateMessage(event, "text.maths.date.and")) : (unitsUsedCount + 1) > differentUnitsUsed ? "" : ", ");
-                    time = Math.floor(((time / date.factor) - Math.floor(time / date.factor)) * date.factor);
-                }
-            }
-        }
-        return stringBuilder.toString();
     }
 
     public enum Unit {

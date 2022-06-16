@@ -83,15 +83,6 @@ public class Eval {
         }
     }
 
-    /**
-     * @deprecated {@link Eval#getV8Runtime()}
-     * @return GraalJS's Script Engine
-     */
-    @Deprecated
-    public ScriptEngine getEngine() {
-        return engine;
-    }
-
     public V8Runtime getV8Runtime() {
         return v8Runtime;
     }

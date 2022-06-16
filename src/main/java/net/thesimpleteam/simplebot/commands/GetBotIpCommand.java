@@ -2,6 +2,7 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.thesimpleteam.simplebot.utils.RequestHelper;
@@ -23,7 +24,7 @@ public class GetBotIpCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         try {
-            event.replyInDm(String.format(MessageHelper.translateMessage(event, "success.getBotIp"), RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.ipify.org/"))));
+            event.replyInDm(new MessageBuilder(MessageHelper.getEmbed(event, "success.getBotIp", null, null, null, RequestHelper.getResponseAsString(RequestHelper.sendRequest("https://api.ipify.org/")))).build());
         } catch (IOException ex) {
             MessageHelper.sendError(ex, event, this);
         }

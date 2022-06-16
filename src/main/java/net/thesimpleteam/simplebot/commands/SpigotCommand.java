@@ -59,20 +59,20 @@ public class SpigotCommand extends Command {
         if(args[0].chars().allMatch(Character::isDigit)) { //Search for plugin with an ID
             try {
                 Resource plugin = new Resource(Integer.parseInt(args[0]));
-                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.spigot.pluginID.success", null, null, plugin.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : plugin.getResourceIconLink().toString(), (Object[]) null)
+                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.spigot.pluginID.success", null, null, plugin.getResourceIconLink() == null ? "https://static.spigotmc.org/styles/spigot/xenresource/resource_icon.png" : plugin.getResourceIconLink().toString())
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginName"), plugin.getResourceName(), false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginLink"), plugin.getResourceLink(), false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.pluginID"), args[0], false)
                         .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.downloads"), String.valueOf(plugin.getDownloads()), false)
-                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.getDescription(plugin.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", "")), false)
+                        .addField(MessageHelper.translateMessage(event, "success.spigot.pluginID.description"), MessageHelper.stringShortener(plugin.getDescription().replaceAll(".SpoilerTarget\">Spoiler:", ""), 1024), false)
                         .build()).build());
-            } catch (IOException exception) {
-                if(exception instanceof FileNotFoundException) {
+            } catch (IOException e) {
+                if(e instanceof FileNotFoundException) {
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.spigot.pluginID.pluginNull", null, null, null, args[0]).build()).build());
                     return;
                 }
-                MessageHelper.sendError(exception, event, this);
-            } catch (NumberFormatException exception){
+                MessageHelper.sendError(e, event, this);
+            } catch (NumberFormatException e){
                 event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.commands.numberTooLarge", null, null, null, args[0]).build()).build());
             }
         } else {
@@ -85,18 +85,18 @@ public class SpigotCommand extends Command {
                         embedBuilder.addField(author.getName(), String.format("https://www.spigotmc.org/resources/authors/%s.%o/", author.getName(), author.getId()), true);
                     }
                     event.reply(new MessageBuilder(embedBuilder.build()).build());
-                } catch (IOException exception){
-                    if(exception instanceof FileNotFoundException) {
+                } catch (IOException e){
+                    if(e instanceof FileNotFoundException) {
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.spigot.user", null, null, null, args[1]).build()).build());
                         return;
                     }
-                    MessageHelper.sendError(exception, event, this);
+                    MessageHelper.sendError(e, event, this);
                 }
             } else {
                 //Search for plugin with his name
                 try {
                     List<Resource> resources = Resource.getResourcesByName(event.getArgs());
-                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, resources.size() == 1 ? "success.spigot.pluginName.success.singular" : "success.spigot.pluginName.success.plural", null, null, "https://static.spigotmc.org/img/spigot.png", (Object[]) null);
+                    EmbedBuilder embedBuilder = MessageHelper.getEmbed(event, resources.size() == 1 ? "success.spigot.pluginName.success.singular" : "success.spigot.pluginName.success.plural", null, null, "https://static.spigotmc.org/img/spigot.png");
                     for (Resource resource : resources) {
                         embedBuilder.addField(resource.getResourceName(), resource.getResourceLink(), true);
                     }

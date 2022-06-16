@@ -47,35 +47,32 @@ public class SnippetCommand extends Command {
         this.aliases = new String[]{"gist", "paste", "carbon", "sn"};
         this.cooldown = 5;
         this.help = "help.snippet";
-        this.example = """
-                ```public static void main(String[] args){
-                  System.out.println("Hello World");
-                }```""";
+        this.example = "example.snippet";
         this.arguments = "arguments.snippet";
         this.category = CommandCategories.MISC.category;
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        if(event.getArgs().isEmpty()){
+        if(event.getArgs().isEmpty() || !event.getArgs().startsWith("```")){
             MessageHelper.syntaxError(event, this, null);
             return;
         }
-        ImageOptions.Language language = ImageOptions.Language.Auto;
-        if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format) && getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, "")) != ImageOptions.Language.Auto) {
-            language = getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
-        }
+        ImageOptions.Language language = getLanguage(event.getArgs().split("\n")[0].replaceAll(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format, ""));
         List<String> list = new LinkedList<>(Arrays.asList(event.getArgs().split("\n")));
         list.remove(0);
         list.remove(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format);
-        final ImageOptions options = new ImageOptions.ImageOptionsBuilder()
+        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.commands.takeTime", null, null, null).build()).build()).queue(warningTakeTimeMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), new ImageOptions.ImageOptionsBuilder()
                 .language(language)
                 .fontFamily(ImageOptions.FontFamily.JetBrainsMono)
                 .theme(ImageOptions.Theme.NightOwl)
-                .build();
-        event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event, "warning.snippet", null, null, null, (Object[]) null).build()).build()).queue(warningTakeTooLongMessage -> event.getMessage().reply(carbon.getImage(String.join("\n", list), options), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTooLongMessage.delete().queue()));
+                .build()), "code.png").mentionRepliedUser(true).queue(unused -> warningTakeTimeMessage.delete().queue()));
     }
 
+    /**
+     * @param language the language
+     * @return the language from ImageOptions enum
+     */
     private ImageOptions.Language getLanguage(String language) {
         for (ImageOptions.Language value : ImageOptions.Language.values()) {
             switch (language.toLowerCase()) {
