@@ -22,32 +22,8 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.plugin;
+package net.thesimpleteam.pluginapi.socket;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
-import net.thesimpleteam.pluginapi.plugins.BasePlugin;
-import net.thesimpleteam.pluginapi.plugins.Plugin;
-
-@Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
-
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
-        }
-    }
-
-    @Override
-    public void onEnable() {
-        getLogger().info("Enabled");
-        getLoader().addListener(this, this);
-    }
-
-    @Override
-    public void onDisable() {
-        getLogger().info("Disabled");
-    }
+public interface SocketMessageListener {
+    void onMessage(SocketMessage message);
 }

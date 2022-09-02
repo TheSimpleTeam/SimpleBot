@@ -22,13 +22,20 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.loader;
+package net.thesimpleteam.pluginapi.plugins;
 
-import java.nio.file.Path;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class Main {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Plugin {
 
-    public static void main(String[] args) {
-        new PluginLoader(Path.of("").toAbsolutePath()).start();
-    }
+    String name();
+    String version();
+    String author();
+    String website() default "https://example.com";
+    String description() default "A plugin";
 }

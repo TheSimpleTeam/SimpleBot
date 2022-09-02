@@ -22,49 +22,6 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi;
+package net.thesimpleteam.pluginapi.event;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-
-public abstract class BasePlugin implements Serializable {
-
-    public static final long serialVersionUID = 112410L;
-    private transient IPluginLoader loader;
-    private static transient Logger logger;
-
-    protected BasePlugin() {
-        logger = Logger.getLogger(getClass().getName());
-    }
-
-    public String getName() {
-        return getClass().getAnnotation(Plugin.class).name();
-    }
-
-    public String getVersion() {
-        return getClass().getAnnotation(Plugin.class).version();
-    }
-
-    public String getAuthor() {
-        return getClass().getAnnotation(Plugin.class).author();
-    }
-
-    public String getWebsite() {
-        return getClass().getAnnotation(Plugin.class).website();
-    }
-
-    public static Logger getLogger() {
-        return logger;
-    }
-
-    public Plugin getAnnotation() {
-        return getClass().getAnnotation(Plugin.class);
-    }
-
-    public abstract void onEnable();
-    public abstract void onDisable();
-
-    public IPluginLoader getLoader() {
-        return loader;
-    }
-}
+public interface Listener {}

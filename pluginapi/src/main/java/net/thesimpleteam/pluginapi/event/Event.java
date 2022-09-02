@@ -22,32 +22,19 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.plugin;
+package net.thesimpleteam.pluginapi.event;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.pluginapi.plugins.BasePlugin;
-import net.thesimpleteam.pluginapi.plugins.Plugin;
 
-@Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
+import java.io.Serializable;
 
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
-        }
-    }
+public abstract class Event implements Serializable {
 
-    @Override
-    public void onEnable() {
-        getLogger().info("Enabled");
-        getLoader().addListener(this, this);
-    }
+    public static final long serialVersionUID = -17712456L;
 
-    @Override
-    public void onDisable() {
-        getLogger().info("Disabled");
+    private transient BasePlugin plugin;
+
+    public BasePlugin getPlugin() {
+        return plugin;
     }
 }

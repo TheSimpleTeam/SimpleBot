@@ -22,19 +22,13 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi.event;
+package net.thesimpleteam.pluginapi.event;
 
-import fr.thesimpleteam.pluginapi.BasePlugin;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.io.Serializable;
-
-public abstract class Event implements Serializable {
-
-    public static final long serialVersionUID = -17712456L;
-
-    private transient BasePlugin plugin;
-
-    public BasePlugin getPlugin() {
-        return plugin;
-    }
-}
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface EventHandler { }

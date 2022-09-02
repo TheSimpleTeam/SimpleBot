@@ -1,4 +1,5 @@
 {
+  "help.plugins": "Idk ratio",
   "arguments.ban": "\u003cmember\u0027s ID/mention\u003e \u003cdays\u003e [reason]",
   "arguments.calculate": "\u003cnumber\u003e \u003coperator\u003e (Follow this pattern)",
   "arguments.config": "\u003cjoinrole\u003e \u003cchannel\u0027s ID/mention/reset\u003e²\u003clocalization\u003e \u003cen/fr\u003e²\u003csetprefix\u003e \u003creset/prefix\u003e²\u003cchannelmember\u003e \u003cjoin/leave\u003e \u003cchannel\u0027s ID/mention/reset/this\u003e²\u003cprohibitword\u003e \u003cadd/remove/reset\u003e \u003cword\u003e",

@@ -10,7 +10,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import fr.simpleteam.simplebot.api.Server;
 import net.dv8tion.jda.api.JDA;
-import io.tunabytes.bytecode.MixinsBootstrap;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -75,7 +74,6 @@ public class SimpleBot {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Is in dev mode :" + isInDevMode());
         executorService = Executors.newScheduledThreadPool(6);
-        MixinsBootstrap.init(false);
         try {
             String arg = "";
             try {
@@ -149,7 +147,7 @@ public class SimpleBot {
         } else {
             LOGGER.warning("Console is not interactive. CLI Commands will be disabled!");
         }
-        executorService.schedule(PluginService::startPluginLoader, 2, TimeUnit.SECONDS);
+        executorService.execute(PluginService::startPluginLoader);
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot bot) {

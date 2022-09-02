@@ -22,37 +22,44 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi.event;
+package net.thesimpleteam.pluginapi.socket;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
-public class MessageReceiveEvent extends Event implements Serializable {
+public class SocketMessage implements Serializable {
 
-    public static final long serialVersionUID = -177124568L;
+    public static final long serialVersionUID = -44454884056L;
 
     private final String message;
-    private final String authorName;
-    private final String channelId;
+    private final Serializable object;
+    private final MessageType messageType;
 
-    public MessageReceiveEvent(String message, String authorName, String channelId) {
-        this.message = message;
-        this.authorName = authorName;
-        this.channelId = channelId;
+    public SocketMessage(MessageType messageType) {
+        this(messageType, null);
     }
 
-    public void reply(String message) {
-        this.getPlugin().getLoader().reply(message, channelId);
+    public SocketMessage(@NotNull MessageType messageType, @Nullable Serializable object) {
+        this(object == null ? null : object.toString(), object, messageType);
+    }
+
+    public SocketMessage(String message, Serializable object, MessageType messageType) {
+        this.message = message;
+        this.object = object;
+        this.messageType = messageType;
+    }
+
+    public @NotNull MessageType getMessageType() {
+        return messageType;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public String getChannelId() {
-        return channelId;
-    }
-
-    public String getAuthorName() {
-        return authorName;
+    public <T extends Serializable> T getObject(Class<T> clazz) {
+        return clazz.cast(object);
     }
 }

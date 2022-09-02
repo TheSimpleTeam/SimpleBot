@@ -2,7 +2,6 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.typesafe.config.ConfigException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.SimpleBot;
@@ -21,13 +20,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RequireConfig("botGithubToken")
 public class GithubCommand extends Command {
 
     private final GitHub github;
+    private final Map<String, Map<String, String>> colorMap;
 
     public GithubCommand() throws IOException {
         this.name = "github";
@@ -36,8 +35,15 @@ public class GithubCommand extends Command {
         this.category = CommandCategories.MISC.category;
         this.help = "help.github";
         this.example = "search PufferTeam SuperPack";
-        this.aliases = new String[]{"ghub","gith","gh"};
+        this.aliases = new String[]{"git","gh"};
         this.github = new GitHubBuilder().withOAuthToken(SimpleBot.getInfos().botGithubToken()).build();
+        Map<String, Map<String, String>> colorMap1;
+        try {
+            colorMap1 = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
+        } catch (IOException e) {
+            colorMap1 = Collections.emptyMap();
+        }
+        colorMap = colorMap1;
     }
 
     @Override
@@ -125,13 +131,7 @@ public class GithubCommand extends Command {
      * @return the language's color
      */
     private Color getColor(String language) {
-        try {
-            Map<String, Map<String, String>> lang = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
-            return language == null ? Color.RED : Color.getColor(String.valueOf(getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"))));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Color.RED;
-        }
+        return language == null || colorMap.isEmpty() ? Color.RED : Color.getColor(String.valueOf(getDecimal(colorMap.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"))));
     }
 
     /**

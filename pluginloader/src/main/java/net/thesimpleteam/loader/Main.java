@@ -22,39 +22,13 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi.socket;
+package net.thesimpleteam.loader;
 
-import java.io.Serializable;
+import java.nio.file.Path;
 
-public class SocketMessage implements Serializable {
+public class Main {
 
-    public static final long serialVersionUID = -44454884056L;
-
-    private final String message;
-    private final Object object;
-    private final MessageType messageType;
-
-    public SocketMessage(Object message, MessageType messageType) {
-        this.message = message.toString();
-        this.object = message;
-        this.messageType = messageType;
-    }
-
-    public SocketMessage(String message, Object object, MessageType messageType) {
-        this.message = message;
-        this.object = object;
-        this.messageType = messageType;
-    }
-
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Object getObject() {
-        return object;
+    public static void main(String[] args) {
+        new PluginLoader(Path.of("").toAbsolutePath()).start();
     }
 }

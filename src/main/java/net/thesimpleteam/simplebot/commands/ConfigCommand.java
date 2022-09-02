@@ -3,26 +3,24 @@ package net.thesimpleteam.simplebot.commands;
 import com.google.gson.JsonObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.config.ServerConfig;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.listeners.Listener;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.GuildChannel;
 
-import javax.management.ReflectionException;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class ConfigCommand extends Command {
 
@@ -31,7 +29,7 @@ public class ConfigCommand extends Command {
         this.cooldown = 5;
         this.help = "help.config";
         this.example = "example.config";
-        this.aliases = new String[]{"cf", "parameter", "par"};
+        this.aliases = new String[]{"cf", "settings", "conf"};
         this.arguments = "arguments.config";
         this.category = CommandCategories.UTILITY.category;
         this.guildOnly = true;

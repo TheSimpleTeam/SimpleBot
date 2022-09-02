@@ -22,32 +22,49 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.plugin;
+package net.thesimpleteam.pluginapi.plugins;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
-import net.thesimpleteam.pluginapi.plugins.BasePlugin;
-import net.thesimpleteam.pluginapi.plugins.Plugin;
+import java.io.Serializable;
+import java.util.logging.Logger;
 
-@Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
+public abstract class BasePlugin implements Serializable {
 
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
-        }
+    public static final long serialVersionUID = 112410L;
+    private transient IPluginLoader loader;
+    private static transient Logger logger;
+
+    protected BasePlugin() {
+        logger = Logger.getLogger(getClass().getName());
     }
 
-    @Override
-    public void onEnable() {
-        getLogger().info("Enabled");
-        getLoader().addListener(this, this);
+    public String getName() {
+        return getClass().getAnnotation(Plugin.class).name();
     }
 
-    @Override
-    public void onDisable() {
-        getLogger().info("Disabled");
+    public String getVersion() {
+        return getClass().getAnnotation(Plugin.class).version();
+    }
+
+    public String getAuthor() {
+        return getClass().getAnnotation(Plugin.class).author();
+    }
+
+    public String getWebsite() {
+        return getClass().getAnnotation(Plugin.class).website();
+    }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public Plugin getAnnotation() {
+        return getClass().getAnnotation(Plugin.class);
+    }
+
+    public abstract void onEnable();
+    public abstract void onDisable();
+
+    public IPluginLoader getLoader() {
+        return loader;
     }
 }

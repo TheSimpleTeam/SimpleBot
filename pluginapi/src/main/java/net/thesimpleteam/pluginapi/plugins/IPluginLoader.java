@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi;
+package net.thesimpleteam.pluginapi.plugins;
 
-import fr.thesimpleteam.pluginapi.event.Event;
-import fr.thesimpleteam.pluginapi.event.Listener;
+import net.thesimpleteam.pluginapi.event.Event;
+import net.thesimpleteam.pluginapi.event.Listener;
 
 public interface IPluginLoader {
 

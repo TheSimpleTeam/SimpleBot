@@ -10,7 +10,6 @@ public class TestCommand extends Command {
         this.help = "help.test";
         this.cooldown = 5;
         this.name = "test";
-        this.aliases = new String[]{"t", "te", "tes"};
         this.ownerCommand = true;
         this.hidden = true;
     }

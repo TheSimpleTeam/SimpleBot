@@ -22,23 +22,11 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi.socket;
+package net.thesimpleteam.pluginapi.exceptions;
 
-import java.io.Serializable;
+public class NotImplementedException extends RuntimeException {
 
-public enum MessageType implements Serializable {
-
-    // Client (Simple Bot) -> Server (Plugin Loader)
-
-    TRIGGER_EVENT,
-    SHUTDOWN,
-
-    // Server (Plugin Loader) -> Client (Simple Bot)
-
-    LOG_MESSAGE,
-    REPLY,
-
-    ;
-
-    public static final long serialVersionUID = -112410L;
+    public NotImplementedException() {
+        super("This method is not implemented yet!");
+    }
 }

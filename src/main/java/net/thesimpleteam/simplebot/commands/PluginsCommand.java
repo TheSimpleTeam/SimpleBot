@@ -22,32 +22,33 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.plugin;
+package net.thesimpleteam.simplebot.commands;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
-import net.thesimpleteam.pluginapi.plugins.BasePlugin;
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.thesimpleteam.pluginapi.plugins.Plugin;
+import net.thesimpleteam.simplebot.enums.CommandCategories;
+import net.thesimpleteam.simplebot.plugins.PluginService;
+import net.thesimpleteam.simplebot.utils.MessageHelper;
 
-@Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
+import java.awt.Color;
 
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
+public class PluginsCommand extends Command {
+
+    public PluginsCommand() {
+        this.name = "plugins";
+        this.aliases = new String[]{"plugin", "pl"};
+        this.help = "help.plugins";
+        this.category = CommandCategories.MISC.category;
+    }
+
+    @Override
+    protected void execute(CommandEvent event) {
+        EmbedBuilder embed = MessageHelper.getEmbed(event, "Plugins", Color.magenta, "List of plugins loaded", null);
+        for (Plugin plugin : PluginService.getPlugins()) {
+            embed.addField(plugin.name(), "Description: " + plugin.description() + "\n" + "Version: " + plugin.version() + "\n" + "Author: " + plugin.author(), false);
         }
-    }
-
-    @Override
-    public void onEnable() {
-        getLogger().info("Enabled");
-        getLoader().addListener(this, this);
-    }
-
-    @Override
-    public void onDisable() {
-        getLogger().info("Disabled");
+        event.reply(embed.build());
     }
 }

@@ -4,11 +4,11 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
     id 'com.bmuschko.docker-java-application' version '7.3.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
 }
 
-ext.graalVersion = '22.0.0.2'
+ext.graalVersion = '22.2.0'
 
 group 'fr.thesimpleteam'
 version '1.0'
@@ -23,7 +23,6 @@ application {
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
-
 
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
@@ -43,6 +42,7 @@ repositories {
     }
     maven { url 'https://jitpack.io' }
     maven { url "https://m2.chew.pro/releases" }
+    maven { url "https://repo.spongepowered.org/repository/maven-public/" }
 }
 
 dependencies {
@@ -53,38 +53,36 @@ dependencies {
     }
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:ab05b178ae'
     //ByteCode
-    implementation 'net.bytebuddy:byte-buddy:1.12.9'
+    implementation 'net.bytebuddy:byte-buddy:1.12.14'
     //Eval
     implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
     implementation "org.graalvm.js:js:$graalVersion"
     implementation "org.graalvm.js:js-scriptengine:$graalVersion"
-    implementation('com.caoccao.javet:javet:1.1.4')
-    implementation 'org.python:jython-standalone:2.7.2'
+    implementation('com.caoccao.javet:javet:1.1.6')
+    implementation 'org.python:jython-standalone:2.7.3b1'
     //CLI
     implementation 'commons-cli:commons-cli:1.5.0'
-    //API
-    implementation('io.ktor:ktor-server-core:1.6.8')
-    implementation('io.ktor:ktor-server-host-common:1.6.8')
-    implementation('io.ktor:ktor-server-netty:1.6.8')
-    implementation('io.ktor:ktor-serialization:1.6.8')
-    //Mixins
-    implementation 'com.github.ReflxctionDev.Tuna-Bytes:core:1.2.0'
-    annotationProcessor 'com.github.ReflxctionDev.Tuna-Bytes:core:1.2.0'
     //Other
     implementation project(':pluginapi')
     implementation 'com.github.TheSimpleTeam:Colors:59450963b7'
     implementation 'com.github.TheSimpleTeam:Spiget:master-SNAPSHOT'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation("com.google.guava:guava:31.1-jre")
-    implementation group: 'org.kohsuke', name: 'github-api', version: '1.306'
-    implementation 'org.jsoup:jsoup:1.14.3'
-    implementation "org.mariuszgromada.math:MathParser.org-mXparser:5.0.3"
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.308'
+    implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'org.mariuszgromada.math:MathParser.org-mXparser:5.0.6'
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
     implementation 'org.fusesource.jansi:jansi:2.4.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
+    implementation 'io.ktor:ktor-server-cors:2.1.0'
+    implementation 'io.ktor:ktor-server-content-negotiation-jvm:2.1.0'
+    implementation 'io.ktor:ktor-server-core-jvm:2.1.0'
+    implementation 'io.ktor:ktor-server-host-common-jvm:2.1.0'
+    implementation 'io.ktor:ktor-server-netty-jvm:2.1.0'
+    implementation 'io.ktor:ktor-serialization-kotlinx-json:2.1.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 }
 
 docker {

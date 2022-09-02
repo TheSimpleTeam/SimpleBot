@@ -2,16 +2,18 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MathUtils;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.thesimpleteam.simplebot.utils.UnicodeCharacters;
-import net.dv8tion.jda.api.MessageBuilder;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.mXparser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class MathsCommand extends Command {
 
@@ -59,26 +61,25 @@ public class MathsCommand extends Command {
                         .build()).build());
             }
             case 2 -> {
-                switch (args[0].toLowerCase(Locale.ROOT)) {
-                    case "calculate" -> {
-                        mXparser.disableAlmostIntRounding();
-                        mXparser.disableCanonicalRounding();
-                        mXparser.disableUlpRounding();
-                        for (char c : args[1].toCharArray()) {
-                            if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
-                            }
+                if ("calculate".equals(args[0].toLowerCase(Locale.ROOT))) {
+                    mXparser.disableAlmostIntRounding();
+                    mXparser.disableCanonicalRounding();
+                    mXparser.disableUlpRounding();
+                    for (char c : args[1].toCharArray()) {
+                        if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
                         }
-                        if (!new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).checkSyntax()) {
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).build()).build());
-                            return;
-                        }
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.calculate.mathematicalExpression"), calculateReplaceArgs(args[1].replaceAll("\\s+", "")), false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false)
-                                .build()).build());
                     }
-                    default -> MessageHelper.syntaxError(event, this, "information.maths");
+                    if (!new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).checkSyntax()) {
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).build()).build());
+                        return;
+                    }
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.calculate.success", null, null, null)
+                            .addField(MessageHelper.translateMessage(event, "success.maths.calculate.mathematicalExpression"), calculateReplaceArgs(args[1].replaceAll("\\s+", "")), false)
+                            .addField(MessageHelper.translateMessage(event, "success.maths.calculate.result"), String.valueOf(new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).calculate()).replace("E", "x10^"), false)
+                            .build()).build());
+                } else {
+                    MessageHelper.syntaxError(event, this, "information.maths");
                 }
             }
             case 3 -> {
@@ -171,40 +172,39 @@ public class MathsCommand extends Command {
                 }
             }
             case 4 -> {
-                switch (args[0].toLowerCase(Locale.ROOT)) {
-                    case "convert" -> {
-                        for(int i = 0 ; i < Unit.values().length; i++){
-                            for(Unit unit : Unit.values()) {
-                                if (Unit.values()[i] != unit && Unit.values()[i].name().equals(unit.name())) {
-                                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.convert.sameSymbols", null, null, null, MessageHelper.translateMessage(event, Unit.values()[i].unitName), MessageHelper.translateMessage(event, unit.unitName), Unit.values()[i].name()).build()).build());
-                                    return;
-                                }
-                            }
-                        }
-                        if(!MathUtils.isParsableDouble(event, args[1].replace(',', '.'))) return;
-                        double number = Double.parseDouble(args[1].replace(',', '.'));
-                        Unit unit1 = null;
-                        Unit unit2 = null;
+                if ("convert".equals(args[0].toLowerCase(Locale.ROOT))) {
+                    for (int i = 0; i < Unit.values().length; i++) {
                         for (Unit unit : Unit.values()) {
-                            if (unit.name().equals(args[2])) {
-                                unit1 = unit;
-                            }
-                            if (unit.name().equals(args[3])) {
-                                unit2 = unit;
+                            if (Unit.values()[i] != unit && Unit.values()[i].name().equals(unit.name())) {
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.convert.sameSymbols", null, null, null, MessageHelper.translateMessage(event, Unit.values()[i].unitName), MessageHelper.translateMessage(event, unit.unitName), Unit.values()[i].name()).build()).build());
+                                return;
                             }
                         }
-                        if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType){
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null)).build());
-                            return;
-                        }
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), String.valueOf(unit1.factor / unit2.factor).replace("E", "x10^"), false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
-                                .build()).build());
                     }
-                    default -> MessageHelper.syntaxError(event, this, "information.maths");
+                    if (!MathUtils.isParsableDouble(event, args[1].replace(',', '.'))) return;
+                    double number = Double.parseDouble(args[1].replace(',', '.'));
+                    Unit unit1 = null;
+                    Unit unit2 = null;
+                    for (Unit unit : Unit.values()) {
+                        if (unit.name().equals(args[2])) {
+                            unit1 = unit;
+                        }
+                        if (unit.name().equals(args[3])) {
+                            unit2 = unit;
+                        }
+                    }
+                    if (unit1 == null || unit2 == null || unit1.unitType != unit2.unitType) {
+                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null)).build());
+                        return;
+                    }
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null)
+                            .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
+                            .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
+                            .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), String.valueOf(unit1.factor / unit2.factor).replace("E", "x10^"), false)
+                            .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
+                            .build()).build());
+                } else {
+                    MessageHelper.syntaxError(event, this, "information.maths");
                 }
             }
             default -> MessageHelper.syntaxError(event, this, "information.maths");

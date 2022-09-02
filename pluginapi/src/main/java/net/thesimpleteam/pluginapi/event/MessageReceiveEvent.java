@@ -22,20 +22,27 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi;
+package net.thesimpleteam.pluginapi.event;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import net.thesimpleteam.pluginapi.message.Message;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Plugin {
+import java.io.Serializable;
 
-    String name();
-    String version();
-    String author();
-    String website() default "https://example.com";
-    String description() default "A plugin";
+public class MessageReceiveEvent extends Event implements Serializable {
+
+    public static final long serialVersionUID = -177124568L;
+
+    private final Message message;
+
+    public MessageReceiveEvent(Message message) {
+        this.message = message;
+    }
+
+    public void reply(String message) {
+        this.getPlugin().getLoader().reply(message, this.message.getChannelID());
+    }
+
+    public Message getMessage() {
+        return message;
+    }
 }

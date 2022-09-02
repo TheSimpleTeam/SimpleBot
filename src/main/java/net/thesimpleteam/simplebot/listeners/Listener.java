@@ -2,7 +2,6 @@ package net.thesimpleteam.simplebot.listeners;
 
 import com.google.common.base.Throwables;
 import com.jagrosh.jdautilities.command.Command;
-import fr.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -14,6 +13,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.config.ServerConfig;
 import net.thesimpleteam.simplebot.plugins.PluginService;
@@ -25,14 +25,12 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class Listener extends ListenerAdapter {
@@ -45,12 +43,12 @@ public class Listener extends ListenerAdapter {
         } catch (IOException ex) {
             SimpleBot.LOGGER.severe(Throwables.getStackTraceAsString(ex));
         }
-        SimpleBot.getExecutorService().schedule(() -> System.exit(0), 3, TimeUnit.SECONDS); //JDA doesn't want to exit the JVM so we do a System.exit()
+        System.exit(0);
     }
 
     /**
      * This method is called when we want to save the configs
-     * @throws IOException
+     * @throws IOException for some reason
      */
     public static void saveConfigs() throws IOException {
         if (!new File(new File("config/server-config.json").toPath().toUri()).exists())
@@ -145,7 +143,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        PluginService.callEvent(new MessageReceiveEvent(event.getMessage().getContentRaw(), event.getAuthor().getName(), event.getChannel().getId()));
+        PluginService.callEvent(new MessageReceiveEvent(new net.thesimpleteam.pluginapi.message.Message(event.getMessage().getContentRaw(), event.getChannel().getId(), event.getAuthor().getId(), event.getAuthor().getName())));
         if (event.getAuthor().isBot()) return;
         if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember()) &&
                 !Objects.equals(getUserFromReferencedMessage(event.getMessage().getReferencedMessage()), event.getJDA().getSelfUser())) {

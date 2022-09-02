@@ -25,23 +25,24 @@
 package fr.simpleteam.simplebot.api
 
 import com.google.gson.Gson
-import net.thesimpleteam.simplebot.SimpleBot
 import fr.simpleteam.simplebot.api.jda.Guild
-import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.serialization.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import net.dv8tion.jda.api.JDA
+import net.thesimpleteam.simplebot.SimpleBot
 import java.util.logging.Logger
 import java.util.stream.Collectors
 
-class Server(private val jda : JDA, private val gson: Gson) {
+class Server(private val jda: JDA, private val gson: Gson) {
 
-    private val LOGGER: Logger = SimpleBot.LOGGER
+    private val logger: Logger = SimpleBot.LOGGER
 
     fun server() {
         embeddedServer(Netty, port = 8080) {
@@ -51,7 +52,16 @@ class Server(private val jda : JDA, private val gson: Gson) {
                 }
                 get("/guilds") {
                     call.respondText(gson.toJson(jda.guilds.stream()
-                        .map { v -> Guild(v.id, v.name, v.iconUrl, v.owner?.user?.name + "#" + v.owner?.user?.discriminator, v.memberCount, v.timeCreated.toString()) }
+                        .map { v ->
+                            Guild(
+                                v.id,
+                                v.name,
+                                v.iconUrl,
+                                v.owner?.user?.name + "#" + v.owner?.user?.discriminator,
+                                v.memberCount,
+                                v.timeCreated.toString()
+                            )
+                        }
                         .collect(Collectors.toList())), ContentType.Application.Json)
                 }
                 get("/guilds/count") {
@@ -62,13 +72,13 @@ class Server(private val jda : JDA, private val gson: Gson) {
                 json()
             }
             install(CORS) {
-                header(HttpHeaders.AccessControlAllowOrigin)
-                header(HttpHeaders.ContentType)
+                allowHeader(HttpHeaders.AccessControlAllowOrigin)
+                allowHeader(HttpHeaders.ContentType)
                 allowNonSimpleContentTypes = true
                 anyHost()
                 allowSameOrigin = true
             }
-            LOGGER.info("The server has been initialized !")
+            logger.info("The server has been initialized !")
         }.start(wait = true)
     }
 

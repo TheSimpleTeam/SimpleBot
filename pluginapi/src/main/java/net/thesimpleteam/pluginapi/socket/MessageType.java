@@ -22,13 +22,43 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.pluginapi.event;
+package net.thesimpleteam.pluginapi.socket;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.Serializable;
+import java.util.Arrays;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface EventHandler { }
+public enum MessageType implements Serializable {
+
+    // Server (Simple Bot) -> Client (Plugin Loader)
+
+    PING("PONG"),
+    GET_PLUGINS("SEND_PLUGINS"),
+    TRIGGER_EVENTS("RECEIVED"),
+    SHUTDOWN("RECEIVED"),
+
+    // Client (Plugin Loader) -> Server (Simple Bot)
+
+    PONG("RECEIVED"),
+    SEND_PLUGINS("RECEIVED"),
+    SEND_REGISTERED_COMMANDS("RECEIVED"),
+    REPLY("RECEIVED"),
+
+    // Both
+    RECEIVED("RECEIVED"),
+    ;
+
+    public static final long serialVersionUID = -112410L;
+    private final String[] reply;
+
+    MessageType(String... reply) {
+        this.reply = reply;
+    }
+
+    public MessageType[] getReplies() {
+        return Arrays.stream(reply).map(MessageType::valueOf).toArray(MessageType[]::new);
+    }
+
+    public MessageType getReply() {
+        return getReplies()[0];
+    }
+}

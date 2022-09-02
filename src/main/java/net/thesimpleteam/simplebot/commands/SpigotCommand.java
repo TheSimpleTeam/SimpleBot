@@ -26,12 +26,12 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.thesimpleteam.simplebot.enums.CommandCategories;
-import net.thesimpleteam.simplebot.utils.MessageHelper;
 import me.bluetree.spiget.Author;
 import me.bluetree.spiget.Resource;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.thesimpleteam.simplebot.enums.CommandCategories;
+import net.thesimpleteam.simplebot.utils.MessageHelper;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,7 +41,6 @@ public class SpigotCommand extends Command {
 
     public SpigotCommand() {
         this.name = "spigot";
-        this.aliases = new String[]{"spigo", "spig", "spi", "plugin", "spige", "plu", "plug", "plugi", "spiget", "pl", "plugins"};
         this.cooldown = 5;
         this.example = "80802";
         this.help = "help.spigot";

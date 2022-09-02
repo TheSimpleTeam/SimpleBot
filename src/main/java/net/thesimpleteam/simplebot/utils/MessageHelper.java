@@ -4,7 +4,10 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.thesimpleteam.simplebot.SimpleBot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +16,7 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class MessageHelper {
@@ -31,9 +34,9 @@ public class MessageHelper {
     /**
      * @param event the event
      * @param command the command that is being executed
-     * @param informations provides information on the usages of the command
+     * @param info provides information on the usages of the command
      */
-    public static void syntaxError(CommandEvent event, Command command, String informations) {
+    public static void syntaxError(CommandEvent event, Command command, String info) {
         StringBuilder argumentsBuilder = new StringBuilder();
         if (command.getArguments() == null)
             argumentsBuilder.append(translateMessage(event, "error.commands.syntaxError.arguments.argumentsNull"));
@@ -83,26 +86,26 @@ public class MessageHelper {
                 .addField(command.getArguments().startsWith("arguments.") ? translateMessage(event, command.getArguments()).split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.arguments.argument") : translateMessage(event, "error.commands.syntaxError.arguments.arguments") : command.getArguments().split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.arguments.argument") : translateMessage(event, "error.commands.syntaxError.arguments.arguments"), argumentsBuilder.toString(), false)
                 .addField(translateMessage(event, "error.commands.syntaxError.help"), command.getHelp() == null || command.getHelp().isEmpty() ? translateMessage(event, "error.commands.syntaxError.help.helpNull") : translateMessage(event, command.getHelp()).contains("²") ? translateMessage(event, command.getHelp()).split("²")[0] : translateMessage(event, command.getHelp()), false)
                 .addField(command.getExample().startsWith("example.") ? translateMessage(event, command.getExample()).split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.examples.example") : translateMessage(event, "error.commands.syntaxError.examples.examples") : command.getExample().split("²").length == 1 ? translateMessage(event, "error.commands.syntaxError.examples.example") : translateMessage(event, "error.commands.syntaxError.examples.examples"), examples, false);
-        if (informations != null) {
-            if (translateMessage(event, informations).length() > 1024) {
+        if (info != null) {
+            if (translateMessage(event, info).length() > 1024) {
                 int field = 0;
-                StringBuilder informationsBuilder = new StringBuilder();
-                for (char character : informations.toCharArray()) {
-                    informationsBuilder.append(character);
+                StringBuilder infoBuilder = new StringBuilder();
+                for (char character : info.toCharArray()) {
+                    infoBuilder.append(character);
                     if(character == '²') {
                         field++;
-                        embedBuilder.addField(field == 1 ? translateMessage(event, "error.commands.syntaxError.informations") : "", informationsBuilder.toString(), false);
+                        embedBuilder.addField(field == 1 ? translateMessage(event, "error.commands.syntaxError.info") : "", infoBuilder.toString(), false);
                     }
                 }
             } else
-                embedBuilder.addField(translateMessage(event, "error.commands.syntaxError.informations"), translateMessage(event, informations), false);
+                embedBuilder.addField(translateMessage(event, "error.commands.syntaxError.info"), translateMessage(event, info), false);
         }
-        //TODO [REMINDER] When all syntaxError of commands are translated, remove the informations lambda thing and add "translateMessage(informations, event)"
+        //TODO [REMINDER] When all syntaxError of commands are translated, remove the info lambda thing and add "translateMessage(info, event)"
         event.reply(new MessageBuilder(embedBuilder.build()).build());
     }
 
     /**
-     * @param exception the exception that was catched
+     * @param exception the exception that was caught
      * @param event the event
      * @param command the command
      */
@@ -143,11 +146,11 @@ public class MessageHelper {
         if(color != null) embedBuilder.setColor(color);
         else {
             if (title.startsWith("success.")) {
-                embedBuilder.setColor(Color.GREEN).setTitle(new StringBuilder().append(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI).append(" ").append(formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId())), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId()))).toString());
+                embedBuilder.setColor(Color.GREEN).setTitle(UnicodeCharacters.WHITE_HEAVY_CHECK_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId())), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId()))));
             } else if (title.startsWith("error.")) {
-                embedBuilder.setColor(Color.RED).setTitle(new StringBuilder().append(UnicodeCharacters.CROSS_MARK_EMOJI).append(" ").append(formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId())), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId()))).toString());
+                embedBuilder.setColor(Color.RED).setTitle(UnicodeCharacters.CROSS_MARK_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId())), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId()))));
             } else if (title.startsWith("warning.")) {
-                embedBuilder.setColor(0xff7f00).setTitle(new StringBuilder().append(UnicodeCharacters.WARNING_SIGN_EMOJI).append(" ").append(formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId())), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId()))).toString());
+                embedBuilder.setColor(0xff7f00).setTitle(UnicodeCharacters.WARNING_SIGN_EMOJI + " " + (formatArgs != null ? String.format(translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId())), formatArgs) : translateMessage(author, message, guild, title, SimpleBot.getServerConfig().language().get(guild.getId()))));
             }
         }
         if(description != null && description.length() <= 4096) embedBuilder.setDescription(description);
