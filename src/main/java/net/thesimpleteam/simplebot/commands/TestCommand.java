@@ -3,6 +3,7 @@ package net.thesimpleteam.simplebot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
+
 public class TestCommand extends Command {
 
     public TestCommand() {
