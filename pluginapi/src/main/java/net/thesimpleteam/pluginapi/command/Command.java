@@ -22,33 +22,47 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.plugin;
+package net.thesimpleteam.pluginapi.command;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.pluginapi.plugins.BasePlugin;
-import net.thesimpleteam.pluginapi.plugins.Plugin;
+import org.jetbrains.annotations.NotNull;
 
-@Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
+import java.util.Objects;
 
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
-        }
+public abstract class Command {
+
+    private final CommandInfo info;
+    private final BasePlugin plugin;
+
+    protected Command(@NotNull BasePlugin plugin) {
+        this.info = this.getClass().getAnnotation(CommandInfo.class);
+        if(this.info == null) throw new IllegalArgumentException("CommandInfo annotation is required!");
+        this.plugin = Objects.requireNonNull(plugin);
     }
 
-    @Override
-    public void onEnable() {
-        getLogger().info("Enabled");
-        getLoader().addListener(this, this);
-        getLoader().addCommand(this, new HelloWorldCommand(this));
+    public abstract void execute(CommandEvent event);
+
+    public CommandInfo getInfo() {
+        return info;
     }
 
-    @Override
-    public void onDisable() {
-        getLogger().info("Disabled");
+    public BasePlugin getPlugin() {
+        return plugin;
+    }
+
+    public String getName() {
+        return this.info.name();
+    }
+
+    public String getDescription() {
+        return this.info.description();
+    }
+
+    public String getUsage() {
+        return this.info.usage();
+    }
+
+    public String[] getAliases() {
+        return this.info.aliases();
     }
 }

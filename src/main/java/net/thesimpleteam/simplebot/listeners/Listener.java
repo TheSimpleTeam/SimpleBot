@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.thesimpleteam.pluginapi.command.CommandInfo;
 import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.config.ServerConfig;
@@ -31,6 +32,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Listener extends ListenerAdapter {
@@ -164,6 +166,11 @@ public class Listener extends ListenerAdapter {
             if (SimpleBot.getClient().getCommands().stream().anyMatch(command -> command.getName().equalsIgnoreCase(cmdName) || Arrays.stream(command.getAliases()).anyMatch(cmdName::equalsIgnoreCase)) ||
                     SimpleBot.getClient().getHelpWord().equalsIgnoreCase(cmdName))
                 return;
+            Optional<CommandInfo> command = PluginService.findCommand(cmdName);
+            if(command.isPresent()) {
+                PluginService.executeCommand(command.get(), toMessage(event.getMessage()));
+                return;
+            }
             double highestResult = 0;
             String cmd = null;
             for (String commandName : Stream.concat(SimpleBot.getClient().getCommands().stream().map(Command::getName), Stream.of("help")).toList()) {
@@ -181,5 +188,9 @@ public class Listener extends ListenerAdapter {
         for (String prohibitedWord : SimpleBot.getServerConfig().prohibitWords().get(event.getGuild().getId())) {
             if (event.getMessage().getContentRaw().toLowerCase().contains(prohibitedWord.toLowerCase())) event.getMessage().delete().queue(unused -> event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getMessage(), event.getGuild(), "error.listener.onGuildMessageReceived.prohibitedWord", null, null, null, prohibitedWord).build()).build()).queue());
         }
+    }
+
+    private net.thesimpleteam.pluginapi.message.Message toMessage(Message message) {
+        return new net.thesimpleteam.pluginapi.message.Message(message.getContentRaw(), message.getChannel().getId(), message.getAuthor().getId(), message.getAuthor().getName());
     }
 }

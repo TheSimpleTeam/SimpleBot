@@ -33,6 +33,7 @@ public enum MessageType implements Serializable {
 
     PING("PONG"),
     GET_PLUGINS("SEND_PLUGINS"),
+    EXECUTE_COMMAND("RECEIVED"),
     TRIGGER_EVENTS("RECEIVED"),
     SHUTDOWN("RECEIVED"),
 

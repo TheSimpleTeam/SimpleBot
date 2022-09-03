@@ -2,6 +2,10 @@ package net.thesimpleteam.simplebot.plugins;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.thesimpleteam.pluginapi.command.Command;
+import net.thesimpleteam.pluginapi.command.CommandEvent;
+import net.thesimpleteam.pluginapi.command.CommandInfo;
+import net.thesimpleteam.pluginapi.event.Event;
 import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.pluginapi.exceptions.NotImplementedException;
 import net.thesimpleteam.pluginapi.message.Message;
@@ -18,10 +22,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static net.thesimpleteam.simplebot.SimpleBot.LOGGER;
 
@@ -32,6 +34,7 @@ public class PluginService {
     private static ObjectOutputStream outputStream;
 
     private static final List<Plugin> plugins = new ArrayList<>();
+    private static final List<CommandInfo> commands = new ArrayList<>();
     private static final boolean alreadyLoaded = false;
     private static Process p;
 
@@ -73,16 +76,17 @@ public class PluginService {
                             LOGGER.info("Loaded " + plugins.size() + " plugins!");
                         }
                         case SEND_REGISTERED_COMMANDS -> {
-                            throw new NotImplementedException();
+                            commands.addAll(List.of(message.getObject(CommandInfo[].class)));
+                            LOGGER.info("Loaded " + commands.size() + " commands!");
                         }
                         case REPLY -> {
                             Message msg = message.getObject(Message.class);
-                            JDA jda = SimpleBot.getJda();
-                            if(jda.getGuildChannelById(msg.getChannelID()) == null || jda.getGuildChannelById(msg.getChannelID()).getType() != ChannelType.TEXT) {
+                            var channel = SimpleBot.getJda().getTextChannelById(msg.getChannelID());
+                            if(channel == null) {
                                 LOGGER.warning(msg.getFromPlugin() + " tried to send a message to a channel that doesn't exist!");
                                 return;
                             }
-                            jda.getTextChannelById(msg.getChannelID()).sendMessage(msg.getMessageContent()).queue();
+                            channel.sendMessage(msg.getMessageContent()).queue();
                         }
                         case PONG -> LOGGER.info("Pong received!");
                         default -> throw new NotImplementedException();
@@ -104,13 +108,34 @@ public class PluginService {
         }*/
     }
 
-    public static void callEvent(MessageReceiveEvent messageReceiveEvent) {
+    public static void callEvent(Event event) {
         try {
-            outputStream.writeObject(new SocketMessage(MessageType.TRIGGER_EVENTS, messageReceiveEvent));
+            outputStream.writeObject(new SocketMessage(MessageType.TRIGGER_EVENTS, event));
             outputStream.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void executeCommand(CommandInfo command, Message message) {
+        try {
+            outputStream.writeObject(new SocketMessage(MessageType.EXECUTE_COMMAND, new CommandEvent(command, message)));
+            outputStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<CommandInfo> getCommands() {
+        return commands;
+    }
+
+    /*public static List<String[]> getCommandsNames() {
+        return commands.stream().map(commandInfo -> Stream.concat(Stream.of(commandInfo.name()), Arrays.stream(commandInfo.aliases())).toArray(String[]::new)).toList();
+    }*/
+
+    public static Optional<CommandInfo> findCommand(String nameOrAlias) {
+        return commands.stream().filter(commandInfo -> Stream.concat(Stream.of(commandInfo.name()), Arrays.stream(commandInfo.aliases())).anyMatch(nameOrAlias::equalsIgnoreCase)).findFirst();
     }
 
     public static List<Plugin> getPlugins() {

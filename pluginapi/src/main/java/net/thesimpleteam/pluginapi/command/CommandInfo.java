@@ -22,33 +22,19 @@
  * SOFTWARE.
  */
 
-package fr.thesimpleteam.plugin;
+package net.thesimpleteam.pluginapi.command;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
-import net.thesimpleteam.pluginapi.plugins.BasePlugin;
-import net.thesimpleteam.pluginapi.plugins.Plugin;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface CommandInfo {
 
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
-        }
-    }
-
-    @Override
-    public void onEnable() {
-        getLogger().info("Enabled");
-        getLoader().addListener(this, this);
-        getLoader().addCommand(this, new HelloWorldCommand(this));
-    }
-
-    @Override
-    public void onDisable() {
-        getLogger().info("Disabled");
-    }
+    String name();
+    String description() default "";
+    String usage() default "";
+    String[] aliases() default {};
 }

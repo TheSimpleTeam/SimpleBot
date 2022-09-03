@@ -24,6 +24,7 @@
 
 package net.thesimpleteam.pluginapi.plugins;
 
+import net.thesimpleteam.pluginapi.command.Command;
 import net.thesimpleteam.pluginapi.event.Event;
 import net.thesimpleteam.pluginapi.event.Listener;
 
@@ -34,5 +35,7 @@ public interface IPluginLoader {
     void reply(String message, String channelId);
 
     void addListener(BasePlugin plugin, Listener... listeners);
+
+    void addCommand(BasePlugin plugin, Command... command);
 
 }

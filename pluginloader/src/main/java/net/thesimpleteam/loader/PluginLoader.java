@@ -24,6 +24,9 @@
 
 package net.thesimpleteam.loader;
 
+import net.thesimpleteam.pluginapi.command.Command;
+import net.thesimpleteam.pluginapi.command.CommandEvent;
+import net.thesimpleteam.pluginapi.command.CommandInfo;
 import net.thesimpleteam.pluginapi.event.Event;
 import net.thesimpleteam.pluginapi.event.EventHandler;
 import net.thesimpleteam.pluginapi.event.Listener;
@@ -57,7 +60,7 @@ import java.util.stream.Stream;
 
 public class PluginLoader implements IPluginLoader, SocketMessageListener {
 
-    private record Plugin(BasePlugin plugin, Path jarPath, List<Class<?>> pluginClasses, List<Listener> listeners) { }
+    private record Plugin(BasePlugin plugin, Path jarPath, List<Class<?>> pluginClasses, List<Listener> listeners, List<Command> commands) { }
 
     public static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
     public static final Logger LOGGER = Logger.getLogger("SBPL");
@@ -89,6 +92,8 @@ public class PluginLoader implements IPluginLoader, SocketMessageListener {
             LOGGER.info("Connecting to socket server...");
             this.client = new SocketClient(this);
             LOGGER.info("Connected to socket server!");
+            this.client.sendMessage(MessageType.SEND_REGISTERED_COMMANDS, plugins.stream().map(Plugin::commands)
+                    .flatMap(commands -> commands.stream().map(Command::getInfo)).toArray(CommandInfo[]::new));
         });
     }
 
@@ -104,17 +109,47 @@ public class PluginLoader implements IPluginLoader, SocketMessageListener {
                 callEvent(event);
             }
             case SHUTDOWN -> {
-                throw new NotImplementedException();
+                stop();
             }
             case PING -> {
                 client.sendMessage(MessageType.PONG);
             }
+            case EXECUTE_COMMAND -> {
+                CommandEvent event = message.getObject(CommandEvent.class);
+                callCommandEvent(event);
+            }
         }
+    }
+
+    private void callCommandEvent(CommandEvent event) {
+        try {
+            Field command = CommandEvent.class.getDeclaredField("command");
+            command.setAccessible(true);
+            CommandInfo info = event.getCommandInfo();
+            command.set(event, getCommand(info));
+            if(command.get(event) == null) {
+                LOGGER.warning("Command not found: " + info.name());
+                return;
+            }
+        } catch (ReflectiveOperationException e) {
+            LOGGER.log(Level.SEVERE, "Error while calling command event", e);
+            return;
+        }
+        event.getCommand().execute(event);
+    }
+
+    private Command getCommand(CommandInfo info) {
+        return plugins.stream().map(Plugin::commands).flatMap(Collection::stream).filter(command -> command.getInfo().equals(info)).findFirst().orElse(null);
     }
 
     private void stop() {
         plugins.forEach(pl -> pl.plugin.onDisable());
         System.exit(0);
+    }
+
+    @Override
+    public void addCommand(BasePlugin plugin, Command... command) {
+        plugins.stream().filter(p -> p.plugin.equals(plugin)).findFirst().ifPresent(p -> p.commands.addAll(Arrays.asList(command)));
     }
 
     @Override
@@ -189,7 +224,7 @@ public class PluginLoader implements IPluginLoader, SocketMessageListener {
                     throw new IllegalStateException("The class " + pluginClass.get().getName() + " is not annotated with @Plugin");
                 }
                 pl = constructor.newInstance();
-                plugins.add(new Plugin(pl, jarFile, classes, new ArrayList<>()));
+                plugins.add(new Plugin(pl, jarFile, classes, new ArrayList<>(), new ArrayList<>()));
                 Field loader = BasePlugin.class.getDeclaredField("loader");
                 loader.trySetAccessible();
                 loader.set(pl, this);

@@ -24,31 +24,20 @@
 
 package fr.thesimpleteam.plugin;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
+import net.thesimpleteam.pluginapi.command.Command;
+import net.thesimpleteam.pluginapi.command.CommandEvent;
+import net.thesimpleteam.pluginapi.command.CommandInfo;
 import net.thesimpleteam.pluginapi.plugins.BasePlugin;
-import net.thesimpleteam.pluginapi.plugins.Plugin;
 
-@Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
+@CommandInfo(name = "helloworld", description = "Hello World command", usage = "/helloworld", aliases = {"hw"})
+public class HelloWorldCommand extends Command {
 
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
-        }
+    public HelloWorldCommand(BasePlugin pl) {
+        super(pl);
     }
 
     @Override
-    public void onEnable() {
-        getLogger().info("Enabled");
-        getLoader().addListener(this, this);
-        getLoader().addCommand(this, new HelloWorldCommand(this));
-    }
-
-    @Override
-    public void onDisable() {
-        getLogger().info("Disabled");
+    public void execute(CommandEvent event) {
+        event.reply("Hello World!");
     }
 }
