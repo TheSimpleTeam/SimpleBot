@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  simplebot:
+    image: thesimpleteam/simplebot:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+      - "10909:10909"
+    volumes:
+      - "./docker/test:/app"

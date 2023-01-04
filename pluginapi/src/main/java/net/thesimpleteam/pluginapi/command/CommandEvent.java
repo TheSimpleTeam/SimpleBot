@@ -28,6 +28,7 @@ import net.thesimpleteam.pluginapi.message.Message;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public final class CommandEvent implements Serializable {
@@ -61,6 +62,14 @@ public final class CommandEvent implements Serializable {
 
     public Message getMessage() {
         return message;
+    }
+
+    public String[] getArgs() {
+        return message.getMessageContent().split("\\s+");
+    }
+
+    public List<String> getArgList() {
+        return List.of(getArgs());
     }
 
     public CommandInfo getCommandInfo() {

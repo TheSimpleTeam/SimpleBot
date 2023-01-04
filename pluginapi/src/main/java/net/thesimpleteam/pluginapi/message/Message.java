@@ -25,6 +25,7 @@
 package net.thesimpleteam.pluginapi.message;
 
 import net.thesimpleteam.pluginapi.plugins.Plugin;
+import net.thesimpleteam.pluginapi.plugins.Author;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,45 +33,35 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- *
- */
 public final class Message implements Serializable {
     @Serial
     private static final long serialVersionUID = -44454884057L;
     private final String message;
     private final String channelID;
-    private final String authorID;
-    private final String authorName;
+    private final Author author;
     private Plugin fromPlugin;
 
     /**
      * @param message The content of the message
      * @param channelID The channel ID in which the message was sent or will be sent
-     * @param authorID  The author ID of the message or null if the message is sent by the bot
-     * @param authorName The author name of the message or null if the message is sent by the bot
+     * @param author  The author of the message or null if the message is sent by the bot
      */
-    public Message(@NotNull String message, @NotNull String channelID, @Nullable String authorID, @Nullable String authorName) {
+    public Message(@NotNull String message, @NotNull String channelID, @Nullable Author author) {
         this.message = Objects.requireNonNull(message);
         this.channelID = Objects.requireNonNull(channelID);
-        this.authorID = authorID;
-        this.authorName = authorName;
+        this.author = author;
     }
 
     public String getMessageContent() {
         return message;
     }
 
-    public String getAuthorID() {
-        return authorID;
+    public Author getAuthor() {
+        return author;
     }
 
     public String getChannelID() {
         return channelID;
-    }
-
-    public String getAuthorName() {
-        return authorName;
     }
 
     /**
@@ -87,13 +78,12 @@ public final class Message implements Serializable {
         var that = (Message) obj;
         return Objects.equals(this.message, that.message) &&
                 Objects.equals(this.channelID, that.channelID) &&
-                Objects.equals(this.authorID, that.authorID) &&
-                Objects.equals(this.authorName, that.authorName);
+                Objects.deepEquals(this.author, that.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(message, channelID, authorID, authorName);
+        return Objects.hash(message, channelID, author);
     }
 
     @Override
@@ -101,7 +91,6 @@ public final class Message implements Serializable {
         return "Message[" +
                 "message=" + message + ", " +
                 "channelID=" + channelID + ", " +
-                "authorID=" + authorID + ", " +
-                "authorName=" + authorName + ']';
+                "author=" + author + ']';
     }
 }

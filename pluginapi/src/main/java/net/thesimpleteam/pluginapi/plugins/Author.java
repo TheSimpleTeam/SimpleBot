@@ -24,19 +24,11 @@
 
 package net.thesimpleteam.pluginapi.plugins;
 
-import net.thesimpleteam.pluginapi.command.Command;
-import net.thesimpleteam.pluginapi.event.Event;
-import net.thesimpleteam.pluginapi.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
-public interface IPluginLoader {
+import java.io.Serializable;
 
-    void callEvent(Event event);
-
-    void reply(String message, String channelId);
-
-    void addListener(BasePlugin plugin, Listener... listeners);
-
-    void addCommand(BasePlugin plugin, Command... command);
-
-    Author getUser(String id);
+//It should do it for now
+public record Author(@NotNull String username, @NotNull String authorId, String avatarURL, @NotNull String discriminator) implements Serializable {
+        public static final long serialVersionUID = 112410L;
 }

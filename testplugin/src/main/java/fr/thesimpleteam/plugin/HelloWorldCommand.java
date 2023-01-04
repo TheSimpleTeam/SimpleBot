@@ -29,7 +29,7 @@ import net.thesimpleteam.pluginapi.command.CommandEvent;
 import net.thesimpleteam.pluginapi.command.CommandInfo;
 import net.thesimpleteam.pluginapi.plugins.BasePlugin;
 
-@CommandInfo(name = "helloworld", description = "Hello World command", usage = "/helloworld", aliases = {"hw"})
+@CommandInfo(name = "helloworld", description = "Hello World command", usage = "helloworld", aliases = {"hw"})
 public class HelloWorldCommand extends Command {
 
     public HelloWorldCommand(BasePlugin pl) {

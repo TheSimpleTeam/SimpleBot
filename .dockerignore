@@ -8,10 +8,6 @@
 **/.toolstarget
 **/.vs
 **/.vscode
-**/.idea
-**/.gradle
-**/.github
-**/config
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm

@@ -34,7 +34,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SocketClient {
 
@@ -64,11 +67,13 @@ public class SocketClient {
         listeners.remove(listener);
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public void listenForMessages() {
         PluginLoader.EXECUTOR_SERVICE.execute(() -> {
             while (true) {
                 try {
-                    if(in.readObject() instanceof SocketMessage message) {
+                    Object o = in.readObject();
+                    if(o instanceof SocketMessage message) {
                         listeners.forEach(listener -> listener.onMessage(message));
                     }
                 } catch (EOFException ignored) {} catch (IOException | ClassNotFoundException e) {
@@ -83,7 +88,18 @@ public class SocketClient {
             out.writeObject(SerializationUtils.serialize(message));
             out.flush();
             if(message.getMessageType().getReply() == MessageType.RECEIVED) return Optional.empty();
-            return Optional.of((SocketMessage) in.readObject());
+            try {
+                /*Future<Optional<SocketMessage>> f = PluginLoader.EXECUTOR_SERVICE.submit(() -> {
+                    while (true) {
+                        Thread.sleep(100);
+                        if(PluginLoader.SOCKET_MESSAGES.containsKey(message.getId())) return Optional.of(PluginLoader.SOCKET_MESSAGES.get(message.getId()).get(2, TimeUnit.SECONDS));
+                    }
+                });*/
+                return Optional.ofNullable(PluginLoader.SOCKET_MESSAGES.get(message.getId()).get(2, TimeUnit.SECONDS));
+                //return f.get(2, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                return Optional.empty();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

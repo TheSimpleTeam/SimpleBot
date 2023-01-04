@@ -22,21 +22,14 @@
  * SOFTWARE.
  */
 
-package net.thesimpleteam.pluginapi.plugins;
+package net.thesimpleteam.simplebot.plugins.utils;
 
-import net.thesimpleteam.pluginapi.command.Command;
-import net.thesimpleteam.pluginapi.event.Event;
-import net.thesimpleteam.pluginapi.event.Listener;
+import net.dv8tion.jda.api.entities.User;
+import net.thesimpleteam.pluginapi.plugins.Author;
 
-public interface IPluginLoader {
+public class JdaToPluginObject {
 
-    void callEvent(Event event);
-
-    void reply(String message, String channelId);
-
-    void addListener(BasePlugin plugin, Listener... listeners);
-
-    void addCommand(BasePlugin plugin, Command... command);
-
-    Author getUser(String id);
+    public static Author toAuthor(User user) {
+        return new Author(user.getName(), user.getId(), user.getAvatarUrl(), user.getDiscriminator());
+    }
 }

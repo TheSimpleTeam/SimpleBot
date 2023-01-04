@@ -27,3 +27,4 @@ gradle.properties
 /pluginapi/.project
 /testplugin/.settings/
 /testplugin/bin/
+/docker/test/

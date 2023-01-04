@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class SocketMessage implements Serializable {
 
@@ -36,6 +37,7 @@ public class SocketMessage implements Serializable {
     private final String message;
     private final Serializable object;
     private final MessageType messageType;
+    private UUID id;
 
     public SocketMessage(MessageType messageType) {
         this(messageType, null);
@@ -49,6 +51,7 @@ public class SocketMessage implements Serializable {
         this.message = message;
         this.object = object;
         this.messageType = messageType;
+        this.id = UUID.randomUUID();
     }
 
     public @NotNull MessageType getMessageType() {
@@ -61,5 +64,14 @@ public class SocketMessage implements Serializable {
 
     public <T extends Serializable> T getObject(Class<T> clazz) {
         return clazz.cast(object);
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public SocketMessage setId(UUID id) {
+        this.id = id;
+        return this;
     }
 }

@@ -21,13 +21,15 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.logging.Level;
 
 @RequireConfig("botGithubToken")
 public class GithubCommand extends Command {
 
     private final GitHub github;
-    private final Map<String, Map<String, String>> colorMap;
+    private final Map<String, Map<String, String>> colorMap = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public GithubCommand() throws IOException {
         this.name = "github";
         this.cooldown = 5;
@@ -37,13 +39,11 @@ public class GithubCommand extends Command {
         this.example = "search PufferTeam SuperPack";
         this.aliases = new String[]{"git","gh"};
         this.github = new GitHubBuilder().withOAuthToken(SimpleBot.getInfos().botGithubToken()).build();
-        Map<String, Map<String, String>> colorMap1;
-        try {
-            colorMap1 = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
+        try(InputStreamReader reader = new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream(), StandardCharsets.UTF_8)) {
+            colorMap.putAll(SimpleBot.gson.fromJson(reader, Map.class));
         } catch (IOException e) {
-            colorMap1 = Collections.emptyMap();
+            SimpleBot.LOGGER.log(Level.WARNING, "Error while loading github colors", e);
         }
-        colorMap = colorMap1;
     }
 
     @Override

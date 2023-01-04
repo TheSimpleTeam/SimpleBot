@@ -24,27 +24,17 @@
 
 package fr.thesimpleteam.plugin;
 
-import net.thesimpleteam.pluginapi.event.EventHandler;
-import net.thesimpleteam.pluginapi.event.Listener;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.pluginapi.plugins.BasePlugin;
 import net.thesimpleteam.pluginapi.plugins.Plugin;
 
 @Plugin(name = "SimpleTeam", version = "1.0", author = "minemobs", description = "SimpleTeam's test plugin")
-public class Main extends BasePlugin implements Listener {
-
-    @EventHandler
-    public void onMessage(MessageReceiveEvent event) {
-        if(event.getMessage().getMessageContent().equalsIgnoreCase("HelloWorld")) {
-            event.reply("Hello " + event.getMessage().getAuthorName());
-        }
-    }
+public class Main extends BasePlugin {
 
     @Override
     public void onEnable() {
         getLogger().info("Enabled");
-        getLoader().addListener(this, this);
-        getLoader().addCommand(this, new HelloWorldCommand(this));
+        getLoader().addListener(this, new MessageListener());
+        getLoader().addCommand(this, new HelloWorldCommand(this), new ConnectFourCommand(this));
     }
 
     @Override

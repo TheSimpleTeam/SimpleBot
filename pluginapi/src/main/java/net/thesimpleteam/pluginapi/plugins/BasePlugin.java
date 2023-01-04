@@ -31,7 +31,7 @@ public abstract class BasePlugin implements Serializable {
 
     public static final long serialVersionUID = 112410L;
     private transient IPluginLoader loader;
-    private static transient Logger logger;
+    private static Logger logger;
 
     protected BasePlugin() {
         logger = Logger.getLogger(getClass().getName());

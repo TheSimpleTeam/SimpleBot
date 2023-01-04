@@ -1,19 +1,17 @@
 package net.thesimpleteam.simplebot.plugins;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.thesimpleteam.pluginapi.command.Command;
 import net.thesimpleteam.pluginapi.command.CommandEvent;
 import net.thesimpleteam.pluginapi.command.CommandInfo;
 import net.thesimpleteam.pluginapi.event.Event;
-import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.pluginapi.exceptions.NotImplementedException;
 import net.thesimpleteam.pluginapi.message.Message;
+import net.thesimpleteam.pluginapi.plugins.Author;
 import net.thesimpleteam.pluginapi.plugins.Plugin;
 import net.thesimpleteam.pluginapi.socket.MessageType;
 import net.thesimpleteam.pluginapi.socket.SocketMessage;
 import net.thesimpleteam.pluginapi.utils.SerializationUtils;
 import net.thesimpleteam.simplebot.SimpleBot;
+import net.thesimpleteam.simplebot.plugins.utils.JdaToPluginObject;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -71,6 +69,16 @@ public class PluginService {
                 while(true) {
                     SocketMessage message = SerializationUtils.deserialize((byte[]) ois.readObject(), SocketMessage.class);
                     switch (Objects.requireNonNull(message).getMessageType()) {
+                        case GET_USER -> {
+                            LOGGER.info("Received user request");
+                            //FIXME: This line completely blocks the thread
+                            Author object = JdaToPluginObject.toAuthor(Objects.requireNonNull(SimpleBot.getJda().getUserById(message.getObject(String.class))));
+                            SocketMessage obj = new SocketMessage(MessageType.SEND_USER, object).setId(message.getId());
+                            //Write this object to the socket using an array of bytes
+                            oos.writeObject(obj);
+                            oos.flush();
+                            LOGGER.info("Sent user");
+                        }
                         case SEND_PLUGINS -> {
                             plugins.addAll(List.of(message.getObject(Plugin[].class)));
                             LOGGER.info("Loaded " + plugins.size() + " plugins!");
@@ -89,7 +97,7 @@ public class PluginService {
                             channel.sendMessage(msg.getMessageContent()).queue();
                         }
                         case PONG -> LOGGER.info("Pong received!");
-                        default -> throw new NotImplementedException();
+                        default -> LOGGER.warning("Unknown message type received: " + message.getMessageType());
                     }
                 }
             }catch (EOFException ignored) {} catch (IOException | ClassNotFoundException e) {
@@ -111,7 +119,6 @@ public class PluginService {
     public static void callEvent(Event event) {
         try {
             outputStream.writeObject(new SocketMessage(MessageType.TRIGGER_EVENTS, event));
-            outputStream.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -120,7 +127,6 @@ public class PluginService {
     public static void executeCommand(CommandInfo command, Message message) {
         try {
             outputStream.writeObject(new SocketMessage(MessageType.EXECUTE_COMMAND, new CommandEvent(command, message)));
-            outputStream.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -129,10 +135,6 @@ public class PluginService {
     public static List<CommandInfo> getCommands() {
         return commands;
     }
-
-    /*public static List<String[]> getCommandsNames() {
-        return commands.stream().map(commandInfo -> Stream.concat(Stream.of(commandInfo.name()), Arrays.stream(commandInfo.aliases())).toArray(String[]::new)).toList();
-    }*/
 
     public static Optional<CommandInfo> findCommand(String nameOrAlias) {
         return commands.stream().filter(commandInfo -> Stream.concat(Stream.of(commandInfo.name()), Arrays.stream(commandInfo.aliases())).anyMatch(nameOrAlias::equalsIgnoreCase)).findFirst();

@@ -29,11 +29,8 @@ import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.gson.RecordTypeAdapterFactory;
 import net.thesimpleteam.simplebot.listeners.Listener;
 import net.thesimpleteam.simplebot.plugins.PluginService;
-import net.thesimpleteam.simplebot.utils.Eval;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import okhttp3.OkHttpClient;
-import org.fusesource.jansi.internal.CLibrary;
-import org.python.core.PrePy;
 import org.reflections.Reflections;
 
 import javax.security.auth.login.LoginException;
@@ -64,7 +61,6 @@ public class SimpleBot {
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new RecordTypeAdapterFactory()).setPrettyPrinting().create();
     public static final Logger LOGGER = Logger.getLogger(SimpleBot.class.getName());
     public static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
-    public static final Eval eval = new Eval();
     private static Map<String, JsonObject> localizations;
     private static String[] langs;
     private static ScheduledExecutorService executorService;
@@ -135,7 +131,8 @@ public class SimpleBot {
                     });
                 }), 0, 1, TimeUnit.SECONDS);
         executorService.schedule(() -> new Server(jda, gson).server(), 3, TimeUnit.SECONDS);
-        if (CLibrary.isatty(CLibrary.STDIN_FILENO) == 1 || isInDevMode()) {
+        //TODO: Reimplement CLibrary.isatty(CLibrary.STDIN_FILENO) == 1
+        if (isInDevMode()) {
             executorService.schedule(() -> {
                 try {
                     CLI cli = new CLIBuilder(jda).addCommand(new TestCommand(), new SendMessageCommand(), new HelpCommand()).build();
@@ -257,7 +254,8 @@ public class SimpleBot {
         if (!config.exists()) {
             config.createNewFile();
             Map<String, Object> map = new LinkedHashMap<>();
-            if (arg.equalsIgnoreCase("--nosetup") || !PrePy.isInteractive()) {
+            //TODO: Reimplement something like PrePy.isInteractive()
+            if (arg.equalsIgnoreCase("--nosetup")) {
                 map.put("token", "YOUR-TOKEN-HERE");
                 map.put("prefix", "sb!");
                 map.put("timeBetweenStatusChange", 15);
@@ -393,10 +391,6 @@ public class SimpleBot {
 
     public static String[] getLangs() {
         return langs;
-    }
-
-    public static boolean isTTY() {
-        return PrePy.isInteractive();
     }
 
     public static ScheduledExecutorService getExecutorService() {

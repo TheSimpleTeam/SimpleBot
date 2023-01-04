@@ -18,6 +18,7 @@ import net.thesimpleteam.pluginapi.event.MessageReceiveEvent;
 import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.config.ServerConfig;
 import net.thesimpleteam.simplebot.plugins.PluginService;
+import net.thesimpleteam.simplebot.plugins.utils.JdaToPluginObject;
 import net.thesimpleteam.simplebot.utils.LevenshteinDistance;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
 import net.thesimpleteam.simplebot.utils.UnicodeCharacters;
@@ -145,8 +146,8 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        PluginService.callEvent(new MessageReceiveEvent(new net.thesimpleteam.pluginapi.message.Message(event.getMessage().getContentRaw(), event.getChannel().getId(), event.getAuthor().getId(), event.getAuthor().getName())));
         if (event.getAuthor().isBot()) return;
+        PluginService.callEvent(new MessageReceiveEvent(new net.thesimpleteam.pluginapi.message.Message(event.getMessage().getContentRaw(), event.getChannel().getId(), JdaToPluginObject.toAuthor(event.getAuthor()))));
         if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember()) &&
                 !Objects.equals(getUserFromReferencedMessage(event.getMessage().getReferencedMessage()), event.getJDA().getSelfUser())) {
             event.getMessage().reply(new MessageBuilder(MessageHelper.getEmbed(event.getAuthor(), event.getMessage(), event.getGuild(), "success.listener.onGuildMessageReceived.prefix", null, null, null, SimpleBot.getPrefix(event.getGuild())).build()).build()).queue();
@@ -191,6 +192,7 @@ public class Listener extends ListenerAdapter {
     }
 
     private net.thesimpleteam.pluginapi.message.Message toMessage(Message message) {
-        return new net.thesimpleteam.pluginapi.message.Message(message.getContentRaw(), message.getChannel().getId(), message.getAuthor().getId(), message.getAuthor().getName());
+        return new net.thesimpleteam.pluginapi.message.Message(String.join("\n", Arrays.copyOfRange(message.getContentRaw().split("\\s+"),
+                1, message.getContentRaw().split("\\s+").length)), message.getChannel().getId(), JdaToPluginObject.toAuthor(message.getAuthor()));
     }
 }

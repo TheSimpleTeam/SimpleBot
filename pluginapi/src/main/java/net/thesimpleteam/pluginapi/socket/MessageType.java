@@ -33,19 +33,21 @@ public enum MessageType implements Serializable {
 
     PING("PONG"),
     GET_PLUGINS("SEND_PLUGINS"),
-    EXECUTE_COMMAND("RECEIVED"),
-    TRIGGER_EVENTS("RECEIVED"),
-    SHUTDOWN("RECEIVED"),
+    EXECUTE_COMMAND(),
+    TRIGGER_EVENTS(),
+    SEND_USER(),
+    SHUTDOWN(),
 
     // Client (Plugin Loader) -> Server (Simple Bot)
 
-    PONG("RECEIVED"),
-    SEND_PLUGINS("RECEIVED"),
-    SEND_REGISTERED_COMMANDS("RECEIVED"),
-    REPLY("RECEIVED"),
+    PONG(),
+    SEND_PLUGINS(),
+    SEND_REGISTERED_COMMANDS(),
+    GET_USER("SEND_USER"),
+    REPLY(),
 
     // Both
-    RECEIVED("RECEIVED"),
+    RECEIVED(),
     ;
 
     public static final long serialVersionUID = -112410L;
@@ -56,7 +58,11 @@ public enum MessageType implements Serializable {
     }
 
     public MessageType[] getReplies() {
-        return Arrays.stream(reply).map(MessageType::valueOf).toArray(MessageType[]::new);
+        return reply.length == 0 ? new MessageType[] {RECEIVED} : Arrays.stream(reply).map(MessageType::valueOf).toArray(MessageType[]::new);
+    }
+
+    private String nameChecker(String name) {
+        return name == null || name.isEmpty() ? "RECEIVED" : name;
     }
 
     public MessageType getReply() {

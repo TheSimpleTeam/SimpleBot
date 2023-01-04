@@ -2,13 +2,10 @@ plugins {
     id 'java'
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.2"
-    id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
     id 'com.bmuschko.docker-java-application' version '7.3.0'
     id 'org.jetbrains.kotlin.jvm' version '1.7.10'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
 }
-
-ext.graalVersion = '22.2.0'
 
 group 'fr.thesimpleteam'
 version '1.0'
@@ -18,6 +15,7 @@ application {
     tasks.run.setWorkingDir(file(sourceSets.main.resources.srcDirs[0]))
     run {
         getSystemProperties().put("simplebot.dev", "true")
+        args('-x', ':pluginloader:run')
     }
 }
 
@@ -28,10 +26,6 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 import java.util.concurrent.Callable
-
-graal {
-    version "$graalVersion"
-}
 
 repositories {
     mavenCentral()
@@ -54,12 +48,6 @@ dependencies {
     implementation 'com.github.TheSimpleTeam.JDA-Chewtils:jda-chewtils-command:ab05b178ae'
     //ByteCode
     implementation 'net.bytebuddy:byte-buddy:1.12.14'
-    //Eval
-    implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
-    implementation "org.graalvm.js:js:$graalVersion"
-    implementation "org.graalvm.js:js-scriptengine:$graalVersion"
-    implementation('com.caoccao.javet:javet:1.1.6')
-    implementation 'org.python:jython-standalone:2.7.3b1'
     //CLI
     implementation 'commons-cli:commons-cli:1.5.0'
     //Other
@@ -70,10 +58,9 @@ dependencies {
     implementation("com.google.guava:guava:31.1-jre")
     implementation group: 'org.kohsuke', name: 'github-api', version: '1.308'
     implementation 'org.jsoup:jsoup:1.15.3'
-    implementation 'org.mariuszgromada.math:MathParser.org-mXparser:5.0.6'
+    implementation 'org.mariuszgromada.math:MathParser.org-mXparser:5.0.7'
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
-    implementation 'org.fusesource.jansi:jansi:2.4.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
     implementation 'io.ktor:ktor-server-cors:2.1.0'
     implementation 'io.ktor:ktor-server-content-negotiation-jvm:2.1.0'

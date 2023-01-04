@@ -83,7 +83,8 @@ public enum Color {
     private final String code;
 
     Color(String code) {
-        this.code = SimpleBot.isTTY() ? code : "";
+        //this.code = SimpleBot.isTTY() ? code : "";
+        this.code = code;
     }
 
     /**
