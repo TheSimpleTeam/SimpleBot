@@ -240,6 +240,7 @@ public class MathsCommand extends Command {
         Tm(UnitType.LENGTH, 1.0E12D, "text.maths.convert.terameter"),
         au(UnitType.LENGTH, 1.495978707E11D, "text.maths.convert.astronomicalUnit"),
         Gm(UnitType.LENGTH, 1.0E9D, "text.maths.convert.gigameter"),
+        eM(UnitType.LENGTH, 40003200D, "text.maths.convert.earthMeridian"), //TODO this key doesn't exist
         Mm(UnitType.LENGTH, 1000000.0D, "text.maths.convert.megameter"),
         mam(UnitType.LENGTH, 10000.0D, "text.maths.convert.myriameter"),
         lg(UnitType.LENGTH, 4828.032D, "text.maths.convert.league"),
