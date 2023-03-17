@@ -47,7 +47,7 @@ repositories {
 
 dependencies {
     //JDA & JDA-Utilities
-    implementation("net.dv8tion:JDA:4.4.0_350")
+    implementation("net.dv8tion:JDA:4.4.1_353")
     implementation('pw.chew:jda-chewtils:1.23.0') {
         exclude group: 'pw.chew', module: 'jda-chewtils-command'
     }
