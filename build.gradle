@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'eclipse'
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
     id 'com.bmuschko.docker-java-application' version '7.3.0'

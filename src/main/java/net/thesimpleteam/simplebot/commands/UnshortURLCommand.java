@@ -29,6 +29,11 @@ public class UnshortURLCommand extends Command {
             MessageHelper.syntaxError(event, this, null);
             return;
         }
+        if(true) {
+            //TODO: remove this command
+            event.reply("This command has been removed.");
+            return;
+        }
         try {
             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.unshortURL.success", Color.GREEN, null, null)
                     .addField(MessageHelper.translateMessage(event, "success.unshortURL.link"), !event.getArgs().split("\\s")[0].startsWith("https://") && !event.getArgs().split("\\s")[0].startsWith("http://") ? "http://" + event.getArgs().split("\\s")[0] : event.getArgs().split("\\s")[0], false)

@@ -2,6 +2,8 @@ package net.thesimpleteam.simplebot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+
+import net.thesimpleteam.simplebot.SimpleBot;
 import net.thesimpleteam.simplebot.enums.CommandCategories;
 import net.thesimpleteam.simplebot.utils.MathUtils;
 import net.thesimpleteam.simplebot.utils.MessageHelper;
@@ -11,7 +13,8 @@ import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.mXparser;
 
 import java.util.*;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.stream.IntStream;
 
 public class MathsCommand extends Command {
 
@@ -38,18 +41,16 @@ public class MathsCommand extends Command {
                 mXparser.disableAlmostIntRounding();
                 mXparser.disableCanonicalRounding();
                 mXparser.disableUlpRounding();
-                for (char c : args[0].toCharArray()) {
-                    if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
-                        event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
-                        return;
-                    }
+                if(args[1].chars().mapToObj(i -> (char) i).anyMatch(c -> UnicodeCharacters.getAllExponentCharacters().contains(c))) {
+                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
+                    return;
                 }
                 if (!new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).checkSyntax()) {
                     if(args[0].replaceAll("\\D+", "").isEmpty()) {
                         MessageHelper.syntaxError(event, this, "information.maths");
                         return;
                     }
-                    System.out.println(new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).getErrorMessage());
+                    SimpleBot.LOGGER.log(Level.INFO, new Expression(calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).getErrorMessage());
                     event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[0].replaceAll("\\s+", ""))).build()).build());
                     return;
                 }
@@ -64,10 +65,9 @@ public class MathsCommand extends Command {
                         mXparser.disableAlmostIntRounding();
                         mXparser.disableCanonicalRounding();
                         mXparser.disableUlpRounding();
-                        for (char c : args[1].toCharArray()) {
-                            if (UnicodeCharacters.getAllExponentCharacters().contains(c)) {
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
-                            }
+                        if(args[1].chars().mapToObj(i -> (char) i).anyMatch(c -> UnicodeCharacters.getAllExponentCharacters().contains(c))) {
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.calculate.exponentsCharacters", null, null, null).build()).build());
+                            return;
                         }
                         if (!new Expression(calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).checkSyntax()) {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[1].replaceAll("\\s+", ""))).build()).build());
@@ -84,12 +84,11 @@ public class MathsCommand extends Command {
             case 3 -> {
                 switch (args[0].toLowerCase(Locale.ROOT)) {
                     case "primenumber" -> {
-                        long number;
-                        if (MathUtils.isIntegerNumber(args[2]))
-                            number = Long.parseLong(args[2].split("\\.")[0]);
-                        else if (new Expression(args[2]).checkSyntax()){
+                        int number;
+                        if (MathUtils.isIntegerNumber(args[2])) number = Integer.parseInt(args[2].split("\\.")[0]);
+                        else if (new Expression(args[2]).checkSyntax()) {
                             if(MathUtils.isIntegerNumberWithEmbed(event, String.valueOf(new Expression(args[2]).calculate())))
-                                number = Long.parseLong(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
+                                number = Integer.parseInt(String.valueOf(new Expression(args[2]).calculate()).split("\\.")[0]);
                             else return;
                         } else {
                             event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.syntax", null, null, null, calculateReplaceArgs(args[2].replaceAll("\\s+", ""))).build()).build());
@@ -98,31 +97,8 @@ public class MathsCommand extends Command {
                         switch (args[1]) {
                             case "number" -> event.reply(new MessageBuilder(MessageHelper.getEmbed(event, MathUtils.numberIsPrime(number) ? "success.maths.primeNumber.isPrime" : "error.maths.primeNumber.isNotPrime", null, null, null, number).build()).build());
                             case "list" -> {
-                                //TODO optimize that if possible
-                                StringBuilder listBuilder = new StringBuilder();
-                                List<String> primeNumberList = new ArrayList<>();
-                                for (long i = 2; i <= number; i++) {
-                                    if (MathUtils.numberIsPrime(i)) primeNumberList.add(String.valueOf(i));
-                                }
-                                if(primeNumberList.isEmpty()){
-                                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.primeNumber.list.error", null, null, null, number).build()).build());
-                                    return;
-                                }
-                                for (String string : primeNumberList) {
-                                    listBuilder.append(string).append(", ");
-                                }
-                                if(listBuilder.toString().length() >= 4096) {
-                                    //We subtract 3 because we add that string "..." into the listBuilder
-                                    while (listBuilder.toString().length() > 4096 - 3) {
-                                        primeNumberList.remove(0);
-                                        listBuilder = new StringBuilder();
-                                        for (String string : primeNumberList) {
-                                            listBuilder.append(string).append(", ");
-                                        }
-                                    }
-                                    listBuilder.insert(0, "...");
-                                }
-                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.primeNumber.list.success", null, listBuilder.deleteCharAt(listBuilder.toString().length() - 2).toString(), null, number).build()).build());
+                                StringBuilder listBuilder = getListOfPrimes(number);
+                                event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.primeNumber.list.success", null, listBuilder.toString(), null, number).build()).build());
                             }
                         }
                     }
@@ -173,14 +149,6 @@ public class MathsCommand extends Command {
             case 4 -> {
                 switch (args[0].toLowerCase(Locale.ROOT)) {
                     case "convert" -> {
-                        for(int i = 0 ; i < Unit.values().length; i++){
-                            for(Unit unit : Unit.values()) {
-                                if (Unit.values()[i] != unit && Unit.values()[i].name().equals(unit.name())) {
-                                    event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "error.maths.convert.sameSymbols", null, null, null, MessageHelper.translateMessage(event, Unit.values()[i].unitName), MessageHelper.translateMessage(event, unit.unitName), Unit.values()[i].name()).build()).build());
-                                    return;
-                                }
-                            }
-                        }
                         if(!MathUtils.isParsableDouble(event, args[1].replace(',', '.'))) return;
                         double number = Double.parseDouble(args[1].replace(',', '.'));
                         Unit unit1 = null;
@@ -188,20 +156,28 @@ public class MathsCommand extends Command {
                         for (Unit unit : Unit.values()) {
                             if (unit.name().equals(args[2])) {
                                 unit1 = unit;
-                            }
-                            if (unit.name().equals(args[3])) {
+                            } else if (unit.name().equals(args[3])) {
                                 unit2 = unit;
                             }
                         }
                         if(unit1 == null || unit2 == null || unit1.unitType != unit2.unitType){
-                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event, unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" : unit1 == null ? "error.maths.convert.firstUnitDontExist" : unit2 == null ? "error.maths.convert.secondUnitDontExist" : "error.maths.convert.notSameUnitType", null, null, null)).build());
+                            event.reply(new MessageBuilder(MessageHelper.getEmbed(event,
+                                unit1 == null && unit2 == null ? "error.maths.convert.unitsDontExist" :
+                                    unit1 == null ? "error.maths.convert.firstUnitDontExist" :
+                                        unit2 == null ? "error.maths.convert.secondUnitDontExist" :
+                                            "error.maths.convert.notSameUnitType", null, null, null)).build());
                             return;
                         }
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), String.valueOf(unit1.factor / unit2.factor).replace("E", "x10^"), false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"),
+                                    args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, unit1.unitName) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"),
+                                    String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] +
+                                        " (" + MessageHelper.translateMessage(event, unit2.unitName) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"),
+                                    String.valueOf(unit1.factor / unit2.factor).replace("E", "x10^"), false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"),
+                                    MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
                                 .build()).build());
                     }
                     default -> MessageHelper.syntaxError(event, this, "information.maths");
@@ -209,6 +185,31 @@ public class MathsCommand extends Command {
             }
             default -> MessageHelper.syntaxError(event, this, "information.maths");
         }
+    }
+
+    private static StringBuilder getListOfPrimes(int upToN) {
+        StringBuilder builder = new StringBuilder();
+        if(upToN >= 6661) { //Abitrary limit since the embed cannot go higher than 4096 chars. You can find this value by finding every prime number and add a space between each integer, it should give you 6659.
+            upToN = 6661;
+        }
+        //This is an implementation of the Sieve of Eratostenes
+        boolean[] b = new boolean[upToN + 1];
+        b[0] = true;
+        b[1] = true;
+        for(int i = 2; i < Math.sqrt(upToN); i++) {
+            if(!b[i]) {
+                for(int j = i*i; j <= upToN; j+= i) b[j] = true;
+            }
+        }
+        IntStream.range(0, b.length).filter(i -> !b[i]).forEach(i -> {
+            if(builder.length() + (Math.log10(i) + 1) + 2 >= 4096) { // The + 2 is one char for the space and one char for the … char
+                builder.append(" …");
+                return;
+            }
+            if(i != 2) builder.append(" ");
+            builder.append(i);
+        });
+        return builder;
     }
 
     /**

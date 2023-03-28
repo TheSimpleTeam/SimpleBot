@@ -37,6 +37,11 @@ public class EvaluateCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        //TODO: remove this command
+        if(true) {
+            event.reply("This command has been removed");
+            return;
+        }
         String args = event.getArgs();
         Eval.Languages language = Eval.Languages.JS;
         if(event.getArgs().startsWith(DiscordFormatUtils.MULTILINE_CODE_BLOCK.format)) {

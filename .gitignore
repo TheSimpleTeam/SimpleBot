@@ -8,3 +8,7 @@
 /src/main/resources/config/server-config.json
 gradle.properties
 /Dockerfile_*
+/.classpath
+/.factorypath
+/.project
+/.settings

@@ -14,7 +14,7 @@ public class CreateChannelCommand extends Command {
         this.cooldown = 30;
         this.arguments = "arguments.createChannel";
         this.help = "help.createChannel";
-        this.example = "text général 846048803554852905";
+        this.example = "text general 846048803554852905";
         this.category = CommandCategories.STAFF.category;
         this.guildOnly = true;
         this.aliases = new String[]{"cc", "createc", "cchannel"};

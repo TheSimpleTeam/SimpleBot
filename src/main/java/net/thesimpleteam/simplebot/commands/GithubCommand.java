@@ -1,5 +1,6 @@
 package net.thesimpleteam.simplebot.commands;
 
+import com.google.common.base.Throwables;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.typesafe.config.ConfigException;
@@ -21,8 +22,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Level;
 
 @RequireConfig("botGithubToken")
 public class GithubCommand extends Command {
@@ -71,11 +72,8 @@ public class GithubCommand extends Command {
                             .addField(MessageHelper.translateMessage(event, "success.github.search.license"), repository.getLicense() == null ? MessageHelper.translateMessage(event, "success.github.noLicense") : repository.getLicense().getName(), false);
                     if(repository.getDescription() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.description"), repository.getDescription(), false);
                     if(repository.getLanguage() != null) embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.mainLanguage"), repository.getLanguage(), false);
-                    try{
-                        embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.stringShortener(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8), 1024), false);
-                    } finally {
-                        event.reply(new MessageBuilder(embedBuilder).build());
-                    }
+                    embedBuilder.addField(MessageHelper.translateMessage(event, "success.github.search.fileREADME"), MessageHelper.stringShortener(IOUtils.toString(repository.getReadme().read(), StandardCharsets.UTF_8), 1024), false);
+                    event.reply(new MessageBuilder(embedBuilder).build());
                 } catch (IOException e) {
                     MessageHelper.sendError(e, event, this);
                 }
@@ -129,7 +127,7 @@ public class GithubCommand extends Command {
             Map<String, Map<String, String>> lang = SimpleBot.gson.fromJson(new InputStreamReader(new URL("https://raw.githubusercontent.com/ozh/github-colors/master/colors.json").openStream()), Map.class);
             return language == null ? Color.RED : Color.getColor(String.valueOf(getDecimal(lang.get(StringUtils.capitalize(language)).getOrDefault("color", "#FF0000"))));
         } catch (IOException e) {
-            e.printStackTrace();
+            SimpleBot.LOGGER.log(Level.SEVERE, Throwables.getStackTraceAsString(e));
             return Color.RED;
         }
     }
@@ -140,11 +138,10 @@ public class GithubCommand extends Command {
      */
     private int getDecimal(String hex) {
         String digits = "0123456789ABCDEF";
+        char[] hexArray = hex.toUpperCase().toCharArray();
         int val = 0;
-        for (int i = 0; i < hex.length(); i++) {
-            char c = hex.toUpperCase().charAt(i);
-            int d = digits.indexOf(c);
-            val = 16 * val + d;
+        for(char c : hexArray) {
+            val = 16 * val + digits.indexOf(c);
         }
         return val;
     }
