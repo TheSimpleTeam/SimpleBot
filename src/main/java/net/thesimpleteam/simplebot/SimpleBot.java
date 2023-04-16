@@ -152,20 +152,20 @@ public class SimpleBot {
     private static void getHelpConsumer(CommandEvent event, Bot bot) {
         StringBuilder helpBuilder = new StringBuilder(String.format(MessageHelper.translateMessage(event, "help.commands"), event.getSelfUser().getName()));
         for(CommandCategories category : CommandCategories.values()) {
-            if(!bot.commands.stream().filter(command -> category.category == command.getCategory()).toList().isEmpty()) {
-                helpBuilder.append("\n\n__").append(MessageHelper.translateMessage(event, category.category.getName())).append("__ :\n");
-                for (Command command : bot.commands.stream().filter(command -> category.category == command.getCategory()).toList()) {
-                    if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
-                        if (MessageHelper.translateMessage(event, command.getHelp()).contains("²")) {
-                            for (int index = 0; index < MessageHelper.translateMessage(event, command.getHelp()).split("²").length - 1; index++) {
-                                helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" ➡ *").append(MessageHelper.translateMessage(event, command.getHelp()).split("²")[index]).append("*");
-                            }
-                        } else {
-                            helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ?
-                                    command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`")
-                                    .append(" \u27A1 *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
-                        }
+            if(bot.commands.stream().noneMatch(command -> category.category == command.getCategory())) continue;
+            helpBuilder.append("\n\n__").append(MessageHelper.translateMessage(event, category.category.getName())).append("__ :\n");
+            for (Command command : bot.commands.stream().filter(command -> category.category == command.getCategory()).toList()) {
+                if(command.isHidden() || (command.isOwnerCommand() && !event.isOwner())) continue;
+                String translatedHelp = MessageHelper.translateMessage(event, command.getHelp());
+                if(translatedHelp.contains("²")) {
+                    String[] splittedHelp = translatedHelp.split("²");
+                    for (int index = 0; index < splittedHelp.length - 1; index++) {
+                        helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" ➡ *").append(splittedHelp[index]).append("*");
                     }
+                } else {
+                    helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ?
+                                    command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`")
+                            .append(" \u27A1 *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
                 }
             }
         }
