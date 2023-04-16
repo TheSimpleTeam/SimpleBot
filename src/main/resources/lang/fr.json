@@ -13,7 +13,7 @@
   "arguments.purge": "\u003cnombre de messages\u003e",
   "arguments.say": "\u003ctexte\u003e",
   "arguments.snippet": "\u003cprogramme\u003e",
-  "arguments.spigot": "\u003cID du plugin Spigot\u003e²<nom du plugin>²\u003cuser\u003e \u003cutilisateur Spigot\u003e",
+  "arguments.spigot": "\u003cID du plugin Spigot\u003e²<nom du plugin>²\u003cutilisateur Spigot\u003e",
   "arguments.suggestion": "\u003csuggestion\u003e",
   "arguments.tempban": "\u003cidentifiant/mention du membre\u003e \u003cjours\u003e \u003ctemps de ban\u003e [raison]",
   "arguments.translate": "\u003ctexte à traduire\u003e \u003c--lang\u003e \u003clangage du texte\u003e \u003clangage où doit être traduit le texte\u003e",

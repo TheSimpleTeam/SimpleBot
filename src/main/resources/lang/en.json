@@ -13,7 +13,7 @@
   "arguments.purge": "\u003cnumber of messages\u003e",
   "arguments.say": "\u003ctext\u003e",
   "arguments.snippet": "\u003cprogramm\u003e",
-  "arguments.spigot": "\u003cSpigot plugin's ID/Spigot user/plugin's name\u003e",
+  "arguments.spigot": "<Spigot plugin's ID>²<plugin's name>²<Spigot user>",
   "arguments.suggestion": "\u003csuggestion\u003e",
   "arguments.tempban": "\u003cmember\u0027s ID/mention\u003e \u003ctime\u003e \u003cban time\u003e [reason]",
   "arguments.translate": "\u003ctext to be translated\u003e \u003c--lang\u003e \u003ctext language\u003e \u003clanguage where the text should be translated\u003e",

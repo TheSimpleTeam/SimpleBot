@@ -30,12 +30,12 @@ public class MathsCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String[] args = event.getArgs().split("\\s+");
         StringBuilder unitsList = new StringBuilder();
-        if (args.length < 1) {
+        if (event.getArgs().isBlank()) {
             MessageHelper.syntaxError(event, this, String.format("information.maths", unitsList));
             return;
         }
+        String[] args = event.getArgs().split("\\s+");
         switch (args.length) {
             case 1 -> { //Calculate the specified mathematical expression
                 mXparser.disableAlmostIntRounding();
