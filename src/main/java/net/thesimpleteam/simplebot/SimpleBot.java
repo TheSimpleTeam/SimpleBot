@@ -14,7 +14,9 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.thesimpleteam.simplebot.cli.CLI;
@@ -150,32 +152,34 @@ public class SimpleBot {
     }
 
     private static void getHelpConsumer(CommandEvent event, Bot bot) {
-        StringBuilder helpBuilder = new StringBuilder(String.format(MessageHelper.translateMessage(event, "help.commands"), event.getSelfUser().getName()));
-        for(CommandCategories category : CommandCategories.values()) {
-            if(bot.commands.stream().noneMatch(command -> category.category == command.getCategory())) continue;
-            helpBuilder.append("\n\n__").append(MessageHelper.translateMessage(event, category.category.getName())).append("__ :\n");
-            for (Command command : bot.commands.stream().filter(command -> category.category == command.getCategory()).toList()) {
-                if(command.isHidden() || (command.isOwnerCommand() && !event.isOwner())) continue;
-                String translatedHelp = MessageHelper.translateMessage(event, command.getHelp());
-                if(translatedHelp.contains("²")) {
-                    String[] splittedHelp = translatedHelp.split("²");
-                    for (int index = 0; index < splittedHelp.length - 1; index++) {
-                        helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" ➡ *").append(splittedHelp[index]).append("*");
+        try {
+            event.getAuthor().openPrivateChannel().complete();
+            StringBuilder helpBuilder = new StringBuilder(String.format(MessageHelper.translateMessage(event, "help.commands"), event.getSelfUser().getName()));
+            for(CommandCategories category : CommandCategories.values()) {
+                if(bot.commands.stream().noneMatch(command -> category.category == command.getCategory())) continue;
+                helpBuilder.append("\n\n__").append(MessageHelper.translateMessage(event, category.category.getName())).append("__ :\n");
+                for (Command command : bot.commands.stream().filter(command -> category.category == command.getCategory()).toList()) {
+                    if(command.isHidden() || (command.isOwnerCommand() && !event.isOwner())) continue;
+                    String translatedHelp = MessageHelper.translateMessage(event, command.getHelp());
+                    if(translatedHelp.contains("²")) {
+                        String[] splittedHelp = translatedHelp.split("²");
+                        for (int index = 1; index < splittedHelp.length - 1; index++) {
+                            helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" ➡ *").append(splittedHelp[index]).append("*");
+                        }
+                    } else {
+                        helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ? command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`").append(" \u27A1 *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
                     }
-                } else {
-                    helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ?
-                                    command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`")
-                            .append(" \u27A1 *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
                 }
             }
+            if (event.getJDA().getUserById(bot.ownerID) != null) {
+                helpBuilder.append("\n\n").append(MessageHelper.translateMessage(event, "help.contact")).append(" **").append(MessageHelper.getTag(event.getJDA().getUserById(bot.ownerID))).append("**");
+                if (event.getClient().getServerInvite() != null)
+                    helpBuilder.append(' ').append(MessageHelper.translateMessage(event, "help.discord")).append(' ').append(bot.serverInvite);
+            }
+            event.replyInDm(helpBuilder.toString(), unused -> {}, unused -> {});
+        } catch (PermissionException e) {
+            event.reply(MessageHelper.translateMessage(event, "help.DMBlocked"));
         }
-        if (event.getJDA().getUserById(bot.ownerID) != null) {
-            helpBuilder.append("\n\n").append(MessageHelper.translateMessage(event, "help.contact")).append(" **").append(MessageHelper.getTag(event.getJDA().getUserById(bot.ownerID))).append("**");
-            if (event.getClient().getServerInvite() != null)
-                helpBuilder.append(' ').append(MessageHelper.translateMessage(event, "help.discord")).append(' ').append(bot.serverInvite);
-        }
-        event.replyInDm(helpBuilder.toString(), unused -> {
-        }, t -> event.reply(MessageHelper.translateMessage(event, "help.DMBlocked")));
     }
 
     private static void setupLocalizations() throws IOException {
