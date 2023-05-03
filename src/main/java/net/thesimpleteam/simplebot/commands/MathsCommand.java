@@ -162,8 +162,8 @@ public class MathsCommand extends Command {
                             return;
                         }
                         event.reply(new MessageBuilder(MessageHelper.getEmbed(event, "success.maths.convert.success", null, null, null)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + MessageHelper.translateMessage(event, "text.maths.convert." + unit1.name().toLowerCase()) + ")", false)
-                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] + " (" + MessageHelper.translateMessage(event, "text.maths.convert." + unit2.name().toLowerCase()) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.from"), args[1] + " " + args[2] + " (" + Unit.getUnitName(event, unit1) + ")", false)
+                                .addField(MessageHelper.translateMessage(event, "success.maths.convert.to"), String.valueOf(number * unit1.factor / unit2.factor).replace("E", "x10^") + " " + args[3] + " (" + Unit.getUnitName(event, unit2) + ")", false)
                                 .addField(MessageHelper.translateMessage(event, "success.maths.convert.factor"), String.valueOf(unit1.factor / unit2.factor).replace("E", "x10^"), false)
                                 .addField(MessageHelper.translateMessage(event, "success.maths.convert.unitType"), MessageHelper.translateMessage(event, unit1.unitType.unitTypeName), true)
                                 .build()).build());
@@ -333,6 +333,10 @@ public class MathsCommand extends Command {
             List<String> symbolsList = new ArrayList<>();
             Arrays.stream(Unit.values()).filter(unit -> unit.unitType == unitType).forEach(unit -> symbolsList.add(unit.name()));
             return symbolsList;
+        }
+
+        public static String getUnitName(CommandEvent event, Unit unit){
+            return MessageHelper.translateMessage(event, "text.maths.convert.unit." + unit.name().toLowerCase());
         }
     }
 
