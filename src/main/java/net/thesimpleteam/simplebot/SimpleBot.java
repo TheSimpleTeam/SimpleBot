@@ -96,7 +96,7 @@ public class SimpleBot {
             LOGGER.log(Level.SEVERE, "The token is invalid !");
             return;
         }
-        Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/jw3kn4gNZW");
+        Bot b = new Bot(new ArrayList<>(), "285829396009451522", "https://discord.gg/KFbguzQk5Q");
         CommandClientBuilder clientBuilder = new CommandClientBuilder()
                 .setOwnerId(b.ownerID)
                 .setCoOwnerIds("363811352688721930")
@@ -153,7 +153,7 @@ public class SimpleBot {
 
     private static void getHelpConsumer(CommandEvent event, Bot bot) {
         try {
-            event.getAuthor().openPrivateChannel().complete();
+            PrivateChannel privateChannel = event.getAuthor().openPrivateChannel().complete();
             StringBuilder helpBuilder = new StringBuilder(String.format(MessageHelper.translateMessage(event, "help.commands"), event.getSelfUser().getName()));
             for(CommandCategories category : CommandCategories.values()) {
                 if(bot.commands.stream().noneMatch(command -> category.category == command.getCategory())) continue;
@@ -163,8 +163,12 @@ public class SimpleBot {
                     String translatedHelp = MessageHelper.translateMessage(event, command.getHelp());
                     if(translatedHelp.contains("²")) {
                         String[] splittedHelp = translatedHelp.split("²");
-                        for (int index = 1; index < splittedHelp.length - 1; index++) {
-                            helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index]).append("`").append(" ➡ *").append(splittedHelp[index]).append("*");
+                        System.out.println(Arrays.toString(splittedHelp));
+                        for (int index = 1; index < splittedHelp.length; index++) {
+                            System.out.println(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index - 1]);
+                            System.out.println(splittedHelp[index]);
+                            helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(MessageHelper.translateMessage(event, command.getArguments()).split("²")[index - 1]).append("`").append(" ➡ *").append(splittedHelp[index]).append("*");
+                            System.out.println("======================================================" + helpBuilder);
                         }
                     } else {
                         helpBuilder.append("\n`").append(getPrefix(event.getGuild())).append(command.getName()).append(" ").append(command.getArguments() != null ? command.getArguments().startsWith("arguments.") ? MessageHelper.translateMessage(event, command.getArguments()) : command.getArguments() : "").append("`").append(" \u27A1 *").append(MessageHelper.translateMessage(event, command.getHelp())).append("*");
@@ -176,7 +180,22 @@ public class SimpleBot {
                 if (event.getClient().getServerInvite() != null)
                     helpBuilder.append(' ').append(MessageHelper.translateMessage(event, "help.discord")).append(' ').append(bot.serverInvite);
             }
-            event.replyInDm(helpBuilder.toString(), unused -> {}, unused -> {});
+            if (helpBuilder.length() <= 2000) {
+                privateChannel.sendMessage(helpBuilder).queue();
+            } else {
+                String[] parts = helpBuilder.toString().split("\n");
+                StringBuilder builder = new StringBuilder();
+                for (String part : parts) {
+                    if (builder.length() + part.length() + 1 > 2000) { // add 1 for the "\n"
+                        privateChannel.sendMessage(builder.toString()).queue();
+                        builder.setLength(0);
+                    }
+                    builder.append(part).append("\n");
+                }
+                if (builder.length() > 0) {
+                    privateChannel.sendMessage(builder.toString()).queue();
+                }
+            }
         } catch (PermissionException e) {
             event.reply(MessageHelper.translateMessage(event, "help.DMBlocked"));
         }

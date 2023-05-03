@@ -115,7 +115,7 @@
   "help.invite": "Crée un lien d\u0027invitation du serveur ou donne le lien d\u0027invitation du bot.",
   "help.issue": "Envoie une issue sur notre dépôt GitHub.",
   "help.kick": "Exclut un membre du serveur.",
-  "help.maths": "Ceci est une commande ayant plein d\u0027utilités en rapport avec les mathématiques.²Calcule l\u0027expression mathématique spécifiée.²Calcule l\u0027expression mathématique spécifiée.²Vérifie si un nombre est premier ou fait une liste de tous les nombres premiers jusqu\u0027au nombre spécifié.²Vérifie si un nombre est parfait ou fait une liste de tous les nombres parfaits jusqu\u0027au nombre spécifié.²Convertis une unité de mesure en une autre.",
+  "help.maths": "Ceci est une commande ayant plein d\u0027utilités en rapport avec les mathématiques.²Calcule l\u0027expression mathématique spécifiée.²Calcule l\u0027expression mathématique spécifiée.²Vérifie si un nombre est premier ou fait une liste de tous les nombres premiers jusqu\u0027au nombre spécifié.²Vérifie si un nombre est parfait ou fait une liste de tous les nombres parfaits jusqu\u0027au nombre spécifié.²Convertit une unité de mesure en une autre.",
   "help.mcServer": "Donne la version, le nombre de joueurs connectés et le port du serveur spécifié.",
   "help.mute": "Mute définitivement un membre, démute si la personne est déjà muté.",
   "help.purge": "Supprime les messages selon un nombre donné se situant entre 1 et 100 (ces nombres inclus).",
