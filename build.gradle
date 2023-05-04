@@ -72,7 +72,7 @@ dependencies {
     implementation 'com.github.ReflxctionDev.Tuna-Bytes:core:1.2.0'
     annotationProcessor 'com.github.ReflxctionDev.Tuna-Bytes:core:1.2.0'
     //Other
-    implementation 'com.github.TheSimpleTeam:Spiget:master-SNAPSHOT'
+    implementation 'com.github.Thesimpleteam:spiget:15c1d27021'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation("com.google.guava:guava:31.1-jre")
     implementation group: 'org.kohsuke', name: 'github-api', version: '1.306'
