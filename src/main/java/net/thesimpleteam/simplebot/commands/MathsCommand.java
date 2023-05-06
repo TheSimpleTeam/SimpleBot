@@ -220,17 +220,17 @@ public class MathsCommand extends Command {
 
     public enum Unit {
         //Units of length
-        PARSEC(UnitType.LENGTH, 3.0856775814913675E32D, "pc"),
         YOTTAMETER(UnitType.LENGTH, 1.0E24D, "Ym"),
         ZETTAMETER(UnitType.LENGTH, 1.0E21D, "Zm"),
         LIGHTYEAR(UnitType.LENGTH, 9.4607304725808E20D, "ly"),
         EXAMETER(UnitType.LENGTH, 1.0E18D, "Em"),
+        PARSEC(UnitType.LENGTH, (96_939_420_213_600_000D/Math.PI), "pc"),
         PETAMETER(UnitType.LENGTH, 1.0E15D, "Pm"),
         TERAMETER(UnitType.LENGTH, 1.0E12D, "Tm"),
         ASTRONOMICALUNIT(UnitType.LENGTH, 1.495978707E11D, "au"),
         GIGAMETER(UnitType.LENGTH, 1.0E9D, "Gm"),
         MEGAMETER(UnitType.LENGTH, 1000000.0D, "Mm"),
-        MYRIAMETER(UnitType.LENGTH, 10000.0D, "mam"),
+        MYRIAMETER(UnitType.LENGTH, 1.0E4D, "mam"),
         LEAGUE(UnitType.LENGTH, 4828.032D, "lea"),
         NAUTICALMILE(UnitType.LENGTH, 1852.0D, "NM"),
         MILE(UnitType.LENGTH, 1609.344D, "mi"),
@@ -300,7 +300,7 @@ public class MathsCommand extends Command {
         DECASECOND(UnitType.TIME, 10.0D, "das"),
         SECOND(UnitType.TIME, 1.0D, "s"),
         DECISECOND(UnitType.TIME, 0.1D, "ds"),
-        TIERCE(UnitType.TIME, 0.01666666666D, "t"),
+        TIERCE(UnitType.TIME, (1D/60D), "t"),
         CENTISECOND(UnitType.TIME, 0.01D, "cs"),
         MILLISECOND(UnitType.TIME, 0.001D, "ms"),
         MICROSECOND(UnitType.TIME, 1.0E-6D, "µs"),
