@@ -220,6 +220,8 @@ public class MathsCommand extends Command {
 
     public enum Unit {
         //Units of length
+        QUETTAMETER(UnitType.LENGTH, 1E30D, "Qm"),
+        RONNAMETER(UnitType.LENGTH, 1E27D, "Rm"),
         GIGAPARSEC(UnitType.LENGTH, (96939420213600000000000000D/Math.PI), "Gpc"), //In scientific notation, it's about 3.0856775814913673E25
         YOTTAMETER(UnitType.LENGTH, 1E24D, "Ym"),
         MEGAPARSEC(UnitType.LENGTH, (96939420213600000000000D/Math.PI), "Mpc"), //In scientific notation, it's about 3.0856775814913673E22
@@ -233,7 +235,7 @@ public class MathsCommand extends Command {
         ASTRONOMICALUNIT(UnitType.LENGTH, 1.495978707E11D, "au"),
         GIGAMETER(UnitType.LENGTH, 1E9D, "Gm"),
         MEGAMETER(UnitType.LENGTH, 1E6D, "Mm"),
-        MYRIAMETER(UnitType.LENGTH, 1E4D, "myr"),
+        MYRIAMETER(UnitType.LENGTH, 1E4D, "mam"),
         LEAGUE(UnitType.LENGTH, (19008000D/3937D), "lea"), //In scientific notation, it's about 4.82804165608331E3
         NAUTICALMILE(UnitType.LENGTH, 1.852E3D, "NM"),
         MILE(UnitType.LENGTH, 1.609344E3D, "mi"),
@@ -282,6 +284,9 @@ public class MathsCommand extends Command {
         ATTOMETER(UnitType.LENGTH, 1E-18D, "am"),
         ZEPTOMETER(UnitType.LENGTH, 1E-21D, "zm"),
         YOCTOMETER(UnitType.LENGTH, 1E-24D, "ym"),
+        RONTOMETER(UnitType.LENGTH, 1E-27D, "rm"),
+        QUECTOMETER(UnitType.LENGTH, 1E-30D, "qm"),
+
         //Units of time
         YOTTASECOND(UnitType.TIME, 1E24D, "Ys"),
         ZETTASECOND(UnitType.TIME, 1E21D, "Zs"),
