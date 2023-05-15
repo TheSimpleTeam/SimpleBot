@@ -266,7 +266,7 @@ public class MathsCommand extends Command {
         MILLIMETER(UnitType.LENGTH, 1E-3D, "mm"),
         PICAPOINT(UnitType.LENGTH, (127D/360000D), "pp"), //In scientific notation, it's about 3.527...E-4
         DECIMILLIMETER(UnitType.LENGTH, 1E-4D, "dmm"),
-        MIL(UnitType.LENGTH, 2.54E-5D, "mil"),
+        THOU(UnitType.LENGTH, 2.54E-5D, "mil"),
         CENTIMILLIMETER(UnitType.LENGTH, 1E-5D, "cmm"),
         MICROMETER(UnitType.LENGTH, 1E-6D, "µm"),
         NANOMETER(UnitType.LENGTH, 1E-9D, "nm"),
