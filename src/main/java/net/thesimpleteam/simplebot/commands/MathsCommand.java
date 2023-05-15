@@ -220,10 +220,13 @@ public class MathsCommand extends Command {
 
     public enum Unit {
         //Units of length
+        GIGAPARSEC(UnitType.LENGTH, (96939420213600000000000000D/Math.PI), "Gpc"), //In scientific notation, it's about 3.0856775814913673E25
         YOTTAMETER(UnitType.LENGTH, 1E24D, "Ym"),
+        MEGAPARSEC(UnitType.LENGTH, (96939420213600000000000D/Math.PI), "Mpc"), //In scientific notation, it's about 3.0856775814913673E22
         ZETTAMETER(UnitType.LENGTH, 1E21D, "Zm"),
+        KILOPARSEC(UnitType.LENGTH, (96939420213600000000D/Math.PI), "kpc"), //In scientific notation, it's about 3.0856775814913673E19
         EXAMETER(UnitType.LENGTH, 1E18D, "Em"),
-        PARSEC(UnitType.LENGTH, (96_939_420_213_600_000D/Math.PI), "pc"), //In scientific notation, it's about 3.0856775814913673E16
+        PARSEC(UnitType.LENGTH, (96939420213600000D/Math.PI), "pc"), //In scientific notation, it's about 3.0856775814913673E16
         LIGHTYEAR(UnitType.LENGTH, 9.4607304725808E15, "ly"),
         PETAMETER(UnitType.LENGTH, 1E15D, "Pm"),
         TERAMETER(UnitType.LENGTH, 1E12D, "Tm"),
