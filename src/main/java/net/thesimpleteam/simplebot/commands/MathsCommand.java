@@ -286,7 +286,7 @@ public class MathsCommand extends Command {
         YOCTOMETER(UnitType.LENGTH, 1E-24D, "ym"),
         RONTOMETER(UnitType.LENGTH, 1E-27D, "rm"),
         QUECTOMETER(UnitType.LENGTH, 1E-30D, "qm"),
-
+        PLANKLENGTH(UnitType.LENGTH, 1.616255E-35D, "ℓP"),
         //Units of time
         YOTTASECOND(UnitType.TIME, 1E24D, "Ys"),
         ZETTASECOND(UnitType.TIME, 1E21D, "Zs"),
