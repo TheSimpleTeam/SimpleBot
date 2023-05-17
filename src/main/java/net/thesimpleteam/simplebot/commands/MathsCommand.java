@@ -318,7 +318,8 @@ public class MathsCommand extends Command {
         FEMTOSECOND(UnitType.TIME, 1E-15D, "fs"),
         ATTOSECOND(UnitType.TIME, 1E-18D, "as"),
         ZEPTOSECOND(UnitType.TIME, 1E-21D, "zs"),
-        YOCTOSECOND(UnitType.TIME, 1E-24D, "ys");
+        YOCTOSECOND(UnitType.TIME, 1E-24D, "ys"),
+        PLANCKTIME(UnitType.TIME, 5.391247E-44D, "tP");
 
 
 
