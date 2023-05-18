@@ -228,12 +228,17 @@ public class MathsCommand extends Command {
         ZETTAMETER(UnitType.LENGTH, 1E21D, "Zm"),
         KILOPARSEC(UnitType.LENGTH, (96_939_420_213_600_000_000D/Math.PI), "kpc"), //In scientific notation, it's about 3.0856775814913673E19
         EXAMETER(UnitType.LENGTH, 1E18D, "Em"),
+        LIGHTCENTURY(UnitType.LENGTH, 9.4607304725808E17, "lc"),
         PARSEC(UnitType.LENGTH, (96_939_420_213_600_000D/Math.PI), "pc"), //In scientific notation, it's about 3.0856775814913673E16
         LIGHTYEAR(UnitType.LENGTH, 9.4607304725808E15, "ly"),
         PETAMETER(UnitType.LENGTH, 1E15D, "Pm"),
+        LIGHTDAY(UnitType.LENGTH, 2.59020683712E13D, "ld"),
+        LIGHTHOUR(UnitType.LENGTH, 1.0792528488E12, "lh"),
         TERAMETER(UnitType.LENGTH, 1E12D, "Tm"),
         ASTRONOMICALUNIT(UnitType.LENGTH, 1.495978707E11D, "au"),
+        LIGHTMINUTE(UnitType.LENGTH, 1.798754748E10, "lm"),
         GIGAMETER(UnitType.LENGTH, 1E9D, "Gm"),
+        LIGHTSECOND(UnitType.LENGTH, 2.99792458E8, "ls"),
         MEGAMETER(UnitType.LENGTH, 1E6D, "Mm"),
         MYRIAMETER(UnitType.LENGTH, 1E4D, "mam"),
         LEAGUE(UnitType.LENGTH, (19_008_000D/3_937D), "lea"), //In scientific notation, it's about 4.82804165608331E3
