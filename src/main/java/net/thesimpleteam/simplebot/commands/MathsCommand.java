@@ -253,6 +253,7 @@ public class MathsCommand extends Command {
         YARD(UnitType.LENGTH, 9.144E-1D, "yd"),
         FOOT(UnitType.LENGTH, 3.048E-1, "ft"),
         SURVEYFOOT(UnitType.LENGTH, (1_200D/3_937D), "sft"), //In scientific notation, it's about 3.0480061E-1
+        INDIANSURVEYFOOT(UnitType.LENGTH, 3.047996E-1D, "isft"),
         SPAN(UnitType.LENGTH, 2.286E-1D, "sp"),
         NATURALSPAN(UnitType.LENGTH, 2.032E-1D, "nasp"),
         LINK(UnitType.LENGTH, (792D/3_937D), "li"), //In scientific notation, it's about 2.01168402336805E-1
