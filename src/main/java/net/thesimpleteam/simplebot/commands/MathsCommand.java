@@ -251,6 +251,7 @@ public class MathsCommand extends Command {
         METER(UnitType.LENGTH, 1.0D, "m"),
         YARD(UnitType.LENGTH, 9.144E-1D, "yd"),
         FOOT(UnitType.LENGTH, 3.048E-1, "ft"),
+        SURVEYFOOT(UnitType.LENGTH, (1200D/3937D), "sft"), //In scientific notation, it's about 3.0480061E-1
         SPAN(UnitType.LENGTH, 2.286E-1D, "sp"),
         // After long research, I cannot find a single track of this unit on Internet, apparently that existed. I'm waiting for a proof of its existence.
         // NATURALSPAN(UnitType.LENGTH, 2.032E-1D, "nasp"),
@@ -321,8 +322,6 @@ public class MathsCommand extends Command {
         YOCTOSECOND(UnitType.TIME, 1E-24D, "ys"),
         PLANCKTIME(UnitType.TIME, 5.391247E-44D, "tP");
 
-
-
         public final UnitType unitType;
         public final double factor;
         public final String unitSymbol;
@@ -347,7 +346,7 @@ public class MathsCommand extends Command {
         }
 
         public static String getUnitName(CommandEvent event, Unit unit){
-            return MessageHelper.translateMessage(event, "text.maths.convert.unit." + unit.name().toLowerCase());
+            return MessageHelper.translateMessage(event, "text.maths.convert." + unit.name().toLowerCase());
         }
     }
 
