@@ -238,6 +238,7 @@ public class MathsCommand extends Command {
         MYRIAMETER(UnitType.LENGTH, 1E4D, "mam"),
         LEAGUE(UnitType.LENGTH, (19008000D/3937D), "lea"), //In scientific notation, it's about 4.82804165608331E3
         NAUTICALMILE(UnitType.LENGTH, 1.852E3D, "NM"),
+        SURVEYMILE(UnitType.LENGTH, (6336000D/3937D), "smi"), //In scientific notation, it's about 1.60934721869E3
         MILE(UnitType.LENGTH, 1.609344E3D, "mi"),
         KILOMETER(UnitType.LENGTH, 1E3D, "km"),
         CABLE(UnitType.LENGTH, 1.852E2D, "cb"),
@@ -253,8 +254,7 @@ public class MathsCommand extends Command {
         FOOT(UnitType.LENGTH, 3.048E-1, "ft"),
         SURVEYFOOT(UnitType.LENGTH, (1200D/3937D), "sft"), //In scientific notation, it's about 3.0480061E-1
         SPAN(UnitType.LENGTH, 2.286E-1D, "sp"),
-        // After long research, I cannot find a single track of this unit on Internet, apparently that existed. I'm waiting for a proof of its existence.
-        // NATURALSPAN(UnitType.LENGTH, 2.032E-1D, "nasp"),
+        NATURALSPAN(UnitType.LENGTH, 2.032E-1D, "nasp"),
         LINK(UnitType.LENGTH, (792D/3937D), "li"), //In scientific notation, it's about 2.01168402336805E-1
         SHAFTMENT(UnitType.LENGTH, 1.524E-1D, "sh"),
         HAND(UnitType.LENGTH, 1.016E-1D, "h"),
@@ -268,7 +268,7 @@ public class MathsCommand extends Command {
         BARLEYCORN(UnitType.LENGTH, (127D/15000D), "bc"), //In scientific notation, it's about 8.46...E-3
         PICA(UnitType.LENGTH, (127D/30000D), "p"), //In scientific notation, it's about 4.23...E-3
         LINE(UnitType.LENGTH, (127D/60000D), "lin"), //In scientific notation, it's about 2.116...E-3
-        POPPYSEED(UnitType.LENGTH, (127D/60000D), "pop"), //1 line is equal to 1 poppyseed
+        POPPYSEED(UnitType.LENGTH, (127D/60000D), "pop"), //1 poppyseed is equal to 1 line
         MILLIMETER(UnitType.LENGTH, 1E-3D, "mm"),
         PICAPOINT(UnitType.LENGTH, (127D/360000D), "pp"), //In scientific notation, it's about 3.527...E-4
         DECIMILLIMETER(UnitType.LENGTH, 1E-4D, "dmm"),
