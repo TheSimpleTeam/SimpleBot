@@ -222,13 +222,13 @@ public class MathsCommand extends Command {
         //Units of length
         QUETTAMETER(UnitType.LENGTH, 1E30D, "Qm"),
         RONNAMETER(UnitType.LENGTH, 1E27D, "Rm"),
-        GIGAPARSEC(UnitType.LENGTH, (96939420213600000000000000D/Math.PI), "Gpc"), //In scientific notation, it's about 3.0856775814913673E25
+        GIGAPARSEC(UnitType.LENGTH, (96_939_420_213_600_000_000_000_000D/Math.PI), "Gpc"), //In scientific notation, it's about 3.0856775814913673E25
         YOTTAMETER(UnitType.LENGTH, 1E24D, "Ym"),
-        MEGAPARSEC(UnitType.LENGTH, (96939420213600000000000D/Math.PI), "Mpc"), //In scientific notation, it's about 3.0856775814913673E22
+        MEGAPARSEC(UnitType.LENGTH, (96_939_420_213_600_000_000_000D/Math.PI), "Mpc"), //In scientific notation, it's about 3.0856775814913673E22
         ZETTAMETER(UnitType.LENGTH, 1E21D, "Zm"),
-        KILOPARSEC(UnitType.LENGTH, (96939420213600000000D/Math.PI), "kpc"), //In scientific notation, it's about 3.0856775814913673E19
+        KILOPARSEC(UnitType.LENGTH, (96_939_420_213_600_000_000D/Math.PI), "kpc"), //In scientific notation, it's about 3.0856775814913673E19
         EXAMETER(UnitType.LENGTH, 1E18D, "Em"),
-        PARSEC(UnitType.LENGTH, (96939420213600000D/Math.PI), "pc"), //In scientific notation, it's about 3.0856775814913673E16
+        PARSEC(UnitType.LENGTH, (96_939_420_213_600_000D/Math.PI), "pc"), //In scientific notation, it's about 3.0856775814913673E16
         LIGHTYEAR(UnitType.LENGTH, 9.4607304725808E15, "ly"),
         PETAMETER(UnitType.LENGTH, 1E15D, "Pm"),
         TERAMETER(UnitType.LENGTH, 1E12D, "Tm"),
@@ -236,9 +236,9 @@ public class MathsCommand extends Command {
         GIGAMETER(UnitType.LENGTH, 1E9D, "Gm"),
         MEGAMETER(UnitType.LENGTH, 1E6D, "Mm"),
         MYRIAMETER(UnitType.LENGTH, 1E4D, "mam"),
-        LEAGUE(UnitType.LENGTH, (19008000D/3937D), "lea"), //In scientific notation, it's about 4.82804165608331E3
+        LEAGUE(UnitType.LENGTH, (19_008_000D/3_937D), "lea"), //In scientific notation, it's about 4.82804165608331E3
         NAUTICALMILE(UnitType.LENGTH, 1.852E3D, "NM"),
-        SURVEYMILE(UnitType.LENGTH, (6336000D/3937D), "smi"), //In scientific notation, it's about 1.60934721869E3
+        SURVEYMILE(UnitType.LENGTH, (6_336_000D/3_937D), "smi"), //In scientific notation, it's about 1.60934721869E3
         MILE(UnitType.LENGTH, 1.609344E3D, "mi"),
         KILOMETER(UnitType.LENGTH, 1E3D, "km"),
         CABLE(UnitType.LENGTH, 1.852E2D, "cb"),
@@ -246,16 +246,16 @@ public class MathsCommand extends Command {
         HECTOMETER(UnitType.LENGTH, 1E2D, "hm"),
         CHAIN(UnitType.LENGTH, 2.01168E1D, "ch"),
         DECAMETER(UnitType.LENGTH, 1E1D, "dam"),
-        ROD(UnitType.LENGTH, (19800D/3937D), "rd"), //In scientific notation, it's about 5.02921005842012E-1
+        ROD(UnitType.LENGTH, (19_800D/3_937D), "rd"), //In scientific notation, it's about 5.02921005842012E-1
         FATHOM(UnitType.LENGTH, 1.8288D, "ftm"),
         ELL(UnitType.LENGTH, 1.143D, "ell"),
         METER(UnitType.LENGTH, 1.0D, "m"),
         YARD(UnitType.LENGTH, 9.144E-1D, "yd"),
         FOOT(UnitType.LENGTH, 3.048E-1, "ft"),
-        SURVEYFOOT(UnitType.LENGTH, (1200D/3937D), "sft"), //In scientific notation, it's about 3.0480061E-1
+        SURVEYFOOT(UnitType.LENGTH, (1_200D/3_937D), "sft"), //In scientific notation, it's about 3.0480061E-1
         SPAN(UnitType.LENGTH, 2.286E-1D, "sp"),
         NATURALSPAN(UnitType.LENGTH, 2.032E-1D, "nasp"),
-        LINK(UnitType.LENGTH, (792D/3937D), "li"), //In scientific notation, it's about 2.01168402336805E-1
+        LINK(UnitType.LENGTH, (792D/3_937D), "li"), //In scientific notation, it's about 2.01168402336805E-1
         SHAFTMENT(UnitType.LENGTH, 1.524E-1D, "sh"),
         HAND(UnitType.LENGTH, 1.016E-1D, "h"),
         DECIMETER(UnitType.LENGTH, 1E-1D, "dm"),
@@ -265,12 +265,12 @@ public class MathsCommand extends Command {
         FINGER(UnitType.LENGTH, 2.2225E-2D, "fg"),
         DIGIT(UnitType.LENGTH, 1.905E-2D, "dg"),
         CENTIMETER(UnitType.LENGTH, 1E-2D, "cm"),
-        BARLEYCORN(UnitType.LENGTH, (127D/15000D), "bc"), //In scientific notation, it's about 8.46...E-3
-        PICA(UnitType.LENGTH, (127D/30000D), "p"), //In scientific notation, it's about 4.23...E-3
-        LINE(UnitType.LENGTH, (127D/60000D), "lin"), //In scientific notation, it's about 2.116...E-3
-        POPPYSEED(UnitType.LENGTH, (127D/60000D), "pop"), //1 poppyseed is equal to 1 line
+        BARLEYCORN(UnitType.LENGTH, (127D/15_000D), "bc"), //In scientific notation, it's about 8.46...E-3
+        PICA(UnitType.LENGTH, (127D/30_000D), "p"), //In scientific notation, it's about 4.23...E-3
+        LINE(UnitType.LENGTH, (127D/60_000D), "lin"), //In scientific notation, it's about 2.116...E-3
+        POPPYSEED(UnitType.LENGTH, (127D/60_000D), "pop"), //1 poppyseed is equal to 1 line
         MILLIMETER(UnitType.LENGTH, 1E-3D, "mm"),
-        PICAPOINT(UnitType.LENGTH, (127D/360000D), "pp"), //In scientific notation, it's about 3.527...E-4
+        PICAPOINT(UnitType.LENGTH, (127D/360_000D), "pp"), //In scientific notation, it's about 3.527...E-4
         DECIMILLIMETER(UnitType.LENGTH, 1E-4D, "dmm"),
         THOU(UnitType.LENGTH, 2.54E-5D, "mil"),
         CENTIMILLIMETER(UnitType.LENGTH, 1E-5D, "cmm"),
@@ -278,7 +278,7 @@ public class MathsCommand extends Command {
         NANOMETER(UnitType.LENGTH, 1E-9D, "nm"),
         ANGSTROM(UnitType.LENGTH, 1E-10D, "Å"),
         BOHRRADIUS(UnitType.LENGTH, 5.29177210903E-11D, "a₀"),
-        TWIP(UnitType.LENGTH, (127D/7200000D), "tp"), //In scientific notation, it's about 1.7638...E-5
+        TWIP(UnitType.LENGTH, (127D/7_200_000D), "tp"), //In scientific notation, it's about 1.7638...E-5
         PICOMETER(UnitType.LENGTH, 1E-12D, "pm"),
         SIEGBAHN(UnitType.LENGTH, 1.0021E-13D, "xu"), //This unit is approximate
         FEMTOMETER(UnitType.LENGTH, 1E-15D, "fm"),
