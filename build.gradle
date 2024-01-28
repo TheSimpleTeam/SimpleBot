@@ -9,7 +9,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
 }
 
-ext.graalVersion = '22.0.0.2'
+ext.graalVersion = '22.3.5'
 
 group 'fr.thesimpleteam'
 version '1.0'
