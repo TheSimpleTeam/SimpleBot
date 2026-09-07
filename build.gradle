@@ -5,8 +5,8 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.graalvm.plugin.compiler" version "0.1.0-alpha2"
     id 'com.bmuschko.docker-java-application' version '7.3.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.25'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.25'
 }
 
 ext.graalVersion = '22.0.0.2'
@@ -81,7 +81,7 @@ dependencies {
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'sh.stein:carbon-api:1.2'
     implementation 'org.fusesource.jansi:jansi:2.4.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.25'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
